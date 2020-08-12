@@ -203,9 +203,9 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 *Conclusion*: With 3 levels the test incorrectly chooses 1 harmony pair with similar distribution. The harmony pair which is displayed.
 
 
-```{r diffnull_3levels}
+<!-- ```{r diffnull_3levels} -->
 
-```
+<!-- ``` -->
 
 *Conclusion*: The test with MMPD selects just one pair, as opposed to the test with maximum. This needs to be checked against what we expect from the test. The harmony pairs which are selected (either through MMPD or maximum) are displayed.
 

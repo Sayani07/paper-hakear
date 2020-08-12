@@ -58,7 +58,7 @@ rank_harmony <- function(.data = NULL,
 
 
 # loop through all harmony pairs in the harmony table
-# uses dist_harmony_pair used for calculating max pairiwise
+# uses dist_harmony_pair used for calculatin%>% max pairiwise
 # distance for one harmony pair
 
 dist_harmony_tbl <- function(.data, harmony_tbl, response, prob,
@@ -349,8 +349,13 @@ nsamp = 20,...)
   
   right_quantile_MMPD <- stats::quantile(unlist(MMPD_sample), probs = 0.95)
   right_quantile_maxpd <- stats::quantile(unlist(maxpd_sample), probs = 0.95)
-  MMPD_obs %>% dplyr::mutate(gt_MMPD = MMPD > right_quantile_MMPD,
-                             gt_maxpd = max_pd > right_quantile_maxpd)
+  MMPD_tbl <- MMPD_obs %>% dplyr::mutate(select_harmony = MMPD > right_quantile_MMPD,
+                                         gt_0.95_MMPD = right_quantile_MMPD)
+  #gt_maxpd = max_pd > right_quantile_maxpd)
+  #
+  MMPD_sample <- unlist(MMPD_sample)
+  
+  return(list(MMPD_tbl, MMPD_sample))
 }
 
 ##----samenull_2by4
@@ -366,14 +371,6 @@ names(data2) =  c("Var2", "Var1","dist","sim_dist")
 data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
 data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
 data_mlist =  list(data_l, data_m)
-
-
-global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "sim_dist",
-                   dist_distribution = "normal",
-                   dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 20)
 
 p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
   ggplot(aes(x = Var2, y = sim_dist)) +
@@ -409,7 +406,17 @@ global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
                    dist_ordered = TRUE,
                    create_gran_data = FALSE, nsamp = 20)
 
-global_harmony %>% kable()
+g = global_harmony[[2]] %>% as_tibble()
+h = global_harmony[[1]]$gt_0.95_MMPD[1]
+g 
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+
+
+
+g = global_harmony[[2]] %>% as_tibble()
+h = global_harmony[[1]]$gt_0.95_MMPD[1]
+g 
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
 
 
 
@@ -457,7 +464,13 @@ global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
                    dist_ordered = TRUE,
                    create_gran_data = FALSE, nsamp = 200)
 
-global_harmony
+
+g = global_harmony[[2]] %>% as_tibble()
+h = global_harmony[[1]]$gt_0.95_MMPD[1]
+g 
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+
+
 
 
 p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
@@ -530,7 +543,13 @@ global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
                    dist_ordered = TRUE,
                    create_gran_data = FALSE, nsamp = 20)
 
-global_harmony %>% kable()
+
+g = global_harmony[[2]] %>% as_tibble()
+h = global_harmony[[1]]$gt_0.95_MMPD[1]
+g 
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+
+
 
 
 ##----samenull_3levels
@@ -574,7 +593,13 @@ global_harmony <-  data_mlist %>%
                    dist_ordered = TRUE,
                    create_gran_data = FALSE, nsamp = 20)
 
-global_harmony %>% kable()
+
+g = global_harmony[[2]] %>% as_tibble()
+h = global_harmony[[1]]$gt_0.95_MMPD[1]
+g 
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+
+
 
 pnull <- data1 %>% unnest(sim_dist) %>%
   ggplot(aes(x = Var2, y = sim_dist)) +
@@ -626,7 +651,7 @@ global_harmony <-  data_mlist %>%
                    dist_ordered = TRUE,
                    create_gran_data = FALSE, nsamp = 20)
 
-global_harmony %>% kable()
+global_harmony$MMPD_tbl %>% kable()
 
 p1 <- data6 %>% unnest(sim_dist) %>%
   ggplot(aes(x = Var2, y = sim_dist)) +
