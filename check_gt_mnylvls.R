@@ -191,6 +191,7 @@ step1 <- function(.data, harmony_tbl, response = NULL, hierarchy_tbl = NULL, cre
       #responsei <- create_harmony_datai[[response]]
       
       harmony_datai  %>% 
+        ungroup() %>% 
         dplyr::mutate(
           response = harmony_datai[[response]]
         ) %>%
@@ -294,10 +295,11 @@ nsamp = 20,...)
   
   
   MMPD_sample_lst <- (1:nsamp) %>%
-    purrr::map(function(i){
+    purrr::map(function(nsampi){
       
       if(create_gran_data)
-      {
+      { 
+        set.seed(nsampi)
         response_sample <-  sample(.data[[response]], size = nrow(.data))
         
         data_sample <- .data %>%
@@ -312,10 +314,12 @@ nsamp = 20,...)
         
         .data <- (1:length(.data)) %>%
           purrr::map(function(i){
-            .data %>% magrittr::extract2(i) %>%  dplyr::mutate(id = i)
+            .data %>% magrittr::extract2(i) %>%
+              dplyr::mutate(id = i)
           })
         
-        data <- bind_rows(.data)
+        data <- bind_rows(.data) %>% ungroup()  
+        set.seed(nsampi)
         response_sample <-  sample(data[[response]], size = nrow(data))
         
         data_sample <- data %>%
@@ -333,29 +337,30 @@ nsamp = 20,...)
         rank_harmony(harmony_tbl = harmonies,
                      response = response,
                      create_gran_data = create_gran_data,
-                     dist_ordered = dist_ordered,...) %>%
-        dplyr::select(MMPD, max_pd)
+                     dist_ordered = dist_ordered) %>%
+        dplyr::select(MMPD)
+      
     })
   
-  MMPD_sample <- (1:nsamp) %>%
-    purrr::map(function(i){
-      MMPD_sample_lst %>% magrittr::extract2(i) %>%  dplyr::select(MMPD)
-    })
+  # MMPD_sample <- (1:nsamp) %>%
+  #   purrr::map(function(i){
+  #     MMPD_sample_lst %>% magrittr::extract2(i) %>%  dplyr::select(MMPD)
+  #   })
+  # 
+  # maxpd_sample <- (1:nsamp) %>%
+  #   purrr::map(function(i){
+  #     MMPD_sample_lst %>% magrittr::extract2(i) %>%  dplyr::select(max_pd)
+  #   })
   
-  maxpd_sample <- (1:nsamp) %>%
-    purrr::map(function(i){
-      MMPD_sample_lst %>% magrittr::extract2(i) %>%  dplyr::select(max_pd)
-    })
-  
-  right_quantile_MMPD <- stats::quantile(unlist(MMPD_sample), probs = 0.95)
-  right_quantile_maxpd <- stats::quantile(unlist(maxpd_sample), probs = 0.95)
-  MMPD_tbl <- MMPD_obs %>% dplyr::mutate(select_harmony = MMPD > right_quantile_MMPD,
-                                         gt_0.95_MMPD = right_quantile_MMPD)
+  right_quantile_MMPD <- stats::quantile(unlist(MMPD_sample_lst), probs = 0.95)
+  #right_quantile_maxpd <- stats::quantile(unlist(maxpd_sample), probs = 0.95)
+  #MMPD_tbl <- MMPD_obs %>% dplyr::mutate(select_harmony = MMPD > right_quantile_MMPD,
+                                         #gt_0.95_MMPD = right_quantile_MMPD)
   #gt_maxpd = max_pd > right_quantile_maxpd)
   #
-  MMPD_sample <- unlist(MMPD_sample)
+  MMPD_sample <- unlist(MMPD_sample_lst)
   
-  return(list(MMPD_tbl, MMPD_sample))
+  return(list(MMPD_obs,MMPD_sample, right_quantile_MMPD))
 }
 
 ##----samenull_2by4
@@ -407,9 +412,15 @@ global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
                    create_gran_data = FALSE, nsamp = 20)
 
 g = global_harmony[[2]] %>% as_tibble()
-h = global_harmony[[1]]$gt_0.95_MMPD[1]
+h1 = global_harmony[[1]]$MMPD[1]
+h2 = global_harmony[[1]]$MMPD[2]
+h3 = global_harmony[[3]]
+
 g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h1, colour = "red") +
+geom_vline(xintercept =  h2, colour = "blue") +  geom_vline(xintercept =  h3, colour = "black")
+
+  
 
 
 
@@ -422,7 +433,6 @@ ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colo
 
 ##----diffnull_7by11
 
-set.seed(321)
 harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"), facet_levels = c(7, 11),x_levels = c(11, 7))
 .data = harmonies[1,]
 
@@ -501,14 +511,6 @@ data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
 data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
 data_mlist =  list(data_l, data_m)
 
-
-global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "sim_dist",
-                   dist_distribution = "normal",
-                   dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 20)
-
 p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
   ggplot(aes(x = Var2, y = sim_dist)) +
   facet_wrap(~Var1) + geom_boxplot()
@@ -525,29 +527,24 @@ data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
 data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
 data_mlist =  list(data_l, data_m)
 
-sim_harmony <- map(data_mlist, ~ (.x %>% select(-1)))  %>%
-  rank_harmony(harmony_tbl = harmonies,
-               response = "sim_dist",
-               prob = seq(0.01, 0.99, 0.01),
-               dist_distribution = "normal",
-               hierarchy_tbl = NULL,
-               dist_ordered = TRUE,
-               alpha = 0.05,
-               create_gran_data = FALSE)
-
 
 global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
   global_threshold(harmony_tbl = harmonies,
                    response = "sim_dist",
                    dist_distribution = "normal",
                    dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 20)
+                   create_gran_data = FALSE, nsamp = 200)
+
 
 
 g = global_harmony[[2]] %>% as_tibble()
-h = global_harmony[[1]]$gt_0.95_MMPD[1]
+h1 = global_harmony[[1]]$MMPD[1]
+h2 = global_harmony[[1]]$MMPD[2]
+h3 = global_harmony[[3]]
+
 g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h1, colour = "red") +
+  geom_vline(xintercept =  h2, colour = "blue") +  geom_vline(xintercept =  h3, colour = "black")
 
 
 
