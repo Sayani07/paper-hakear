@@ -8,6 +8,46 @@ library(tidyr)
 library(dplyr)
 library(ggpubr)
 
+##--sim_plot
+sim_plot <- function(.data, sim_dist, nsamp = 20)
+{
+  data1 <- sim_distharmony1(.data, sim_dist = sim_dist)
+  data2 <- data1
+  names(data2) =  c("Var2", "Var1","dist","sim_dist")
+  
+  data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
+  data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
+  data_mlist =  list(data_l, data_m)
+  
+  harmonies = .data
+  
+  global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
+    global_threshold(harmony_tbl = harmonies,
+                     response = "sim_dist",
+                     dist_distribution = "normal",
+                     dist_ordered = TRUE,
+                     create_gran_data = FALSE, nsamp = nsamp)
+  
+  g = global_harmony[[2]] %>% as_tibble()
+  h1 = global_harmony[[1]]$MMPD[1]
+  h2 = global_harmony[[1]]$MMPD[2]
+  h3 = global_harmony[[3]]
+  
+  sim_hist <- ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h1, colour = "red") +
+    geom_vline(xintercept =  h2, colour = "blue") +  geom_vline(xintercept =  h3, colour = "black")
+  
+  
+  
+  plot_harmony_row1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
+    ggplot(aes(x = Var2, y = sim_dist)) +
+    facet_wrap(~Var1) + geom_boxplot()
+  
+  plot_harmony_row2 <- data2 %>% select(-dist) %>% unnest(sim_dist) %>%
+    ggplot(aes(x = Var2, y = sim_dist)) +
+    facet_wrap(~Var1) + geom_boxplot()
+  
+  return(list(sim_hist, plot_harmony_row1, plot_harmony_row2))
+}
 
 ##----rank_harmony
 rank_harmony <- function(.data = NULL,
@@ -368,66 +408,12 @@ harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"
 .data = harmonies[1,]
 
 sim_dist1 = rep(distributional::dist_normal(5, 10), 8)
-data1 <- sim_distharmony1(.data, sim_dist = sim_dist1)
-data1
-data2 <- data1
-names(data2) =  c("Var2", "Var1","dist","sim_dist")
-
-data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-data_mlist =  list(data_l, data_m)
-
-p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p2 <- data2 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p1
-p2
 
 
-data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-data_mlist =  list(data_l, data_m)
-
-sim_harmony <- map(data_mlist, ~ (.x %>% select(-1)))  %>%
-  rank_harmony(harmony_tbl = harmonies,
-               response = "sim_dist",
-               prob = seq(0.01, 0.99, 0.01),
-               dist_distribution = "normal",
-               hierarchy_tbl = NULL,
-               dist_ordered = TRUE,
-               alpha = 0.05,
-               create_gran_data = FALSE)
-
-
-global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "sim_dist",
-                   dist_distribution = "normal",
-                   dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 20)
-
-g = global_harmony[[2]] %>% as_tibble()
-h1 = global_harmony[[1]]$MMPD[1]
-h2 = global_harmony[[1]]$MMPD[2]
-h3 = global_harmony[[3]]
-
-g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h1, colour = "red") +
-geom_vline(xintercept =  h2, colour = "blue") +  geom_vline(xintercept =  h3, colour = "black")
-
-  
-
-
-
-g = global_harmony[[2]] %>% as_tibble()
-h = global_harmony[[1]]$gt_0.95_MMPD[1]
-g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
+a = sim_plot(.data, sim_dist = sim_dist1, nsamp = 200)
+a[[1]]
+a[[2]]
+a[[3]]
 
 
 
@@ -436,118 +422,25 @@ ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colo
 harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"), facet_levels = c(7, 11),x_levels = c(11, 7))
 .data = harmonies[1,]
 
-
 sim_dist6 <- distributional::dist_normal(mu = 1:77, sigma = 5)
 
+a = sim_plot(.data, sim_dist = sim_dist6, nsamp = 200)
+a[[1]]
+a[[2]]
+a[[3]]
 
-data1 <- sim_distharmony1(.data, sim_dist = sim_dist6)
-data2 <- data1
-names(data2) =  c("Var2", "Var1","dist","sim_dist")
-
-data1 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-data2 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-data_mlist =  list(data_l, data_m)
-
-sim_harmony <- map(data_mlist, ~ (.x %>% select(-1)))  %>%
-  rank_harmony(harmony_tbl = harmonies,
-               response = "sim_dist",
-               prob = seq(0.01, 0.99, 0.01),
-               dist_distribution = "normal",
-               hierarchy_tbl = NULL,
-               dist_ordered = TRUE,
-               alpha = 0.05,
-               create_gran_data = FALSE)
-
-
-global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "sim_dist",
-                   dist_distribution = "normal",
-                   dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 200)
-
-
-g = global_harmony[[2]] %>% as_tibble()
-h = global_harmony[[1]]$gt_0.95_MMPD[1]
-g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h, colour = "red")
-
-
-
-
-p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p2 <- data2 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p1
-p2
 
 
 ##----diffnull_2by4
-
 harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"), facet_levels = c(2, 4),x_levels = c(4, 2))
 .data = harmonies[1,]
 
 sim_dist2 <- c(rep(distributional::dist_normal(mu = 10, sigma = 5),2),rep(distributional::dist_exponential(10),2), rep(distributional::dist_weibull(0.5, 2),2), rep(distributional::dist_exponential(5),2))
 
-data1 <- sim_distharmony1(.data, sim_dist = sim_dist2)
-data1
-data2 <- data1
-names(data2) =  c("Var2", "Var1","dist","sim_dist")
-
-data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-data_mlist =  list(data_l, data_m)
-
-p1 <- data1 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p2 <- data2 %>% select(-dist) %>% unnest(sim_dist) %>%
-  ggplot(aes(x = Var2, y = sim_dist)) +
-  facet_wrap(~Var1) + geom_boxplot()
-
-p1
-p2
-
-
-data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-data_mlist =  list(data_l, data_m)
-
-
-global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "sim_dist",
-                   dist_distribution = "normal",
-                   dist_ordered = TRUE,
-                   create_gran_data = FALSE, nsamp = 200)
-
-
-
-g = global_harmony[[2]] %>% as_tibble()
-h1 = global_harmony[[1]]$MMPD[1]
-h2 = global_harmony[[1]]$MMPD[2]
-h3 = global_harmony[[3]]
-
-g 
-ggplot(g, aes(x = value)) + geom_histogram()  + geom_vline(xintercept =  h1, colour = "red") +
-  geom_vline(xintercept =  h2, colour = "blue") +  geom_vline(xintercept =  h3, colour = "black")
-
-
-
+a = sim_plot(.data, sim_dist = sim_dist2, nsamp = 200)
+a[[1]]
+a[[2]]
+a[[3]]
 
 ##----samenull_3levels
 
