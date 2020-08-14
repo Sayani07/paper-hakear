@@ -1,2 +1,2 @@
-# paper-gravitas
-Exploring probability distributions for bivariate temporal granularities
+# paper-hakear
+Algorithm for keeping and rating harmonies (HArmony KEeper And Rater)
