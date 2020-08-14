@@ -61,9 +61,6 @@ set.seed(321)
 
 # Introduction
 
-# Background
-
-
 Even after excluding clashes, the list of harmonies left could be large and overwhelming for human consumption. Hence, there is a need to rank the harmonies basis how well they capture the variation in the measured variable and additionally reduce the number of harmonies for further exploration/visualization. Assuming a numeric response variable, our graphics are displays of distributions compared across combinations of categorical variables, one placed at x-axis and the other on the facet. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. Here, we have two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
@@ -71,7 +68,7 @@ Even after excluding clashes, the list of harmonies left could be large and over
 
 # A new test statistic
 
-## Computing distances
+## Distance between distributions
 
 One of the potential ways to evaluate this variation is by computing the pairwise distances between the distributions of the measured variable. We do this through Jensen-Shannon distance which is based on Kullback-Leibler divergence.
 
@@ -97,9 +94,40 @@ With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, $
 
 Distribution of JS distances is assumed to be normal but the mean and variance are estimated from the sample, rather than deducing it from the number of discretization used to approximate the continuous distribution.
 
+## Algorithm
+
+\noindent The algorithm employed for computing MMPD is summarized as follows:
+<!-- Algorithm -->
+
+<!-- 1. Suppose $C_i$ and $C_2$ are two cyclic granularities such that $C_i$ maps index set to a set $\{A_1, A_2, A_3, \dots, A_l$\}, and $C_2$ maps index set to a set $\{B_1, B_2, B_3, \dots, B_m$\} and $v$ is the measured variable. Hence for each combination ($A_k$, $B_l$), we have the time series variable $v_{ij} \subseteq v$, $\forall i = {1, 2, \dots, l}$ and $\forall j = {1, 2, \dots, m}$ -->
+
+- **Input:** Data corresponding to all harmony pairs, i.e., data sets of the form $(C_i, C_j, v)$ 
+$\forall i, j \in N_C$  
+- **Output:** MMPD (Median Maximum Pairwise Distances) measuring the average variation across different levels of $C_i$ and $C_j$ $\forall i, j \in N_C$  
+
+1. Fix harmony pair $(C_i, C_j)$.
+
+2. Fix $k$. Then there are $L$ groups corresponding to level $A_k$ of $C_i$.
+
+3. Compute  $m = \binom{L}{2}$ pairwise distances between distributions of $L$ unordered levels and $m = L-1$ pairwise distances for $L$ ordered categories.
+
+4. Identify maximum within the $m$ computed distances.
+
+5. Compute normalized maximum distance ($NM$) using appropriate norming constants.
+<!--so that the distribution of the normalized maximum converges to a Gumbel distribution as $m\rightarrow\infty$.-->
+
+
+6. Use Steps 1-5 to compute normalized maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+
+7. Compute MMPD = median $(NM_1, NM_2, \dots, NM_K)$/log($K$).
+
+8. Repeat Steps 1 to 7 for all harmony pairs.
+
+### Interpreting the test statistic
+
 # The statistical test
 
-## Threshold definition for test through permutation test
+## Algorithm for threshold 
 
 **Assumption:** random permutation without considering ordering 
 (global)
@@ -155,7 +183,7 @@ smart_harmony %>%
 ```
 
 
-## Level and power of the test
+## Level and power
 
 To estimate the sampling distribution of the test statistic we need many samples generated under the null hypothesis. If the null hypothesis is true, changing the exposure would have no effect on the outcome. By randomly shuffling the exposures we can make up as many data sets as we like. If the null hypothesis is true the shuffled data sets should look like the real data, otherwise they should look different from the
 real data. The ranking of the real test statistic among the shuffled test statistics gives a p-value.
@@ -178,7 +206,7 @@ real data. The ranking of the real test statistic among the shuffled test statis
 
 <!-- The output table has the value of MMPD (normalized median maximum pairwise distances), gt_MMPD(global threshold of MMPD indicator). -->
 
-## Scenario 1: Simulated same normal distributions for all combinations of categories for all harmony pairs.
+### Scenario 1: Simulated same normal distributions for all combinations of categories for all harmony pairs.
 
 Failure to reject the null hypothesis when there is in fact no significant effect.
 
@@ -190,7 +218,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 *Conclusion*: The test does not select harmony pairs when distributions of categories are same
 
 
-## Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels.
+### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels.
 
 
 
@@ -202,7 +230,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 *Conclusion*: The test select the harmony pair for which distribution of x-axis categories are significantly different
 
 
-## Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels.
+### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels.
 
 
 ```{r diffnull_7by11}
@@ -211,6 +239,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 *Conclusion*: The test indicates that both harmony pairs do not have significant variation.
 
 
+### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis
 
 
 ```{r diffnull_7by11normal}
@@ -218,11 +247,15 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 
 *Conclusion*: The test indicates that only the first harmony pair has significant variation.
 
+
+### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets
+
+
 ```{r diffnull_7by11normal2}
 ```
 
 
-*Conclusion*: The test indicates that only the first harmony pair has significant variation.
+<!-- *Conclusion*:  -->
 
 
 
@@ -273,7 +306,6 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 <!-- #  -->
 <!-- # ``` -->
 <!-- #  -->
-
 
 # Application
 
