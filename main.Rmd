@@ -307,6 +307,8 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 <!-- # ``` -->
 <!-- #  -->
 
+# Behavior of the statistic - control simulation
+
 # Application
 
 # Conclusion
