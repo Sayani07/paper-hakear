@@ -68,7 +68,7 @@ When we need to understand the interplay of different periodicities in a high fr
 - To choose harmonies for which distributions of categories are significantly different 
 - To rank the selected harmonies from highest to lowest variation in the distribution of their categories. The idea here is to rate a harmony pair higher if this variation between different levels of the x-axis variable is higher on an average across all levels of facet variables.
 
-# A new test statistic
+# Computing distance measure
 
 ## Distance between distributions
 

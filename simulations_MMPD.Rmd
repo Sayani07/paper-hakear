@@ -33,7 +33,6 @@ knitr::opts_knit$set(root.dir = here::here())
 read_chunk('main.R')
 ```
 
-
 ```{r external, include = FALSE}
 
 ```
@@ -49,3 +48,33 @@ read_chunk('main.R')
 ```{r global_threshold}
 
 ```
+
+
+# Simulation from a Normal distribution
+all combinations ~ N(5, 10)
+
+# Simulations from another Normal distribution
+all combinations ~ N(800, 40)
+
+# Simulations from a Cauchy distribution
+
+# Simulations from a Exponential distribution
+
+If these look correct
+
+Then check for different levels
+
+same four things
+
+Think about if they would have a range always
+
+check MMPD from start!!!!!!!!!!
+
+max of standard gumbel distribution
+
+
+
+
+
+
+

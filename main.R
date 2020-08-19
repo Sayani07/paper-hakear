@@ -12,13 +12,13 @@ library(ggpubr)
 sim_plot <- function(.data, sim_dist, nsamp = 20)
 {
   data1 <- sim_distharmony1(.data, sim_dist = sim_dist)
-  data2 <- data1
-  names(data2) =  c("Var2", "Var1","dist","sim_dist")
+  #data2 <- data1
+  #names(data2) =  c("Var2", "Var1","dist","sim_dist")
   
   data_l = bind_cols(pairn = 1L, data1) %>% select(-dist) %>% unnest(sim_dist)
-  data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
-  data_mlist =  list(data_l, data_m)
-  
+  #data_m = bind_cols(pairn = 2L, data2) %>% select(pairn, Var1, Var2,sim_dist, -dist) %>% unnest(sim_dist)
+  #data_mlist =  list(data_l, data_m)
+  data_mlist = list(data_l)
   harmonies = .data
   
   global_harmony <-  map(data_mlist, ~ (.x %>% select(-1)))%>%
