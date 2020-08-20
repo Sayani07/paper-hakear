@@ -72,10 +72,21 @@ When we need to understand the interplay of different periodicities in a high fr
 
 ## Distance between distributions
 
-One of the potential ways to evaluate this variation is by computing the pairwise distances between the distributions of the measured variable. We do this through Jensen-Shannon distance which is based on Kullback-Leibler divergence.
+<!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
+<!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
+<!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
 
-The Jensen-Shanon distance between two probability distribution $p_1$ and $p_2$ is given by $$d = [D(p_1, r) + D(p_2, r)]/2 \quad where \quad r = (p_1 + p_2)/2$$ where,
-$$D(p_1,p_2) = \int^{\infty}_{-\infty}p_1(x)log\frac{p_1(x)}{p_2(x)}\,dx$$ is the Kullback-Leibler divergence between $p_1$ and $p_2$. Probability distributions are estimated through quantiles instead of kernel density so that there is minimal dependency on selecting kernel or bandwidth. 
+  
+The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence, denoted $D(p(x), q(x))$ is a non-symmetric measure of the difference between two probability distributions $p(x)$ and $q(x)$ and is interpreted as the amount of information lost when $q(x)$ is used to approximate $p(x)$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric. The Jensen-Shannon divergence based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance are Hellinger distance, total variation distance and Fisher information metric. 
+
+In the context of this paper, the pairwise distances between the distributions of the measured variable are computed through Jensen-Shannon distance which is based on Kullback-Leibler divergence and is defined by,
+
+$$JSD(P||Q) = \frac{1}{2}D(P||M) + \frac{1}{2}D(Q||M)$$
+where $M = \frac{P+Q}{2}$ and 
+$D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence between distributions $p(x)$ and $q(x)$. Probability distributions are estimated through quantiles instead of kernel density so that there is minimal dependency on selecting kernel or bandwidth.
+
+<!-- The Jensen-Shanon distance between two probability distribution $p_1$ and $p_2$ is given by $$d = [D(p_1, r) + D(p_2, r)]/2 \quad where \quad r = (p_1 + p_2)/2$$ where, -->
+<!-- $$D(p_1,p_2) = \int^{\infty}_{-\infty}p_1(x)log\frac{p_1(x)}{p_2(x)}\,dx$$ is the Kullback-Leibler divergence between $p_1$ and $p_2$.   -->
 
 We call this measure of variation as  Median Maximum Pairwise Distances (MMPD).
 
@@ -213,7 +224,7 @@ real data. The ranking of the real test statistic among the shuffled test statis
 Failure to reject the null hypothesis when there is in fact no significant effect.
 
 
-```{r samenull_2by4}
+```{r samenull_2by4, eval = FALSE}
 
 ```
 
@@ -224,7 +235,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 
 
 
-```{r diffnull_2by4}
+```{r diffnull_2by4, eval = FALSE}
 
 ```
 
@@ -235,7 +246,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 ### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels.
 
 
-```{r diffnull_7by11}
+```{r diffnull_7by11, eval = FALSE}
 ```
 
 *Conclusion*: The test indicates that both harmony pairs do not have significant variation.
@@ -244,7 +255,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 ### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis
 
 
-```{r diffnull_7by11normal}
+```{r diffnull_7by11normal, eval = FALSE}
 ```
 
 *Conclusion*: The test indicates that only the first harmony pair has significant variation.
@@ -253,7 +264,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 ### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets
 
 
-```{r diffnull_7by11normal2}
+```{r diffnull_7by11normal2, eval = FALSE}
 ```
 
 
