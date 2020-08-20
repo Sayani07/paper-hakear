@@ -1,0 +1,101 @@
+---
+title: "Simulating null distributions"
+author: "Sayani Gupta"
+date: "19/08/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+options("knitr.graphics.auto_pdf" = TRUE)
+library(knitr)
+library(tidyverse)
+library(lubridate)
+library(lvplot)
+library(ggridges)
+library(viridis)
+library(tsibble)
+library(gravitas)
+library(ggpubr)
+library(readr)
+library(ggplot2)
+library(distributional)
+
+opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
+  fig.path = "figure/", fig.align = "center", fig.show = "hold",
+  cache = TRUE, cache.path = "cache/",
+  out.width = ifelse(is_html_output(), "100%", "\\textwidth")
+)
+knitr::opts_knit$set(root.dir = here::here())
+read_chunk('check.R')
+```
+
+```{r external, include = FALSE}
+
+```
+
+```{r load}
+```
+
+If we suppose that MMPD is useful to normalise for the number of levels, then distribution of MMPD should be same for different levels, provided the response variable for all the levels comes from the same distribution. Following scenarios are considered to test that by breaking down the problem and checking  - 
+a) Does normalising works for different x-axis levels?
+b) if yes, then does further normalisation using median works for different facet categories?
+
+## To test if normalisation works for different x-axis levels:
+
+For x-axis, first maximum of pairwise JS distances are computed and it is normalised using Fisher–Tippett–Gnedenko theorem. Different x-axis levels viz, 10, 20, 30, 40 are considered and data is simulated 200 times for each of these cases to learn about the distribution of these normalised distances through 
+
+
+### All levels drawn from N(5, 10) distribution
+
+```{r normalv11}
+
+```
+
+```{r normalv12}
+
+```
+
+```{r normalv13}
+
+```
+
+```{r normalv14}
+
+```
+
+
+From the above graphs, we could see that irrespective of the levels, the distribution of the normalised distances look like a normal distribution when the underlying observations are drawn from a N(5, 10) distribution. Let us check, if the same holds true if the underlying distributions are from Exp(0.5), Chi-squared(5), Gumbel(0.5, 2), Weibull(1.5, 1). Here, we fix the number of levels to 20.
+
+
+### Different distributions with 20 levels
+
+```{r exp20}
+
+```
+
+```{r chisq20}
+
+```
+
+```{r gumbel20}
+
+```
+
+```{r weibull20}
+
+```
+
+
+```{r alldist}
+
+```
+
+
+## To test if further normalisation using median works for different facet categories?
+
+### All levels drawn from N(5, 10) distribution
+
+### All levels drawn from Exp(2/3) distribution
+
