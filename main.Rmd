@@ -36,6 +36,7 @@ opts_chunk$set(
 )
 knitr::opts_knit$set(root.dir = here::here())
 read_chunk('main.R')
+read_chunk("null_distribution.R")
 ```
 
 ```{r external, include = FALSE}
@@ -88,11 +89,13 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- The Jensen-Shanon distance between two probability distribution $p_1$ and $p_2$ is given by $$d = [D(p_1, r) + D(p_2, r)]/2 \quad where \quad r = (p_1 + p_2)/2$$ where, -->
 <!-- $$D(p_1,p_2) = \int^{\infty}_{-\infty}p_1(x)log\frac{p_1(x)}{p_2(x)}\,dx$$ is the Kullback-Leibler divergence between $p_1$ and $p_2$.   -->
 
-We call this measure of variation as  Median Maximum Pairwise Distances (MMPD).
+<!-- We call this measure of variation as  Median Maximum Pairwise Distances (MMPD). -->
 
 ## Normalize distances
 
-The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. But maximum is not robust to the number of levels and is higher for harmonies with higher levels. Thus these maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re- normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
+<!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
+
+Maximum pairwise distances are not robust to the number of levels and is higher for harmonies with higher levels. Thus these maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
 More formally, $d_{1},d_{2}\ldots ,d_{n}$ be a sequence of independent and identically-distributed pairwise distances and $M_{n}=\max\{d_{1},\ldots ,d_{n}\}$. Then Fisher–Tippett–Gnedenko theorem [@De_Haan2007-yx] suggests that if a sequence of pairs of real numbers $(a_{n}, b_{n})$ exists such that each $a_{n}>0$ and $\lim _{{m\to \infty }}P\left({\frac  {M_{n}-b_{n}}{a_{n}}}\leq x\right)=F(x)$, where $F$ is a non-degenerate distribution function, then the limit distribution $F$ belongs to either the Gumbel, Fréchet or Weibull family. The normalizing constants $(a_{n}, b_{n})$ vary depending on the underlying distribution of the pairwise distances. Hence to normalize appropriately, it is important to assume a distribution of these distances. 
 
@@ -105,7 +108,28 @@ With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, $
 
 ### Empirical evidence
 
-Distribution of JS distances is assumed to be normal but the mean and variance are estimated from the sample, rather than deducing it from the number of discretization used to approximate the continuous distribution.
+Distribution of JS distances is assumed to be normal but the mean and variance are estimated from the sample, rather than deducing it from the number of discretization used to approximate the continuous distribution. We look at different scenarios, where observations are collected from Normal, Exponential, Chi-squared and Gumbel distribution and found the distribution of JS distances are similar, irrespective of which distribution they are drawn from.
+
+# Initial distribution of observed variables shown in plot title
+
+```{r distv11}
+
+```
+
+```{r distv12}
+
+```
+
+
+```{r distv13}
+
+```
+
+
+```{r distv14}
+
+```
+
 
 ## Algorithm
 

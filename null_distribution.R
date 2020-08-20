@@ -48,6 +48,41 @@ plot_normmax_1var <- function(sim_dist,
     geom_histogram(aes(x = normalised_max))
 }
 
+hist_dist <- function(sim_dist,
+                      nx = 7,
+                      nobs_sample = 500,
+                      nsim = 50, 
+                      dist_ordered = TRUE) {
+  suppressMessages(
+    plot_data <- (1:nsim) %>%
+      purrr::map(function(i) {
+        data <- make_sim_1var(
+          sim_dist,
+          nx,
+          nobs_sample,
+          nsim
+        )
+        gravitas::dist_npair(data, quantile_prob, dist_ordered)
+      })
+  )
+  
+  MMPD_obs <- unlist(plot_data) %>% tibble(.name_repair = "universal")
+  names(MMPD_obs) <- "pairwise_jsd"
+  
+  hist_dist <- MMPD_obs %>% ggplot(aes(x = pairwise_jsd, y = ..density..)) +
+    geom_histogram() + 
+    ggplot2::geom_histogram()+
+    ggplot2::geom_density(colour = "red")
+  
+  p <- MMPD_obs %>% filter(!is.na(pairwise_jsd)) %>% ggplot(aes(sample = pairwise_jsd))
+  p
+  qq_dist <- p + stat_qq() + stat_qq_line()
+  
+  qq_dist
+  #ggarrange(hist_dist, qq_dist, ncol = 1, nrow = 2)
+}
+
+
 nx_range <- seq(10, 60, by = 10)
 
 ## ----normalv11
@@ -251,3 +286,46 @@ r4 <- plot_normmax_2var(sim_dist,
 
 ggarrange(r1, r2, r3, r4, nrow = 2, ncol = 2)
 
+## ----distv11
+set.seed(nx_range[1])
+nx <- nx_range[1]
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+s1 <-hist_dist(sim_dist,
+               nx,
+               nobs_sample = 50,
+               dist_ordered = FALSE) + ggtitle("N(5, 10)")
+
+## ----distv12
+set.seed(nx_range[1])
+nx <- nx_range[1]
+sim_dist <- rep(distributional::dist_exponential(0.5), nx)
+
+s2 <-hist_dist(sim_dist,
+               nx,
+               nobs_sample = 50,
+               dist_ordered = FALSE) + ggtitle("Exp(0.5)")
+
+## ----distv13
+set.seed(nx_range[1])
+nx <- nx_range[1]
+sim_dist <- rep(distributional::dist_chisq(5), nx)
+
+s3 <-hist_dist(sim_dist,
+               nx,
+               nobs_sample = 50,
+               dist_ordered = FALSE) + ggtitle("Chi(5)")
+
+## ----distv14
+set.seed(nx_range[1])
+nx <- nx_range[1]
+sim_dist <- rep(distributional::dist_gumbel(0.5, 2), nx)
+s4 <-hist_dist(sim_dist,
+               nx,
+               nobs_sample = 50,
+               dist_ordered = FALSE) + ggtitle("Gumbel (0.5, 2)")
+
+
+##alldist_distances
+
+ggarrange(s1, s2, s3, s4, nrow = 2, ncol = 2) + coord_fixed(ratio=1)

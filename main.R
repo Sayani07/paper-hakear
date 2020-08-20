@@ -607,3 +607,6 @@ p3 <- data6 %>% unnest(sim_dist) %>%
   ggplot(aes(x = Var2, y = sim_dist)) +
   facet_wrap(~Var1) + geom_boxplot() + ggtitle("selected by max and not MMPD")
 p3
+
+
+##----
