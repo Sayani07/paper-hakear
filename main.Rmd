@@ -120,7 +120,9 @@ With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, $
 
 Distribution of JS distances is assumed to be normal but the mean and variance are estimated from the sample, rather than deducing it from the number of discretization used to approximate the continuous distribution. We look at different scenarios, where observations are collected from Normal, Exponential, Chi-squared and Gumbel distribution and found the distribution of JS distances are similar, irrespective of which distribution they are drawn from.
 
-# Initial distribution of observed variables shown in plot title
+
+
+#### Initial distribution of observed variables shown in plot title
 
 ```{r distv11}
 
@@ -141,7 +143,11 @@ Distribution of JS distances is assumed to be normal but the mean and variance a
 ```
 
 
-## Algorithm
+## Median Maximum Pairwise distance
+
+### Definition
+
+### Algorithm for computation for all harmony pairs
 
 \noindent The algorithm employed for computing MMPD is summarized as follows:
 <!-- Algorithm -->
@@ -170,11 +176,36 @@ $\forall i, j \in N_C$
 
 8. Repeat Steps 1 to 7 for all harmony pairs.
 
-### Interpreting the test statistic
+### Bounds
+
+This is not correct becuase MMPD should be median of standardized Gumbel distribution. So no bound?
+
+By @Lin1991-fj,
+$$ 0 \leq JSD(P||Q) \leq ln(2)$$.
+
+Thus,  $$ 0 \leq MMPD \leq \frac{ln(2)}{ln(k)}$$.
+Now, by asumption $k \geq 2$ and hence,
+<!-- \begin{equation} -->
+<!-- For k = 2, $\frac{ln(2)}{ln(k)} = 1$  -->
+<!-- \end{equation} -->
+<!-- For $k > 2$, $\frac{ln(2)}{ln(k)}  <1$. -->
+
+
+\[\frac{ln(2)}{ln(k)} : \left\{
+  \begin{array}{lr}
+    1 & if \ k = 2\\
+    <1 & if \ k \ge 2
+  \end{array}
+\right.
+\]
+
+Thus, $$ 0 \leq MMPD \leq \ 1$$
 
 # The statistical test
 
-## Algorithm for threshold 
+## Definition
+
+### Algorithm for computation for all harmony pairs
 
 **Assumption:** random permutation without considering ordering 
 (global)
@@ -228,7 +259,9 @@ smart_harmony %>%
   mutate(rankn = row_number()) %>%
   rename("rankun" = "r") %>% kable()
 ```
+## Simulation design 
 
+Behavior of the statistic - control simulation
 
 ## Size and power
 
@@ -284,7 +317,7 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 ```
 
 
-*Conclusion*: The test does not select harmony pairs when distributions of categories are same.
+*Conclusion*: The test rejects the null hypothesis if distributions are different.
 
 ### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels.
 
@@ -375,8 +408,6 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 <!-- # ``` -->
 <!-- #  -->
 
-# Behavior of the statistic - control simulation
-
 # Application
 
-# Conclusion
+# Summary and discussion
