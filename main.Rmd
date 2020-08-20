@@ -47,6 +47,16 @@ read_chunk("null_distribution.R")
 
 ```
 
+
+```{r load_fun_1var}
+
+```
+
+
+```{r load_fun_2var}
+
+```
+
 ```{r rank_harmony}
 
 ```
@@ -220,7 +230,7 @@ smart_harmony %>%
 ```
 
 
-## Level and power
+## Size and power
 
 To estimate the sampling distribution of the test statistic we need many samples generated under the null hypothesis. If the null hypothesis is true, changing the exposure would have no effect on the outcome. By randomly shuffling the exposures we can make up as many data sets as we like. If the null hypothesis is true the shuffled data sets should look like the real data, otherwise they should look different from the
 real data. The ranking of the real test statistic among the shuffled test statistics gives a p-value.
@@ -243,17 +253,38 @@ real data. The ranking of the real test statistic among the shuffled test statis
 
 <!-- The output table has the value of MMPD (normalized median maximum pairwise distances), gt_MMPD(global threshold of MMPD indicator). -->
 
-### Scenario 1: Simulated same normal distributions for all combinations of categories for all harmony pairs.
+### Size: Simulated same distribution for all combinations of categories for all harmony pairs.
 
 Failure to reject the null hypothesis when there is in fact no significant effect.
 
+<!-- # ```{r samenull_2by4, eval = FALSE} -->
+<!-- #  -->
+<!-- # ``` -->
 
-```{r samenull_2by4, eval = FALSE}
+```{r normalv21_power}
 
 ```
 
-*Conclusion*: The test does not select harmony pairs when distributions of categories are same
 
+```{r normalv22_power}
+
+```
+
+### Power: Simulated same distribution for all combinations of categories for all harmony pairs.
+
+
+
+```{r normalv23_power}
+
+```
+
+
+```{r normalv24_power}
+
+```
+
+
+*Conclusion*: The test does not select harmony pairs when distributions of categories are same.
 
 ### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels.
 

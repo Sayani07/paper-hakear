@@ -38,6 +38,17 @@ read_chunk('null_distribution.R')
 ```{r load}
 ```
 
+
+
+```{r load_fun_1var}
+
+```
+
+
+```{r load_fun_2var}
+
+```
+
 If we suppose that MMPD is useful to normalize for the number of levels, then distribution of MMPD should be same for different levels, provided the response variable for all the levels comes from the same distribution. Following scenarios are considered to test that by breaking down the problem and checking  - 
 A) Does normalizing works for different x-axis levels?
 B) if yes, then does further normalization using median works for different facet categories?

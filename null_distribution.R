@@ -10,6 +10,8 @@ library(magrittr)
 library(distributional)
 # devtools::install_github("vigou3/actuar")
 library(actuar)
+
+##----load_fun_1var
 quantile_prob <- seq(0.01, 0.99, 0.01)
 make_sim_1var <- function(sim_dist,
                           # distribution
@@ -84,6 +86,102 @@ hist_dist <- function(sim_dist,
 
 
 nx_range <- seq(10, 60, by = 10)
+nfacet_range <-  seq(10, 40, by = 10)
+
+
+##----load_fun_2var
+make_sim_2var <- function(sim_dist,
+                          # distribution
+                          nx = 7,
+                          # number of levels/categories of x-axis,
+                          nfacet = 10,
+                          # number of levels/categories of facet,
+                          nobs_sample = 500,
+                          # number of observations in each sample
+                          nsim = 200
+                          # number of simulations to get histogram 
+) {
+  data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
+  
+  sim_distharmony1(data_str,
+                   sim_dist = sim_dist
+  ) %>%
+    dplyr::select(-dist) %>%
+    tidyr::pivot_wider(names_from = "Var2", values_from = sim_dist) %>%
+    ungroup()
+}
+
+
+plot_normmax_2var <- function(sim_dist,
+                              nx = 7,
+                              nfacet = 10,
+                              nobs_sample = 500,
+                              nsim = 200,
+                              dist_ordered = TRUE) {
+  suppressMessages(
+    plot_data <- (1:nsim) %>%
+      purrr::map(function(i) {
+        data <- make_sim_2var(
+          sim_dist,
+          nx,
+          nfacet,
+          nobs_sample,
+          nsim
+        )
+        gravitas::MMPD1(data, dist_ordered = dist_ordered)
+      })
+  )
+  
+  MMPD_obs <- unlist(plot_data) %>% tibble(.name_repair = "universal")
+  names(MMPD_obs) <- "normalised_max"
+  
+  MMPD_obs %>% ggplot() +
+    geom_histogram(aes(x = normalised_max)) +
+    ggtitle(paste("x: ", nx, "levels", " facet: ", nfacet, "levels"))
+}
+
+
+
+make_nsim_2var <- function(sim_dist,
+                       nx = 7,
+                       nfacet = 10,
+                       nobs_sample = 500,
+                       nsim = 200,
+                       dist_ordered = TRUE) {
+  suppressMessages(
+    plot_data <- (1:nsim) %>%
+      purrr::map(function(i) {
+        data <- make_sim_2var(
+          sim_dist,
+          nx,
+          nfacet,
+          nobs_sample,
+          nsim
+        )
+        gravitas::MMPD1(data, dist_ordered = dist_ordered)
+      })
+  )
+}
+#.data is a list obtained from make_nsim_2var
+# .data <- make_nsim_2var(
+#   sim_dist,
+#   nx,
+#   nfacet,
+#   nobs_sample,
+#   nsim,
+#   dist_ordered
+# )
+plot_nsim_2var <- function(.data){
+
+  MMPD_obs <- unlist(.data) %>% tibble(.name_repair = "universal")
+  names(MMPD_obs) <- "normalised_max"
+  
+  MMPD_obs %>% ggplot() +
+    geom_histogram(aes(x = normalised_max)) +
+    ggtitle(paste("x: ", nx, "levels", " facet: ", nfacet, "levels"))
+}
+
+
 
 ## ----normalv11
 set.seed(nx_range[1])
@@ -176,56 +274,6 @@ ggarrange(p2_1, q1, q2, q3, nrow = 2, ncol = 2)
 
 
 
-make_sim_2var <- function(sim_dist,
-                          # distribution
-                          nx = 7,
-                          # number of levels/categories of x-axis,
-                          nfacet = 10,
-                          # number of levels/categories of facet,
-                          nobs_sample = 500,
-                          # number of observations in each sample
-                          nsim = 200
-                          # number of simulations to get histogram
-) {
-  data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
-
-  sim_distharmony1(data_str,
-    sim_dist = sim_dist
-  ) %>%
-    dplyr::select(-dist) %>%
-    tidyr::pivot_wider(names_from = "Var2", values_from = sim_dist) %>%
-    ungroup()
-}
-
-plot_normmax_2var <- function(sim_dist,
-                              nx = 7,
-                              nfacet = 10,
-                              nobs_sample = 500,
-                              nsim = 200) {
-  suppressMessages(
-    plot_data <- (1:nsim) %>%
-      purrr::map(function(i) {
-        data <- make_sim_2var(
-          sim_dist,
-          nx,
-          nfacet,
-          nobs_sample,
-          nsim
-        )
-        gravitas::MMPD1(data)
-      })
-  )
-
-  MMPD_obs <- unlist(plot_data) %>% tibble(.name_repair = "universal")
-  names(MMPD_obs) <- "normalised_max"
-  
-  MMPD_obs %>% ggplot() +
-    geom_histogram(aes(x = normalised_max)) +
-    ggtitle(paste("x: ", nx, "levels", " facet: ", nfacet, "levels"))
-}
-
-nfacet_range <-  seq(10, 40, by = 10)
-nsim = 200
 
 ## ----normalv21
 set.seed(nfacet_range[1])
@@ -329,3 +377,230 @@ s4 <-hist_dist(sim_dist,
 ##alldist_distances
 
 ggarrange(s1, s2, s3, s4, nrow = 2, ncol = 2) + coord_fixed(ratio=1)
+
+
+## ----normalv21_power
+set.seed(nfacet_range[1])
+nx <- 4
+nfacet <- 7
+nsim = 50
+dist_ordered = FALSE
+
+sim_dist <- rep(distributional::dist_exponential(rate = 2 / 3), nfacet * nx)
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+
+## ----normalv22_power
+set.seed(nfacet_range[1])
+nx <- 4
+nfacet <- 11
+nsim = 50
+dist_ordered = FALSE
+
+sim_dist <- rep(distributional::dist_exponential(rate = 2 / 3), nfacet * nx)
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+
+
+## ----normalv21_power
+set.seed(nfacet_range[1])
+nx <- 4
+nfacet <- 7
+nsim = 50
+dist_ordered = FALSE
+
+sim_dist <- rep(distributional::dist_exponential(rate = 2 / 3), nfacet * nx)
+
+data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
+
+sim_distharmony1(data_str,
+                 sim_dist = sim_dist
+) %>%
+  dplyr::select(-dist) %>% tidyr::unnest(sim_dist) %>% ggplot(aes(x = Var2, y = sim_dist)) + facet_wrap(~Var1) + geom_boxplot()
+
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+
+## ----normalv22_power
+set.seed(nfacet_range[1])
+nx <- 7
+nfacet <- 4
+nsim = 50
+dist_ordered = FALSE
+
+sim_dist <- rep(distributional::dist_exponential(rate = 2 / 3), nfacet * nx)
+
+
+data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
+
+sim_distharmony1(data_str,
+                 sim_dist = sim_dist
+) %>%
+  dplyr::select(-dist) %>% tidyr::unnest(sim_dist) %>% ggplot(aes(x = Var2, y = sim_dist)) + facet_wrap(~Var1) + geom_boxplot()
+
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+
+
+
+## ----normalv23_power
+
+nx <- 4
+nfacet <- 7
+nsim = 50
+dist_ordered = FALSE
+set.seed(nx*nfacet)
+sim_dist <- distributional::dist_normal(seq(1,nx*nfacet,1), 3)
+
+data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
+
+sim_distharmony1(data_str,
+                 sim_dist = sim_dist
+) %>%
+  dplyr::select(-dist) %>% tidyr::unnest(sim_dist) %>% ggplot(aes(x = Var2, y = sim_dist)) + facet_wrap(~Var1) + geom_boxplot()
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+
+
+## ----normalv24_power
+
+nx <- 7
+nfacet <- 4
+nsim = 50
+dist_ordered = FALSE
+set.seed(nx*nfacet)
+sim_dist <- distributional::dist_normal(seq(1,nx*nfacet,1), 3)
+
+data_str <- tibble::tibble(facet_variable = "A", x_variable = "B", facet_levels = nfacet, x_levels = nx)
+
+sim_distharmony1(data_str,
+                 sim_dist = sim_dist
+) %>%
+  dplyr::select(-dist) %>% tidyr::unnest(sim_dist) %>% ggplot(aes(x = Var2, y = sim_dist)) + facet_wrap(~Var1) + geom_boxplot()
+
+nullvalue <-  make_sim_2var(
+  sim_dist,
+  nx,
+  nfacet,
+  nobs_sample,
+  nsim
+) %>% gravitas::MMPD1()
+
+manynull.r1 <- make_nsim_2var(sim_dist,
+                              nx,
+                              nfacet,
+                              nobs_sample,
+                              nsim, dist_ordered = FALSE) 
+
+manytrue <- manynull.r1 %>% unlist()
+pvalue <- mean(manytrue>nullvalue)
+
+manynull.r1 %>% 
+  plot_nsim_2var() + 
+  geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
+  ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
