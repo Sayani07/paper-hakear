@@ -259,9 +259,32 @@ smart_harmony %>%
   mutate(rankn = row_number()) %>%
   rename("rankun" = "r") %>% kable()
 ```
+
+## Null distribution
+
+### Normalised maximum distances follow standard Gumbel distribution
+
+### Limiting distribution of median of normalised maximum distances is normal
+
+Let a continuous population be given with cdf F(x) (cumulative distribution function) and median $\xi$ (assumed to exist uniquely). For a sample of size $2n + 1$, let $\tilde{x}$ denote the sample median. The distribution of $\tilde{x}$,under certain conditions, to be asymptotically normal with mean $\xi$ and variance $\sigma_n^2 = \frac{1}{4} [f(\xi)]^2(2n + 1)$, where $f(x) = F'(x)$ is the pdf (probability density function).
+
+
 ## Simulation design 
 
 Behavior of the statistic - control simulation
+
+ - To check if different distributions impact
+(simulate with different distributions but same for all levels)
+
+ - To check if x-levels are normalised
+(simulate with different distributions)
+(simulate with different x-levels)
+
+
+ - To check if facet-levels are normalised
+(simulate with different distributions)
+(simulate with different facet-levels for fixed x-levels)
+
 
 ## Size and power
 
