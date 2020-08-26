@@ -1,0 +1,90 @@
+---
+title: "Mean of normal distribution"
+author: "Sayani Gupta"
+date: "25/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(ggpubr)
+```
+
+
+```{r functions}
+
+# create data for each levels
+set.seed(12345)
+create_simdata <- function(nx = 2, nsim = 5){
+  mean_dist <- (1:nsim) %>% 
+  purrr::map(function(i){
+    x =  rgamma(nx, 0.5, 3)
+    #p = 1-(1/nx)
+    #b = stats::qnorm(p, mean(x), sd(x))
+    #a = 1/(nx*stats::dnorm(b, mean(x), sd(x)))
+    #k = stats::quantile(x, p, type = 8, na.rm = TRUE)
+    max(x)
+    #mean(x)
+  })
+}
+```
+
+
+```{r tidy_data}
+
+nlevels = seq(2, 10, 1)
+
+data_orig <- nlevels %>% 
+  purrr::map_df(function(i){
+    create_datai <- create_simdata(nx = i, nsim = 500)
+    tibble::tibble(ind = i, sim_data = create_datai)
+  })
+
+data_orig %>%
+  unnest(sim_data) %>% 
+   ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+
+
+```
+
+
+```{r tidy_data_frame}
+# nx = 20
+# nsim = 500
+# sim_dist <- rep(distributional::dist_gamma(0.2, 1), length(nx))
+# 
+# simdata_format <- function(nx, sim_dist)
+# {
+#   tibble(nlevel = seq_len(nx), sim_dist)
+# }
+# 
+# create_simdata <- function(.data, nsim = 500)
+# {
+# nx = nrow(.data)
+# sim_value <- seq_len(nx) %>%
+#   purrr::map(function(i){
+#     disti = .data %>% magrittr::extract(i,2)
+#    distributional::generate(disti$sim_dist, nsim)
+#   }) %>% enframe()
+# .data %>% bind_cols(sim_value)
+# #data %>% mutate(sim_value = data)
+# }
+# 
+# data <- simdata_format(nx, sim_dist) %>%
+#   create_simdata()
+# 
+# data %>%
+#   select(-sim_dist, -name) %>%
+#   unnest(value) %>%
+#   unnest(value) %>%
+#   ggplot(aes(x = value)) +
+#   geom_histogram() +
+#   facet_wrap(~nlevel)
+
+```
+
+
