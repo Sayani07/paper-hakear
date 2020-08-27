@@ -175,7 +175,9 @@ plot_simdata(nlevels = seq(20, 45, 5),
 set.seed(12345)
 plot_simdata(nlevels = seq(2, 10, 1),
              nsim = 500, 
-             create_fun = max)
+             create_fun = max,
+               sim_dist = distributional::dist_normal(5, 10),
+             distr = "gumbel")
 ```
 
 ## Many levels and many iterations of max
@@ -186,7 +188,9 @@ plot_simdata(nlevels = seq(2, 10, 1),
 set.seed(54321)
 plot_simdata(nlevels = seq(20, 45, 5),
              nsim = 500, 
-             create_fun = max)
+             create_fun = max,
+               sim_dist = distributional::dist_normal(5, 10),
+             distr = "gumbel")
 ```
 
 ```{r norm_max}
@@ -196,8 +200,10 @@ norm_max <- function(x = NULL){
       p = 1-(1/nx)
       shape = 0.5
       rate = 3
-      meanx = shape/rate
-      sdx = shape/(rate^2)
+      # meanx = shape/rate
+      # sdx = shape/(rate^2)
+      meanx = 5
+      sdx = 10
       b = stats::qnorm(p, meanx, sdx)
       a = 1/(nx*stats::dnorm(b, meanx, sdx))
       #k = stats::quantile(x, p, type = 8, na.rm = TRUE)
@@ -213,6 +219,7 @@ norm_max <- function(x = NULL){
 set.seed(12345)
 plot_simdata(nlevels = seq(2, 10, 1),
              nsim = 500, 
+             sim_dist = distributional::dist_normal(5, 10),
              create_fun = norm_max,
              distr = "gumbel")
 ```
@@ -226,5 +233,6 @@ set.seed(54321)
 plot_simdata(nlevels = seq(20, 45, 5),
              nsim = 500, 
              create_fun = norm_max, 
+             sim_dist = distributional::dist_normal(5, 10),
              distr = "gumbel")
 ```
