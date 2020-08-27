@@ -12,7 +12,7 @@ library(ggplot2)
 library(ggpubr)
 ```
 
-Discussion: Let the sample size be $n$ and the number of iterations be $k$. By CLT (or EVT), when $n$ is high enough, then the limiting distribution of sample mean (or max) goes to a standard normal (or Gumbel/Freschet/Weibull) distribution, irrespective of the underlying distribution of the sample. This means when $n$ is high enough and we sample $n$ iid random variables multiple times (high enough $k$), by CLT, the distribution of sample mean would look like standard normal. What if $n$ is very small and $k$ is large? Would the distribution of sample mean still look like standard normal? It would not. Similarly, EVT works when $n$ is high enough. When we are taking the max of 2 or 3 rvs ("levels" in our terminology), $n = 2/3$, which are far too less. Hence, normalisation would be able to nullify the effect of $n$ only for large enough $n$.
+Discussion: Let the sample size be $n$ and the number of iterations be $k$. By CLT (or EVT), when $n$ is high enough, then the limiting distribution of sample mean (or max) goes to a standard normal (or Gumbel/Freschet/Weibull) distribution, irrespective of the underlying distribution of the sample. This means when $n$ is high enough and we sample $n$ iid random variables multiple times (high enough $k$), by CLT, the distribution of sample mean would look like standard normal. What if $n$ is very small and $k$ is large? Would the distribution of sample mean still look like standard normal? It would not. Similarly, EVT works when $n$ is high enough. When we are taking the max of 2 or 3 rvs ("levels" in our terminology), $n = 2/3$, which are far too less. Hence, normalization would be able to nullify the effect of $n$ only for large enough $n$.
 
 Simulation Study:
 
@@ -24,10 +24,10 @@ Samples are taken from Gamma(shape = 3, rate = 0.5) distribution and $k = 500$ i
  2. sample means for large $n$
 (Obs: distribution looks similar and normal like with different scales)
 
- 3. normalised sample means for small $n$
+ 3. normalized sample means for small $n$
 (Obs: distribution doesn't look similar)
  
- 4. normalised sample means for large $n$ 
+ 4. normalized sample means for large $n$ 
 (Obs: distribution looks similar in both shape and scale with mean 0)
  
  5. sample maximums for small $n$ 
@@ -36,18 +36,18 @@ Samples are taken from Gamma(shape = 3, rate = 0.5) distribution and $k = 500$ i
  6. sample maximums for large $n$ 
 (Obs: distribution looks similar and positively skewed with very high scales)
  
- 7. normalised sample maximums for small $n$ 
+ 7. normalized sample maximums for small $n$ 
 (Obs: distribution doesn't look similar, scaled down, maybe similar after facet label 5)
 
- 8. normalised sample maximums for large $n$ 
-(Obs: distribution looks similar and it has been scaled down much more than maximum without normalisation. Can we use this fact to explore maximums more?)
+ 8. normalized sample maximums for large $n$ 
+(Obs: distribution looks similar and it has been scaled down much more than maximum without normalization. Can we use this fact to explore maximums more?)
 
-Question: So we cannot normalise for the number of levels using limit theorems when we are talking about normalising for few levels? By normalisation, if we mean adjusting values measured on different scales to a common scale, then that could be done through limit theorems. If the intention is to align distributions to a normal like distribution, then we have to resort to something else like distribution transformation?
+Question: So we cannot normalize for the number of levels using limit theorems when we are talking about normalizing for few levels? By normalization, if we mean adjusting values measured on different scales to a common scale, then that could be done through limit theorems. If the intention is to align distributions to a normal like distribution, then we have to resort to something else like distribution transformation?
 
 # CLT
 
 Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$.
-Suppose the sample mean is $\bar{X} = \frac{(X_1 + X_2 + \ldots + X_n)}{n}$, then by CLT the distribution of the normalised random variable:
+Suppose the sample mean is $\bar{X} = \frac{(X_1 + X_2 + \ldots + X_n)}{n}$, then by CLT the distribution of the normalized random variable:
 $Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a standard normal distribution.
 
 
@@ -55,11 +55,6 @@ $Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a stand
 shape1 <- 3
 rate1 <- 0.5
 ```
-
-
-
-
-
 
 ```{r create_simdata}
 # create data for each levels
@@ -139,16 +134,22 @@ set.seed(12345)
 data_all_mean <- create_nlevels(nlevels = seq(2, 50, 1), create_fun = mean)
 
 set.seed(12345)
-data_all_max <- create_nlevels(nlevels = seq(2, 50, 1),
-                               create_fun = max)
+data_all_max <- create_nlevels(
+  nlevels = seq(2, 50, 1),
+  create_fun = max
+)
 
 set.seed(12345)
-data_all_norm_mean <- create_nlevels(nlevels = seq(2, 50, 1),
-                               create_fun = norm_mean)
+data_all_norm_mean <- create_nlevels(
+  nlevels = seq(2, 50, 1),
+  create_fun = norm_mean
+)
 
 set.seed(12345)
-data_all_norm_max <- create_nlevels(nlevels = seq(2, 50, 1),
-                               create_fun = norm_max)
+data_all_norm_max <- create_nlevels(
+  nlevels = seq(2, 50, 1),
+  create_fun = norm_max
+)
 ```
 
 # Small levels and many iterations of means
@@ -176,7 +177,7 @@ data_all_mean %>%
 
 The histograms look like a normal distribution in this case, because number of levels are higher. For smaller number of levels, even with many repetitions the histograms do not look like normal.
 
-# Small levels and many iterations of normalised means
+# Small levels and many iterations of normalized means
 
 ```{r norm_mean_small}
 data_all_norm_mean %>%
@@ -186,7 +187,7 @@ data_all_norm_mean %>%
   facet_wrap(~ind)
 ```
 
-# Many levels and many iterations of normalised means
+# Many levels and many iterations of normalized means
 
 
 ```{r norm_mean_large}
@@ -244,10 +245,3 @@ data_all_norm_max %>%
   geom_histogram() +
   facet_wrap(~ind)
 ```
-
-
-
-
-
-
-
