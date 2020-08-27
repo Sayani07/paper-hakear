@@ -16,23 +16,33 @@ Discussion: Let the sample size be $n$ and the number of iterations be $k$. By C
 
 Simulation Study:
 
-Samples are taken from Gamma(0.5, 3) distribution and $k = 500$ in all the cases. Small values of n considered in the range  ${2, 3, \ldots, 10}$ and large values of $n$ considered within ${25, 30, 35, \ldots, 45}$. We study the distribution of:
+Samples are taken from Gamma(3, 0.5) distribution and $k = 500$ in all the cases. Small values of n considered in the range  ${2, 3, \ldots, 10}$ and large values of $n$ considered within ${25, 30, 35, \ldots, 45}$. We study the distribution of:
 
  1. sample means for small $n$ 
+(Obs: distribution doesn't look similar or normal)
 
  2. sample means for large $n$
+(Obs: distribution looks similar and normal like with different scales)
 
  3. normalised sample means for small $n$
+(Obs: distribution doesn't look similar)
  
  4. normalised sample means for large $n$ 
+(Obs: distribution looks similar in both shape and scale with mean 0)
  
  5. sample maximums for small $n$ 
- 
+(Obs: distribution doesn't look too different except for tails, high scale)
+
  6. sample maximums for large $n$ 
+(Obs: distribution looks similar and positively skewed with very high scales)
  
  7. normalised sample maximums for small $n$ 
- 
+(Obs: distribution doesn't look similar, scaled down, maybe similar after facet label 5)
+
  8. normalised sample maximums for large $n$ 
+(Obs: distribution looks similar and it has been scaled down much more than maximum without normalisation. Can we use this fact to explore maximums more?)
+
+Q: So when we are talking about normalising for the levels when number of levels are low? - Not by using limit theorems. Transformation?
 
 # CLT
 
@@ -41,17 +51,25 @@ Suppose the sample mean is $\bar{X} = \frac{(X_1 + X_2 + \ldots + X_n)}{n}$, the
 $Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a standard normal distribution.
 
 
+```{r shape_rate}
+shape1 = 3
+rate1 = 0.5
+```
+
+
 ```{r functions}
 # create data for each levels
+
 create_simdata <- function(nx = 2,
                            # number of rvs to generate
-                           nsim = 500, 
+                           nsim = 500,
                            # number of simulations
-                           sim_dist = distributional::dist_gamma(0.5, 3),
+                           sim_dist = distributional::dist_gamma(shape = shape1, 
+                                                                 rate = rate1),
                            # distribution of each rv
-                           create_fun = mean 
-                           # function used on the rvs 
-                           ){
+                           create_fun = mean
+                           # function used on the rvs
+) {
   mean_dist <- (1:nsim) %>%
     purrr::map(function(i) {
       x <- sim_dist %>%
@@ -69,43 +87,23 @@ create_simdata <- function(nx = 2,
 nlevels <- seq(2, 10, 1)
 
 plot_simdata <- function(nlevels = seq(2, 10, 1),
-                         nsim = 500, 
-                         sim_dist = distributional::dist_gamma(0.5, 3),
-                         create_fun = mean, 
-                         distr = "norm"){
-data_orig <- nlevels %>%
-  purrr::map_df(function(i) {
-    create_datai <- create_simdata(nx = i, nsim, sim_dist, create_fun)
-    tibble::tibble(ind = i, sim_data = create_datai)
-  })
+                         nsim = 500,
+                         sim_dist = distributional::dist_gamma(shape = shape1,
+                      rate = rate1),
+                         # distr = "norm",
+                         create_fun = mean) {
+  data_orig <- nlevels %>%
+    purrr::map_df(function(i) {
+      create_datai <- create_simdata(nx = i, nsim, sim_dist, create_fun)
+      tibble::tibble(ind = i, sim_data = create_datai)
+    })
 
-# defining gumbel distribution
-dgumbel <- function(x, a, b) 1/b*exp((a-x)/b)*exp(-exp((a-x)/b))
-pgumbel <- function(q, a, b) exp(-exp((a-q)/b))
-qgumbel <- function(p, a, b) a-b*log(-log(p))
-
-response <- data_orig %>%
-  unnest(sim_data) 
-
-if(distr == "gumbel")
-{
-par = fitdistrplus::fitdist(response$sim_data, distr = "gumbel", start = list(a = 0, b = 1))
-}
-
-if(distr == "norm")
-{
-par = fitdistrplus::fitdist(response$sim_data, distr = distr)
-}
-
-par1 <- round(par$estimate[1], 2)
-par2 <- round(par$estimate[2], 2)
-
-data_orig %>%
-  unnest(sim_data) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind) + 
-  ggtitle(paste0(distr, " (",par1,", ",par2,")"))
+  data_orig %>%
+    unnest(sim_data) %>%
+    ggplot(aes(x = sim_data)) +
+    geom_histogram() +
+    facet_wrap(~ind)
+  # + ggtitle(paste0(distr, " (",par1,", ",par2,")"))
 }
 ```
 
@@ -116,10 +114,11 @@ In facet  with label 2, two random numbers are generated and their mean is compu
 
 ```{r}
 set.seed(12345)
-plot_simdata(nlevels = seq(2, 10, 1),
-             nsim = 500, 
-             create_fun = mean,
-             distr = "norm")
+plot_simdata(
+  nlevels = seq(2, 10, 1),
+  nsim = 500,
+  create_fun = mean
+)
 ```
 
 
@@ -129,18 +128,20 @@ The histograms look like a normal distribution in this case, because number of l
 
 ```{r}
 set.seed(54321)
-plot_simdata(nlevels = seq(20, 45, 5),
-             nsim = 500,
-             create_fun = mean)
+plot_simdata(
+  nlevels = seq(20, 45, 5),
+  nsim = 500,
+  create_fun = mean
+)
 ```
 
 ```{r norm_mean}
-norm_mean <- function(x = NULL){
-    shape = 0.5
-    rate = 3
-    meanx = shape/rate
-    sdx = shape/(rate^2)
-    (mean(x) - meanx)/sdx
+norm_mean <- function(x = NULL,
+                      shape = shape1,
+                      rate = rate1) {
+  meanx <- shape / rate
+  sdx <- shape / (rate^2)
+  (mean(x) - meanx) / sdx
 }
 ```
 
@@ -149,9 +150,11 @@ norm_mean <- function(x = NULL){
 
 ```{r normmean_small_lev}
 set.seed(12345)
-plot_simdata(nlevels = seq(2, 10, 1),
-             nsim = 500, 
-             create_fun = norm_mean)
+plot_simdata(
+  nlevels = seq(2, 10, 1),
+  nsim = 500,
+  create_fun = norm_mean
+)
 ```
 
 # Many levels and many iterations of normalised means
@@ -159,10 +162,11 @@ plot_simdata(nlevels = seq(2, 10, 1),
 
 ```{r normmean_large_lev}
 set.seed(54321)
-plot_simdata(nlevels = seq(20, 45, 5),
-             nsim = 500, 
-             create_fun = norm_mean,
-             distr = "norm")
+plot_simdata(
+  nlevels = seq(20, 45, 5),
+  nsim = 500,
+  create_fun = norm_mean
+)
 ```
 
 
@@ -173,11 +177,13 @@ plot_simdata(nlevels = seq(20, 45, 5),
 
 ```{r max_small_lev}
 set.seed(12345)
-plot_simdata(nlevels = seq(2, 10, 1),
-             nsim = 500, 
-             create_fun = max,
-               sim_dist = distributional::dist_normal(5, 10),
-             distr = "gumbel")
+plot_simdata(
+  nlevels = seq(2, 10, 1),
+  nsim = 500,
+  create_fun = max
+)
+# sim_dist = distributional::dist_normal(5, 10))
+# distr = "gumbel")
 ```
 
 ## Many levels and many iterations of max
@@ -186,30 +192,32 @@ plot_simdata(nlevels = seq(2, 10, 1),
 
 ```{r max_large_lev}
 set.seed(54321)
-plot_simdata(nlevels = seq(20, 45, 5),
-             nsim = 500, 
-             create_fun = max,
-               sim_dist = distributional::dist_normal(5, 10),
-             distr = "gumbel")
+plot_simdata(
+  nlevels = seq(20, 45, 5),
+  nsim = 500,
+  create_fun = max
+)
+# distr = "gumbel",
+# sim_dist = distributional::dist_normal(5, 10))
 ```
 
 ```{r norm_max}
 # normalised maximum of a vector
-norm_max <- function(x = NULL){
-      nx <- length(x)
-      p = 1-(1/nx)
-      shape = 0.5
-      rate = 3
-      # meanx = shape/rate
-      # sdx = shape/(rate^2)
-      meanx = 5
-      sdx = 10
-      b = stats::qnorm(p, meanx, sdx)
-      a = 1/(nx*stats::dnorm(b, meanx, sdx))
-      #k = stats::quantile(x, p, type = 8, na.rm = TRUE)
-      (max(x) - a)/b
-      #max(x)/k
-      }
+norm_max <- function(x = NULL,
+                     shape = shape1,
+                      rate = rate1) {
+  nx <- length(x)
+  p <- 1 - (1 / nx)
+  meanx <- shape / rate
+  sdx <- shape / (rate^2)
+  # meanx = 5
+  # sdx = 10
+  b <- stats::qnorm(p, meanx, sdx)
+  a <- 1 / (nx * stats::dnorm(b, meanx, sdx))
+  # k = stats::quantile(x, p, type = 8, na.rm = TRUE)
+  (max(x) - a) / b
+  # max(x)/k
+}
 ```
 
 ## Small levels and many iterations of norm max
@@ -217,11 +225,13 @@ norm_max <- function(x = NULL){
 
 ```{r normmax_small_lev}
 set.seed(12345)
-plot_simdata(nlevels = seq(2, 10, 1),
-             nsim = 500, 
-             sim_dist = distributional::dist_normal(5, 10),
-             create_fun = norm_max,
-             distr = "gumbel")
+plot_simdata(
+  nlevels = seq(2, 10, 1),
+  nsim = 500,
+  # distr = "gumbel",
+  # sim_dist = distributional::dist_normal(5, 10),
+  create_fun = norm_max
+)
 ```
 
 ## Many levels and many iterations of norm max
@@ -230,9 +240,11 @@ plot_simdata(nlevels = seq(2, 10, 1),
 
 ```{r normmax_large_lev}
 set.seed(54321)
-plot_simdata(nlevels = seq(20, 45, 5),
-             nsim = 500, 
-             create_fun = norm_max, 
-             sim_dist = distributional::dist_normal(5, 10),
-             distr = "gumbel")
+plot_simdata(
+  nlevels = seq(20, 45, 5),
+  nsim = 500,
+  create_fun = norm_max
+  # distr = "gumbel",
+  # sim_dist = distributional::dist_normal(5, 10))
+)
 ```

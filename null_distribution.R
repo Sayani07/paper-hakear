@@ -604,3 +604,111 @@ manynull.r1 %>%
   plot_nsim_2var() + 
   geom_vline(xintercept =  nullvalue, colour = "purple", show.legend = TRUE, labels = pvalue) + 
   ggtitle(paste("p-value: ", pvalue, ", x: ", nx, "levels", ", facet: ", nfacet, "levels")) 
+
+## ----normalv11_low
+set.seed(nx_range[1])
+nx <- 2
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p1 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+## ----normalv12_low
+set.seed(3000)
+nx <- 3
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p2 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+## ----normalv13_low
+set.seed(4000)
+nx <- 4
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p3 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+
+## ----normalv14_low
+set.seed(5000)
+nx <- 5
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p4 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+## ----normalv15_low
+set.seed(6000)
+nx <- 6
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p5 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+## ----normalv16_low
+set.seed(7000)
+nx <- 7
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p6 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+
+## ----normalv17_low
+set.seed(8000)
+nx <- 8
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p7 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+
+## ----normalv18_low
+set.seed(9000)
+nx <- 9
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p8 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+
+## ----normalv19_low
+set.seed(1000)
+nx <- 10
+sim_dist <- rep(distributional::dist_normal(5, 10), nx)
+
+p9 <- plot_normmax_1var(sim_dist,
+                        nx,
+                        nobs_sample = 5000
+) +
+  ggtitle(paste(nx, "levels"))
+
+## ---normalall_low
+
+ggarrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3, ncol = 3)
+

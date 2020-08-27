@@ -61,6 +61,49 @@ Null distribution of normalized maximum distances at this stage should be standa
 
 ### All levels drawn from N(5, 10) distribution
 
+```{r normalv11_low}
+
+```
+
+```{r normalv12_low}
+
+```
+
+```{r normalv13_low}
+
+```
+
+```{r normalv14_low}
+
+```
+
+```{r normalv15_low}
+
+```
+
+```{r normalv16_low}
+
+```
+
+```{r normalv17_low}
+
+```
+
+```{r normalv18_low}
+
+```
+
+```{r normalv19_low}
+
+```
+
+```{r normalall_low}
+
+```
+
+
+
+
 ```{r normalv11}
 
 ```
