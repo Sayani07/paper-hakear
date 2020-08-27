@@ -1,8 +1,8 @@
 ---
-title: "Mean of normal distribution"
+title: "Simulations, CLT and EVT"
 author: "Sayani Gupta"
 date: "25/08/2020"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -12,42 +12,219 @@ library(ggplot2)
 library(ggpubr)
 ```
 
+Discussion: Let the sample size be $n$ and the number of iterations be $k$. By CLT (or EVT), when $n$ is high enough, then the limiting distribution of sample mean (or max) goes to a standard normal (or Gumbel/Freschet/Weibull) distribution, irrespective of the underlying distribution of the sample. This means when $n$ is high enough and we sample $n$ iid random variables multiple times (high enough $k$), by CLT, the distribution of sample mean would look like standard normal. What if $n$ is very small and $k$ is large? Would the distribution of sample mean still look like standard normal? It would not. Similarly, EVT works when $n$ is high enough. When we are taking the max of 2 or 3 rvs ("levels" in our terminology), $n = 2/3$, which are far too less. Hence, normalisation would be able to nullify the effect of $n$ only for large enough $n$.
+
+Simulation Study:
+
+Samples are taken from Gamma(0.5, 3) distribution and $k = 500$ in all the cases. Small values of n considered in the range  ${2, 3, \ldots, 10}$ and large values of $n$ considered within ${25, 30, 35, \ldots, 45}$. We study the distribution of:
+
+ 1. sample means for small $n$ 
+
+ 2. sample means for large $n$
+
+ 3. normalised sample means for small $n$
+ 
+ 4. normalised sample means for large $n$ 
+ 
+ 5. sample maximums for small $n$ 
+ 
+ 6. sample maximums for large $n$ 
+ 
+ 7. normalised sample maximums for small $n$ 
+ 
+ 8. normalised sample maximums for large $n$ 
+
+# CLT
+
+Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$.
+Suppose the sample mean is $\bar{X} = \frac{(X_1 + X_2 + \ldots + X_n)}{n}$, then by CLT the distribution of the normalised random variable:
+$Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a standard normal distribution.
+
 
 ```{r functions}
 # create data for each levels
-set.seed(12345)
-create_simdata <- function(nx = 2, nsim = 5, sim_dist = distributional::dist_gamma(0.5, 3)){
-  mean_dist <- (1:nsim) %>% 
-  purrr::map(function(i){
-    #x =  rgamma(nx, 0.5, 3)
-    x =  sim_dist %>% distributional::generate(nx) %>% unlist()
-    p = 1-(1/nx)
-    b = stats::qnorm(p, mean(x), sd(x))
-    a = 1/(nx*stats::dnorm(b, mean(x), sd(x)))
-    k = stats::quantile(x, p, type = 8, na.rm = TRUE)
-    (max(x)-a)/b
-    # max(x)
-  })
+create_simdata <- function(nx = 2,
+                           # number of rvs to generate
+                           nsim = 500, 
+                           # number of simulations
+                           sim_dist = distributional::dist_gamma(0.5, 3),
+                           # distribution of each rv
+                           create_fun = mean 
+                           # function used on the rvs 
+                           ){
+  mean_dist <- (1:nsim) %>%
+    purrr::map(function(i) {
+      x <- sim_dist %>%
+        distributional::generate(nx) %>%
+        unlist()
+      x %>% create_fun()
+    })
 }
 ```
 
 
 ```{r tidy_data}
 
-nlevels = seq(60, 100, 5)
+# input vector of levels for which distributions are plotted
+nlevels <- seq(2, 10, 1)
 
-data_orig <- nlevels %>% 
-  purrr::map_df(function(i){
-    create_datai <- create_simdata(nx = i, nsim = 500)
+plot_simdata <- function(nlevels = seq(2, 10, 1),
+                         nsim = 500, 
+                         sim_dist = distributional::dist_gamma(0.5, 3),
+                         create_fun = mean, 
+                         distr = "norm"){
+data_orig <- nlevels %>%
+  purrr::map_df(function(i) {
+    create_datai <- create_simdata(nx = i, nsim, sim_dist, create_fun)
     tibble::tibble(ind = i, sim_data = create_datai)
   })
 
+# defining gumbel distribution
+dgumbel <- function(x, a, b) 1/b*exp((a-x)/b)*exp(-exp((a-x)/b))
+pgumbel <- function(q, a, b) exp(-exp((a-q)/b))
+qgumbel <- function(p, a, b) a-b*log(-log(p))
+
+response <- data_orig %>%
+  unnest(sim_data) 
+
+if(distr == "gumbel")
+{
+par = fitdistrplus::fitdist(response$sim_data, distr = "gumbel", start = list(a = 0, b = 1))
+}
+
+if(distr == "norm")
+{
+par = fitdistrplus::fitdist(response$sim_data, distr = distr)
+}
+
+par1 <- round(par$estimate[1], 2)
+par2 <- round(par$estimate[2], 2)
+
 data_orig %>%
-  unnest(sim_data) %>% 
-   ggplot(aes(x = sim_data)) +
+  unnest(sim_data) %>%
+  ggplot(aes(x = sim_data)) +
   geom_histogram() +
-  facet_wrap(~ind)
-
-
+  facet_wrap(~ind) + 
+  ggtitle(paste0(distr, " (",par1,", ",par2,")"))
+}
 ```
 
+In facet  with label 2, two random numbers are generated and their mean is computed. We repeat this process 500 times and draw the histogram of the computed means. Similarly, for facet with label 3, 3 random numbers are generated and histogram is drawn for the computed means of 3 random numbers.
+
+# Small levels and many iterations of means
+
+
+```{r}
+set.seed(12345)
+plot_simdata(nlevels = seq(2, 10, 1),
+             nsim = 500, 
+             create_fun = mean,
+             distr = "norm")
+```
+
+
+# Many levels and many iterations of means
+
+The histograms look like a normal distribution in this case, because number of levels are higher. For smaller number of levels, even with many repetitions the histograms do not look like normal.
+
+```{r}
+set.seed(54321)
+plot_simdata(nlevels = seq(20, 45, 5),
+             nsim = 500,
+             create_fun = mean)
+```
+
+```{r norm_mean}
+norm_mean <- function(x = NULL){
+    shape = 0.5
+    rate = 3
+    meanx = shape/rate
+    sdx = shape/(rate^2)
+    (mean(x) - meanx)/sdx
+}
+```
+
+# Small levels and many iterations of normalised means
+
+
+```{r normmean_small_lev}
+set.seed(12345)
+plot_simdata(nlevels = seq(2, 10, 1),
+             nsim = 500, 
+             create_fun = norm_mean)
+```
+
+# Many levels and many iterations of normalised means
+
+
+```{r normmean_large_lev}
+set.seed(54321)
+plot_simdata(nlevels = seq(20, 45, 5),
+             nsim = 500, 
+             create_fun = norm_mean,
+             distr = "norm")
+```
+
+
+# EVT
+
+## Small levels and many iterations of max
+
+
+```{r max_small_lev}
+set.seed(12345)
+plot_simdata(nlevels = seq(2, 10, 1),
+             nsim = 500, 
+             create_fun = max)
+```
+
+## Many levels and many iterations of max
+
+
+
+```{r max_large_lev}
+set.seed(54321)
+plot_simdata(nlevels = seq(20, 45, 5),
+             nsim = 500, 
+             create_fun = max)
+```
+
+```{r norm_max}
+# normalised maximum of a vector
+norm_max <- function(x = NULL){
+      nx <- length(x)
+      p = 1-(1/nx)
+      shape = 0.5
+      rate = 3
+      meanx = shape/rate
+      sdx = shape/(rate^2)
+      b = stats::qnorm(p, meanx, sdx)
+      a = 1/(nx*stats::dnorm(b, meanx, sdx))
+      #k = stats::quantile(x, p, type = 8, na.rm = TRUE)
+      (max(x) - a)/b
+      #max(x)/k
+      }
+```
+
+## Small levels and many iterations of norm max
+
+
+```{r normmax_small_lev}
+set.seed(12345)
+plot_simdata(nlevels = seq(2, 10, 1),
+             nsim = 500, 
+             create_fun = norm_max,
+             distr = "gumbel")
+```
+
+## Many levels and many iterations of norm max
+
+
+
+```{r normmax_large_lev}
+set.seed(54321)
+plot_simdata(nlevels = seq(20, 45, 5),
+             nsim = 500, 
+             create_fun = norm_max, 
+             distr = "gumbel")
+```
