@@ -16,7 +16,7 @@ Discussion: Let the sample size be $n$ and the number of iterations be $k$. By C
 
 Simulation Study:
 
-Samples are taken from Gamma(3, 0.5) distribution and $k = 500$ in all the cases. Small values of n considered in the range  ${2, 3, \ldots, 10}$ and large values of $n$ considered within ${25, 30, 35, \ldots, 45}$. We study the distribution of:
+Samples are taken from Gamma(shape = 3, rate = 0.5) distribution and $k = 500$ in all the cases. Small values of n considered in the range  ${2, 3, \ldots, 10}$ and large values of $n$ considered within ${25, 30, 35, \ldots, 45}$. We study the distribution of:
 
  1. sample means for small $n$ 
 (Obs: distribution doesn't look similar or normal)
@@ -42,7 +42,7 @@ Samples are taken from Gamma(3, 0.5) distribution and $k = 500$ in all the cases
  8. normalised sample maximums for large $n$ 
 (Obs: distribution looks similar and it has been scaled down much more than maximum without normalisation. Can we use this fact to explore maximums more?)
 
-Q: So when we are talking about normalising for the levels when number of levels are low? - Not by using limit theorems. Transformation?
+Question: So we cannot normalise for the number of levels using limit theorems when we are talking about normalising for few levels? By normalisation, if we mean adjusting values measured on different scales to a common scale, then that could be done through limit theorems. If the intention is to align distributions to a normal like distribution, then we have to resort to something else like distribution transformation?
 
 # CLT
 
@@ -52,8 +52,8 @@ $Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a stand
 
 
 ```{r shape_rate}
-shape1 = 3
-rate1 = 0.5
+shape1 <- 3
+rate1 <- 0.5
 ```
 
 
@@ -64,8 +64,10 @@ create_simdata <- function(nx = 2,
                            # number of rvs to generate
                            nsim = 500,
                            # number of simulations
-                           sim_dist = distributional::dist_gamma(shape = shape1, 
-                                                                 rate = rate1),
+                           sim_dist = distributional::dist_gamma(
+                             shape = shape1,
+                             rate = rate1
+                           ),
                            # distribution of each rv
                            create_fun = mean
                            # function used on the rvs
@@ -88,8 +90,10 @@ nlevels <- seq(2, 10, 1)
 
 plot_simdata <- function(nlevels = seq(2, 10, 1),
                          nsim = 500,
-                         sim_dist = distributional::dist_gamma(shape = shape1,
-                      rate = rate1),
+                         sim_dist = distributional::dist_gamma(
+                           shape = shape1,
+                           rate = rate1
+                         ),
                          # distr = "norm",
                          create_fun = mean) {
   data_orig <- nlevels %>%
@@ -205,7 +209,7 @@ plot_simdata(
 # normalised maximum of a vector
 norm_max <- function(x = NULL,
                      shape = shape1,
-                      rate = rate1) {
+                     rate = rate1) {
   nx <- length(x)
   p <- 1 - (1 / nx)
   meanx <- shape / rate
