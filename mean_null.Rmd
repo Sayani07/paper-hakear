@@ -57,7 +57,11 @@ rate1 <- 0.5
 ```
 
 
-```{r functions}
+
+
+
+
+```{r create_simdata}
 # create data for each levels
 
 create_simdata <- function(nx = 2,
@@ -83,60 +87,22 @@ create_simdata <- function(nx = 2,
 ```
 
 
-```{r tidy_data}
-
-# input vector of levels for which distributions are plotted
-nlevels <- seq(2, 10, 1)
-
-plot_simdata <- function(nlevels = seq(2, 10, 1),
-                         nsim = 500,
-                         sim_dist = distributional::dist_gamma(
-                           shape = shape1,
-                           rate = rate1
-                         ),
-                         # distr = "norm",
-                         create_fun = mean) {
+```{r create_nlevels}
+create_nlevels <- function(nlevels = seq(2, 10, 2),
+                           nsim = 500,
+                           sim_dist = distributional::dist_gamma(
+                             shape = shape1,
+                             rate = rate1
+                           ),
+                           # distr = "norm",
+                           create_fun = mean) {
   data_orig <- nlevels %>%
     purrr::map_df(function(i) {
       create_datai <- create_simdata(nx = i, nsim, sim_dist, create_fun)
       tibble::tibble(ind = i, sim_data = create_datai)
     })
-
-  data_orig %>%
-    unnest(sim_data) %>%
-    ggplot(aes(x = sim_data)) +
-    geom_histogram() +
-    facet_wrap(~ind)
-  # + ggtitle(paste0(distr, " (",par1,", ",par2,")"))
+  data_orig %>% unnest(sim_data)
 }
-```
-
-In facet  with label 2, two random numbers are generated and their mean is computed. We repeat this process 500 times and draw the histogram of the computed means. Similarly, for facet with label 3, 3 random numbers are generated and histogram is drawn for the computed means of 3 random numbers.
-
-# Small levels and many iterations of means
-
-
-```{r}
-set.seed(12345)
-plot_simdata(
-  nlevels = seq(2, 10, 1),
-  nsim = 500,
-  create_fun = mean
-)
-```
-
-
-# Many levels and many iterations of means
-
-The histograms look like a normal distribution in this case, because number of levels are higher. For smaller number of levels, even with many repetitions the histograms do not look like normal.
-
-```{r}
-set.seed(54321)
-plot_simdata(
-  nlevels = seq(20, 45, 5),
-  nsim = 500,
-  create_fun = mean
-)
 ```
 
 ```{r norm_mean}
@@ -147,62 +113,6 @@ norm_mean <- function(x = NULL,
   sdx <- shape / (rate^2)
   (mean(x) - meanx) / sdx
 }
-```
-
-# Small levels and many iterations of normalised means
-
-
-```{r normmean_small_lev}
-set.seed(12345)
-plot_simdata(
-  nlevels = seq(2, 10, 1),
-  nsim = 500,
-  create_fun = norm_mean
-)
-```
-
-# Many levels and many iterations of normalised means
-
-
-```{r normmean_large_lev}
-set.seed(54321)
-plot_simdata(
-  nlevels = seq(20, 45, 5),
-  nsim = 500,
-  create_fun = norm_mean
-)
-```
-
-
-# EVT
-
-## Small levels and many iterations of max
-
-
-```{r max_small_lev}
-set.seed(12345)
-plot_simdata(
-  nlevels = seq(2, 10, 1),
-  nsim = 500,
-  create_fun = max
-)
-# sim_dist = distributional::dist_normal(5, 10))
-# distr = "gumbel")
-```
-
-## Many levels and many iterations of max
-
-
-
-```{r max_large_lev}
-set.seed(54321)
-plot_simdata(
-  nlevels = seq(20, 45, 5),
-  nsim = 500,
-  create_fun = max
-)
-# distr = "gumbel",
-# sim_dist = distributional::dist_normal(5, 10))
 ```
 
 ```{r norm_max}
@@ -224,31 +134,120 @@ norm_max <- function(x = NULL,
 }
 ```
 
+```{r create_scenarios}
+set.seed(12345)
+data_all_mean <- create_nlevels(nlevels = seq(2, 50, 1), create_fun = mean)
+
+set.seed(12345)
+data_all_max <- create_nlevels(nlevels = seq(2, 50, 1),
+                               create_fun = max)
+
+set.seed(12345)
+data_all_norm_mean <- create_nlevels(nlevels = seq(2, 50, 1),
+                               create_fun = norm_mean)
+
+set.seed(12345)
+data_all_norm_max <- create_nlevels(nlevels = seq(2, 50, 1),
+                               create_fun = norm_max)
+```
+
+# Small levels and many iterations of means
+
+```{r mean_small}
+data_all_mean %>%
+  filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+In facet  with label 2, two random numbers are generated and their mean is computed. We repeat this process 500 times and draw the histogram of the computed means. Similarly, for facet with label 3, 3 random numbers are generated and histogram is drawn for the computed means of 3 random numbers.
+
+
+# Many levels and many iterations of means
+
+```{r mean_large}
+data_all_mean %>%
+  filter(ind %in% seq(20, 45, 5)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+The histograms look like a normal distribution in this case, because number of levels are higher. For smaller number of levels, even with many repetitions the histograms do not look like normal.
+
+# Small levels and many iterations of normalised means
+
+```{r norm_mean_small}
+data_all_norm_mean %>%
+  filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+# Many levels and many iterations of normalised means
+
+
+```{r norm_mean_large}
+data_all_norm_mean %>%
+  filter(ind %in% seq(20, 45, 5)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+# EVT
+
+## Small levels and many iterations of max
+
+
+```{r max_small}
+data_all_max %>%
+  filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+## Many levels and many iterations of max
+
+```{r max_large}
+data_all_max %>%
+  filter(ind %in% seq(20, 45, 5)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+```
+
+
+
 ## Small levels and many iterations of norm max
 
 
-```{r normmax_small_lev}
-set.seed(12345)
-plot_simdata(
-  nlevels = seq(2, 10, 1),
-  nsim = 500,
-  # distr = "gumbel",
-  # sim_dist = distributional::dist_normal(5, 10),
-  create_fun = norm_max
-)
+
+```{r norm_max_small}
+data_all_norm_max %>%
+  filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
 ```
 
 ## Many levels and many iterations of norm max
 
 
-
-```{r normmax_large_lev}
-set.seed(54321)
-plot_simdata(
-  nlevels = seq(20, 45, 5),
-  nsim = 500,
-  create_fun = norm_max
-  # distr = "gumbel",
-  # sim_dist = distributional::dist_normal(5, 10))
-)
+```{r norm_max_large}
+data_all_norm_max %>%
+  filter(ind %in% seq(20, 45, 5)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
 ```
+
+
+
+
+
+
+
