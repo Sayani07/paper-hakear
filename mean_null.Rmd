@@ -6,10 +6,15 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(ggplot2)
-library(ggpubr)
+library(knitr)
+opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
+  fig.path = "figure/", fig.align = "center", fig.show = "hold",
+  cache = TRUE, cache.path = "cache/",
+  out.width = ifelse(is_html_output(), "100%", "\\textwidth")
+)
+knitr::opts_knit$set(root.dir = here::here())
+read_chunk('mean_null.R')
 ```
 
 Discussion: Let the sample size be $n$ and the number of iterations be $k$. By CLT (or EVT), when $n$ is high enough, then the limiting distribution of sample mean (or max) goes to a standard normal (or Gumbel/Freschet/Weibull) distribution, irrespective of the underlying distribution of the sample. This means when $n$ is high enough and we sample $n$ iid random variables multiple times (high enough $k$), by CLT, the distribution of sample mean would look like standard normal. What if $n$ is very small and $k$ is large? Would the distribution of sample mean still look like standard normal? It would not. Similarly, EVT works when $n$ is high enough. When we are taking the max of 2 or 3 rvs ("levels" in our terminology), $n = 2/3$, which are far too less. Hence, normalization would be able to nullify the effect of $n$ only for large enough $n$.
@@ -52,114 +57,31 @@ $Z_n = \frac{\bar{X} - \mu}{\sqrt n\sigma}$ converges in distribution to a stand
 
 
 ```{r shape_rate}
-shape1 <- 3
-rate1 <- 0.5
 ```
 
 ```{r create_simdata}
-# create data for each levels
 
-create_simdata <- function(nx = 2,
-                           # number of rvs to generate
-                           nsim = 500,
-                           # number of simulations
-                           sim_dist = distributional::dist_gamma(
-                             shape = shape1,
-                             rate = rate1
-                           ),
-                           # distribution of each rv
-                           create_fun = mean
-                           # function used on the rvs
-) {
-  mean_dist <- (1:nsim) %>%
-    purrr::map(function(i) {
-      x <- sim_dist %>%
-        distributional::generate(nx) %>%
-        unlist()
-      x %>% create_fun()
-    })
-}
 ```
 
 
 ```{r create_nlevels}
-create_nlevels <- function(nlevels = seq(2, 10, 2),
-                           nsim = 500,
-                           sim_dist = distributional::dist_gamma(
-                             shape = shape1,
-                             rate = rate1
-                           ),
-                           # distr = "norm",
-                           create_fun = mean) {
-  data_orig <- nlevels %>%
-    purrr::map_df(function(i) {
-      create_datai <- create_simdata(nx = i, nsim, sim_dist, create_fun)
-      tibble::tibble(ind = i, sim_data = create_datai)
-    })
-  data_orig %>% unnest(sim_data)
-}
 ```
 
 ```{r norm_mean}
-norm_mean <- function(x = NULL,
-                      shape = shape1,
-                      rate = rate1) {
-  meanx <- shape / rate
-  sdx <- shape / (rate^2)
-  (mean(x) - meanx) / sdx
-}
 ```
 
 ```{r norm_max}
-# normalised maximum of a vector
-norm_max <- function(x = NULL,
-                     shape = shape1,
-                     rate = rate1) {
-  nx <- length(x)
-  p <- 1 - (1 / nx)
-  meanx <- shape / rate
-  sdx <- shape / (rate^2)
-  # meanx = 5
-  # sdx = 10
-  b <- stats::qnorm(p, meanx, sdx)
-  a <- 1 / (nx * stats::dnorm(b, meanx, sdx))
-  # k = stats::quantile(x, p, type = 8, na.rm = TRUE)
-  (max(x) - a) / b
-  # max(x)/k
-}
+
 ```
 
 ```{r create_scenarios}
-set.seed(12345)
-data_all_mean <- create_nlevels(nlevels = seq(2, 50, 1), create_fun = mean)
 
-set.seed(12345)
-data_all_max <- create_nlevels(
-  nlevels = seq(2, 50, 1),
-  create_fun = max
-)
-
-set.seed(12345)
-data_all_norm_mean <- create_nlevels(
-  nlevels = seq(2, 50, 1),
-  create_fun = norm_mean
-)
-
-set.seed(12345)
-data_all_norm_max <- create_nlevels(
-  nlevels = seq(2, 50, 1),
-  create_fun = norm_max
-)
 ```
 
 # Small levels and many iterations of means
 
 ```{r mean_small}
-data_all_mean %>%
-  filter(ind %in% seq(2, 10, 1)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
+
 ```
 
 In facet  with label 2, two random numbers are generated and their mean is computed. We repeat this process 500 times and draw the histogram of the computed means. Similarly, for facet with label 3, 3 random numbers are generated and histogram is drawn for the computed means of 3 random numbers.
@@ -168,11 +90,7 @@ In facet  with label 2, two random numbers are generated and their mean is compu
 # Many levels and many iterations of means
 
 ```{r mean_large}
-data_all_mean %>%
-  filter(ind %in% seq(20, 45, 5)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
+
 ```
 
 The histograms look like a normal distribution in this case, because number of levels are higher. For smaller number of levels, even with many repetitions the histograms do not look like normal.
@@ -180,22 +98,14 @@ The histograms look like a normal distribution in this case, because number of l
 # Small levels and many iterations of normalized means
 
 ```{r norm_mean_small}
-data_all_norm_mean %>%
-  filter(ind %in% seq(2, 10, 1)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
+
 ```
 
 # Many levels and many iterations of normalized means
 
 
 ```{r norm_mean_large}
-data_all_norm_mean %>%
-  filter(ind %in% seq(20, 45, 5)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
+
 ```
 
 # EVT
@@ -204,44 +114,22 @@ data_all_norm_mean %>%
 
 
 ```{r max_small}
-data_all_max %>%
-  filter(ind %in% seq(2, 10, 1)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
 ```
 
 ## Many levels and many iterations of max
 
 ```{r max_large}
-data_all_max %>%
-  filter(ind %in% seq(20, 45, 5)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
 ```
 
 
 
 ## Small levels and many iterations of norm max
 
-
-
 ```{r norm_max_small}
-data_all_norm_max %>%
-  filter(ind %in% seq(2, 10, 1)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
 ```
 
 ## Many levels and many iterations of norm max
 
 
 ```{r norm_max_large}
-data_all_norm_max %>%
-  filter(ind %in% seq(20, 45, 5)) %>%
-  ggplot(aes(x = sim_data)) +
-  geom_histogram() +
-  facet_wrap(~ind)
 ```
