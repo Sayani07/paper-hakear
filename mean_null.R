@@ -73,11 +73,11 @@ norm_max <- function(x = NULL,
   sdx <- shape / (rate^2)
   # meanx = 5
   # sdx = 10
-  #b <- stats::qnorm(p, meanx, sdx)
-  #a <- 1 / (nx * stats::dnorm(b, meanx, sdx))
-  k = stats::quantile(x, p, type = 8, na.rm = TRUE)
-  #(max(x) - a) / b
-  max(x)/k
+  b <- stats::qnorm(p, meanx, sdx)
+  a <- 1 / (nx * stats::dnorm(b, meanx, sdx))
+  #k = stats::quantile(x, p, type = 8, na.rm = TRUE)
+  (max(x) - a) / b
+  #max(x)/k
 }
 
 
@@ -165,3 +165,63 @@ data_all_norm_max %>%
   ggplot(aes(x = sim_data)) +
   geom_histogram() +
   facet_wrap(~ind)
+
+
+##----max_large_mean_sd
+set.seed(12345)
+data_all_max <- create_nlevels(
+  nlevels = seq(1, 50, 1),
+  sim_dist = distributional::dist_normal(5,10),
+  create_fun = max
+)
+
+
+data_mean_sd <- data_all_max %>%
+  filter(ind %in% seq(1, 50, 1)) %>% 
+  group_by(ind) %>% 
+  summarise(mean = mean(sim_data), 
+            sd = sd(sim_data)) %>% 
+  pivot_longer(2:3, names_to = c("statistic"), values_to = "value") %>% mutate(norm = "no")
+
+data_mean_sd %>% ggplot(aes(x= ind, y = value)) +
+  geom_line() + facet_wrap(~statistic, scales = "free_y") + xlab("n") + scale_x_continuous(breaks = seq(1, 50, 5))
+
+##----max_large_mean_sd_norm
+set.seed(12345)
+data_all_norm_max <- create_nlevels(
+  nlevels = seq(1, 50, 1),
+  sim_dist = distributional::dist_normal(5,10),
+  create_fun = norm_max
+)
+
+
+data_mean_sd_norm <- data_all_norm_max %>%
+  filter(ind %in% seq(1, 50, 1)) %>% 
+  group_by(ind) %>% 
+  summarise(mean = mean(sim_data), 
+            sd = sd(sim_data)) %>% 
+  pivot_longer(2:3, names_to = c("statistic"), values_to = "value") %>% mutate(norm = "yes")
+
+#data <- bind_rows(data_mean_sd, data_mean_sd_norm)
+
+data_mean_sd_norm %>% ggplot(aes(x= ind, y = value)) +
+  geom_line() + facet_wrap(~statistic, scales = "free_y") + xlab("n") + scale_x_continuous(breaks = seq(1, 50, 5))
+
+
+
+##small_max_normal
+data_all_max %>%
+filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+
+
+##small_normmax_normal
+data_all_norm_max %>%
+  filter(ind %in% seq(2, 10, 1)) %>%
+  ggplot(aes(x = sim_data)) +
+  geom_histogram() +
+  facet_wrap(~ind)
+
+

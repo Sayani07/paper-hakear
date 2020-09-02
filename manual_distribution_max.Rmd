@@ -1,28 +1,71 @@
 ---
-title: "Untitled"
+title: "Mean and sd of null distribution"
 author: "Sayani Gupta"
-date: "28/08/2020"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
+  fig.path = "figure/", fig.align = "center", fig.show = "hold",
+  cache = TRUE, cache.path = "cache/",
+  out.width = ifelse(is_html_output(), "100%", "\\textwidth")
+)
+knitr::opts_knit$set(root.dir = here::here())
+read_chunk("mean_null.R")
 ```
 
-
-## Why normalise?
 
 Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let 
 $Y = max(X_1, X_2, \dots, X_n)$.
 
 Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the
 corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using:
-$F_Y(y) = P[(X_1 ≤ y)∩(X_2 ≤ y) ∩...∩ (X_n ≤ y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$.But what about the case when $n$ is not large enough. Then the distribution of maximum will indeed depend on maximum is taken for random variables from which distributions. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. If $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
-$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$, since the distribution of maximum depends on $n$.As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$.
-
-## Mean and standard deviation of the distribution of maximum for small n
+$F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
+$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot.
 
 
-Analytically,
-sample mean: $ \frac{\sum(Y_i)}{n}$
-throeretical mean: $ \frac{\int_i(y_if_Y(y_i))}{n}$
+
+```{r create_simdata}
+
+```
+
+```{r create_nlevels}
+
+```
+
+```{r shape_rate}
+
+```
+
+
+```{r norm_max}
+
+```
+
+## Mean and standard deviation of the distribution of maximum
+
+
+```{r max_large_mean_sd}
+
+```
+
+## Mean and standard deviation of the distribution of normalised maximum
+
+```{r max_large_mean_sd_norm}
+
+```
+
+Looking at the smaller values of $n$, what we already saw last week.
+
+## Distribution of max for smaller n
+```{r small_max_normal}
+
+```
+
+## Distribution of normalised max for smaller n
+
+```{r small_normmax_normal}
+
+```
