@@ -133,3 +133,7 @@ The histograms look like a normal distribution in this case, because number of l
 
 ```{r norm_max_large}
 ```
+
+
+
+
