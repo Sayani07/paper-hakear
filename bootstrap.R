@@ -50,3 +50,10 @@ boot_max %>%
   ggplot() +
   geom_histogram(aes(x = sim_max)) +
   facet_wrap(~n)
+
+
+# bootstrap 2000 times
+# compute the mean and the sd
+# compute norm_max = (max - mean)/sd
+# Do the above steps 500 times and see the distribution of norm_max
+

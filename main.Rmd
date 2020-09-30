@@ -37,6 +37,7 @@ opts_chunk$set(
 knitr::opts_knit$set(root.dir = here::here())
 read_chunk('main.R')
 read_chunk("null_distribution.R")
+read_chunk("mean_null.R")
 ```
 
 ```{r external, include = FALSE}
@@ -109,9 +110,58 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 
 <!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
 
+
 Maximum pairwise distances are not robust to the number of levels and is higher for harmonies with higher levels. Thus these maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-More formally, $d_{1},d_{2}\ldots ,d_{n}$ be a sequence of independent and identically-distributed pairwise distances and $M_{n}=\max\{d_{1},\ldots ,d_{n}\}$. Then Fisher–Tippett–Gnedenko theorem [@De_Haan2007-yx] suggests that if a sequence of pairs of real numbers $(a_{n}, b_{n})$ exists such that each $a_{n}>0$ and $\lim _{{m\to \infty }}P\left({\frac  {M_{n}-b_{n}}{a_{n}}}\leq x\right)=F(x)$, where $F$ is a non-degenerate distribution function, then the limit distribution $F$ belongs to either the Gumbel, Fréchet or Weibull family. The normalizing constants $(a_{n}, b_{n})$ vary depending on the underlying distribution of the pairwise distances. Hence to normalize appropriately, it is important to assume a distribution of these distances. 
+More formally, $d_{1},d_{2}\ldots ,d_{n}$ be a sequence of independent and identically-distributed pairwise distances and $M_{n}=\max\{d_{1},\ldots ,d_{n}\}$. Then Fisher–Tippett–Gnedenko theorem [@De_Haan2007-yx] suggests that if a sequence of pairs of real numbers $(a_{n}, b_{n})$ exists such that each $a_{n}>0$ and $\lim _{{m\to \infty }}P\left({\frac  {M_{n}-b_{n}}{a_{n}}}\leq x\right)=F(x)$, where $F$ is a non-degenerate distribution function, then the limit distribution $F$ belongs to either the Gumbel, Fréchet or Weibull family. The normalizing constants $(a_{n}, b_{n})$ vary depending on the underlying distribution of the pairwise distances. Hence to normalize appropriately, it is 
+important to assume a distribution of these distances. 
+
+### why normalize
+
+Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let 
+$Y = max(X_1, X_2, \dots, X_n)$.
+
+Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using:
+$F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
+$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot.
+
+
+
+```{r create_simdata}
+
+```
+
+```{r create_nlevels}
+
+```
+
+
+```{r norm_max_new}
+
+```
+
+## Mean and standard deviation of the distribution of maximum
+
+
+```{r}
+library(ggridges)
+library(viridis)
+max_all_data <- create_nlevels(nlevels = seq(2, 30, 2),
+                           nsim = 500,
+                           sim_dist = distributional::dist_normal(5, 10), create_fun = max)
+
+g1 <- max_all_data %>% ggplot() + geom_density_ridges(aes(x=sim_data, y = as.factor(ind))) + ylab("n") + xlab("max")
+
+median_all_data <- create_nlevels(nlevels = seq(2, 30, 2),
+                           nsim = 500,
+                           sim_dist = distributional::dist_normal(5, 10), create_fun = median)
+
+g2 <- max_all_data %>% ggplot() + geom_boxplot(aes(x=sim_data, y = as.factor(ind)))  + ylab("n") + xlab("median")
+
+ggpubr::ggarrange(g1, g2, ncol = 2)
+
+
+```
 
 ## Distribution of distances
 
