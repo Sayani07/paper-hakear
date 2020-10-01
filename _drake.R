@@ -1,6 +1,9 @@
 ## Load your packages, e.g. library(drake).
 source("./packages.R")
 
+conflict_prefer("filter", "dplyr")
+conflict_prefer("select", "dplyr")
+
 ## Load your R files
 lapply(list.files("./R", full.names = TRUE), source)
 
