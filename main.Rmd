@@ -178,23 +178,23 @@ Distribution of JS distances is assumed to be normal but the mean and variance a
 
 #### Initial distribution of observed variables shown in plot title
 
-```{r distv11}
+<!-- ```{r distv11} -->
 
-```
+<!-- ``` -->
 
-```{r distv12}
+<!-- ```{r distv12} -->
 
-```
-
-
-```{r distv13}
-
-```
+<!-- ``` -->
 
 
-```{r distv14}
+<!-- ```{r distv13} -->
 
-```
+<!-- ``` -->
+
+
+<!-- ```{r distv14} -->
+
+<!-- ``` -->
 
 
 ## Median Maximum Pairwise distance
