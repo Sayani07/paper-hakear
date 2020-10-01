@@ -74,21 +74,38 @@ set.seed(321)
 # Introduction
 
 
+<!-- background of the problem -->
 Take the example of the calendar display of electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to display the daily schedules. The calendar display has several components in it which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month and month-of-the-year all at once.
-Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. However, there are two things that might be of concern. Due to the combination of linear and cyclic representation of time, it is difficult to comprehend the interaction of periodicities at once from this display. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight which could potentially become useful depending on context. Lastly, there might be certain interactions which are interesting and others which are not. It could be potentially useful to know which all cyclic granularities could be useful.
+Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. However, there are two things that might be of concern. Due to the combination of linear and cyclic representation of time, it is difficult to comprehend the interaction of periodicities at once from this display. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight which could potentially become useful depending on context. Lastly, there might be certain interactions which are interesting and others which are not. It is immensely useful to be able to make transition from all possible ways to only ways that could potentially be important given a situation. 
 
 <!-- Take an example of a data set which are observed at fine temporal scales, like that of NYC bike usage available at https://www.citibikenyc.com/system-data. We use the `nyc_bikes` data set from the R package `tsibbledata` which takes a sample of 10 bikes for the year 2018. The `start_time` and the `stop_time` are recorded to a fineness of seconds. We can look at pair of cyclic granularities (hour_day, wknd_wday) or (week_month, day_week) to see how these periodicities interact. But there could be other pairs that are important too. How to understand which pairs are sufficient to explore given the data set without losing much information about the data. -->
 
 <!-- When we need to understand the interplay of different periodicities in a high frequency temporal datasets, we have many choices to consider. In [@wang2019tsibble] and [@wang2020calendar], periodicities are explored across hour of the day and day of the week or months. But calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions. -->
 
-The paper (gravitas) describes how we can start with all possible combinations of cyclic time granularities and narrow down our search to harmonies and remove clashes without losing any perspectives about the data. Even after excluding clashes, the list of harmonies left could be large and overwhelming for human consumption. Hence, there is a need to rank the harmonies basis how well they capture the variation in the measured variable and additionally reduce the number of harmonies for further exploration/visualization. Assuming a numeric response variable, our graphics are displays of distributions compared across combinations of categorical variables, one placed at x-axis and the other on the facet. Displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. Here, we have two main objectives:
+
+<!-- what is the dimension of the problem -->
+The paper (gravitas) describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. Assuming a numeric response variable, the graphics are displays of distributions compared across combinations of these cyclic granularities, one placed at x-axis and the other on the facet. With this design, potentially there are $^{N_C}P_2$ possible pairwise plots, where each plot would display pair of cyclic granularities. Now this is large and overwhelming for human consumption.
+
+<!-- Scagnostics literature -->
+This is similar to Scagnostics (Scatterplot Diagnostics)[@mention-paper] which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore
+for even small $v$, the number of scatterplots can be
+large and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. [@ScagExplorer], [@otherref] provides solution to this, where few characterizations helps us to locate anomalies for further analysis or search for
+similar distributions in a “large” SPLOM with more than a hundred dimensions.
+
+
+<!-- harmonies and why it is not enough -->
+The paper (gravitas) narrows down our search to harmonies and remove clashes without losing any perspectives about the data. But even after excluding clashes, the list of harmonies left could be large and overwhelming for human consumption. Hence, there is a need to rank the harmonies basis how well they capture the variation in the measured variable and additionally reduce the number of harmonies to include only those for which variation within different categories are significant.
+
+
+<!-- in the same group would be important to bring out different patterns of the data. -->
+
+Here, we have two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
 - To rank the selected harmonies from highest to lowest variation in the distribution of their categories. The idea here is to rate a harmony pair higher if this variation between different levels of the x-axis variable is higher on an average across all levels of facet variables.
 
-To be able to dice time in all possible ways in order to have multiple perspectives about peridicities in the data, there are too many things that we should look at ideally. Exploratory analysis is detective work and it is difficult to traverse through all possible ways without any systematic approach. It is immensely useful to be able to make transition from all possible ways to only ways that could potentially be important given a situation. 
 
-Talk about Scagnostics: Tukey
+<!-- Talk about Scagnostics: Tukey -->
 
 # Computing distance measure
 
