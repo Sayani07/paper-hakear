@@ -75,8 +75,8 @@ set.seed(321)
 
 
 <!-- background of the problem -->
-Take the example of the calendar display of electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to display the daily schedules. The calendar display has several components in it, which helps us look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once.
-Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. However, certain things might be of concern. Due to the combination of linear and cyclic representation of time, it is not easy to comprehend the interaction of some periodicities' interaction from this display. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Lastly, there might be specific interactions that are interesting and others that are not. It is immensely useful to make the transition from all possible ways to only ways that could potentially be important given a situation. 
+Take the example of the calendar display of electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once.
+Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. This is a great start to have an overview of the energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater details, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Lastly, there might be specific interactions that are interesting and others that are not. It is immensely useful to make the transition from all possible ways to only ways that could potentially be important given a situation. 
 
 <!-- Take an example of a data set which are observed at fine temporal scales, like that of NYC bike usage available at https://www.citibikenyc.com/system-data. We use the `nyc_bikes` data set from the R package `tsibbledata` which takes a sample of 10 bikes for the year 2018. The `start_time` and the `stop_time` are recorded to a fineness of seconds. We can look at pair of cyclic granularities (hour_day, wknd_wday) or (week_month, day_week) to see how these periodicities interact. But there could be other pairs that are important too. How to understand which pairs are sufficient to explore given the data set without losing much information about the data. -->
 
@@ -84,25 +84,25 @@ Some interaction of these cyclic granularities[@our-paper] could also be interpr
 
 
 <!-- what is the dimension of the problem -->
-The paper (gravitas) describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. Assuming a numeric response variable, the graphics display distributions compared across combinations of these cyclic granularities, one placed at x-axis and the other on the facet. With this design, potentially, there are $^{N_C}P_2$ possible pairwise plots, where each plot would display a pair of cyclic granularities. Now, this is large and overwhelming for human consumption.
+The paper (gravitas) describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. The mapping of the graphical elements chosen in the paper implies that, for a numeric response variable, the graphics display distributions across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.
 
 <!-- Scagnostics literature -->
 This is similar to Scagnostics (Scatterplot Diagnostics)[@mention-paper], which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore
 for even small $v$, the number of scatterplots can be
-large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. [@ScagExplorer], [@otherref] provides a solution to this, where few characterizations help us to locate anomalies for further analysis or search for
-similar distributions in a "large" SPLOM with more than a hundred dimensions.
+large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. [@ScagExplorer], [@otherref] provides a solution to this, where few characterizations help us to locate anomalies for further analysis or search for similar distributions in a "large" SPLOM with more than a hundred dimensions.
 
 
 <!-- harmonies and why it is not enough -->
-The paper (gravitas) narrows down our search to harmonies and removes clashes without losing any data perspectives. However, even after excluding clashes, the list of harmonies left could be extensive and overwhelming for human consumption. Hence, there is a need to rank the harmonies based on how well they capture the variation in the measured variable and reduce the number of harmonies to include only those for which variation within different categories is significant.
-
+The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies for which variation within different categories is significant. Also, ranking the remaining harmonies based on how well they capture the variation in the measured variable could be potentially useful. 
 
 <!-- in the same group would be important to bring out different patterns of the data. -->
 
 Here, we have two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
-- To rank the selected harmonies from highest to lowest variation in the distribution of their categories. The idea here is to rate a harmony pair higher if this variation between different x-axis variable levels is higher on an average across all levels of facet variables.
+- To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
+
+<!-- The idea here is to rate a harmony pair higher if this variation between different x-axis variable levels is higher on an average across all levels of facet variables. -->
 
 
 <!-- Talk about Scagnostics: Tukey -->
@@ -133,6 +133,22 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 
 <!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
 
+<!-- With increasing n, mean and sd of distribution of max increases. -->
+
+
+<!-- FTP theorem works for large n -->
+
+
+<!-- For small n resort to bootstrapping -->
+
+
+Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let 
+$Y = max(X_1, X_2, \dots, X_n)$.
+
+Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using:
+$F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
+$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot.
+
 
 Maximum pairwise distances are not robust to the number of levels and is higher for harmonies with higher levels. Thus these maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
@@ -141,12 +157,6 @@ important to assume a distribution of these distances.
 
 ### why normalize
 
-Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let 
-$Y = max(X_1, X_2, \dots, X_n)$.
-
-Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using:
-$F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
-$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot.
 
 
 
