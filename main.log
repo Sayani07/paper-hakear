@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.27)  8 OCT 2020 09:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.27)  8 OCT 2020 10:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -607,18 +607,19 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
 14.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [2]
+)
 
-LaTeX Warning: Reference `@paper-gravitas' on page 3 undefined on input line 12
+LaTeX Warning: Reference `@paper-gravitas' on page 2 undefined on input line 12
 7.
 
-<figure/null4by2-1.pdf, id=124, 569.12625pt x 352.31625pt>
+[2]
+<figure/null4by2-1.pdf, id=104, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 131.
 (pdftex.def)             Requested size: 469.7781pt x 290.81502pt.
 
-Underfull \hbox (badness 1635) in paragraph at lines 141--142
+Underfull \hbox (badness 1635) in paragraph at lines 144--145
 \T1/lmr/m/n/10 The most com-mon di-ver-gence mea-sure be-tween dis-tri-bu-tions
  is the Kullback-Leibler (KL) di-ver-
  []
@@ -628,144 +629,144 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.142 
-       <./figure/null4by2-1.pdf>] [4]
-<figure/unnamed-chunk-2-1.pdf, id=146, 566.115pt x 349.305pt>
+l.148 ...\frac{1}{2}D(P||M) + \frac{1}{2}D(Q||M)\]
+                                                   <./figure/null4by2-1.pdf>]
+<figure/unnamed-chunk-2-1.pdf, id=120, 566.115pt x 349.305pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 176.
+Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 179.
 (pdftex.def)             Requested size: 469.76303pt x 289.85378pt.
-[5 <./figure/unnamed-chunk-2-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 209--212
+[4] [5 <./figure/unnamed-chunk-2-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 206--209
 
  []
 
-[6] [7]
-<figure/normalv21_power-1.pdf, id=213, 568.1225pt x 349.305pt>
+[6]
+<figure/normalv21_power-1.pdf, id=175, 568.1225pt x 349.305pt>
 File: figure/normalv21_power-1.pdf Graphic file (type pdf)
 <use figure/normalv21_power-1.pdf>
-Package pdftex.def Info: figure/normalv21_power-1.pdf  used on input line 331.
+Package pdftex.def Info: figure/normalv21_power-1.pdf  used on input line 328.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/normalv21_power-2.pdf, id=214, 568.1225pt x 351.3125pt>
+<figure/normalv21_power-2.pdf, id=176, 568.1225pt x 351.3125pt>
 File: figure/normalv21_power-2.pdf Graphic file (type pdf)
 <use figure/normalv21_power-2.pdf>
-Package pdftex.def Info: figure/normalv21_power-2.pdf  used on input line 331.
+Package pdftex.def Info: figure/normalv21_power-2.pdf  used on input line 328.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[8 <./figure/normalv21_power-1.pdf>]
-<figure/normalv22_power-1.pdf, id=228, 568.1225pt x 349.305pt>
+[7]
+<figure/normalv22_power-1.pdf, id=198, 568.1225pt x 349.305pt>
 File: figure/normalv22_power-1.pdf Graphic file (type pdf)
 <use figure/normalv22_power-1.pdf>
-Package pdftex.def Info: figure/normalv22_power-1.pdf  used on input line 333.
+Package pdftex.def Info: figure/normalv22_power-1.pdf  used on input line 330.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/normalv22_power-2.pdf, id=229, 568.1225pt x 351.3125pt>
+<figure/normalv22_power-2.pdf, id=199, 568.1225pt x 351.3125pt>
 File: figure/normalv22_power-2.pdf Graphic file (type pdf)
 <use figure/normalv22_power-2.pdf>
-Package pdftex.def Info: figure/normalv22_power-2.pdf  used on input line 333.
+Package pdftex.def Info: figure/normalv22_power-2.pdf  used on input line 330.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[9 <./figure/normalv21_power-2.pdf> <./figure/normalv22_power-1.pdf>]
-<figure/normalv23_power-1.pdf, id=248, 568.1225pt x 349.305pt>
+[8 <./figure/normalv21_power-1.pdf> <./figure/normalv21_power-2.pdf>]
+<figure/normalv23_power-1.pdf, id=219, 568.1225pt x 349.305pt>
 File: figure/normalv23_power-1.pdf Graphic file (type pdf)
 <use figure/normalv23_power-1.pdf>
-Package pdftex.def Info: figure/normalv23_power-1.pdf  used on input line 338.
+Package pdftex.def Info: figure/normalv23_power-1.pdf  used on input line 335.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/normalv23_power-2.pdf, id=249, 568.1225pt x 351.3125pt>
+<figure/normalv23_power-2.pdf, id=220, 568.1225pt x 351.3125pt>
 File: figure/normalv23_power-2.pdf Graphic file (type pdf)
 <use figure/normalv23_power-2.pdf>
-Package pdftex.def Info: figure/normalv23_power-2.pdf  used on input line 338.
+Package pdftex.def Info: figure/normalv23_power-2.pdf  used on input line 335.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[10 <./figure/normalv22_power-2.pdf> <./figure/normalv23_power-1.pdf>]
-<figure/normalv24_power-1.pdf, id=270, 568.1225pt x 349.305pt>
+[9 <./figure/normalv22_power-1.pdf> <./figure/normalv22_power-2.pdf>]
+<figure/normalv24_power-1.pdf, id=240, 568.1225pt x 349.305pt>
 File: figure/normalv24_power-1.pdf Graphic file (type pdf)
 <use figure/normalv24_power-1.pdf>
-Package pdftex.def Info: figure/normalv24_power-1.pdf  used on input line 340.
+Package pdftex.def Info: figure/normalv24_power-1.pdf  used on input line 337.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/normalv24_power-2.pdf, id=271, 568.1225pt x 351.3125pt>
+<figure/normalv24_power-2.pdf, id=241, 568.1225pt x 351.3125pt>
 File: figure/normalv24_power-2.pdf Graphic file (type pdf)
 <use figure/normalv24_power-2.pdf>
-Package pdftex.def Info: figure/normalv24_power-2.pdf  used on input line 340.
+Package pdftex.def Info: figure/normalv24_power-2.pdf  used on input line 337.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[11 <./figure/normalv23_power-2.pdf> <./figure/normalv24_power-1.pdf>] [12 <./f
-igure/normalv24_power-2.pdf>]
+[10 <./figure/normalv23_power-1.pdf> <./figure/normalv23_power-2.pdf>] [11 <./f
+igure/normalv24_power-1.pdf> <./figure/normalv24_power-2.pdf>]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-77.
+74.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 
-LaTeX Warning: Reference `sec:cyclic-calendar' on page 13 undefined on input li
-ne 377.
+LaTeX Warning: Reference `sec:cyclic-calendar' on page 12 undefined on input li
+ne 374.
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 377--378
+Underfull \hbox (badness 1043) in paragraph at lines 374--375
 \T1/lmr/m/n/10 The tsib-ble ob-ject \T1/lmtt/m/n/10 smart_meter10 \T1/lmr/m/n/1
 0 from R pack-age \T1/lmtt/m/n/10 gravitas \T1/lmr/m/n/10 (Gupta et al. 2019) c
 on-sist-ing of
  []
 
 
-LaTeX Warning: Reference `tab:harmony-tab' on page 13 undefined on input line 3
-82.
+LaTeX Warning: Reference `tab:harmony-tab' on page 12 undefined on input line 3
+79.
 
 
-LaTeX Warning: Reference `sec:levels' on page 13 undefined on input line 382.
+LaTeX Warning: Reference `sec:levels' on page 12 undefined on input line 379.
 
-[13]
-<figure/bothcust-1.pdf, id=331, 570.13pt x 353.32pt>
+[12]
+<figure/bothcust-1.pdf, id=306, 570.13pt x 353.32pt>
 File: figure/bothcust-1.pdf Graphic file (type pdf)
 <use figure/bothcust-1.pdf>
-Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 393.
+Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 390.
 (pdftex.def)             Requested size: 422.77695pt x 262.00261pt.
-[14pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
- has been already used, duplicate ignored
+[13] [14pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.402 T
-       his case study shows systematic exploration of energy behavior for a ...
- <./figure/bothcust-1.pdf>] [15pdfTeX warning (ext4): destination with the same
- identifier (name{table.1}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.432 
-      ]
-<figure/cricex-1.pdf, id=358, 566.115pt x 350.30875pt>
+l.405 
+       <./figure/bothcust-1.pdf>]
+<figure/cricex-1.pdf, id=334, 566.115pt x 350.30875pt>
 File: figure/cricex-1.pdf Graphic file (type pdf)
 <use figure/cricex-1.pdf>
-Package pdftex.def Info: figure/cricex-1.pdf  used on input line 435.
+Package pdftex.def Info: figure/cricex-1.pdf  used on input line 432.
 (pdftex.def)             Requested size: 422.78845pt x 261.6191pt.
-<figure/cricex-2.pdf, id=359, 566.115pt x 352.31625pt>
+<figure/cricex-2.pdf, id=335, 566.115pt x 352.31625pt>
 File: figure/cricex-2.pdf Graphic file (type pdf)
 <use figure/cricex-2.pdf>
-Package pdftex.def Info: figure/cricex-2.pdf  used on input line 435.
+Package pdftex.def Info: figure/cricex-2.pdf  used on input line 432.
 (pdftex.def)             Requested size: 422.78845pt x 263.11835pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 470.
-[16] [17pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.3}) has been already used, duplicate ignored
+[15pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
+has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.470 \end{document}
-                     <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 470.
+l.448 
+      ] [16pdfTeX warning (ext4): destination with the same identifier (name{fi
+gure.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.448 
+       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 467.
+[17]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 467.
 (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 470.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 470.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 467.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 467.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 6B968CB7B93FE937A7BE729BCC62C07A;3217.
+(rerunfilecheck)             Checksum: 3D186368A9FE2954D734C867B82C5140;2126.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 470.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 467.
  ) 
 Here is how much of TeX's memory you used:
- 12615 strings out of 482798
- 183263 string characters out of 5953960
- 442747 words of memory out of 5000000
- 27614 multiletter control sequences out of 15000+600000
+ 12608 strings out of 482798
+ 183096 string characters out of 5953960
+ 443692 words of memory out of 5000000
+ 27609 multiletter control sequences out of 15000+600000
  585426 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 43i,9n,37p,1609b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,9n,37p,1609b,400s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Us
 ers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/User
 s/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/
@@ -785,10 +786,10 @@ onts/type1/public/lm/lmri10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fon
 ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmtt10.pfb>
-Output written on main.pdf (17 pages, 686876 bytes).
+Output written on main.pdf (17 pages, 686465 bytes).
 PDF statistics:
- 473 PDF objects out of 1000 (max. 8388607)
- 398 compressed objects within 4 object streams
- 120 named destinations out of 1000 (max. 500000)
- 210 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 455 PDF objects out of 1000 (max. 8388607)
+ 380 compressed objects within 4 object streams
+ 118 named destinations out of 1000 (max. 500000)
+ 178 words of extra memory for PDF output out of 10000 (max. 10000000)
 

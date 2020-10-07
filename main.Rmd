@@ -153,7 +153,11 @@ ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
 
 
 <!-- in the same group would be important to bring out different patterns of the data. -->
-## Distance between distributions
+
+
+## Computation
+
+### Distance between distributions
 
 <!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
 <!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
@@ -174,14 +178,14 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- We call this measure of variation as  Median Maximum Pairwise Distances (MMPD). -->
 
 
-# Distribution of Jensen-Shannon distances
+### Distribution of Jensen-Shannon distances
 
 Jensen-Shannon distances (JSD) are distributed as chi-squared with $m$ df where we discretize the continuous distribution with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$.
 With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made.
 
 
 
-## Normalize distances
+### Normalize distances
 
 <!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
 
@@ -225,7 +229,7 @@ important to assume a distribution of these distances.
 
 ```
 
-## Mean and standard deviation of the distribution of maximum
+### Mean and standard deviation of the distribution of maximum
 
 
 ```{r}
@@ -248,7 +252,7 @@ ggpubr::ggarrange(g1, g2, ncol = 2)
 
 ```
 
-## Distribution of distances
+### Distribution of distances
 
 ### Theoretical evidence
 
@@ -282,11 +286,8 @@ Distribution of JS distances is assumed to be normal but the mean and variance a
 <!-- ``` -->
 
 
-## Median Maximum Pairwise distance
 
-### Definition
-
-### Algorithm for computation for all harmony pairs
+## Algorithm 
 
 \noindent The algorithm employed for computing MMPD is summarized as follows:
 <!-- Algorithm -->
