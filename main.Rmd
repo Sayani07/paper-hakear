@@ -98,20 +98,21 @@ large, and scatterplot matrices (SPLOMs) could easily run out of pixels when pre
 <!-- harmonies and why it is not enough -->
 The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies for which variation within different categories is significant. Also, ranking the remaining harmonies based on how well they capture the variation in the measured variable could be potentially useful. 
 
-Here, we have two main objectives:
+Here, we aim to build a new measure to follow through these two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
 - To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# Building a new metric
+# Median Maximum Pairwise Distances (MMPD)
 
 ## Principle
 
 The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
 
-With reference to the graphical design in \ref{@paper-gravitas}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of facet variables. 
+With reference to the graphical design in \ref{@paper-gravitas}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. Thus the metric could be obtained by computing maximum pairwise distances between distributions of the continuous random variable across x-axis categories for all facets and then taking the median of those maximum pairwise distances across facets. This would help capture the average maximum difference in distribution of the measurement variable explained by the two cyclic granularities together. We call this metric MMPD which stands for Median Maximum Pairwise Distances. In the next section we shall see how we go about computing this measure.
+
 
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.27)  8 OCT 2020 09:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.27)  8 OCT 2020 09:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -628,14 +628,14 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.145 ...\frac{1}{2}D(P||M) + \frac{1}{2}D(Q||M)\]
-                                                   <./figure/null4by2-1.pdf>]
-<figure/unnamed-chunk-2-1.pdf, id=138, 566.115pt x 349.305pt>
+l.142 
+       <./figure/null4by2-1.pdf>] [4]
+<figure/unnamed-chunk-2-1.pdf, id=146, 566.115pt x 349.305pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 176.
 (pdftex.def)             Requested size: 469.76303pt x 289.85378pt.
-[4] [5 <./figure/unnamed-chunk-2-1.pdf>]
+[5 <./figure/unnamed-chunk-2-1.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 209--212
 
  []
@@ -765,7 +765,7 @@ Here is how much of TeX's memory you used:
  27614 multiletter control sequences out of 15000+600000
  585426 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 43i,9n,37p,1609b,400s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,9n,37p,1609b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Us
 ers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/User
 s/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/
@@ -785,7 +785,7 @@ onts/type1/public/lm/lmri10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fon
 ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmtt10.pfb>
-Output written on main.pdf (17 pages, 686368 bytes).
+Output written on main.pdf (17 pages, 686876 bytes).
 PDF statistics:
  473 PDF objects out of 1000 (max. 8388607)
  398 compressed objects within 4 object streams
