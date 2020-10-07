@@ -1,24 +1,25 @@
 library(readr)
 library(tidyverse)
-library(gravitas)
-library(tsibble)
 library(sugrrants)
+library(tsibble)
+library(gravitas)
+
 elec <- read_rds("data/elec.rds")
 
 id3 <- elec %>% 
   filter(id == 3)
 
-p_cal_elec <- id3 %>% 
-  frame_calendar(x = time, y = kwh, date = date, nrow = 1) %>% 
-  ggplot(aes(x = .time, y = .kwh, group = date)) +
-  geom_line(aes(colour = as.factor(id)), size = 0.5) +
-  scale_colour_brewer(name = "", palette = "PiYG") +
-  facet_grid(id ~ ., labeller = label_both) +
-  theme(legend.position = "bottom") +
-  geom_smooth(
-    aes(.time, .kwh, group = date), 
-    se = FALSE, method = "loess"
-  )
+# p_cal_elec <- id3 %>% 
+#   frame_calendar(x = time, y = kwh, date = date, nrow = 1) %>% 
+#   ggplot(aes(x = .time, y = .kwh, group = date)) +
+#   geom_line(aes(colour = as.factor(id)), size = 0.5) +
+#   scale_colour_brewer(name = "", palette = "PiYG") +
+#   facet_grid(id ~ ., labeller = label_both) +
+#   theme(legend.position = "bottom") +
+#   geom_smooth(
+#     aes(.time, .kwh, group = date), 
+#     se = FALSE, method = "loess"
+#   )
 
 id3_tsibble <- id3 %>% 
   as_tsibble(index = date_time)
@@ -138,10 +139,23 @@ p1 <-   id2_tsibble %>%
  
  
 p2 <-   id2_tsibble %>%
+   create_gran("week_month") %>% 
+   create_gran("day_week") %>% 
+   create_gran("month_year") %>% 
+   create_gran("hhour_day") %>% 
+   as_tibble() %>% 
+   ggplot(aes(x = week_month, y = kwh)) +
+   #geom_jitter(alpha = 0.5) +
+   facet_wrap(~day_week) +
+   geom_line(aes(group = interaction(hhour_day, month_year))) +
+   geom_smooth(method = "loess",
+                  colour = "red")
+
+
   prob_plot("week_month",
             "day_week",
             response = "kwh",
-            plot_type = "quantile",
+            plot_type = "violin",
             symmetric = FALSE,
             quantile_prob = c(0.25,0.5,0.75))
 
@@ -155,13 +169,23 @@ p3 <-   id4_tsibble %>%
             quantile_prob = c(0.25,0.5,0.75))
 
 
+
+
+p4 <- id4_tsibble %>%
+   create_gran("week_month") %>% 
+   create_gran("day_week") %>% 
+   ggplot(aes(x = day_week, y = kwh)) +
+   geom_jitter(alpha = 0.1) + facet_wrap(~week_month) +
+   geom_violin(fill = "blue")
+
 p4 <-   id4_tsibble %>%
   prob_plot("week_month",
             "day_week",
             response = "kwh",
-            plot_type = "quantile",
+            plot_type = "violin",
             symmetric = FALSE,
             quantile_prob = c(0.25,0.5,0.75))
 
 
-ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
+#ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2, scales)
+

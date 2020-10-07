@@ -609,4 +609,56 @@ p3 <- data6 %>% unnest(sim_dist) %>%
 p3
 
 
-##----
+##----introduction
+sm <- smart_meter10 %>%
+  filter(customer_id %in% c(10017936))
+
+library(lubridate)
+ptry <- sm %>%
+  create_gran("wknd_wday") %>% 
+  create_gran("week_month") %>% 
+  create_gran("hhour_day") %>% 
+  create_gran("month_year") %>% 
+  create_gran("day_month") %>%
+  filter(year(reading_datetime)==2013)%>% 
+  ggplot(aes(x = as.numeric(week_month), 
+             y = general_supply_kwh)) +
+  geom_line(aes(group = hhour_day,
+                color = as.numeric(month_year)))
+
+
+
+
++ geom_smooth(aes(x = as.numeric(week_month), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE)  + facet_wrap(~wknd_wday)
+  
+
+ptry2 <- sm %>%
+  filter(year(reading_datetime)==2013) %>% 
+  create_gran("wknd_wday") %>% 
+  create_gran("hour_day") %>% 
+  ggplot(aes(x = as.numeric(hour_day), 
+             y = general_supply_kwh)) +
+  geom_point()+ geom_smooth(aes(x = as.numeric(week_month), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE)  + facet_wrap(~wknd_wday)
+ 
+  #facet_wrap(~wknd_wday)
+  
+
+
+ p1 <- prob_plot("wknd_wday", 
+                       "week_month",
+                       plot_type = "boxplot",
+                       alpha = 0.5) + ggtitle("") +
+  ylab("") + 
+  xlab("") +
+  geom_smooth(aes(x = as.numeric(week_month), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE) 
+
+
+p4 <- sm %>% prob_plot("wknd_wday", 
+                       "hour_day",
+                       plot_type = "boxplot") + ggtitle("") +
+  ylab("") + 
+  xlab("") + scale_x_discrete(breaks = c(0,seq(3, 23, 3))) +
+  geom_violin(alpha = 0.3, color = "red") + 
+  geom_smooth(aes(x = as.numeric(hour_day), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE) 
+
+ggarrange(p1, p4, nrow = 2, labels = c("a", "b"))

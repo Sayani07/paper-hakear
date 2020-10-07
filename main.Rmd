@@ -27,6 +27,7 @@ library(tsibble)
 library(gravitas)
 library(ggpubr)
 library(readr)
+library(kableExtra)
 
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
@@ -38,6 +39,8 @@ knitr::opts_knit$set(root.dir = here::here())
 read_chunk('main.R')
 read_chunk("null_distribution.R")
 read_chunk("mean_null.R")
+source("R/sim_panel.R")
+
 ```
 
 ```{r external, include = FALSE}
@@ -95,20 +98,60 @@ large, and scatterplot matrices (SPLOMs) could easily run out of pixels when pre
 <!-- harmonies and why it is not enough -->
 The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies for which variation within different categories is significant. Also, ranking the remaining harmonies based on how well they capture the variation in the measured variable could be potentially useful. 
 
-<!-- in the same group would be important to bring out different patterns of the data. -->
-
 Here, we have two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
 - To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
 
-<!-- The idea here is to rate a harmony pair higher if this variation between different x-axis variable levels is higher on an average across all levels of facet variables. -->
-
-
 <!-- Talk about Scagnostics: Tukey -->
 
-# Computing distance measure
+# Building a new metric
 
+## Principle
+
+The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
+
+With reference to the graphical design in \ref{@paper-gravitas}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of facet variables. 
+
+
+
+<!-- To elaborate further, look at the examples in Figure \ref{}, where Figure \ref{}a represents the panel design with distribution of each x categories drawn from N(5, 10) distribution. It could be observed that the graph is not particularly interesting, as there is no significant change in distribution between x-axis levels or facets. Figure \ref{}b represents the same panel design with no difference in distribution of x-axis categories within a facet, but different distribution of x-axis categories for different facets. For example, if there are 4 facet levels and 2 x-axis levels, data is generated in the way as described in Table \ref{}. Figure \ref{}b exhibits an exact opposite situation where the x-axis within facets are different but not across facets. -->
+<!-- Figure \ref{}d takes it futher by varying the distribution across both facet and x-axis categories. -->
+
+
+
+```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable."}
+
+p1 <- sim_panel(nx = 2, nfacet = 3, ntimes = 500) %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+
+simulated_data <- sim_panel(nx = 2,
+          nfacet = 3,
+          ntimes = 500,
+          sim_dist = rep(dist_normal(seq(5, 15, 5), 5), each = 2)) 
+
+
+p2 <- simulated_data %>% ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+
+p3 <- simulated_data %>% ggplot(aes(x = as.factor(id_facet), y = sim_data)) + facet_wrap(~id_x) + geom_boxplot()
+
+p4 <- sim_panel(nx = 2,
+          nfacet = 3,
+          ntimes = 500,
+          sim_dist = dist_normal(seq(5,30, 5), 5)) %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+
+
+ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
+                  common.legend = TRUE,
+                  labels = c("a", "b", "c", "d"))
+
+```
+
+
+
+
+<!-- in the same group would be important to bring out different patterns of the data. -->
 ## Distance between distributions
 
 <!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
@@ -116,9 +159,9 @@ Here, we have two main objectives:
 <!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
 
   
-The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence, denoted $D(p(x), q(x))$ is a non-symmetric measure of the difference between two probability distributions $p(x)$ and $q(x)$ and is interpreted as the amount of information lost when $q(x)$ is used to approximate $p(x)$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric. The Jensen-Shannon divergence based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance are Hellinger distance, total variation distance and Fisher information metric. 
+The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence[@Kullback1951-jy] introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence, denoted $D(p(x), q(x))$ is a non-symmetric measure of the difference between two probability distributions $p(x)$ and $q(x)$ and is interpreted as the amount of information lost when $q(x)$ is used to approximate $p(x)$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance are Hellinger distance, total variation distance and Fisher information metric. 
 
-In the context of this paper, the pairwise distances between the distributions of the measured variable are computed through Jensen-Shannon distance which is based on Kullback-Leibler divergence and is defined by,
+In the context of this paper, the pairwise distances between the distributions of the measured variable are computed through Jensen-Shannon distance (JSD) which is based on Kullback-Leibler divergence and is defined by,
 
 $$JSD(P||Q) = \frac{1}{2}D(P||M) + \frac{1}{2}D(Q||M)$$
 where $M = \frac{P+Q}{2}$ and 
@@ -128,6 +171,14 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- $$D(p_1,p_2) = \int^{\infty}_{-\infty}p_1(x)log\frac{p_1(x)}{p_2(x)}\,dx$$ is the Kullback-Leibler divergence between $p_1$ and $p_2$.   -->
 
 <!-- We call this measure of variation as  Median Maximum Pairwise Distances (MMPD). -->
+
+
+# Distribution of Jensen-Shannon distances
+
+Jensen-Shannon distances (JSD) are distributed as chi-squared with $m$ df where we discretize the continuous distribution with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$.
+With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made.
+
+
 
 ## Normalize distances
 
@@ -265,13 +316,13 @@ $\forall i, j \in N_C$
 
 ### Bounds
 
-This is not correct becuase MMPD should be median of standardized Gumbel distribution. So no bound?
+This is not correct because MMPD should be median of standardized Gumbel distribution. So no bound?
 
 By @Lin1991-fj,
 $$ 0 \leq JSD(P||Q) \leq ln(2)$$.
 
 Thus,  $$ 0 \leq MMPD \leq \frac{ln(2)}{ln(k)}$$.
-Now, by asumption $k \geq 2$ and hence,
+Now, by assumption $k \geq 2$ and hence,
 <!-- \begin{equation} -->
 <!-- For k = 2, $\frac{ln(2)}{ln(k)} = 1$  -->
 <!-- \end{equation} -->
@@ -365,14 +416,10 @@ Behavior of the statistic - control simulation
  - To check if different distributions impact
 (simulate with different distributions but same for all levels)
 
- - To check if x-levels are normalised
+ - To check if x-levels and facets are normalized
 (simulate with different distributions)
-(simulate with different x-levels)
+(simulate with different x and facet levels)
 
-
- - To check if facet-levels are normalised
-(simulate with different distributions)
-(simulate with different facet-levels for fixed x-levels)
 
 
 ## Size and power
@@ -520,6 +567,669 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 <!-- # ``` -->
 <!-- #  -->
 
-# Application
+
+# Applications {#sec:application}
+
+## Smart meter data of Australia {#sec:smartmeter}
+
+<!-- # how data looks -->
+Smart meters provide large quantities of measurements on energy usage for households across Australia. One of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney provides customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.-->The idea here is to show how to visualize the distribution of the energy consumption across different cyclic granularities in a systematic way to identify different behavioral patterns.
+
+<!-- and identify the extreme and regular households. -->
+
+<!-- ### Data structure for visualization: -->
+
+<!-- The data structure for a sample of 50 households from that trial is depicted in \autoref{tab:smart-data} where the variable `reading_datetime`, `customer_id` and `general_supply_kwh` denote the index, key and measured variable of the tsibble. -->
+<!-- <!-- We take a random sample of 50 households to see how we can achieve that.  -->
+
+
+```{r smart-data}
+# load("data/sm_cust50.Rdata")
+#
+# smart_data <- smart_meter <- sm_cust50 %>%
+#   as_tsibble() %>%
+#   dplyr::select(
+#     customer_id,
+#     reading_datetime,
+#     general_supply_kwh
+#   ) %>% head(n = 5)
+#
+#   knitr::kable(smart_data,
+#                format = "latex",
+#                booktabs = TRUE,
+#                caption = "Smart meter data structure with electricity demand for 50 households from SGSC project for every 30 minutes from 2012 to 2014.")
+```
+
+<!--of the tsibble and represents the time variable. The variable denoting different households represent the key of the tsibble and is the time series variable which needs to be analyzed.Data sets of the form <$C1$, $C2$, `general_supply_kwh`> will form the basis of exploration for each key in the data set, where the cyclic granularity $C1$ would be mapped to $x$ axis and `general_supply_kwh` to $y$ axis with the cyclic granularity $C2$ mapped to facet. Any geometry displaying the probability distribution of `general_supply_kwh` like boxplot, letter value, violin,
+ridge or highest density region plots can then be used to explore the data set.-->
+
+### Cyclic granularities search and computation:
+  
+The tsibble object `smart_meter10` from R package `gravitas` [@R-gravitas] consisting of `reading_datetime`, `customer_id` and `general_supply_kwh` denoting the index, key and measured variable of the tsibble is used to facilitate the systematic exploration. While trying to explore the energy behavior of these customers systematically across cyclic time granularities, the first thing to consider is which cyclic time granularities we can look at exhaustively. Let us consider conventional time deconstructions for a Gregorian calendar (second, minute, half-hour, hour, day, week, month, year). Since the interval of this tsibble is 30 minutes, the temporal granularities may range from half-hour to year. Considering $6$ linear granularities half-hour, hour, day, week, month and year in the hierarchy table, $N_C = (6*5/2) = 15$. <!--(via Section \ref{sec:data-structure}) circular or quasi-circular granularities that could be formed relating two linear granularities at a time.--> If $N_C$ seem too large, the smallest and largest linear granularities could be considered to be removed from the hierarchy table. We remove half-year and year to have $N_C = (4*3/2) = 6$ and obtain cyclic granularities namely "hour_day", "hour_week", "hour_month", "day_week", "day_month" and "week_month", read as "hour of the day", etc. Further, we add cyclic granularity day-type( "wknd_wday") to capture weekend and weekday behavior. Now that we have a list of cyclic granularities to look at, we should be able to compute the multiple-order-up granularities using Section \ref{sec:cyclic-calendar}. <!-- The lubridate package [@Grolemund2011-vm] provides tools to compute single-order-up granularities, \ref{sec:circular-gran-def} (for hour_day, hour_week and day_week) and \ref{sec:quasi-circular-gran-def} (for hour_month, day_month, week_month).  
+with the index set mapping half-hourly time periods to a set of positive integers.-->
+
+
+
+<!-- R package **gravitas** [@R-gravitas] is used to facilitate the systematic exploration here. While trying to explore the energy behavior of these customers systematically across cyclic time granularities, the first thing we should have at our disposal is to know which all cyclic time granularities we can look at exhaustively. Let us consider conventional time deconstructions for a Gregorian calendar (second, minute, half-hour, hour, day, week, month, year). Since the interval of this tsibble is 30 minutes, the temporal granularities may range from half-hour to year. Considering $6$ linear granularities half-hour, hour, day, week, month, year, there could be $(6*5/2) = 15$ circular or quasi-circular granularities that could be formed. If these options are considered too many, the most coarse temporal unit can be set to a “month” and some intermediate temporal units which might not be pertinent to the analysis like hhour could be dropped. Then we will be left with six cyclic granularites namely "hour_day", "hour_week", "hour_month", "day_week", "day_month" and "week_month". Now that we have a list of cyclic granularities to look at, we should be able to compute the multiple-order-up granularities using Sections \ref{sec:cyclic-calendar}. <!-- The lubridate package [@Grolemund2011-vm] provides tools to compute single-order-up granularities, \ref{sec:circular-gran-def} (for hour_day, hour_week and day_week) and \ref{sec:quasi-circular-gran-def} (for hour_month, day_month, week_month).  -->
+<!-- Here, the index set $Z=\{z: z \in \mathbb{Z}_{\geq 0}\}$ maps the half-hourly time instants to a set of positive integers. Then, multiple-order-up circular granularity $hour\_week$ and quasi-circular granularity $hour\_month$ could be computed from single-order-up granularities as follows: -->
+<!-- <!-- $$ hour\_day(z) = \lfloor z/2 \rfloor \mod 7$$ (Definition \autoref{def:circular}) -->
+<!-- \begin{align} -->
+<!--   hour\_week(z) =  day\_week(z) + 24*hour\_day(z) -->
+<!-- \end{align} -->
+
+<!-- <!-- $$ day\_month(z) =   \lfloor z/2*24 \rfloor  - \sum_{w=0}^{k-1}\vert T_{w \mod 12*4} \vert$$ (\autoref{def:quasi-circular}) -->
+<!-- \begin{align} -->
+<!-- hour\_month(z) =  hour\_day(z) + 24*day\_month(z) -->
+<!-- \end{align} -->
+
+<!-- These cyclic granularities are a function of the index variable and are computed based on if they are circular <!--(Section \ref{sec:circular-gran-def}), quasi-circular. <!--(Section \ref{sec:quasi- circular-gran-def}) or aperiodic (Section \ref{sec:aperiodic-gran-def})-->
+
+```{r search, echo=FALSE, eval = FALSE}
+library(gravitas)
+smart_meter %>%
+  search_gran(filter_out = c("semester", 
+                             "quarter",
+                             "fortnight"))
+```
+
+<!-- #smart_smart_search <- smart_meter %>% search_gran() -->
+<!-- #knitr::kable(smart_smart_search, format = "markdown") -->
+
+
+
+<!-- CONTENT CUT -->
+<!-- # ```{r search_limit1, echo=TRUE} -->
+<!-- # smart_meter10 %>% -->
+<!-- #   search_gran(highest_unit = "month") -->
+<!-- # ``` -->
+
+<!-- # smart_meter_limit1 <- smart_meter10 %>%  -->
+<!-- #   search_gran(highest_unit = "month") -->
+<!-- # knitr::kable(smart_meter_limit1, format = "markdown") -->
+
+```{r search_gran_limit2, echo = FALSE, eval = FALSE}
+smart_meter10 %>% search_gran(
+  highest_unit = "month",
+  filter_out = c("hhour", "fortnight"))%>%
+  knitr::kable(format = "latex",
+      booktabs = TRUE) %>%
+  #row_spec(0, bold = TRUE)%>%
+  kable_styling()
+```
+
+
+<!-- # smart_meter_limit2 <- smart_meter10 %>% search_gran(highest_unit = "month", -->
+<!-- #                               filter_out = c("hhour", "fortnight") -->
+<!-- # ) -->
+<!-- # knitr::kable(smart_meter_limit2, format = "markdown") -->
+
+<!-- Now that we have a list of cyclic granularities to look at, we should be able to compute them from the data using Sections \ref{sec:circular-gran-def}, \ref{sec:quasi-circular-gran-def} and \ref{sec:aperiodic-gran-def}. -->
+
+### Screening and visualizing harmonies
+
+From the search list, $N_C = 7$ cyclic granularities are chosen for which we would like to derive insights of energy behavior. Recalling the data structure <$C_i$, $C_j$, `general_supply_kwh`> for exploration $\forall i, j \in \{1, 2, \ldots, 7\}$, each of these $7$ cyclic granularities can either be mapped to x-axis or to facet. Choosing $2$ of the possible $7$ granularities, which is equivalent to having $^{7}P_2 = 42$ candidates for visualization. Fortunately, harmonies can be identified among those $42$ possibilities to narrow the search. \autoref{tab:harmony-tab} shows $16$ harmony pairs after removing clashes and any cyclic granularities with levels more than $31$, as effective  exploration becomes difficult with many levels (Section \ref{sec:levels}). The MMPD is also shown along with indicator (*) only when variation of measured variable across the harmony pair significant. Starting from $42$ possible pairs of cyclic granularities to visualize, we are finally left with only $6$, which is a very sizable number of displays for exploration.
+
+
+Few harmony pairs are displayed in \autoref{fig:bothcust} to illustrate the siginificance of MMPD, threshold and the impact of different distribution plots and reverse mapping.
+\noindent For each of \autoref{fig:bothcust} (b) and (c), $C_i$ is the circular granularity day-type (weekday/weekend) and $C_j$ is hour of the day. The geometry used for displaying the distribution is chosen as area-quantiles and violins in \autoref{fig:bothcust} (b and c respectively). \autoref{fig:bothcust} (a) displays reverse mapping of $C_i$ and $C_j$ with $C_i$ denoting hour of the day and $C_j$ denoting day-type with distribution geometrically displayed as boxplots.
+
+<!-- From the search list, we found six cyclic granularities for which we would like to derive insights of energy behavior. Given the data structure <$C1$, $C2$, `general_supply_kwh`>, each of those six cyclic granularities can either be mapped to x-axis or to facet. Thus the problem is equivalent to taking 2 granularities at a time from six, which essentially is equivalent to having 30 data subsets for visualization. However, harmony/clash pairs can be identified among those 30 possibilities to determine feasibility of plotting any pairs together. \autoref{tab:harmony-tab} shows 13 harmonies pairs, each of which can be plotted together to look at the energy behavior from different perspectives. -->
+
+<!-- We will look at few harmony pairs and see how the proposed workflow can be utilized.  -->
+
+<!-- From the Gestalt theory with the same data  <$C1$ $C2$, `general_supply_kwh`>, mapping $C1$ on the x-axis vs facet might lead to different insights. -->
+
+```{r harmony-tab, echo=FALSE, eval = FALSE, cache=TRUE}
+# if(!dir.exists("cache/"))
+# {
+#   dir.create("cache")
+# }
+# 
+# if (!file.exists("cache/smart_harmony.rds")) {
+  sm <- smart_meter10 %>%
+  filter(customer_id %in% c(10017936))
+  
+  harmonies <- sm %>%
+  harmony(ugran = "month",
+          filter_in = "wknd_wday", 
+          filter_out = c("hhour", "fortnight"))
+set.seed(12345)
+
+global_harmony <- sm %>%
+  global_threshold(harmony_tbl = harmonies,
+                   response = "general_supply_kwh", nsamp = 5) %>%
+  rename(`facet variable` = facet_variable,
+         `x-axis variable` = x_variable,
+         `facet levels` = facet_levels,
+         `x-axis levels` = x_levels) %>% 
+  mutate(MMPD = if_else(gt_MMPD == TRUE,
+                        paste0(MMPD, "*"), paste0(MMPD))) %>%
+  select(`facet variable`,`x-axis variable`,
+         `facet levels`,`x-axis levels` ,MMPD) 
+
+#   write_rds(smart_harmony,"cache/smart_harmony_ak.rds")
+# }
+#smart_harmony <- read_rds("cache/smart_harmony.rds")
+
+  knitr::kable(global_harmony,
+               format = "latex",
+               booktabs = TRUE,
+                caption = "Harmonies with a pair of cyclic granularity one placed on facet and the other on x-axis. Out of 42 possible combinations of cyclic granularities, only 16 are harmony pairs. The harmony pairs are ranked basis highest to lowest MMPD and only the first 6 show significant variation in the measured variable.") %>%
+    #row_spec(0, bold = TRUE) %>%
+    kable_styling()
+```
+
+<!-- # smart_meter10 %>% gran_advice("wknd_wday", "hour_day") -->
+
+<!-- The median consumption or width of other bands doesn't vary much across seasons, implying extreme behavior or extreme customers does not vary across seasons much.  -->
+
+<!-- No need to share the same for 50 customers - cut down text and anyway nothing much interesting is coming -->
+
+<!-- ```{r wknd-wday50, fig.cap = "Quantile plot of energy consumption of 50 households across different hours of the day faceted by weekday and weekend. The quantiles are not different for weekdays and weekends implying either the behavior balances out among these customers or most of them do not behave differently for weekdays and weekends."} -->
+
+<!-- smart_meter <-  -->
+<!--   read_rds("data/sm_cust50.rds") -->
+
+<!-- smart_meter %>%  -->
+<!--   prob_plot("wknd_wday", -->
+<!--                             "hour_day", -->
+<!--                             response = "general_supply_kwh", -->
+<!--                             plot_type = "quantile", -->
+<!--             symmetric = FALSE,  -->
+<!--             quantile_prob = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)) + -->
+<!--   scale_y_sqrt() -->
+<!-- ``` -->
+
+<!-- # ```{r wknd-wday50_df} -->
+<!-- # smart_meter10 %>%  -->
+<!-- #   prob_plot("month_year", -->
+<!-- #                             "day_fortnight", -->
+<!-- #                             response = "general_supply_kwh", -->
+<!-- #                             plot_type = "quantile", -->
+<!-- #             symmetric = TRUE,  -->
+<!-- #             quantile_prob = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)) + -->
+<!-- #   scale_y_sqrt(breaks = c(0.1, 0.25, 0.5, 1:3)) -->
+<!-- # ``` -->
+
+<!-- ```{r my-hd, fig.cap="Area quantile plots of energy consumption across hours of the day faceted by months of the year. The black line is the median, whereas the pink band covers 25th to 75th percentile, the orange band covers 10th to 90th percentile and the green band covers 1st to 99th percentile. The median and quartile consumption increase in winter months, but extreme behavior represented by higher bands mostly stay the same across seasons. "} -->
+
+<!-- library(gravitas) -->
+<!-- library(tsibble) -->
+
+<!-- library(ggplot2) -->
+<!-- smart_meter %>% -->
+<!--   prob_plot("month_year", "hour_day", -->
+<!--     response = "general_supply_kwh", -->
+<!--     plot_type = "quantile", -->
+<!--     quantile_prob = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), -->
+<!--     symmetric = TRUE) + -->
+<!--   ggtitle("") + scale_y_sqrt(breaks = c(0.01, 0.1, 0.5, 1:3)) -->
+<!-- ``` -->
+
+<!-- Figure \ref{fig:dw-hd} shows that on morning peaks for Saturday and Sunday are higher and occurs in a later hour of the day compared to weekdays. This is true for both top 50% and 75% of the customers. Hence, this is indicative of the fact that at least 50% of the households in this subset has traditional work days (Mon-Fri) and weekends(Sat-Sun). All the percentiles peaks up in the morning hours and then drops in the afternoon, before again peaking up in the evening.  -->
+
+<!-- ```{r dw-hd} -->
+
+<!-- # Hourly usage across days of the week -->
+<!-- sm_cust50 %>% -->
+<!--   prob_plot("day_week",  -->
+<!--            "hour_day", -->
+<!--            "general_supply_kwh",  -->
+<!--            plot_type = "quantile",  -->
+<!--           quantile_prob = c(0.25, 0.5, 0.75), -->
+<!--            response = "general_supply_kwh", overlay = FALSE) + -->
+<!--   ggtitle("") -->
+
+<!-- ``` -->
+
+<!-- on half-hourly energy usage and detailed information on appliance use, climate, retail and distributor product offers, and other related factors.  -->
+
+<!-- typical and extreme behaviors of 50 households from that trial.  -->
+
+<!-- , and indeed many parts of the world. Households are distributed geographically and have different demographic properties such as the existence of solar panels, central heating or air conditioning. The behavioral patterns in households vary substantially, for example, some families use a dryer for their clothes while others hang them on a line, and some households might consist of night owls, while others are morning larks.  -->
+
+<!-- <!-- Existing approaches, why we need to drill down, or why we want to -- probability distributions -->
+<!-- It is common to see aggregates of usage across households, total kwh used each half-hour by state, for example, because energy companies need to understand maximum loads that they will have to plan ahead to accommodate. But studying overall energy use hides the distributions of usage at finer scales, and making it more difficult to find solutions to improve energy efficiency.  -->
+
+<!-- We want to look at the distribution of energy across coarser temporal granularities and then deep dive into finer temporal granularities. -->
+
+<!-- In Figure \ref{fig:day-fortnight} and \ref{fig:day-fortnight-agg} , the smart meter data is filtered for two customers to illustrate what kinds of insights can be drawn for the energy behavior of these two customers. -->
+
+<!-- can be added later -->
+
+<!-- In Figure \ref{fig:day-fortnight},to illustrate what kinds of insights can be drawn for the energy behavior of these two customers. it can be seen that for most days of the fortnight, the second household has much less consumption than the first one. However, there is additional information that we can derive looking at the distribution. If we consider letter value F as a regular behavior and letter values beyond F as not-so-regular behavior, we can conclude that the regular behavior of the first household is more stable than the second household. However, the distribution of tail of the first household is more variable, observed through distinct letter values, implying that their not-so-regular behavior is quite extreme. This shows, how looking at the distribution of the dependent variable can throw more light on the energy behavior of the customers, which are lost using aggregate or summary statistics.  -->
+
+<!-- # ```{r day-fortnight_agg, echo = FALSE} -->
+<!-- # library(lvplot) -->
+<!-- # library(ggplot2) -->
+<!-- # library(dplyr) -->
+<!-- # library(tibble) -->
+<!-- # library(gravitas) -->
+<!-- # library(tidyr) -->
+<!-- # smart_meter10 %>%  -->
+<!-- #   filter(customer_id %in% c(10006704, 10017936)) %>%  -->
+<!-- #   create_gran("day_fortnight") %>% -->
+<!-- #   as_tibble() %>%  -->
+<!-- #   group_by(customer_id, day_fortnight) %>%  -->
+<!-- #   summarize(median= log(median(general_supply_kwh)), -->
+<!-- #             total = log(sum(general_supply_kwh))) %>%  -->
+<!-- #   gather("daily_consumption", "value", - c(customer_id, day_fortnight)) %>%  -->
+<!-- #   ggplot2::ggplot(aes( -->
+<!-- #     x = as.factor(day_fortnight), -->
+<!-- #     y = value,  -->
+<!-- #     color = daily_consumption, -->
+<!-- #     group = daily_consumption)) + -->
+<!-- #   geom_line() + -->
+<!-- #   xlab("day_fortnight") + -->
+<!-- #   ylab("general_supply_kwh") +  -->
+<!-- #   facet_wrap(~customer_id) +  -->
+<!-- #   theme_bw()  -->
+
+<!-- # smart_meter10 %>%  -->
+<!-- #   filter(customer_id %in% c(10006704, 10017936)) %>%  -->
+<!-- #   create_gran("day_fortnight") %>% -->
+<!-- #   as_tibble() %>%  -->
+<!-- #   group_by(customer_id, day_fortnight) %>%  -->
+<!-- #   summarize(median_consumption= median(general_supply_kwh)) %>% -->
+<!-- #   ggplot2::ggplot(aes( -->
+<!-- #     x = as.factor(day_fortnight), -->
+<!-- #     y = median_consumption, -->
+<!-- #     color =  customer_id, -->
+<!-- #     group = customer_id)) + -->
+<!-- #   geom_line() + -->
+<!-- #   xlab("day_fortnight") + -->
+<!-- #   ylab("general_supply_kwh") +  -->
+<!-- #   theme_bw()  -->
+<!-- ``` -->
+
+<!-- ```{r day-fortnight, fig.cap="Letter value plot of two households across days of the fortnight. M, F, E, D and C represents the letter values of energy consumption. Regular behavior (within letter value F) is more variable for the 2nd household, whereas extreme behavior (beyond letter value F) is varying more for the first household."} -->
+<!-- library(lvplot) -->
+<!-- library(ggplot2) -->
+<!-- library(dplyr) -->
+<!-- library(tibble) -->
+<!-- library(gravitas) -->
+<!-- smart_meter10 %>% -->
+<!--   filter(customer_id %in% c(10006704, 10017936)) %>%  -->
+<!--   create_gran("day_fortnight") %>% -->
+<!--   ggplot2::ggplot(aes( -->
+<!--     x = as.factor(day_fortnight), -->
+<!--     y = general_supply_kwh)) + -->
+<!--   xlab("day_fortnight") + -->
+<!--   geom_lv( -->
+<!--     outlier.colour = "red", -->
+<!--     aes(fill = ..LV..), -->
+<!--     k = 5) + -->
+<!--   facet_wrap(~customer_id) +  -->
+<!--   scale_fill_lv() + -->
+<!--   theme_bw() + -->
+<!--   scale_y_sqrt()  -->
+<!-- ``` -->
+
+<!-- Figure \autoref{fig:my-hd} shows the overlay quantile plot of energy consumption of 50 households. The black line is the median, whereas the pink band covers 25th to 75th percentile, the orange band covers 10th to 90th percentile and the green band covers 1st to 99th percentile. Each facet represents a month and energy consumption across each hours of the day is shown inside each facet. It can be observed that the median is very close (and hence not distinctly visible) to the lower boundaries of all the other bands implying energy consumption for these households are extremely left skewed.75% of the households has distinct higher evening peaks compared to morning peaks, especially in the winter months. The top 5% households behave very differently than even the top 10% households in terms of total energy consumption across hours of the day.  -->
+
+<!-- # ```{r is_harmony, echo= TRUE} -->
+<!-- # smart_meter10 %>%  -->
+<!-- #   is_harmony(gran1 = "hour_day",  -->
+<!-- #              gran2 = "day_week") -->
+<!-- #  -->
+<!-- # smart_meter10 %>% -->
+<!-- #   is_harmony(gran1 = "hour_day",  -->
+<!-- #              gran2 = "day_week",  -->
+<!-- #              facet_h = 14) -->
+<!-- #  -->
+<!-- # smart_meter10 %>%  -->
+<!-- #   is_harmony(gran1 = "day_month", -->
+<!-- #              gran2 = "week_month") -->
+<!-- # ``` -->
+
+<!-- Boxplot of energy consumption is shown across `wknd_wday` (facet) and `hour_day` (x-axis) for the same two households. For the first household, the shape of the distribution does not change significantly for weekdays and weekends. The distribution is roughly smooth with a morning and an evening peak. -->
+
+In \autoref{fig:bothcust} (b), <!--the distribution of energy consumption is plotted across the harmony pair (weekday/weekend, hour of the day) through an area quantile plot-->the black line is the median, whereas the purple band covers 25th to 75th percentile, the orange band covers 10th to 90th percentile and the green band covers 1st to 99th percentile. The first facet represents the weekday behavior while the second one displays the weekend behavior and energy consumption across each hours of the day is shown inside each facet. The energy consumption is extremely (positive- or right-) skewed with the 1st, 10th and 25th percentile lying relatively close whereas 75th, 90th and 99th lying further away from each other. This is common across both weekdays and weekends. For the first few hours on weekdays, median energy consumption starts and continues to be higher for longer as compared to weekends.
+
+Consider looking at violin plots instead of quantile plots to look at the same data in \autoref{fig:bothcust}(c). There is additional information that we can derive looking at the distribution. There is bimodality in the early hours of the day, implying both low and high energy consumption is probable in the early hours of the day both for weekdays and weekends. <!--Also the hours from 7 to 13 look most volatile.--> If we visualize the same data with reverse mapping of the cyclic granularities, then the natural tendency would be to compare weekend and weekday behavior within each hour and not across hours. For example in \autoref{fig:bothcust}(a), it can be seen that median energy consumption for the early morning hours is extremely high for weekdays compared to weekends. Also, outliers are more prominent in the latter part of the day. All of these indicate that looking at different distribution geometry or changing the mapping might shed lights on different aspect of the energy behavior for the same sample population.
+
+
+
+
+<!-- If we consider letter value F as a regular behavior and letter values beyond F as not-so-regular behavior, we can conclude that the regular behavior of the first household is more stable than the second household. However, the distribution of tail of the first household is more variable, observed through distinct letter values, implying that their not-so-regular behavior is quite extreme. This shows, how looking at the distribution of the dependent variable can throw more light on the energy behavior of the customers, which are lost using aggregate or summary statistics. -->
+
+
+```{r bothcust, fig.cap = "Energy consumption of a single customer shown with different distribution displays, and granularity arrangements. Two granularities are used: hour of the day (I) and weekday/weekend (II). Plot (a) shows granularity I facetted by granularity II, and plots (b), (c) shows the converse mapping. Plot (a) makes a comparison of usage by workday within each hour of the day using side-by-side boxplots. Generally, on a work day there is more consumption early in the day.  Plots (b) and (c) examine the temporal trend of consumption over the course of a day, separately for the type of day. Plot (b) uses an area quantile to put the emphasis on the time series, for example, the median consumption over time shows prolonged usage in the morning on weekdays. Plot (c) uses a violin plot to place emphasis on distributional differences across hours. It can be seen that the morning use on weekdays is bimodal, some work days there is low usage, which might indicate the person is working from home and also having a late start.", out.width="90%"}
+
+# plot for only customer is shown
+# cust1 <- smart_meter10 %>%
+# filter(customer_id %in% c(10006704)) %>%
+#   prob_plot("wknd_wday",
+#                             "hour_day",
+#                             response = "general_supply_kwh",
+#                             plot_type = "quantile",
+#             symmetric = FALSE,
+#             quantile_prob = c(0.25, 0.5, 0.75, 0.9))
+#   scale_y_sqrt() +
+#   ggtitle("Energy consumption distribution for customer id: 10006704")
+cust2_quantile <- smart_meter10 %>%
+  filter(customer_id %in% c(10017936)) %>%
+  prob_plot("wknd_wday",
+    "hour_day",
+    response = "general_supply_kwh",
+    plot_type = "quantile",
+    symmetric = TRUE,
+    quantile_prob = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)
+  ) +
+  scale_y_sqrt() +
+  #ggtitle(" (b) Area quantile plot faceted by weekend-weekday") +
+  ylab("electricity demand [KWh]") + xlab("hours of the day") + ggtitle("") + ylab("")+ 
+  theme_minimal()
+#
+# smart_meter10 %>%
+#   filter(customer_id %in% c(10006704)) %>%
+#   prob_plot("wknd_wday",
+#                             "hour_day",
+#                             response = "general_supply_kwh",
+#                             plot_type = "violin") +
+#   scale_y_sqrt() +
+#   ggtitle("Energy consumption distribution for customer id: 10006704")
+
+cust2_violin <- smart_meter10 %>%
+  filter(customer_id %in% c(10017936)) %>%
+  prob_plot("wknd_wday",
+    "hour_day",
+    response = "general_supply_kwh",
+    plot_type = "violin"
+  ) +
+  scale_y_sqrt()+
+  #ggtitle(" (c) Violin plot faceted by weekend-weekday") +
+  ylab("") + xlab("hours of the day") + ggtitle("") +
+  scale_x_discrete( breaks = seq(0, 23, 5))+ 
+  theme_minimal()
+
+cust2_box <- smart_meter10 %>%
+  filter(customer_id %in% c(10017936)) %>%
+  prob_plot("hour_day",
+    "wknd_wday",
+    response = "general_supply_kwh",
+    plot_type = "boxplot"
+  ) +
+  scale_y_sqrt() +
+  #ggtitle(" (a) Box plot faceted by hour-of-day") +
+  xlab("") +
+  ggtitle("") + ylab("") +
+  scale_x_discrete(labels = c('wday','wend')) +
+  ggplot2::theme(axis.text.x = element_text(size = 7))+ 
+  theme_minimal()
+
+
+
+#ggarrange(cust2_quantile, cust2_violin, nrow = 2)
+
+
+gg_fig <- ggarrange(cust2_box,
+          ggarrange(cust2_quantile, cust2_violin, nrow = 2, labels = c("b", "c")),
+          ncol = 2, labels = "a")
+          #label.y = "electricity demand [KWh]"\
+
+
+ggpubr::annotate_figure(gg_fig,
+                left = text_grob("electricity demand [KWh]",  rot = 90))
+```
+
+<!-- # ```{r cust-ridge, fig.cap ="Boxplot of energy consumption across hours of the day faceted by weekday/weekend for customer id: 10017936. The change in mapping of the cyclic granularities leads to easier comparison within weekdays and weekends for each hour. Median consumption till 6am is higher for weekends compared to weekdays although the quartiles look similar. Outliers appear more during the end of the day implying more uncertain behavior in latter hours of the day compared to early morning hours."} -->
+<!-- #  -->
+<!-- # smart_meter10 %>% -->
+<!-- #   filter(customer_id %in% c(10017936)) %>% -->
+<!-- #   prob_plot("hour_day", -->
+<!-- #     "wknd_wday", -->
+<!-- #     response = "general_supply_kwh", -->
+<!-- #     plot_type = "boxplot" -->
+<!-- #   ) + -->
+<!-- #   scale_y_sqrt() -->
+<!-- # ``` -->
+
+<!-- Now, we would like to see how these customers' behavior relate to the rest of the 50 households across these two measures -   -->
+
+<!-- - if energy distribution is skewed towards extreme? -->
+
+<!-- - if the weekend and weekday behavior are different for most of these households? -->
+
+If the data for all keys are visualized together, it might lead to Simpson's paradox, which occurs when one observation shows a particular behavior, but this behavior paradoxically becomes obscured by aggregation. For example in a particular neighborhood one household may have the least daily power consumption for a full week, yet still not be the household with the minimum weekly power consumption. This is an intuitive possibility, because heterogeneous `customer_id`'s with very different occupation or demographics will tend to have very different energy behavior and combining them together will somehow weaken any typical or extreme behavior. A strategy for analyzing multiple keys together could be to first group them basis time series or demographic features and then look at their energy behavior. This is beyond the scope of the current work.
+
+<!-- For the purpose of this paper, the smart meter data is filtered for two customers to illustrate kinds of insights that can be drawn after proceeding with the systematic exploration. -->
+
+<!-- For example, Figure \ref{fig:wknd-wday50} shows the quantile plot of energy consumption of a sample of 50 households. Quantiles for weekends and weekdays for these customers look exactly the same. It is not clear if the behaviors of most of these customers do not alter between weekdays and weekends or looking at all customers together balances out the behaviors. Consider another example in Figure \ref{fig:my-hd} showing the area quantile plots of 50 customers. The median is very close to the lower boundaries of all the other bands implying energy consumption for these households are left skewed. The pink band changes significantly in winter months (May - August) implying that much of the behavioral changes occur in the quartiles, that too in peak hours of the day. It is to be noted here that the the level of all quantiles increased too in winter months (increased energy usage in weather conditions), the interesting part is to notice that the relationship between bands other than quartile stayed same across seasons. -->
+
+This case study shows systematic exploration of energy behavior for a household to gain exhaustive insights on periodic behavior of the households. 
+<!--First, it helps us to find the list of cyclic granularities to look at, then shrinks the number of possible visualizations by identifying harmonies, visualize a harmony pair and shows the effect of different distribution plots or reverse mapping.-->
+
+## T20 cricket data of Indian Premiere League {#sec:cricket}
+
+The method is not only restricted to temporal data, and can be generalized to many hierarchical granularities (with  continuous and uni-directional nature). We illustrate this with an application to the sport cricket. Although there is no conventional time component in cricket, each ball can be thought to represent an ordering from past to future with the game progressing forward with each ball. In the Twenty20 format, an over will consist of 6 balls (with some exceptions), an inning is restricted to a maximum of 20 overs, a match will consist of 2 innings and a season consists of several matches. Thus, similar to time, there is a hierarchy where ball is nested within overs, overs nested within innings and innings within matches. The idea of cyclic granularities can be likewise mapped to this hierarchy. Example granularites then include ball of the over, over of the inning and ball of the inning. Although most of these cyclic granularities are circular in design of the hierarchy, in application of the rules some granularities are aperiodic. For example, in most cases an over will consist of 6 balls with some exceptions like wide balls or when an inning finishes before the over finishes. Thus, the cyclic granularity ball-of-over will be circular in most cases and aperiodic in others.
+
+<!-- However, irrespective of the type of cyclic granularities, it can be interesting to visualize the distribution of a measured variable across these cyclic granularities to throw light on the periodic behavior of a non-temporal data set similar to any temporal data set. -->
+
+The Indian Premier League (IPL) is a professional Twenty20 cricket league in India contested by eight teams representing eight different cities in India. The ball by ball data for IPL season 2008 to 2016 is fetched from [Kaggle](https://www.kaggle.com/josephgpinto/ipl-data-analysis/data). The `cricket` data set in the `gravitas` package summarizes the ball-by-ball data across overs and contains information for a sample of 214 matches spanning 9 seasons (2008 to 2016) such that each over has 6 balls, each inning has 20 overs and each match has 2 innings. This could be useful in a periodic world when we wish to compute any circular/quasi-circular granularity based on a hierarchy table which look like \autoref{tab:hierarchy-cric}.
+
+```{r hierarchy-cric}
+library(gravitas)
+library(tibble)
+hierarchy_model <- tibble::tibble(
+  `linear (G)` = c("over", "inning", "match", "season"),
+  `single-order-up cyclic (C)` = c("over-of-inning", "inning-of-match", "match-of-season", 1),
+  `period length/conversion operator (K)` = c(20, 2, "k(match, season)", 1)
+)
+knitr::kable(hierarchy_model,
+             format = "latex",
+             booktabs = TRUE,
+             caption = "Hierarchy table for cricket where overs are nested within an inning, innings nested within a match and matches within a season.") %>%
+  #row_spec(0, bold = TRUE)%>%
+  kable_styling()
+```
+
+
+However, even if the situation is not periodic and a similar hierarchy can not be formed, it can be interesting to visualize the distribution of a measured variable across relevant cyclic granularities to shed light on the aperiodic behavior of a non-temporal data set similar to aperiodic events like formal meetings, workshops, conferences, school semesters in a temporal set up. There are many interesting questions that could possibly be answered with such a data set irrespective of the type of cyclic granularities. <!--We will explore a few interesting questions and understand how the proposed approach in the paper can help answer some of the questions.-->
+
+<!-- the two teams have a single innings each, which is restricted to a maximum of 20 overs. Hence, in this format of cricket, a match will consist of 2 innings, an innings will consist of 20 overs, an over will consist of 6 balls with some exceptions. -->
+
+<!-- ```{r hierarchy, echo=FALSE} -->
+<!-- hierarchy_model <- tibble::tibble(linear gran = c("ball", "over", "inning", "match"),  -->
+<!--                                   convert_fct = c(6, 20, 2, 1)) -->
+<!-- knitr::kable(hierarchy_model, caption = " A hierarchy table for T20 cricket") -->
+<!-- ``` -->
+
+<!-- Each team is given a two-and-a-half-minute "strategic timeout" during each innings; one must be taken by the bowling team between the ends of the 6th and 9th overs, and one by the batting team between the ends of the 13th and 16th overs. -->
+
+<!-- Suppose, we are interested to see how the distribution of scores vary from the start to the end of the game. Let us brainstorm some of the questions that might help us comprehend that. -->
+
+<!-- a) What is the most common pattern for batting and bowling teams across balls, overs, innings and matches? Which are the teams which are typical and which are exceptions? -->
+
+<!-- How the scores per over vary across granularities/categorizations like innings of a match or matches of a season? Are these different for the winning teams in that season and the teams that couldn't qualify for the playoffs? -->
+
+<!-- Is the outcome of the game dependent on who bats first? Do some teams have more chance to win if they are batting in the first innings? -->
+
+<!-- We will look at the ball by ball data for all batting teams. Since we want a periodic world, where each over consists of 6 balls and each match consists of two innings, we shall filter out the matches or overs for which that is not true. Also, we look at runs per over as that would have more variability compared to runs per ball and it be easier to observe the strategies of the winning team through that.  -->
+
+<!-- Making it short -->
+
+<!-- First, we look at the distribution of runs (measured variable) across over-of-inning (circular granularity) and match-of-season (aperiodic cyclic granularity) in \autoref{fig:seas-over-inning}. The distribution of runs per over has not significantly changed from 2008 to 2016. There is no clear pattern/trend that runs per over is increasing or decreasing across seasons. Hence, we work with subsets of seasons to answer some of the questions: -->
+
+First, it would be interesting to see if the distribution of total runs vary depending on if a team bats in the first or second innings. The Mumbai Indians (MI) and Chennai Super kings (CSK) <!--are considered one of the best teams in IPL with multiple winning titles and --> appeared in final playoffs from 2010 to 2015. We take their example in order to dive deeper into this question. <!--Circular granularities "over-of-inning" and "inning-of-match" can be computed using \ref{sec:circular-gran-def} with over as index of the tsibble.--> From Figure \ref{fig:cricex}(a), it can be observed that for the team batting in the first inning there is an upward trend of runs per over, while there is no clear upward trend in median and quartile deviation of runs for the teams batting in the second inning. This seem to indicate that players feel mounting pressure to score more runs as they approach towards the end of the first inning. Whereas teams batting in the second inning have a set target in mind and are not subjected to such mounting pressure and may adopt a more conservative strategy, to score runs. Thus winning teams like CSK and MI seem to employ different inning strategies when it comes to their batting order.
+
+<!-- Also longer and more distinct letter values in the second innings suggests that the variability is more in the second innings. -->
+<!-- - Q1: How their run rates vary depending on if they bat first or 2nd? Is there a chance that they are more likely to win if they bat first? -->
+
+<!-- - Q2: Which team is more consistent in their approach in terms of run rate across different overs of the innings? -->
+
+<!-- # ```{r seas-over-inning, fig.cap = "Quantile plot of runs per over across overs of different seasons. There is no pattern on increase or decrease of runs across overs for seasons."} -->
+<!-- #   cricket_tsibble_all %>%  -->
+<!-- #   prob_plot("over",  -->
+<!-- #             "season", -->
+<!-- #             hierarchy_model, -->
+<!-- #             response = "runs_per_over", -->
+<!-- #             plot_type = "quantile", -->
+<!-- #             quantile_prob = c(0.25, 0.5, 0.75),  -->
+<!-- #             symmetric = FALSE)  + -->
+<!-- #      theme( # remove the vertical grid lines -->
+<!-- #             panel.grid.major.x = element_blank() , -->
+<!-- #             # explicitly set the horizontal lines (or they will disappear too) -->
+<!-- #             panel.grid.major.y = element_blank()) + scale_x_discrete(breaks = seq(2008, 2016, 3)) -->
+<!-- # ``` -->
+
+
+Another interesting question could be: do runs per over decrease in the subsequent over if fielding (defending) was good in the previous over? For establishing the fielding quality, we apply an indicator function on dismissals (1 if there was at least one wicket in the previous over due to run out or catch, 0 otherwise). Runs in the current over is then the observation variable.  <!--If a batsman is bowled out, it does not necessarily signify good fielding. So we only include number of catches and run out in an over as a measure of good fielding.
+Difference in runs across overs are likely to be negative if good fielding has an impact on the runs scored in the subsequent overs. --> Dismissals in the previous over can lead to a batsman adopting a more defensive play style. Figure \ref{fig:cricex}(b) shows that no dismissals in the previous over leads to a higher median and quartile spread of runs per over as compared to the case when there has been at least one dismissal in the previous over.
+
+<!-- Difference in runs across over should be negative if good fielding has an impact on the runs scored in the subsequent overs.  -->
+
+<!-- fetching raw data since dot and fielding information not available in dismissal type not available in cricket data gravitas. Also `cricket` is aggregated across overs -->
+
+```{r cricex, fig.cap= "Runs per over shown with different distribution displays, and granularities. Plot (a) shows letter value plot across overs faceted by innings. For the team batting in the first innings there is an upward trend of runs per over, while there is no such pattern of runs for the teams batting in the second innings. Plot (b) shows quantile plot of runs per over across an indicator of wickets in previous over faceted by current over. This indicates that at least one wicket in the previous over leads to lower median run rate and quartile spread in the subsequent over.", warning = FALSE, message = FALSE, out.width = "90%"}
+
+library(tsibble)
+cricket_tsibble <- cricket %>%
+  mutate(data_index = row_number()) %>%
+  as_tsibble(index = data_index)
+
+hierarchy_model <- tibble::tibble(
+  units = c("index", "over", "inning", "match"),
+  convert_fct = c(1, 20, 2, 1)
+)
+
+cricket_tsibble %>%
+  filter(batting_team %in% c(
+    "Mumbai Indians",
+    "Chennai Super Kings"
+  )) %>%
+  mutate(inning = paste0("innings: ", inning)) %>%
+  prob_plot("inning",
+    "over",
+    response = "runs_per_over",
+    hierarchy_model,
+    plot_type = "lv"
+  ) +
+  scale_fill_brewer(palette = "Dark2") +
+  #ggtitle("(a) Runs per over across over faceted by inning") +
+  theme(legend.position = "right") +
+  ggtitle("a") +
+  ylab("runs per over") +
+  xlab("overs of the innings") +
+  theme(plot.title = element_text(face = "bold")) +
+  ggplot2::theme(
+       strip.text = ggplot2::element_text(
+        size = 10,
+         margin = ggplot2::margin(b=0, t=0)
+      )
+     ) +  theme_minimal() 
+#geom_smooth(aes( x = over,
+#                               y=runs_per_over), method = lm, #formula = y ~ splines::bs(x, 3), se = FALSE)
+
+
+library(tsibble)
+
+cricket_all <- read_csv("data-raw/deliveries_all.csv")
+matches_all <- read_csv("data-raw/matches_all.csv")
+
+cricket_season <- cricket_all %>% left_join(matches_all, by = c("match_id" = "id"))
+
+# cricket_per_over <- cricket_season %>%
+#   group_by(season,
+#            match_id,
+#            batting_team,
+#            bowling_team,
+#            inning,
+#            over) %>%
+#   summarise(runs_per_over = sum(total_runs),
+#             run_rate = sum(total_runs)/length(total_runs))
+#
+# cricket_tsibble_all <- cricket_per_over %>%
+#   ungroup() %>%
+#   mutate(data_index = row_number()) %>%
+#   as_tsibble(index = data_index)
+
+cricket_dot_field <- cricket_season %>%
+  mutate(
+    fielding_proxy = if_else(dismissal_kind %in%
+      c("caught", "caught and bowled"), 1, 0),
+    dot_ball_proxy = if_else(total_runs == 0, 1, 0),
+    wicket_proxy = if_else(is.na(dismissal_kind), 0, 1)
+  ) %>%
+  group_by(
+    season,
+    match_id,
+    batting_team,
+    bowling_team,
+    inning,
+    over
+  ) %>%
+  summarise(
+    runs_per_over = sum(total_runs),
+    run_rate = sum(total_runs)*6 / length(total_runs),
+    fielding_wckts = sum(fielding_proxy),
+    dot_balls = sum(dot_ball_proxy)
+  ) %>%
+  mutate(diff_run_rate = c(0, diff(run_rate)))
+
+cricket_tsibble <- cricket_dot_field %>%
+  ungroup() %>%
+  mutate(data_index = row_number()) %>%
+  as_tsibble(index = data_index)
+
+cricket_data <- cricket_tsibble %>%
+  mutate(
+    field = if_else(fielding_wckts == 0, "0", "1+"),
+    dot = if_else(dot_balls == 0, "no dot balls", ">0 dot balls"),
+    lag_field = lag(field),
+    lag_dot = lag(dot)
+  ) %>%
+  filter(lag_field != 0, lag_dot != 0) 
+
+cricket_data$lag_field <- factor(cricket_data$field, levels = c("0", "1+"))
+
+# filter(fielding_wckts %in% c(0,1)) %>%
+#
+ cricket_data %>%
+  filter(over!=1) %>%
+  prob_plot("over", "lag_field",
+  hierarchy_model,
+  response = "run_rate",
+  plot_type = "quantile",
+  symmetric = FALSE,
+ quantile_prob = c(0.25, 0.5, 0.75)) +
+   #ggtitle("(b) Runs per over across overs faceted by number of wickets in previous over") +
+  ylab("runs per over")  +
+  xlab("number of wickets in previous over") +
+  ggtitle("b") +
+   theme(plot.title = element_text(face = "bold")) +
+        theme(axis.ticks = element_blank(), legend.background = element_blank(),
+            legend.key = element_blank(), panel.background = element_blank(), strip.background = element_blank(),
+            plot.background = element_blank(), complete = TRUE, panel.grid.major = element_line(colour = "#E0E0E0"),
+            panel.border = element_rect(colour = "#E0E0E0", fill = NA))
+```
+
+<!-- Q2: Among good fielding and bowling - which affect the runs of the subsequent overs more? -->
+
+<!-- Q3: Are runs set to reduce in the next over for dot balls in the previous over? -->
+
+<!-- A dot ball is a delivery bowled without any runs scored off it. The number of dot balls is reflective of the quality of bowling in the game. Run rate of an over should ideally decrease if the number of dot balls increase. However, what is the effect of dot balls on runs scored in the subsequent over. Will players batsman likely to go for big shots because they couldn't score good runs in the previous over? Or they should play consistently and avoid scoring high? Figure \ref{fig:exdot} shows the quantile plot of runs across overs for at least one dot ball per over (facet 1) or no dot balls per over (facet 2). -->
+<!-- With at least one dot balls per over, the distribution of run rates in facet 1 increase slower compared to that in facet 2. This implies that run rates are likely to decrease in the subsequent over as a result of dot balls in the previous over. -->
+
+
+<!-- ```{r exdot, fig.cap="25th, 50th, 75th quantiles of runs per over are drawn across overs of the innings with no (facet 2), more than zero (facet 1) dot balls per over. For all quantiles, run rates mostly increase at a higher rate in facet 2 compared to facet 1 implying run rates decrease with at least one dot ball in the previous over.", fig.pos="ht"} -->
+
+
+<!-- cricket_data %>% -->
+<!--   # filter(dot_balls %in% c(0, 1, 2)) %>% -->
+<!--   prob_plot("lag_dot", -->
+<!--     "over", -->
+<!--     hierarchy_model, -->
+<!--     response = "run_rate", -->
+<!--     plot_type = "quantile", -->
+<!--     quantile_prob = c(0.25, 0.5, 0.75), -->
+<!--     symmetric = FALSE -->
+<!--   ) + ggtitle("") -->
+<!-- ``` -->
+
+Wickets per over are considered as an aperiodic cyclic granularity with wickets as an aperiodic linear granularity. These granularities do not appear in the hierarchy table since it is difficult to position them in a hierarchy. These are similar to holidays or special events in temporal data.
+<!-- CONTENT CUT -->
+<!--While any special event that corresponds to a time domain can be treated as an aperiodic linear granularity in a temporal case, dot balls or wickets that corresponds to certain balls (index) could be treated as aperiodic events in cricket.-->
+
 
 # Summary and discussion
