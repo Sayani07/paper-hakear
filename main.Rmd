@@ -79,7 +79,7 @@ set.seed(321)
 
 <!-- background of the problem -->
 Take the example of the calendar display of electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once.
-Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. This is a great start to have an overview of the energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater details, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day varies across month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Lastly, there might be specific interactions that are interesting and others that are not and that too will vary with different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure ref{fig:}a and b respectively. For the first household, the 75th and 90th percentile for Jan, Feb and July are very close, implying that energy usage for these months are generally on a much higher side due to the usage of air conditioners (in Jan and Feb) and heaters (in July).
+Some interaction of these cyclic granularities[@our-paper] could also be interpreted from this display. This is a great start to have an overview of the energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater details, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day varies and month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@our-paper) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Lastly, there might be specific interactions that are interesting and others that are not and that too will vary with different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure ref{fig:}a and b respectively. For the first household, the 75th and 90th percentile for Jan, Feb and July are very close, implying that energy usage for these months are generally on a much higher side due to the usage of air conditioners (in Jan and Feb) and heaters (in July).
 The energy consumption for household 2 is also higher relative to its own consumption for Jan, Feb and March but the 75th and 90th percentile are apart implying that contrary to the first household, the second household resorts to air conditioners and heaters much less regularly than the first one. Moreover, the 75th percentile distribution is not bimodal across hours of the day for the first household in those months, but the distribution looks similar for all months for the second household. Difference in the energy consumption seem to be varying both across month-of-year (facets) and hour-of-day (x-axis). And thus, both the cyclic granularities would deem important while studying the periodicities in the first household. However, it seems like energy consumption across hours of the day are not that different across different months for the second household. Differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). Again, look at \ref{fig:} c and d, where energy consumption for these two households are plotted against (weekend/weekday, week-of-month). Here, for both households, the pattern of energy consumption vary  across different weeks of the month irrespective of the fact it is a weekday or weekend. In that respect, the harmony pair (month-of-year, hour-of-day) seems to be more informative than (weekend/weekday, week-of-month) for the first household. It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative given a household. 
 
 <!-- Take an example of a data set which are observed at fine temporal scales, like that of NYC bike usage available at https://www.citibikenyc.com/system-data. We use the `nyc_bikes` data set from the R package `tsibbledata` which takes a sample of 10 bikes for the year 2018. The `start_time` and the `stop_time` are recorded to a fineness of seconds. We can look at pair of cyclic granularities (hour_day, wknd_wday) or (week_month, day_week) to see how these periodicities interact. But there could be other pairs that are important too. How to understand which pairs are sufficient to explore given the data set without losing much information about the data. -->
@@ -97,7 +97,7 @@ large, and scatterplot matrices (SPLOMs) could easily run out of pixels when pre
 
 
 <!-- harmonies and why it is not enough -->
-The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful. 
+The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful.  
 
 
 ```{r intro_all}
@@ -130,7 +130,7 @@ p2 <- id4_tsibble %>%
              quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) + 
   ggtitle("")
 
-# wknd_wday and week_month (important pair) id2's behavior across different hours of the day very different across months, but for id4 beahvior across different hours of the day is not likely a function of month.
+# wknd_wday and week_month (important pair) id2's behavior across different hours of the day very different across months, but for id4 behavior across different hours of the day is not likely a function of month.
 
 p3 <- id2_tsibble %>%
    prob_plot("wknd_wday",
@@ -160,7 +160,7 @@ ggpubr::ggarrange(p1, p2, ncol = 2)
 ggpubr::ggarrange(p3, p4, ncol = 2)
 ```
 
-Here, we aim to build a new measure to follow through these two main objectives:
+In this paper, we aim to build a new measure to follow through these two main objectives:
 
 - To choose harmonies for which distributions of categories are significantly different 
 - To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
@@ -179,7 +179,7 @@ With reference to the graphical design in \ref{@paper-gravitas}, therefore the i
 
 
 <!-- To elaborate further, look at the examples in Figure \ref{}, where Figure \ref{}a represents the panel design with distribution of each x categories drawn from N(5, 10) distribution. It could be observed that the graph is not particularly interesting, as there is no significant change in distribution between x-axis levels or facets. Figure \ref{}b represents the same panel design with no difference in distribution of x-axis categories within a facet, but different distribution of x-axis categories for different facets. For example, if there are 4 facet levels and 2 x-axis levels, data is generated in the way as described in Table \ref{}. Figure \ref{}b exhibits an exact opposite situation where the x-axis within facets are different but not across facets. -->
-<!-- Figure \ref{}d takes it futher by varying the distribution across both facet and x-axis categories. -->
+<!-- Figure \ref{}d takes it further by varying the distribution across both facet and x-axis categories. -->
 
 
 
@@ -259,24 +259,23 @@ With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, $
 
 <!-- For small n resort to bootstrapping -->
 
+<!-- bullet points end here -->
 
-Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let 
-$Y = max(X_1, X_2, \dots, X_n)$.
+<!-- Suppose that $X_1$, $X_2$ , ... , $X_n$ are i.i.d. random variables with expected values $E(X_i) = \mu < \infty$ and variance $Var(X_i) = \sigma^2 < \infty$. Let  -->
+<!-- $Y = max(X_1, X_2, \dots, X_n)$. -->
 
-Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using:
-$F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then
-$f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot.
+<!-- Let $F_X(x)$ be the common distribution of the variables $X_i$ and let $F_Y(y)$ be the corresponding distribution of $Y$. $F_Y(y)$ could be obtained from $F_X(x)$ simply by using: -->
+<!-- $F_Y(y) = P[(X_1 \leq y)\cap(X_2 \leq y) \cap...\cap (X_n \leq y)] = {F_X(y)}^n$. For large $n$, the distribution of $Y$ approaches a standard shape, which does not depend on $F_X$. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $X$. If $F_X(x)$ is the CDF of $X$, then $F_Y(y) = {F_x(y)}^n$. Suppose $\Phi$ nd $\phi$ are the cdf and pdf of a standard normal distribution, then -->
+<!-- $f_Y(y) = n{\Phi(y)}^{n-1}\phi(y)$, which depends on $n$. Hence, we are trying to normalise for $n$. Also, it depends on the underlying distribution of $X$, which we have assumed as normal in our case. As $n$ grows, we  can see the right tail growing, which implies that the probability that we will get a higher maximum is more. Now, for large $n$, we used EVT to normalise for $n$, that is, we brought them to the same scale without distorting the range of the distribution. But in our case, we will mostly have small $n$. It is important to ensure that they have the same mean and variation, for being able to compare the maximum value across $n$. We observe from the following graphs that our normalisation works after $n=6$, after which the difference in mean and standard deviation flattens out a lot. -->
 
+<!-- ### why normalize -->
 
-Maximum pairwise distances are not robust to the number of levels and is higher for harmonies with higher levels. Thus these maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
+Median and maximum distances are not robust to the number of levels and the metric would have higher values for harmonies with higher levels. Figure \ref{fig:mean-sd-max} shows how both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
 More formally, $d_{1},d_{2}\ldots ,d_{n}$ be a sequence of independent and identically-distributed pairwise distances and $M_{n}=\max\{d_{1},\ldots ,d_{n}\}$. Then Fisher–Tippett–Gnedenko theorem [@De_Haan2007-yx] suggests that if a sequence of pairs of real numbers $(a_{n}, b_{n})$ exists such that each $a_{n}>0$ and $\lim _{{m\to \infty }}P\left({\frac  {M_{n}-b_{n}}{a_{n}}}\leq x\right)=F(x)$, where $F$ is a non-degenerate distribution function, then the limit distribution $F$ belongs to either the Gumbel, Fréchet or Weibull family. The normalizing constants $(a_{n}, b_{n})$ vary depending on the underlying distribution of the pairwise distances. Hence to normalize appropriately, it is 
 important to assume a distribution of these distances. 
 
-### why normalize
-
-
-
+For large $n$, the distribution of $M$ approaches a standard shape. But what about the case when $n$ is not large enough? The distribution of maximum in that case will indeed depend on $n$ and the underlying distribution of $D$. For large $n$, we could use EVT and CLT to normalise for $n$, however, most of the cyclic granularities encountered in practice have low $n$. Hence, normalisation could be done by bootstrapping procedure to ensure that the distribution of maximum/median have the same mean and variation for varying $n$.
 
 ```{r create_simdata}
 
@@ -291,10 +290,10 @@ important to assume a distribution of these distances.
 
 ```
 
-### Mean and standard deviation of the distribution of maximum
 
 
-```{r}
+```{r mean-sd-max, fig.cap = "Display shows mean and standard deviation of the distribution of maximum for sample sizes ranging from 2 to 30. There is a right shift in the distribution of maximum and median with increasing sample sizes."}
+
 library(ggridges)
 library(viridis)
 max_all_data <- create_nlevels(nlevels = seq(2, 30, 2),
@@ -462,7 +461,45 @@ smart_harmony %>%
   rename("rankun" = "r") %>% kable()
 ```
 
-## Null distribution of MMPD
+## Design and analysis of simulation experiments
+
+Simulation experiments with different designs could help monitor and understand the behavior of the test statistic.
+
+
+### Impact of different levels from the same distribution of the measured variable (for understanding size)
+
+A 2 way contingency table with number of facet levels, x-axis levels should be constructed with values as the p-values.
+
+Table
+Conclusions
+(in Null distribution)
+
+### Impact of different distribution of the measured variable keeping the same distribution for each
+panel (for understanding size)
+
+To check if different distributions impact, simulate data from different distributions. A 3 way contingency table with number of facet levels, x-axis levels and distribution type should be constructed with each cell value as the p-value.
+
+Table
+Conclusions
+(in Null distribution)
+
+### Impact of simulating different distributions across categories for understanding power
+
+#### Varying distribution across facet
+#### Varying distribution across x-axis
+#### Varying distribution across both facets and x-axis
+#### Repeat all with varying facet and x-axis levels
+
+Table
+Conclusions
+(in power)
+
+
+## Null distribution
+
+### Size: Simulated same distribution for all combinations of categories for all harmony pairs.
+
+Failure to reject the null hypothesis when there is in fact no significant effect.
 
 ### Normalised maximum distances follow standard Gumbel distribution
 
@@ -471,20 +508,12 @@ smart_harmony %>%
 Let a continuous population be given with cdf F(x) (cumulative distribution function) and median $\xi$ (assumed to exist uniquely). For a sample of size $2n + 1$, let $\tilde{x}$ denote the sample median. The distribution of $\tilde{x}$,under certain conditions, to be asymptotically normal with mean $\xi$ and variance $\sigma_n^2 = \frac{1}{4} [f(\xi)]^2(2n + 1)$, where $f(x) = F'(x)$ is the pdf (probability density function).
 
 
-### Confidence interval of test statistic
+<!-- ### Confidence interval of test statistic -->
 
-## Simulation design 
 
-Behavior of the statistic - control simulation
+## Power and confidence interval
 
- - To check if different distributions impact
-(simulate with different distributions but same for all levels)
-
- - To check if x-levels and facets are normalized
-(simulate with different distributions)
-(simulate with different x and facet levels)
-
-## Size and power
+Failure to reject the null hypothesis when there is in fact a significant effect.
 
 To estimate the sampling distribution of the test statistic we need many samples generated under the null hypothesis. If the null hypothesis is true, changing the exposure would have no effect on the outcome. By randomly shuffling the exposures we can make up as many data sets as we like. If the null hypothesis is true the shuffled data sets should look like the real data, otherwise they should look different from the
 real data. The ranking of the real test statistic among the shuffled test statistics gives a p-value.
@@ -507,74 +536,77 @@ real data. The ranking of the real test statistic among the shuffled test statis
 
 <!-- The output table has the value of MMPD (normalized median maximum pairwise distances), gt_MMPD(global threshold of MMPD indicator). -->
 
-### Size: Simulated same distribution for all combinations of categories for all harmony pairs.
-
-Failure to reject the null hypothesis when there is in fact no significant effect.
-
 <!-- # ```{r samenull_2by4, eval = FALSE} -->
 <!-- #  -->
 <!-- # ``` -->
 
-```{r normalv21_power}
-
-```
-
-
-```{r normalv22_power}
-
-```
-
-### Power: Simulated same distribution for all combinations of categories for all harmony pairs.
+<!-- # ```{r normalv21_power} -->
+<!-- #  -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- #  -->
+<!-- # ```{r normalv22_power} -->
+<!-- #  -->
+<!-- # ``` -->
 
 
 
-```{r normalv23_power}
+### Varying distribution across facet
+### Varying distribution across x-axis
+### Varying distribution across both facets and x-axis
+### Repeat all with varying facet and x-axis levels
 
-```
-
-
-```{r normalv24_power}
-
-```
-
-
-*Conclusion*: The test rejects the null hypothesis if distributions are different.
-
-### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels.
+<!-- ### Power: Simulated same distribution for all combinations of categories for all harmony pairs. -->
 
 
 
-```{r diffnull_2by4, eval = FALSE}
-
-```
-
-
-*Conclusion*: The test select the harmony pair for which distribution of x-axis categories are significantly different
-
-
-### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels.
-
-
-```{r diffnull_7by11, eval = FALSE}
-```
-
-*Conclusion*: The test indicates that both harmony pairs do not have significant variation.
+<!-- # ```{r normalv23_power} -->
+<!-- #  -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- #  -->
+<!-- # ```{r normalv24_power} -->
+<!-- #  -->
+<!-- # ``` -->
 
 
-### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis
+*Conclusion*: The test should reject the null hypothesis if distributions are different.
+
+<!-- ### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels. -->
 
 
-```{r diffnull_7by11normal, eval = FALSE}
-```
 
-*Conclusion*: The test indicates that only the first harmony pair has significant variation.
+<!-- ```{r diffnull_2by4, eval = FALSE} -->
 
-
-### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets
+<!-- ``` -->
 
 
-```{r diffnull_7by11normal2, eval = FALSE}
-```
+<!-- *Conclusion*: The test select the harmony pair for which distribution of x-axis categories are significantly different -->
+
+
+<!-- ### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels. -->
+
+
+<!-- ```{r diffnull_7by11, eval = FALSE} -->
+<!-- ``` -->
+
+<!-- *Conclusion*: The test indicates that both harmony pairs do not have significant variation. -->
+
+
+<!-- ### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis -->
+
+
+<!-- ```{r diffnull_7by11normal, eval = FALSE} -->
+<!-- ``` -->
+
+<!-- *Conclusion*: The test indicates that only the first harmony pair has significant variation. -->
+
+
+<!-- ### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets -->
+
+
+<!-- ```{r diffnull_7by11normal2, eval = FALSE} -->
+<!-- ``` -->
 
 
 <!-- *Conclusion*:  -->
@@ -590,9 +622,9 @@ Failure to reject the null hypothesis when there is in fact no significant effec
 
 <!-- *Conclusion*: With 3 levels the test incorrectly chooses 1 harmony pair with similar distribution. The harmony pair which is displayed. -->
 
-<!-- <!-- ```{r diffnull_3levels} --> -->
+<!-- <!-- ```{r diffnull_3levels} --> 
 
-<!-- <!-- ``` --> -->
+<!-- <!-- ``` --> 
 
 <!-- *Conclusion*: The test with MMPD selects just one pair, as opposed to the test with maximum. This needs to be checked against what we expect from the test. The harmony pairs which are selected (either through MMPD or maximum) are displayed. -->
 
@@ -678,7 +710,7 @@ smart_meter10 %>% search_gran(
 From the search list, $N_C = 7$ cyclic granularities are chosen for which we would like to derive insights of energy behavior. Recalling the data structure <$C_i$, $C_j$, `general_supply_kwh`> for exploration $\forall i, j \in \{1, 2, \ldots, 7\}$, each of these $7$ cyclic granularities can either be mapped to x-axis or to facet. Choosing $2$ of the possible $7$ granularities, which is equivalent to having $^{7}P_2 = 42$ candidates for visualization. Fortunately, harmonies can be identified among those $42$ possibilities to narrow the search. \autoref{tab:harmony-tab} shows $16$ harmony pairs after removing clashes and any cyclic granularities with levels more than $31$, as effective  exploration becomes difficult with many levels (Section \ref{sec:levels}). The MMPD is also shown along with indicator (*) only when variation of measured variable across the harmony pair significant. Starting from $42$ possible pairs of cyclic granularities to visualize, we are finally left with only $6$, which is a very sizable number of displays for exploration.
 
 
-Few harmony pairs are displayed in \autoref{fig:bothcust} to illustrate the siginificance of MMPD, threshold and the impact of different distribution plots and reverse mapping.
+Few harmony pairs are displayed in \autoref{fig:bothcust} to illustrate the significance of MMPD, threshold and the impact of different distribution plots and reverse mapping.
 \noindent For each of \autoref{fig:bothcust} (b) and (c), $C_i$ is the circular granularity day-type (weekday/weekend) and $C_j$ is hour of the day. The geometry used for displaying the distribution is chosen as area-quantiles and violins in \autoref{fig:bothcust} (b and c respectively). \autoref{fig:bothcust} (a) displays reverse mapping of $C_i$ and $C_j$ with $C_i$ denoting hour of the day and $C_j$ denoting day-type with distribution geometrically displayed as boxplots.
 
 <!-- From the search list, we found six cyclic granularities for which we would like to derive insights of energy behavior. Given the data structure <$C1$, $C2$, `general_supply_kwh`>, each of those six cyclic granularities can either be mapped to x-axis or to facet. Thus the problem is equivalent to taking 2 granularities at a time from six, which essentially is equivalent to having 30 data subsets for visualization. However, harmony/clash pairs can be identified among those 30 possibilities to determine feasibility of plotting any pairs together. \autoref{tab:harmony-tab} shows 13 harmonies pairs, each of which can be plotted together to look at the energy behavior from different perspectives. -->

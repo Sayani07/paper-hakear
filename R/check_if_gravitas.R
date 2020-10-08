@@ -23,7 +23,7 @@ id3 <- elec %>%
 
 id3_tsibble <- id3 %>% 
   as_tsibble(index = date_time)
-
+   
 
 harmonies <- id3_tsibble %>%
   harmony(
