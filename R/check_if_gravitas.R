@@ -186,6 +186,88 @@ p4 <-   id4_tsibble %>%
             symmetric = FALSE,
             quantile_prob = c(0.25,0.5,0.75))
 
+   
+   ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 
-#ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2, scales)
+id4_tsibble %>%
+      prob_plot("month_year",
+                "week_month",
+                response = "kwh",
+                plot_type = "quantile",
+                symmetric = FALSE,
+                quantile_prob = c(0.25,0.5,0.75))
 
+
+id1_tsibble %>%
+   prob_plot("month_year",
+             "day_week",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.25,0.5,0.75))
+
+
+
+id3_tsibble %>%
+   prob_plot("month_year",
+             "day_week",
+             response = "kwh",
+             plot_type = "boxplot",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9))
+
+
+
+id3_tsibble %>%
+   prob_plot("month_year",
+             "day_week",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9))
+
+
+
+id1_tsibble %>%
+   prob_plot("day_week",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9))
+
+
+# hour-of-day and month-of-year (important pair) id2's behavior across different hours of the day very different across months, but for id4 beahvior across different hours of the day is not likely a function of month.
+id2_tsibble %>%
+   prob_plot("month_year",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9))
+
+id4_tsibble %>%
+   prob_plot("month_year",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9))
+
+# wknd_wday and week_month (important pair) id2's behavior across different hours of the day very different across months, but for id4 beahvior across different hours of the day is not likely a function of month.
+
+id2_tsibble %>%
+   prob_plot("week_month",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = seq(0.01,0.99,0.01))
+
+id4_tsibble %>%
+   prob_plot("week_month",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = seq(0.01,0.99,0.01))
