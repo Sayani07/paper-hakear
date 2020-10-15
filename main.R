@@ -653,12 +653,12 @@ ptry2 <- sm %>%
   geom_smooth(aes(x = as.numeric(week_month), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE) 
 
 
-p4 <- sm %>% prob_plot("wknd_wday", 
-                       "hour_day",
-                       plot_type = "boxplot") + ggtitle("") +
-  ylab("") + 
-  xlab("") + scale_x_discrete(breaks = c(0,seq(3, 23, 3))) +
-  geom_violin(alpha = 0.3, color = "red") + 
-  geom_smooth(aes(x = as.numeric(hour_day), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE) 
+# p4 <- sm %>% prob_plot("wknd_wday", 
+#                        "hour_day",
+#                        plot_type = "boxplot") + ggtitle("") +
+#   ylab("") + 
+#   xlab("") + scale_x_discrete(breaks = c(0,seq(3, 23, 3))) +
+#   geom_violin(alpha = 0.3, color = "red") + 
+#   geom_smooth(aes(x = as.numeric(hour_day), y = general_supply_kwh), method = "loess", formula = y~x, color = "red", se = TRUE) 
 
 ggarrange(p1, p4, nrow = 2, labels = c("a", "b"))
