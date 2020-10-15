@@ -645,6 +645,7 @@ Few harmony pairs are displayed in \autoref{fig:bothcust} to illustrate the sigi
 # {
 #   dir.create("cache")
 # }
+# 
 # if (!file.exists("cache/smart_harmony.rds")) {
   sm <- smart_meter10 %>%
   filter(customer_id %in% c(10017936))
