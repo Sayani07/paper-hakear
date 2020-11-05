@@ -1,5 +1,5 @@
 ---
-title: Median Maximum Pairwise Distance
+title: Selecting and ranking interesting pairs of cyclic temporal granularities
 authors:
 - name: Sayani Gupta
   affiliation: Department of Econometrics and Business Statistics, Monash University
@@ -28,88 +28,65 @@ library(gravitas)
 library(ggpubr)
 library(readr)
 library(kableExtra)
+library(distributional)
+library(ggplot2)
+library(sugrrants)
 
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
   fig.path = "figure/", fig.align = "center", fig.show = "hold",
-  cache = FALSE, cache.path = "cache/",
+  cache = TRUE, cache.path = "cache/",
   out.width = ifelse(is_html_output(), "100%", "\\textwidth")
 )
 knitr::opts_knit$set(root.dir = here::here())
-read_chunk('main.R')
+#                                                                read_chunk('main.R')
 read_chunk("null_distribution.R")
 read_chunk("mean_null.R")
 source("R/sim_panel.R")
-
 # Set up plan
-source("_drake.R")
+#source("_drake.R")
 # Run all code required
-drake::r_make()
+#drake::r_make()
 # load each object as required
 # loadd()
 ```
 
-
-```{r external, include = FALSE}
-
-```
-
-```{r load}
-
-```
-
-
-```{r load_fun_1var}
-
-```
-
-
-```{r load_fun_2var}
-
-```
-
-```{r rank_harmony}
-
-```
-
-```{r global_threshold}
-
-```
 
 ```{r}
 set.seed(321)
 ```
 
 
-# Introduction and background
-
+# Introduction
 
 <!-- <introducing the problem> -->
 <!-- background of the problem -->
-Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity can become overwhelming with so many possible granularities to explore. Take the example of the calendar display of electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once.
-Some interaction of these cyclic granularities[@Gupta2020-vo] could also be interpreted from this display. This is a great start to have an overview of the energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater details, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day varies and month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Lastly, there might be specific interactions that are interesting and others that are not and that too will vary with different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure ref{fig:}a and b respectively. For the first household, the 75th and 90th percentile for Jan, Feb and July are very close, implying that energy usage for these months are generally on a much higher side due to the usage of air conditioners (in Jan and Feb) and heaters (in July).
-The energy consumption for household 2 is also higher relative to its own consumption for Jan, Feb and March but the 75th and 90th percentile are apart implying that contrary to the first household, the second household resorts to air conditioners and heaters much less regularly than the first one. Moreover, the 75th percentile distribution is not bimodal across hours of the day for the first household in those months, but the distribution looks similar for all months for the second household. Difference in the energy consumption seem to be varying both across month-of-year (facets) and hour-of-day (x-axis). And thus, both the cyclic granularities would deem important while studying the periodicities in the first household. However, it seems like energy consumption across hours of the day are not that different across different months for the second household. Differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). Again, look at \ref{fig:} c and d, where energy consumption for these two households are plotted against (weekend/weekday, week-of-month). Here, for both households, the pattern of energy consumption vary  across different weeks of the month irrespective of the fact it is a weekday or weekend. In that respect, the harmony pair (month-of-year, hour-of-day) seems to be more informative than (weekend/weekday, week-of-month) for the first household. It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative given a household. 
 
-<!-- Take an example of a data set which are observed at fine temporal scales, like that of NYC bike usage available at https://www.citibikenyc.com/system-data. We use the `nyc_bikes` data set from the R package `tsibbledata` which takes a sample of 10 bikes for the year 2018. The `start_time` and the `stop_time` are recorded to a fineness of seconds. We can look at pair of cyclic granularities (hour_day, wknd_wday) or (week_month, day_week) to see how these periodicities interact. But there could be other pairs that are important too. How to understand which pairs are sufficient to explore given the data set without losing much information about the data. -->
+Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allows the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore.
 
-<!-- When we need to understand the interplay of different periodicities in a high frequency temporal datasets, we have many choices to consider. In [@wang2019tsibble] and [@wang2020calendar], periodicities are explored across hour of the day and day of the week or months. But calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions. -->
+```{r calendar-elec, fig.height = 10.5, fig.cap="Calendar display."}
+elec <- read_rds("data/elec.rds") %>% 
+  filter(date >= ymd("20180101"), date < ymd("20180701"))
+rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
 
+elec <- elec %>% 
+  mutate(
+    wday = wday(date, label = TRUE, week_start = 1),
+    weekday = if_else(wday %in% c("Sat", "Sun"), "Weekend", "Weekday")
+  )
+p_cal_elec <- elec %>% 
+  frame_calendar(x = time, y = kwh, date = date, nrow = 1) %>% 
+    ggplot(aes(x = .time, y = .kwh, group = date)) +
+    geom_line(aes(colour = as.factor(id)), size = 0.5) +
+    scale_colour_brewer(name = "", palette = "PiYG") +
+    facet_grid(id ~ ., labeller = label_both) +
+    theme(legend.position = "bottom")
+prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
+```
 
-<!-- what is the dimension of the problem -->
-The paper (@Gupta2020-vo) describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. The mapping of the graphical elements chosen in the paper implies that, for a numeric response variable, the graphics display distributions across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.
-
-<!-- Scagnostics literature -->
-This is similar to Scagnostics (Scatterplot Diagnostics)[@mention-paper], which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore
-for even small $v$, the number of scatterplots can be
-large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. [@ScagExplorer], [@otherref] provides a solution to this, where few characterizations help us to locate anomalies for further analysis or search for similar distributions in a "large" SPLOM with more than a hundred dimensions.
-
-
-<!-- harmonies and why it is not enough -->
-The paper (gravitas) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful.  
-
+\noindent Take the example of the calendar display of electricity smart meter data (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekday and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities could also be interpreted from this display. This is a great start to have an overview of the energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater details, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day varies and month-of-year varies across week-of-the-month. Further, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. 
 
 ```{r intro_all}
-elec <- read_rds("data/elec.rds")
 
 id2_tsibble <- elec %>% 
    filter(id == 2) %>% 
@@ -128,7 +105,8 @@ p1 <- id2_tsibble %>%
              symmetric = TRUE,
              quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) +
   ggtitle("") + theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + 
+  scale_colour_brewer(name = "", palette = "PiYG")
 
 p2 <- id4_tsibble %>%
    prob_plot("month_year",
@@ -170,13 +148,31 @@ theme(
 
 ```
 
-```{r p1_p2}
+```{r id2, fig.cap = "something"}
 ggpubr::ggarrange(p1, p2, ncol = 2)
 ```
 
-```{r p4_p3}
+```{r id4, fig.cap = "something2"}
 ggpubr::ggarrange(p3, p4, ncol = 2)
 ```
+
+Moreover, there might be specific interactions that are interesting and others that are not and that too will vary with different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure \ref{fig:id2}a and b respectively. For the first household, the 75th and 90th percentile for Jan, Feb and July are very close, implying that energy usage for these months are generally on a much higher side due to the usage of air conditioners (in Jan and Feb) and heaters (in July). The energy consumption for household 2 is also higher relative to its own consumption for Jan, Feb and March but the 75th and 90th percentile are apart implying that contrary to the first household, the second household resorts to air conditioners and heaters much less regularly than the first one. Moreover, the 75th percentile distribution is not bimodal across hours of the day for the first household in those months, but the distribution looks similar for all months for the second household. Difference in the energy consumption seem to be varying both across month-of-year (facets) and hour-of-day (x-axis). And thus, both the cyclic granularities would deem important while studying the periodicities in the first household. However, it seems like energy consumption across hours of the day are not that different across different months for the second household. Differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). Again, look at \ref{fig:} c and d, where energy consumption for these two households are plotted against (weekend/weekday, week-of-month). Here, for both households, the pattern of energy consumption vary  across different weeks of the month irrespective of the fact it is a weekday or weekend. In that respect, the harmony pair (month-of-year, hour-of-day) seems to be more informative than (weekend/weekday, week-of-month) for the first household. It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative given a household. 
+
+<!-- Take an example of a data set which are observed at fine temporal scales, like that of NYC bike usage available at https://www.citibikenyc.com/system-data. We use the `nyc_bikes` data set from the R package `tsibbledata` which takes a sample of 10 bikes for the year 2018. The `start_time` and the `stop_time` are recorded to a fineness of seconds. We can look at pair of cyclic granularities (hour_day, wknd_wday) or (week_month, day_week) to see how these periodicities interact. But there could be other pairs that are important too. How to understand which pairs are sufficient to explore given the data set without losing much information about the data. -->
+
+<!-- When we need to understand the interplay of different periodicities in a high frequency temporal datasets, we have many choices to consider. In [@wang2019tsibble] and [@wang2020calendar], periodicities are explored across hour of the day and day of the week or months. But calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions. -->
+
+<!-- what is the dimension of the problem -->
+The paper @Gupta2020-vo describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. The mapping of the graphical elements chosen in the paper implies that, for a numeric response variable, the graphics display distributions across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.
+
+<!-- Scagnostics literature -->
+This is similar to Scagnostics (Scatterplot Diagnostics) by @tukey1988computer, which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore
+for even small $v$, the number of scatterplots can be
+large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. @Dang2014-tw and @wilkinson2005graph provides potential solutions to this, where few characterizations help us to locate anomalies for further analysis or search for similar distributions in a "large" SPLOM with more than a hundred dimensions.
+
+
+<!-- harmonies and why it is not enough -->
+The paper (@Gupta2020-vo) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful.  
 
 In this paper, we aim to build a new measure to follow through these two main objectives:
 
@@ -483,13 +479,15 @@ smart_harmony %>%
 
 The behavior of the test statistic is monitored and understood through simulation experiments. A single simulation consisting of computational operations on a panel generating MMPD the value of which represents to what extent a pair of cyclic granularities would be interesting when displayed in the design. In comparing different simulation runs, we distinguish between different distributions and simulation scenarios (also iterations may be).
 
-### Simulated scenarios:
+### Simulated designs:
 
- 1. Same distribution of the measured variable across all x-axis and facet categories
- 2. Different distribution across x-axis categories but same across facet categories
- 3. Different distribution across facet categories but same across x-axis categories
- 4. Different across both x-axis and facet categories 
- 5. Each of these case scenarios tried against following distribution to check if underlying distribution has a role to play.
+ D1. Same distribution of the measured variable across all x-axis and facet categories
+ D2. Different distribution across facet categories but same across x-axis categories
+ D3. Different distribution across x-axis categories but same across facet categories
+ D4. Different across both x-axis and facet categories 
+ 
+Each of these case scenarios tried against following distribution to check if underlying distribution has a role to play.
+
  a) Normal 
  b) Exponential
  c) Gamma
@@ -505,21 +503,27 @@ R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-
 
 This section desctibes the design of simulation runs, in terms of the scenarios simulated, the number of permutations used to compute estimates and to display the distribution of MMPD.
 
- - seed while generating random observations `seed1 = set.seed(9999)`  
- - grid with how many x levels `range_nx_vec = seq(2:4)`  
- - grid with how many facet levels `range_nfacet_vec = seq(2:4)`  
- - number of observations to be generated `ntimes_val = 500`  
- - number of permutation of data done to compute estimates `nperm_val = 2`  
- - number of permutations of data done to display histogram for each panel `nsim_val = 10`   
- - ordered or un-ordered categories of x levels while computing distances `dist_ordered_val = TRUE`  
- - distance between which quantiles are computed `quantile_prob_vec = seq(0.01, 0.99, 0.01)`  
-- from which distribution observations are drawn for each combination of categories:  
+ <!-- - seed while generating random observations `seed1 = set.seed(9999)`   -->
+ <!-- - grid with how many x levels `range_nx_vec = seq(2:4)`   -->
+ <!-- - grid with how many facet levels `range_nfacet_vec = seq(2:4)`   -->
+ <!-- - number of observations to be generated `ntimes_val = 500`   -->
+ <!-- - number of permutation of data done to compute estimates `nperm_val = 2`   -->
+ <!-- - number of permutations of data done to display histogram for each panel `nsim_val = 10`    -->
+ <!-- - ordered or un-ordered categories of x levels while computing distances `dist_ordered_val = TRUE`   -->
+ <!-- - distance between which quantiles are computed `quantile_prob_vec = seq(0.01, 0.99, 0.01)`   -->
+
+```{r}
+knitr::include_graphics("Figs/simulation.png")
+```
+
+
+Observations from the null distribution are chosen as:  
 `sim_norm_null =   distributional::dist_normal(5, 10)`  
 `sim_exp_null  =   distributional::dist_expoential(5)`  
 `sim_gamma_null  =   distributional::dist_gamma(0.5, 2)`  
 `sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`  
 
-
+The various designs are selected by increasing the mean/rate/shape of these distributions proportionally with that parameter.
 
 <!-- To check if different distributions impact, simulate data from different distributions. A 3 way contingency table with number of facet levels, x-axis levels and distribution type should be constructed with each cell value as the p-value. -->
 
@@ -537,9 +541,103 @@ This section desctibes the design of simulation runs, in terms of the scenarios 
 <!-- (in power) -->
 
 
-### Interpretation and reporting
+### Simulation results 
+
+#### Null distribution 
+
+Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible.
+
+```{r}
+# all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
+# all_files
+# 
+# read_files = lapply(all_files, function(x){
+#   read_rds(paste0("../hakear-drake/data/", x))
+# })
+# 
+# names(read_files) = str_remove(all_files, pattern = ".rds")
+# 
+# null_all = bind_rows(normal = read_files$null_normal,
+#                      exponential = read_files$null_exp,
+#                      gamma = read_files$null_gamma,
+#                      weibull = read_files$null_weibull,
+#                      .id = "distribution")
+design_all = readr::read_rds("../hakear-drake/data/design_all.rds")
+
+design_all$design = 
+  factor(design_all$design,
+         levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
+
+design_all$distribution = 
+  factor(design_all$distribution,
+         levels = c("normal","exponential", "gamma", "weibull"), labels = c("norm", "exp", "gam", "wei"))
+
+library(dplyr)
+library(ggplot2)
+ggplot2::ggplot(design_all %>% 
+                      filter(design == "D1")) +
+  ggridges::geom_density_ridges(aes(y = distribution, x = mmpd.x, fill = distribution)) + 
+  facet_grid(nx~nfacet) +
+  scale_fill_viridis_d() +
+  xlab("MMPD")
+```
+
+#### Characteristics under different simulation designs   
 
 A set of simulation runs that are conducted and some outputs of which are reported.
+
+
+```{r sim_all, echo = FALSE}
+bind_files = readr::read_rds("../hakear-drake/data/compute_p_value.rds")
+
+bind_files$design = 
+  factor(bind_files$design,
+         levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
+
+ggplot(bind_files %>% 
+         filter(distribution == "normal")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "exponential")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "gamma")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "weibull")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+```
+
+# confidence interval
+
+```{r sim_conf, echo = FALSE}
+library(dplyr)
+library(ggplot2)
+ggplot2::ggplot(design_all %>% 
+                      filter(design == "D1", distribution == "norm")) +
+  geom_boxplot(aes(x = as.factor(nx), 
+                   y = mmpd.x), width = 0.1) + 
+  facet_wrap(~nfacet) +
+  scale_fill_viridis_d() +
+  xlab("number of x levels") +
+  coord_flip()
+
+```
 
 
 

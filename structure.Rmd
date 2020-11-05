@@ -1,0 +1,52 @@
+---
+title: "Untitled"
+author: "Sayani Gupta"
+date: "02/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paper structure
+
+## Title (should be more informative than MMPD): Exploring the most interesting pairs of cyclic temporal granularities
+
+# Introduction
+
+<!-- Data structure for analysis -->
+The data structure laid out in paper gravitas for visualizing probability distributions across pairs of cyclic granularities. Why it is important and how it leads to large number of potentially useful displays.
+
+<!-- Motivation -->
+With limited human attention span, it could be useful to select displays that are especially informative. 
+
+Give an example which you would come back to later to show your metric works
+
+<!-- Earlier work -->
+Inspired from John Tukey’s “cognostics” which are diagnostics intended for computer rather than human consumption.
+
+TimeSeer: Scagnostics for High-Dimensional Time Series
+presents characterisation which can help locate anomalous or interesting sub-series for further analysis in doubly-multivariate time series.
+
+<!-- Objective:  -->
+- Assign a numeric importance “index” to each cognostic and rank the "significant" ones.
+
+
+# Proposition of the new metric
+
+# Computation and normalisation
+Simulation study comes here to show normalization works
+
+# Show the statistics do what you wanted it to do through an example
+
+# Selecting significantly important pairs
+Test statistic, size and power
+
+# Application
+How it would help in real time data examples
+
+
+
+
+

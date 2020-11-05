@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.9)  15 OCT 2020 22:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.9)  5 NOV 2020 22:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,175 +602,196 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-
-LaTeX Warning: Reference `fig:' on page 1 undefined on input line 100.
-
+<figure/calendar-elec-1.pdf, id=84, 565.11125pt x 743.77875pt>
+File: figure/calendar-elec-1.pdf Graphic file (type pdf)
+<use figure/calendar-elec-1.pdf>
+Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 102.
+(pdftex.def)             Requested size: 469.76654pt x 618.28954pt.
 [1
 
 {/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<figure/p1_p2-1.pdf, id=90, 568.1225pt x 333.245pt>
-File: figure/p1_p2-1.pdf Graphic file (type pdf)
-<use figure/p1_p2-1.pdf>
-Package pdftex.def Info: figure/p1_p2-1.pdf  used on input line 110.
+[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.110 
+       <./figure/calendar-elec-1.pdf>]
+<figure/id2-1.pdf, id=109, 568.1225pt x 333.245pt>
+File: figure/id2-1.pdf Graphic file (type pdf)
+<use figure/id2-1.pdf>
+Package pdftex.def Info: figure/id2-1.pdf  used on input line 113.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-[2]
-<figure/p4_p3-1.pdf, id=101, 568.1225pt x 328.22626pt>
-File: figure/p4_p3-1.pdf Graphic file (type pdf)
-<use figure/p4_p3-1.pdf>
-Package pdftex.def Info: figure/p4_p3-1.pdf  used on input line 112.
+<figure/id4-1.pdf, id=110, 568.1225pt x 328.22626pt>
+File: figure/id4-1.pdf Graphic file (type pdf)
+<use figure/id4-1.pdf>
+Package pdftex.def Info: figure/id4-1.pdf  used on input line 122.
 (pdftex.def)             Requested size: 469.7731pt x 271.40602pt.
+
+LaTeX Warning: Reference `fig:' on page 3 undefined on input line 129.
+
+[3pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.130 
+       <./figure/id2-1.pdf>] [4pdfTeX warning (ext4): destination with the same
+ identifier (name{figure.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.144   T
+         o choose harmonies for which distributions of categories are signif...
+ <./figure/id4-1.pdf>]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-19.
+44.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [3 <./figure/p1_p2-1.pdf> <./figure/p4_p3-1.pdf>]
+)
 
-LaTeX Warning: Reference `@paper-gravitas' on page 4 undefined on input line 13
-2.
+LaTeX Warning: Reference `@Gupta2020-vo' on page 5 undefined on input line 157.
 
-<figure/null4by2-1.pdf, id=130, 569.12625pt x 352.31625pt>
+
+<figure/null4by2-1.pdf, id=150, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
-Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 136.
+Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 161.
 (pdftex.def)             Requested size: 469.7781pt x 290.81502pt.
 
-Underfull \hbox (badness 1635) in paragraph at lines 149--150
+Underfull \hbox (badness 1635) in paragraph at lines 174--175
 \T1/lmr/m/n/10 The most com-mon di-ver-gence mea-sure be-tween dis-tri-bu-tions
  is the Kullback-Leibler (KL) di-ver-
  []
 
-[4] [5pdfTeX warning (ext4): destination with the same identifier (name{figure.
-1}) has been already used, duplicate ignored
+[5] [6pdfTeX warning (ext4): destination with the same identifier (name{figure.
+4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.162 
+l.181 
        <./figure/null4by2-1.pdf>]
-<figure/mean-sd-max-1.pdf, id=156, 566.115pt x 349.305pt>
+<figure/mean-sd-max-1.pdf, id=176, 566.115pt x 349.305pt>
 File: figure/mean-sd-max-1.pdf Graphic file (type pdf)
 <use figure/mean-sd-max-1.pdf>
-Package pdftex.def Info: figure/mean-sd-max-1.pdf  used on input line 175.
+Package pdftex.def Info: figure/mean-sd-max-1.pdf  used on input line 200.
 (pdftex.def)             Requested size: 469.76303pt x 289.85378pt.
-[6] [7pdfTeX warning (ext4): destination with the same identifier (name{figure.
-2}) has been already used, duplicate ignored
+[7] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
+5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.200 \subsection{Algorithm}\label{algorithm}}
-                                               <./figure/mean-sd-max-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 207--210
+l.220 
+       <./figure/mean-sd-max-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 232--235
 
  []
 
-[8] [9]
+[9] [10]
+<Figs/simulation.png, id=248, 1019.81pt x 539.01375pt>
+File: Figs/simulation.png Graphic file (type png)
+<use Figs/simulation.png>
+Package pdftex.def Info: Figs/simulation.png  used on input line 352.
+(pdftex.def)             Requested size: 469.7563pt x 248.28653pt.
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-38.
+55.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Underfull \hbox (badness 10000) in paragraph at lines 338--340
+<figure/unnamed-chunk-4-1.pdf, id=250, 568.1225pt x 349.305pt>
+File: figure/unnamed-chunk-4-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 370.
+(pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
+[11 <./Figs/simulation.png>]
+<figure/sim_all-1.pdf, id=262, 562.1pt x 351.3125pt>
+File: figure/sim_all-1.pdf Graphic file (type pdf)
+<use figure/sim_all-1.pdf>
+Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 377.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-2.pdf, id=263, 562.1pt x 351.3125pt>
+File: figure/sim_all-2.pdf Graphic file (type pdf)
+<use figure/sim_all-2.pdf>
+Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 377.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-3.pdf, id=264, 562.1pt x 351.3125pt>
+File: figure/sim_all-3.pdf Graphic file (type pdf)
+<use figure/sim_all-3.pdf>
+Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 377.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-4.pdf, id=265, 562.1pt x 351.3125pt>
+File: figure/sim_all-4.pdf Graphic file (type pdf)
+<use figure/sim_all-4.pdf>
+Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 377.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+[12 <./figure/unnamed-chunk-4-1.pdf> <./figure/sim_all-1.pdf>] [13 <./figure/si
+m_all-2.pdf> <./figure/sim_all-3.pdf>]
+<figure/sim_conf-1.pdf, id=318, 572.1375pt x 351.3125pt>
+File: figure/sim_conf-1.pdf Graphic file (type pdf)
+<use figure/sim_conf-1.pdf>
+Package pdftex.def Info: figure/sim_conf-1.pdf  used on input line 382.
+(pdftex.def)             Requested size: 469.75816pt x 288.44798pt.
+[14 <./figure/sim_all-4.pdf> <./figure/sim_conf-1.pdf>]
 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 340--342
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 342--344
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 344--346
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 346--348
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 348--350
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 350--352
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 352--354
-
- []
-
-[10]
-
-LaTeX Warning: Reference `sec:cyclic-calendar' on page 11 undefined on input li
-ne 420.
+LaTeX Warning: Reference `sec:cyclic-calendar' on page 15 undefined on input li
+ne 438.
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 420--421
+Underfull \hbox (badness 1043) in paragraph at lines 438--439
 \T1/lmr/m/n/10 The tsib-ble ob-ject \T1/lmtt/m/n/10 smart_meter10 \T1/lmr/m/n/1
 0 from R pack-age \T1/lmtt/m/n/10 gravitas \T1/lmr/m/n/10 (Gupta et al. 2019) c
 on-sist-ing of
  []
 
+[15]
 
-LaTeX Warning: Reference `tab:harmony-tab' on page 11 undefined on input line 4
-25.
+LaTeX Warning: Reference `tab:harmony-tab' on page 16 undefined on input line 4
+43.
 
 
-LaTeX Warning: Reference `sec:levels' on page 11 undefined on input line 425.
+LaTeX Warning: Reference `sec:levels' on page 16 undefined on input line 443.
 
-[11]
-<figure/bothcust-1.pdf, id=274, 570.13pt x 353.32pt>
+<figure/bothcust-1.pdf, id=374, 570.13pt x 353.32pt>
 File: figure/bothcust-1.pdf Graphic file (type pdf)
 <use figure/bothcust-1.pdf>
-Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 436.
+Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 454.
 (pdftex.def)             Requested size: 422.77695pt x 262.00261pt.
-[12] [13pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.3}) has been already used, duplicate ignored
+[16] [17pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.451 
-       <./figure/bothcust-1.pdf>]
-<figure/cricex-1.pdf, id=302, 566.115pt x 350.30875pt>
+l.462 
+       <./figure/bothcust-1.pdf>] [18pdfTeX warning (ext4): destination with th
+e same identifier (name{table.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.491 
+      ]
+<figure/cricex-1.pdf, id=409, 566.115pt x 350.30875pt>
 File: figure/cricex-1.pdf Graphic file (type pdf)
 <use figure/cricex-1.pdf>
-Package pdftex.def Info: figure/cricex-1.pdf  used on input line 478.
+Package pdftex.def Info: figure/cricex-1.pdf  used on input line 496.
 (pdftex.def)             Requested size: 422.78845pt x 261.6191pt.
-<figure/cricex-2.pdf, id=303, 566.115pt x 352.31625pt>
+<figure/cricex-2.pdf, id=410, 566.115pt x 352.31625pt>
 File: figure/cricex-2.pdf Graphic file (type pdf)
 <use figure/cricex-2.pdf>
-Package pdftex.def Info: figure/cricex-2.pdf  used on input line 478.
+Package pdftex.def Info: figure/cricex-2.pdf  used on input line 496.
 (pdftex.def)             Requested size: 422.78845pt x 263.11835pt.
-[14pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
-has been already used, duplicate ignored
+[19] [20pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.494 
-      ] [15pdfTeX warning (ext4): destination with the same identifier (name{fi
-gure.4}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.494 
-       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>] [16] (./main.aux)
+l.542 
+       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>] [21] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 77181697EC3E227FD6A8273F6436ACBA;2546.
+(rerunfilecheck)             Checksum: 05C181F989788F51CDF317224E8B9E51;2667.
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 12539 strings out of 481860
- 180920 string characters out of 5929930
- 482263 words of memory out of 5000000
- 28467 multiletter control sequences out of 15000+600000
+ 12617 strings out of 481860
+ 182731 string characters out of 5929930
+ 485682 words of memory out of 5000000
+ 28523 multiletter control sequences out of 15000+600000
  585426 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,9n,66p,1600b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,9n,66p,2111b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Us
 ers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/User
 s/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/
@@ -790,10 +811,10 @@ onts/type1/public/lm/lmri10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fon
 ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmtt10.pfb>
-Output written on main.pdf (16 pages, 594176 bytes).
+Output written on main.pdf (21 pages, 994047 bytes).
 PDF statistics:
- 427 PDF objects out of 1000 (max. 8388607)
- 371 compressed objects within 4 object streams
- 130 named destinations out of 1000 (max. 500000)
- 156 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 539 PDF objects out of 1000 (max. 8388607)
+ 454 compressed objects within 5 object streams
+ 142 named destinations out of 1000 (max. 500000)
+ 204 words of extra memory for PDF output out of 10000 (max. 10000000)
 
