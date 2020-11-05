@@ -75,10 +75,11 @@ elec <- elec %>%
     weekday = if_else(wday %in% c("Sat", "Sun"), "Weekend", "Weekday")
   )
 p_cal_elec <- elec %>% 
+  filter(id %in% c(2, 4)) %>% 
   frame_calendar(x = time, y = kwh, date = date, nrow = 1) %>% 
     ggplot(aes(x = .time, y = .kwh, group = date)) +
     geom_line(aes(colour = as.factor(id)), size = 0.5) +
-    scale_colour_brewer(name = "", palette = "PiYG") +
+    scale_colour_brewer(name = "", palette = "PiYG", direction = -1) +
     facet_grid(id ~ ., labeller = label_both) +
     theme(legend.position = "bottom")
 prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
@@ -185,7 +186,6 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (MMPD) to evaluate structure in such a design.
 
-## Idea
 
 The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
 
@@ -325,7 +325,7 @@ ggpubr::ggarrange(g1, g2, ncol = 2)
 
 ```
 
-# Simulation study
+## Simulation study
 
 
 <!-- ### Distribution of distances -->
@@ -360,42 +360,114 @@ ggpubr::ggarrange(g1, g2, ncol = 2)
 
 <!-- ``` -->
 
+### Design and analysis of simulation experiments
+
+The behavior of the test statistic is monitored and understood through simulation experiments. A single simulation consisting of computational operations on a panel generating MMPD the value of which represents to what extent a pair of cyclic granularities would be interesting when displayed in the design. In comparing different simulation runs, we distinguish between different distributions and simulation scenarios (also iterations may be).
+
+#### Simulated designs:
+
+ D1. Same distribution of the measured variable across all x-axis and facet categories
+ D2. Different distribution across facet categories but same across x-axis categories
+ D3. Different distribution across x-axis categories but same across facet categories
+ D4. Different across both x-axis and facet categories 
+ 
+Each of these case scenarios tried against following distribution to check if underlying distribution has a role to play.
+
+ a) Normal 
+ b) Exponential
+ c) Gamma
+ d) Weibull
 
 
-# Algorithm 
+#### Environment
 
-\noindent The algorithm employed for computing MMPD is summarized as follows:
-<!-- Algorithm -->
-
-<!-- 1. Suppose $C_i$ and $C_2$ are two cyclic granularities such that $C_i$ maps index set to a set $\{A_1, A_2, A_3, \dots, A_l$\}, and $C_2$ maps index set to a set $\{B_1, B_2, B_3, \dots, B_m$\} and $v$ is the measured variable. Hence for each combination ($A_k$, $B_l$), we have the time series variable $v_{ij} \subseteq v$, $\forall i = {1, 2, \dots, l}$ and $\forall j = {1, 2, \dots, m}$ -->
-
-- **Input:** Data corresponding to all harmony pairs, i.e., data sets of the form $(C_i, C_j, v)$ 
-$\forall i, j \in N_C$  
-- **Output:** MMPD (Median Maximum Pairwise Distances) measuring the average variation across different levels of $C_i$ and $C_j$ $\forall i, j \in N_C$  
-
-1. Fix harmony pair $(C_i, C_j)$.
-
-2. Fix $k$. Then there are $L$ groups corresponding to level $A_k$ of $C_i$.
-
-3. Compute  $m = \binom{L}{2}$ pairwise distances between distributions of $L$ unordered levels and $m = L-1$ pairwise distances for $L$ ordered categories.
-
-4. Identify maximum within the $m$ computed distances.
-
-5. Compute normalized maximum distance ($NM$) using appropriate norming constants.
-<!--so that the distribution of the normalized maximum converges to a Gumbel distribution as $m\rightarrow\infty$.-->
+R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6
 
 
-6. Use Steps 1-5 to compute normalized maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+#### Experimental set up
 
-7. Compute MMPD = median $(NM_1, NM_2, \dots, NM_K)$/log($K$).
+This section desctibes the design of simulation runs, in terms of the scenarios simulated, the number of permutations used to compute estimates and to display the distribution of MMPD.
 
-8. Repeat Steps 1 to 7 for all harmony pairs.
+ <!-- - seed while generating random observations `seed1 = set.seed(9999)`   -->
+ <!-- - grid with how many x levels `range_nx_vec = seq(2:4)`   -->
+ <!-- - grid with how many facet levels `range_nfacet_vec = seq(2:4)`   -->
+ <!-- - number of observations to be generated `ntimes_val = 500`   -->
+ <!-- - number of permutation of data done to compute estimates `nperm_val = 2`   -->
+ <!-- - number of permutations of data done to display histogram for each panel `nsim_val = 10`    -->
+ <!-- - ordered or un-ordered categories of x levels while computing distances `dist_ordered_val = TRUE`   -->
+ <!-- - distance between which quantiles are computed `quantile_prob_vec = seq(0.01, 0.99, 0.01)`   -->
+
+```{r}
+knitr::include_graphics("Figs/simulation.png")
+```
+
+
+Observations from the null distribution are chosen as:  
+`sim_norm_null =   distributional::dist_normal(5, 10)`  
+`sim_exp_null  =   distributional::dist_expoential(5)`  
+`sim_gamma_null  =   distributional::dist_gamma(0.5, 2)`  
+`sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`  
+
+The various designs are selected by increasing the mean/rate/shape of these distributions proportionally with that parameter.
+
+<!-- To check if different distributions impact, simulate data from different distributions. A 3 way contingency table with number of facet levels, x-axis levels and distribution type should be constructed with each cell value as the p-value. -->
+
+<!-- Table -->
+<!-- Conclusions -->
+<!-- (in Null distribution) -->
+
+<!-- #### Varying distribution across facet -->
+<!-- #### Varying distribution across x-axis -->
+<!-- #### Varying distribution across both facets and x-axis -->
+<!-- #### Repeat all with varying facet and x-axis levels -->
+
+<!-- Table -->
+<!-- Conclusions -->
+<!-- (in power) -->
+
+
+#### Simulation results 
+
+##### Null distribution 
+
+Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible.
+
+```{r}
+# all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
+# all_files
+# 
+# read_files = lapply(all_files, function(x){
+#   read_rds(paste0("../hakear-drake/data/", x))
+# })
+# 
+# names(read_files) = str_remove(all_files, pattern = ".rds")
+# 
+# null_all = bind_rows(normal = read_files$null_normal,
+#                      exponential = read_files$null_exp,
+#                      gamma = read_files$null_gamma,
+#                      weibull = read_files$null_weibull,
+#                      .id = "distribution")
+design_all = readr::read_rds("../hakear-drake/data/design_all.rds")
+design_all$design = 
+  factor(design_all$design,
+         levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
+design_all$distribution = 
+  factor(design_all$distribution,
+         levels = c("normal","exponential", "gamma", "weibull"), labels = c("norm", "exp", "gam", "wei"))
+library(dplyr)
+library(ggplot2)
+ggplot2::ggplot(design_all %>% 
+                      filter(design == "D1")) +
+  ggridges::geom_density_ridges(aes(y = distribution, x = mmpd.x, fill = distribution)) + 
+  facet_grid(nx~nfacet) +
+  scale_fill_viridis_d() +
+  xlab("MMPD")
+```
+
 
 # The statistical test
 
-## Definition
-
-### Algorithm for computation for all harmony pairs
+Algorithm for computation for all harmony pairs
 
 **Assumption:** random permutation without considering ordering 
 (global)
@@ -452,7 +524,6 @@ smart_harmony %>%
 
 
 #### Characteristics under different simulation designs   
-
 A set of simulation runs that are conducted and some outputs of which are reported.
 
 
@@ -492,9 +563,7 @@ ggplot(bind_files %>%
   geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
 ```
 
-# confidence interval
-
-```{r sim_conf, echo = FALSE}
+```{r sim_conf, echo = FALSE, eval = FALSE}
 library(dplyr)
 library(ggplot2)
 ggplot2::ggplot(design_all %>% 
@@ -507,7 +576,6 @@ ggplot2::ggplot(design_all %>%
   coord_flip()
 
 ```
-
 
 
 ## Null distribution
@@ -525,8 +593,9 @@ Let a continuous population be given with cdf F(x) (cumulative distribution func
 
 <!-- ### Confidence interval of test statistic -->
 
+## Power
 
-## Power and confidence interval
+## Confidence interval
 
 Failure to reject the null hypothesis when there is in fact a significant effect.
 
@@ -673,6 +742,38 @@ real data. The ranking of the real test statistic among the shuffled test statis
 <!-- #  -->
 <!-- # ``` -->
 <!-- #  -->
+
+
+
+# Algorithm 
+
+\noindent The algorithm employed for computing MMPD is summarized as follows:
+<!-- Algorithm -->
+
+<!-- 1. Suppose $C_i$ and $C_2$ are two cyclic granularities such that $C_i$ maps index set to a set $\{A_1, A_2, A_3, \dots, A_l$\}, and $C_2$ maps index set to a set $\{B_1, B_2, B_3, \dots, B_m$\} and $v$ is the measured variable. Hence for each combination ($A_k$, $B_l$), we have the time series variable $v_{ij} \subseteq v$, $\forall i = {1, 2, \dots, l}$ and $\forall j = {1, 2, \dots, m}$ -->
+
+- **Input:** Data corresponding to all harmony pairs, i.e., data sets of the form $(C_i, C_j, v)$ 
+$\forall i, j \in N_C$  
+- **Output:** MMPD (Median Maximum Pairwise Distances) measuring the average variation across different levels of $C_i$ and $C_j$ $\forall i, j \in N_C$  
+
+1. Fix harmony pair $(C_i, C_j)$.
+
+2. Fix $k$. Then there are $L$ groups corresponding to level $A_k$ of $C_i$.
+
+3. Compute  $m = \binom{L}{2}$ pairwise distances between distributions of $L$ unordered levels and $m = L-1$ pairwise distances for $L$ ordered categories.
+
+4. Identify maximum within the $m$ computed distances.
+
+5. Compute normalized maximum distance ($NM$) using appropriate norming constants.
+<!--so that the distribution of the normalized maximum converges to a Gumbel distribution as $m\rightarrow\infty$.-->
+
+
+6. Use Steps 1-5 to compute normalized maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+
+7. Compute MMPD = median $(NM_1, NM_2, \dots, NM_K)$/log($K$).
+
+8. Repeat Steps 1 to 7 for all harmony pairs.
+
 
 # Visualisation
 
