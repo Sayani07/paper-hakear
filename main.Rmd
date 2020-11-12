@@ -434,13 +434,12 @@ The various designs are selected by increasing the mean/rate/shape of these dist
 
 ### Null distribution 
 
-Objective: distribution equal and hence values could be compared and normalisation works
+<!-- Objective: distribution equal and hence values could be compared and normalisation works -->
+Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible. So, in turn it needs to be checked that if normalisation worked.
 
-Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible.
+Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
 
-Currently, we see that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
-
-```{r}
+```{r null-dist, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
 # all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
 # all_files
 # 
