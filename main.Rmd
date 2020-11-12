@@ -182,10 +182,12 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# Proposed measure: Median Maximum Pairwise Distances (MMPD)
+# Median Maximum Pairwise Distances (MMPD)
 
 We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (MMPD) to evaluate structure in such a design.
 
+
+## Idea 
 
 The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
 
@@ -230,9 +232,9 @@ ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
 <!-- in the same group would be important to bring out different patterns of the data. -->
 
 
-# Computation
+## Computation
 
-## Distance between distributions
+### Distance between distributions
 
 <!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
 <!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
@@ -253,13 +255,13 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- We call this measure of variation as  Median Maximum Pairwise Distances (MMPD). -->
 
 
-### Distribution of Jensen-Shannon distances
+#### Distribution of Jensen-Shannon distances
 
 Jensen-Shannon distances (JSD) are distributed as chi-squared with $m$ df where we discretize the continuous distribution with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$.
 With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made.
 
 
-## Normalize distances
+### Normalize distances
 
 <!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
 
@@ -325,8 +327,10 @@ ggpubr::ggarrange(g1, g2, ncol = 2)
 
 ```
 
-## Simulation study
+## Performance
 
+
+# Simulation study
 
 <!-- ### Distribution of distances -->
 
@@ -360,11 +364,11 @@ ggpubr::ggarrange(g1, g2, ncol = 2)
 
 <!-- ``` -->
 
-### Design and analysis of simulation experiments
+<!-- ### Design and analysis of simulation experiments -->
 
-The behavior of the test statistic is monitored and understood through simulation experiments. A single simulation consisting of computational operations on a panel generating MMPD the value of which represents to what extent a pair of cyclic granularities would be interesting when displayed in the design. In comparing different simulation runs, we distinguish between different distributions and simulation scenarios (also iterations may be).
+The behavior of the measure is monitored and understood through simulation experiments. A single simulation consisting of computational operations on a panel generating MMPD the value of which represents to what extent a pair of cyclic granularities would be interesting when displayed in the design. In comparing different simulation runs, we distinguish between different distributions and simulation scenarios (also iterations may be).
 
-#### Simulated designs:
+## Simulated designs
 
  D1. Same distribution of the measured variable across all x-axis and facet categories
  D2. Different distribution across facet categories but same across x-axis categories
@@ -379,12 +383,12 @@ Each of these case scenarios tried against following distribution to check if un
  d) Weibull
 
 
-#### Environment
+## Environment
 
 R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6
 
 
-#### Experimental set up
+## Experimental set up
 
 This section desctibes the design of simulation runs, in terms of the scenarios simulated, the number of permutations used to compute estimates and to display the distribution of MMPD.
 
@@ -426,9 +430,11 @@ The various designs are selected by increasing the mean/rate/shape of these dist
 <!-- (in power) -->
 
 
-#### Simulation results 
+## Results 
 
-##### Null distribution 
+### Null distribution 
+
+Objective: distribution equal and hence values could be compared and normalisation works
 
 Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible.
 
@@ -464,10 +470,11 @@ ggplot2::ggplot(design_all %>%
   xlab("MMPD")
 ```
 
-
 # The statistical test
 
-Algorithm for computation for all harmony pairs
+## Algorithm
+
+for computation for all harmony pairs
 
 **Assumption:** random permutation without considering ordering 
 (global)
@@ -522,6 +529,7 @@ smart_harmony %>%
   rename("rankun" = "r") %>% kable()
 ```
 
+## Size, power and confidence interval
 
 #### Characteristics under different simulation designs   
 A set of simulation runs that are conducted and some outputs of which are reported.
@@ -578,172 +586,6 @@ ggplot2::ggplot(design_all %>%
 ```
 
 
-## Null distribution
-
-### Size: Simulated same distribution for all combinations of categories for all harmony pairs.
-
-Failure to reject the null hypothesis when there is in fact no significant effect.
-
-### Normalised maximum distances follow standard Gumbel distribution
-
-### Limiting distribution of median of normalised maximum distances is normal
-
-Let a continuous population be given with cdf F(x) (cumulative distribution function) and median $\xi$ (assumed to exist uniquely). For a sample of size $2n + 1$, let $\tilde{x}$ denote the sample median. The distribution of $\tilde{x}$,under certain conditions, to be asymptotically normal with mean $\xi$ and variance $\sigma_n^2 = \frac{1}{4} [f(\xi)]^2(2n + 1)$, where $f(x) = F'(x)$ is the pdf (probability density function).
-
-
-<!-- ### Confidence interval of test statistic -->
-
-## Power
-
-## Confidence interval
-
-Failure to reject the null hypothesis when there is in fact a significant effect.
-
-To estimate the sampling distribution of the test statistic we need many samples generated under the null hypothesis. If the null hypothesis is true, changing the exposure would have no effect on the outcome. By randomly shuffling the exposures we can make up as many data sets as we like. If the null hypothesis is true the shuffled data sets should look like the real data, otherwise they should look different from the
-real data. The ranking of the real test statistic among the shuffled test statistics gives a p-value.
-
-<!-- Consider two cyclic granularities $A$ and $B$ with $2$ and $3$categories. Thus, the harmony table consisting of all possible harmony pairs (assuming all pairs are harmonies), would look like the following: -->
-
-```{r harmony_min}
-# harmonies <- tibble::tibble(facet_variable = c("A", "B", "A", "C", "B", "C"),
-#                             x_variable  = c("B","A", "C", "A", "C", "B"),
-#                             facet_levels = c(2, 3, 2, 4, 3, 4),
-#                             x_levels = c(3, 2, 4, 2, 4, 3))
-# 
-# harmonies <- tibble::tibble(facet_variable = c("A", "B"),
-#                             x_variable  = c("B","A"),
-#                             facet_levels = c(2, 3),
-#                             x_levels = c(3, 2))
-#                             
-# harmonies %>% knitr::kable()
-```
-
-<!-- The output table has the value of MMPD (normalized median maximum pairwise distances), gt_MMPD(global threshold of MMPD indicator). -->
-
-<!-- # ```{r samenull_2by4, eval = FALSE} -->
-<!-- #  -->
-<!-- # ``` -->
-
-<!-- # ```{r normalv21_power} -->
-<!-- #  -->
-<!-- # ``` -->
-<!-- #  -->
-<!-- #  -->
-<!-- # ```{r normalv22_power} -->
-<!-- #  -->
-<!-- # ``` -->
-
-### Varying distribution across facet
-### Varying distribution across x-axis
-### Varying distribution across both facets and x-axis
-### Repeat all with varying facet and x-axis levels
-
-<!-- ### Power: Simulated same distribution for all combinations of categories for all harmony pairs. -->
-
-
-
-<!-- # ```{r normalv23_power} -->
-<!-- #  -->
-<!-- # ``` -->
-<!-- #  -->
-<!-- #  -->
-<!-- # ```{r normalv24_power} -->
-<!-- #  -->
-<!-- # ``` -->
-
-
-*Conclusion*: The test should reject the null hypothesis if distributions are different.
-
-<!-- ### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels. -->
-
-
-
-<!-- ```{r diffnull_2by4, eval = FALSE} -->
-
-<!-- ``` -->
-
-
-<!-- *Conclusion*: The test select the harmony pair for which distribution of x-axis categories are significantly different -->
-
-
-<!-- ### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels. -->
-
-
-<!-- ```{r diffnull_7by11, eval = FALSE} -->
-<!-- ``` -->
-
-<!-- *Conclusion*: The test indicates that both harmony pairs do not have significant variation. -->
-
-
-<!-- ### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis -->
-
-
-<!-- ```{r diffnull_7by11normal, eval = FALSE} -->
-<!-- ``` -->
-
-<!-- *Conclusion*: The test indicates that only the first harmony pair has significant variation. -->
-
-
-<!-- ### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets -->
-
-
-<!-- ```{r diffnull_7by11normal2, eval = FALSE} -->
-<!-- ``` -->
-
-
-<!-- *Conclusion*:  -->
-
-
-
-<!-- ## Scenario 4: Cumulative 3 levels with 2, 7 and 11 and testing level and power -->
-
-<!-- ```{r samenull_3levels} -->
-
-<!-- ``` -->
-
-
-<!-- *Conclusion*: With 3 levels the test incorrectly chooses 1 harmony pair with similar distribution. The harmony pair which is displayed. -->
-
-<!-- <!-- ```{r diffnull_3levels} --> 
-
-<!-- <!-- ``` --> 
-
-<!-- *Conclusion*: The test with MMPD selects just one pair, as opposed to the test with maximum. This needs to be checked against what we expect from the test. The harmony pairs which are selected (either through MMPD or maximum) are displayed. -->
-
-
-<!-- # ```{r} -->
-<!-- # harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"), facet_levels = c(2, 3),x_levels = c(3, 2)) -->
-<!-- #  -->
-<!-- # har1 <- harmonies[1,] -->
-<!-- #  -->
-<!-- # sim_dist1 = c(rep(distributional::dist_normal(mu = 10, sigma = 5),2),rep(distributional::dist_exponential(10),2), rep(distributional::dist_weibull(0.5, 2),2)) -->
-<!-- #  -->
-<!-- # data1 <- sim_distharmony1(har1, sim_dist = sim_dist1) -->
-<!-- # data1 -->
-<!-- #  -->
-<!-- # data1 %>% unnest(sim_dist) %>% -->
-<!-- #   ggplot(aes(x = Var2, y = sim_dist)) + -->
-<!-- #   facet_wrap(~Var1) + geom_boxplot() + ggtitle("Same distribution 2 by 3") -->
-<!-- #  -->
-<!-- # response = "sim_dist" -->
-<!-- #  -->
-<!-- # MMPD_distribution <- data1 %>% -->
-<!-- #   select(-dist) %>%  -->
-<!-- #   unnest(sim_dist) %>%  -->
-<!-- #   list() %>%  -->
-<!-- #   global_threshold(harmony_tbl = har1, -->
-<!-- #                    response = "sim_dist", -->
-<!-- #                    dist_distribution = "normal", -->
-<!-- #                    dist_ordered = TRUE, -->
-<!-- #                    create_gran_data = FALSE, nsamp = 20) -->
-<!-- #  -->
-<!-- # # as_tibble(sample_MMPD) %>% mutate(id = row_number()) %>%  -->
-<!-- # #   ggplot() + geom_histogram(aes(x = value)) -->
-<!-- #  -->
-<!-- # ``` -->
-<!-- #  -->
-
-
 
 # Algorithm 
 
@@ -774,10 +616,6 @@ $\forall i, j \in N_C$
 
 8. Repeat Steps 1 to 7 for all harmony pairs.
 
-
-# Visualisation
-
-Leader plots like in Scagnostics paper
 
 # Applications {#sec:application}
 
@@ -1212,4 +1050,174 @@ A future direction of work could be to look at more individuals/subjects and gro
 
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
 
+# Appendix
+
+## Null distribution
+
+### Size: Simulated same distribution for all combinations of categories for all harmony pairs.
+
+Failure to reject the null hypothesis when there is in fact no significant effect.
+
+### Normalised maximum distances follow standard Gumbel distribution
+
+### Limiting distribution of median of normalised maximum distances is normal
+
+Let a continuous population be given with cdf F(x) (cumulative distribution function) and median $\xi$ (assumed to exist uniquely). For a sample of size $2n + 1$, let $\tilde{x}$ denote the sample median. The distribution of $\tilde{x}$,under certain conditions, to be asymptotically normal with mean $\xi$ and variance $\sigma_n^2 = \frac{1}{4} [f(\xi)]^2(2n + 1)$, where $f(x) = F'(x)$ is the pdf (probability density function).
+
+
+<!-- ### Confidence interval of test statistic -->
+
+## Power
+
+## Confidence interval
+
+Failure to reject the null hypothesis when there is in fact a significant effect.
+
+To estimate the sampling distribution of the test statistic we need many samples generated under the null hypothesis. If the null hypothesis is true, changing the exposure would have no effect on the outcome. By randomly shuffling the exposures we can make up as many data sets as we like. If the null hypothesis is true the shuffled data sets should look like the real data, otherwise they should look different from the
+real data. The ranking of the real test statistic among the shuffled test statistics gives a p-value.
+
+<!-- Consider two cyclic granularities $A$ and $B$ with $2$ and $3$categories. Thus, the harmony table consisting of all possible harmony pairs (assuming all pairs are harmonies), would look like the following: -->
+
+```{r harmony_min}
+# harmonies <- tibble::tibble(facet_variable = c("A", "B", "A", "C", "B", "C"),
+#                             x_variable  = c("B","A", "C", "A", "C", "B"),
+#                             facet_levels = c(2, 3, 2, 4, 3, 4),
+#                             x_levels = c(3, 2, 4, 2, 4, 3))
+# 
+# harmonies <- tibble::tibble(facet_variable = c("A", "B"),
+#                             x_variable  = c("B","A"),
+#                             facet_levels = c(2, 3),
+#                             x_levels = c(3, 2))
+#                             
+# harmonies %>% knitr::kable()
+```
+
+<!-- The output table has the value of MMPD (normalized median maximum pairwise distances), gt_MMPD(global threshold of MMPD indicator). -->
+
+<!-- # ```{r samenull_2by4, eval = FALSE} -->
+<!-- #  -->
+<!-- # ``` -->
+
+<!-- # ```{r normalv21_power} -->
+<!-- #  -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- #  -->
+<!-- # ```{r normalv22_power} -->
+<!-- #  -->
+<!-- # ``` -->
+
+### Varying distribution across facet
+### Varying distribution across x-axis
+### Varying distribution across both facets and x-axis
+### Repeat all with varying facet and x-axis levels
+
+<!-- ### Power: Simulated same distribution for all combinations of categories for all harmony pairs. -->
+
+
+
+<!-- # ```{r normalv23_power} -->
+<!-- #  -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- #  -->
+<!-- # ```{r normalv24_power} -->
+<!-- #  -->
+<!-- # ``` -->
+
+
+*Conclusion*: The test should reject the null hypothesis if distributions are different.
+
+<!-- ### Scenario 2: Simulated different distributions for all combinations of categories for harmony pairs for few levels. -->
+
+
+
+<!-- ```{r diffnull_2by4, eval = FALSE} -->
+
+<!-- ``` -->
+
+
+<!-- *Conclusion*: The test select the harmony pair for which distribution of x-axis categories are significantly different -->
+
+
+<!-- ### Scenario 3: Simulated different distributions for all combinations of categories for all harmony pairs with many levels. -->
+
+
+<!-- ```{r diffnull_7by11, eval = FALSE} -->
+<!-- ``` -->
+
+<!-- *Conclusion*: The test indicates that both harmony pairs do not have significant variation. -->
+
+
+<!-- ### Scenario 4: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across x-axis -->
+
+
+<!-- ```{r diffnull_7by11normal, eval = FALSE} -->
+<!-- ``` -->
+
+<!-- *Conclusion*: The test indicates that only the first harmony pair has significant variation. -->
+
+
+<!-- ### Scenario 5: Simulated different distributions for all combinations of categories for all harmony pairs with many levels - very different distribution across facets -->
+
+
+<!-- ```{r diffnull_7by11normal2, eval = FALSE} -->
+<!-- ``` -->
+
+
+<!-- *Conclusion*:  -->
+
+
+
+<!-- ## Scenario 4: Cumulative 3 levels with 2, 7 and 11 and testing level and power -->
+
+<!-- ```{r samenull_3levels} -->
+
+<!-- ``` -->
+
+
+<!-- *Conclusion*: With 3 levels the test incorrectly chooses 1 harmony pair with similar distribution. The harmony pair which is displayed. -->
+
+<!-- <!-- ```{r diffnull_3levels} --> 
+
+<!-- <!-- ``` --> 
+
+<!-- *Conclusion*: The test with MMPD selects just one pair, as opposed to the test with maximum. This needs to be checked against what we expect from the test. The harmony pairs which are selected (either through MMPD or maximum) are displayed. -->
+
+
+<!-- # ```{r} -->
+<!-- # harmonies <- tibble::tibble(facet_variable = c("A", "B"),x_variable  = c("B","A"), facet_levels = c(2, 3),x_levels = c(3, 2)) -->
+<!-- #  -->
+<!-- # har1 <- harmonies[1,] -->
+<!-- #  -->
+<!-- # sim_dist1 = c(rep(distributional::dist_normal(mu = 10, sigma = 5),2),rep(distributional::dist_exponential(10),2), rep(distributional::dist_weibull(0.5, 2),2)) -->
+<!-- #  -->
+<!-- # data1 <- sim_distharmony1(har1, sim_dist = sim_dist1) -->
+<!-- # data1 -->
+<!-- #  -->
+<!-- # data1 %>% unnest(sim_dist) %>% -->
+<!-- #   ggplot(aes(x = Var2, y = sim_dist)) + -->
+<!-- #   facet_wrap(~Var1) + geom_boxplot() + ggtitle("Same distribution 2 by 3") -->
+<!-- #  -->
+<!-- # response = "sim_dist" -->
+<!-- #  -->
+<!-- # MMPD_distribution <- data1 %>% -->
+<!-- #   select(-dist) %>%  -->
+<!-- #   unnest(sim_dist) %>%  -->
+<!-- #   list() %>%  -->
+<!-- #   global_threshold(harmony_tbl = har1, -->
+<!-- #                    response = "sim_dist", -->
+<!-- #                    dist_distribution = "normal", -->
+<!-- #                    dist_ordered = TRUE, -->
+<!-- #                    create_gran_data = FALSE, nsamp = 20) -->
+<!-- #  -->
+<!-- # # as_tibble(sample_MMPD) %>% mutate(id = row_number()) %>%  -->
+<!-- # #   ggplot() + geom_histogram(aes(x = value)) -->
+<!-- #  -->
+<!-- # ``` -->
+<!-- #  -->
+
+<!-- # Visualisation -->
+
+<!-- Leader plots like in Scagnostics paper -->
 
