@@ -390,7 +390,7 @@ R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-
 
 ## Experimental set up
 
-This section desctibes the design of simulation runs, in terms of the scenarios simulated, the number of permutations used to compute estimates and to display the distribution of MMPD.
+This section describes the design of simulation runs, in terms of the scenarios simulated, the number of permutations used to compute estimates and to display the distribution of MMPD.
 
  <!-- - seed while generating random observations `seed1 = set.seed(9999)`   -->
  <!-- - grid with how many x levels `range_nx_vec = seq(2:4)`   -->
@@ -408,9 +408,9 @@ knitr::include_graphics("Figs/simulation.png")
 
 Observations from the null distribution are chosen as:  
 `sim_norm_null =   distributional::dist_normal(5, 10)`  
-`sim_exp_null  =   distributional::dist_expoential(5)`  
-`sim_gamma_null  =   distributional::dist_gamma(0.5, 2)`  
-`sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`  
+<!--`sim_exp_null  =   distributional::dist_expoential(5)`  -->
+`sim_gamma_null  =   distributional::dist_gamma(0.5, 0.2)`  
+<!--`sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`-->  
 
 The various designs are selected by increasing the mean/rate/shape of these distributions proportionally with that parameter.
 
@@ -438,6 +438,8 @@ Objective: distribution equal and hence values could be compared and normalisati
 
 Under the null hypothesis, all the combinations of x-axis and facets are obtained from the same distribution. We need to study the distribution of the mmpd values under the null hypothesis to see if comparison of their values across different x-axis and facet levels are at all possible.
 
+Currently, we see that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
+
 ```{r}
 # all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
 # all_files
@@ -453,13 +455,16 @@ Under the null hypothesis, all the combinations of x-axis and facets are obtaine
 #                      gamma = read_files$null_gamma,
 #                      weibull = read_files$null_weibull,
 #                      .id = "distribution")
-design_all = readr::read_rds("../hakear-drake/data/design_all.rds")
+# design_all = readr::read_rds("../hakear-drake/data/design_all.rds")
+design_all = readr::read_rds("data/design_all.rds")
+
+
 design_all$design = 
   factor(design_all$design,
          levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
 design_all$distribution = 
   factor(design_all$distribution,
-         levels = c("normal","exponential", "gamma", "weibull"), labels = c("norm", "exp", "gam", "wei"))
+         levels = c("normal","gamma"), labels = c("norm","gam"))
 library(dplyr)
 library(ggplot2)
 ggplot2::ggplot(design_all %>% 
