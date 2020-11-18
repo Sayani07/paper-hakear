@@ -238,7 +238,7 @@ ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
 
 Consider two cyclic granularities $C_i$ and $C_j$, such that $C_i$ maps index set to a set $\{A_k \mid k=1,\dots,K\}$ and $C_j$ maps index set to a set $\{B_\ell \mid \ell =1,\dots,L\}$. Here, $A_k$ and $B_\ell$ are the levels/categories corresponding to $C_i$ and $C_j$ respectively. Let $S_{k\ell}$ be a subset of the index set such that for all $s \in S_{k\ell}$, $C_i(s) = A_k$ and $C_j(s) = B_\ell$. There are $KL$ such data subsets, one for each combination of levels ($A_k$, $B_\ell$). Moreover, consider that in the graphical space, $C_i$ is mapped to facets and $C_j$ is mapped to x-axis. 
 
-### Estimating distributions
+### Characterising distribution
 
 Each of the $KL$ data subsets in the data structure have multiple observations and may vary widely across different subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. The set of observations corresponding to each combination is assumed to be a sample from an unknown probability density function.
 While the whole population of observations has certain characteristics, we can typically never measure all of them. Often shape, central tendency, and variability are the common characteristics used to describe the distribution. Another way to describe the probability distribution is through quantiles. (Define quantiles here) <!--There are two broad approaches to quantile estimation, viz, parameteric and non-parameteric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data.--> Sample quantiles could be thought to estimate the population quantiles. But there are a large number of different definitions used for sample quantiles. The median-unbiased estimator is recommended (Rob's paper) because of its desirable properties of a quantile estimator and can be defined independently of the underlying distribution. 
@@ -249,7 +249,6 @@ While the whole population of observations has certain characteristics, we can t
 <!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
 <!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
 <!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
-
   
 The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence[@Kullback1951-jy] introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence, denoted $D(p(x), q(x))$ is a non-symmetric measure of the difference between two probability distributions $p(x)$ and $q(x)$ and is interpreted as the amount of information lost when $q(x)$ is used to approximate $p(x)$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance are Hellinger distance, total variation distance and Fisher information metric. 
 
@@ -266,10 +265,37 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 
 
 
-#### Distribution of Jensen-Shannon distances
+<!-- #### Distribution of Jensen-Shannon distances -->
 
-Jensen-Shannon distances (JSD) are distributed as chi-squared with $m$ df where we discretize the continuous distribution with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$.
-With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made.
+<!-- Jensen-Shannon distances (JSD) are distributed as chi-squared with $m$ df where we discretize the continuous distribution with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. -->
+<!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
+
+
+### Distance measure
+
+The algorithm employed for computing the distance measure is summarized as follows:
+
+1. Fix harmony pair $(C_i, C_j)$.
+
+2. Fix $k$. Then there are $L$ groups corresponding to level $A_k$ of $C_i$.
+
+3. Compute  $m = \binom{L}{2}$ pairwise distances between distributions of $L$ unordered levels and $m = L-1$ pairwise distances for $L$ ordered categories.
+
+4. Identify maximum within the $m$ computed distances.
+
+5. Compute maximum distance ($M$) using appropriate norming constants.
+
+6. Use Steps 1-5 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+
+7. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
+
+
+However, median and maximum distances are not robust to the number of levels and the distance measure MMPD_raw would have higher values if $C_i$ or $C_j$ has higher levels. Figure \ref{fig:mean-sd-max} shows how distribution of MMPD_raw varies for different levels of $C_i$ and $C_j$. In this example, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 3, 4, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which MMPD_raw has been constructed 100 times to compute the distribution. This shows that with the increase in the number of levels of $C_i$, the distributions shift rightward and upward. With increasing number of levels of x-axis, such a direction is not clear. This implies we need to atleast normalise for the levels of the facets so that we could correctly compare MMPD_raw across different combinations.
+
+
+both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$.
+
+Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
 
 ### Normalize distances
