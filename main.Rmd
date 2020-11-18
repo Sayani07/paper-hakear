@@ -290,12 +290,44 @@ The algorithm employed for computing the distance measure is summarized as follo
 7. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
 
 
-However, median and maximum distances are not robust to the number of levels and the distance measure MMPD_raw would have higher values if $C_i$ or $C_j$ has higher levels. Figure \ref{fig:mean-sd-max} shows how distribution of MMPD_raw varies for different levels of $C_i$ and $C_j$. In this example, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 3, 4, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which MMPD_raw has been constructed 100 times to compute the distribution. This shows that with the increase in the number of levels of $C_i$, the distributions shift rightward and upward. With increasing number of levels of x-axis, such a direction is not clear. This implies we need to atleast normalise for the levels of the facets so that we could correctly compare MMPD_raw across different combinations.
+However, median and maximum distances are not unaffected by the number of levels and hence the distance measure MMPD_raw, which is a combination of median and maximum would also be influenced by the number of levels. It would have higher values if $C_i$ or $C_j$ has higher levels. We would ideally want a higher value of the measure if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. From the histogram we could see that th both the shape and scale of the distribution are different when we move across different levels.
+
+Figure \ref{fig:mean-sd-max} shows how distribution of MMPD_raw varies for different levels of $C_i$ and $C_j$. In this example, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 3, 4, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which MMPD_raw has been constructed 100 times to compute the distribution. This shows that with the increase in the number of levels of $C_i$, the distributions shift rightward and upward. With increasing number of levels of x-axis, such a direction is not clear. This implies we need to atleast normalise for the levels of the facets so that we could correctly compare MMPD_raw across different combinations. 
 
 
 both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$.
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
+
+
+```{r}
+mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds")
+data_long = mmpd_raw %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
+
+
+g1 <- data_long %>%
+filter(category == "nfacet") %>% 
+ggplot() +
+ggridges::geom_density_ridges(aes(x = raw_mmpd, y = as.factor(levels)))  + ylab("facet levels") + xlab("Raw MMPD")
+
+g2 <- data_long %>%
+filter(category == "nx") %>% 
+ggplot() +
+geom_boxplot(aes(x = as.factor(levels) , y = raw_mmpd)) +
+  xlab("x-axis levels") + ylab("Raw MMPD") +  coord_flip()
+
+library(patchwork)
+g1|g2 
+```
+
+```{r hist_plot}
+ hist_plot = mmpd_raw %>% 
+      ggplot() +
+      geom_density(aes(x = raw_mmpd), fill = "blue") +
+      facet_grid(nx~nfacet)
+hist_plot
+```
+
 
 
 ### Normalize distances
