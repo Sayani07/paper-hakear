@@ -303,8 +303,6 @@ This implies we need to eliminate the impact of different levels of the facets a
 
 In an attempt to make the densities \ref{fig:hist_plot} same across different levels, we want to start by making their scale and location same. In that regard, we shuffle the data multiple times and compute the sampling distribution of $mmpd_{raw}$ for each combination of facet and x-axis levels. 
 
-mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds")
-data_long = mmpd_raw %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
 The null hypothesis is that the two cyclic granularities do not differ on the outcome (i.e., that the outcome is observed independently of treatment assignment). When we permute the outcome values during the test, we therefore see all of the possible alternative treatment assignments we could have had and where the mean-difference in our observed data falls relative to all of the differences we could have seen if the outcome was independent of treatment assignment. While a permutation test requires that we see all possible permutations of the data (which can become quite large), we can easily conduct “approximate permutation tests” by simply conducting a vary large number of resamples. That process should, in expectation, approximate the permutation distribution.
 
 Finally, we run some simulation experiments to see if normalisation works. If normalisation has worked, it should work for both x levle and facet-levels.
@@ -315,12 +313,36 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-```{r hist_plot, fig.cap="density mmpd raw"}
- hist_plot = mmpd_raw %>% 
-      ggplot() +
-      geom_density(aes(x = raw_mmpd), fill = "blue") +
-      facet_grid(nx~nfacet)
-hist_plot
+```{r hist-plot, fig.cap = "density mmpd raw"}
+mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds") 
+mmpd_xmore = read_rds("../hakear-drake/data/data_all213045x.rds") 
+mmpd_fmore = read_rds("../hakear-drake/data/data_all_213045f_allx.rds")
+
+data_all = bind_rows(mmpd_raw, mmpd_xmore, mmpd_fmore)
+
+data_long = data_all %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
+
+g1 <- data_all %>% 
+  filter(!(nx %in% c(3, 4))) %>% 
+  ggplot() +
+  ggridges::geom_density_ridges(aes(x = raw_mmpd, 
+                                    y = as.factor(nfacet))) +
+  facet_wrap(~nx, nrow = 2)
+
+g2 <- data_all %>% 
+  filter(nfacet<=14, nfacet!=3) %>% 
+  ggplot() +
+  geom_boxplot(aes(y = raw_mmpd, 
+                                    x = as.factor(nx))) +
+  facet_wrap(~nfacet) + coord_flip()
+
+#  hist_plot = data_all %>% 
+#       ggplot() +
+#       geom_density(aes(x = raw_mmpd), fill = "blue") +
+#       facet_grid(nx~nfacet)
+# hist_plot
+library(patchwork)
+g1/g2
 ```
 
 
