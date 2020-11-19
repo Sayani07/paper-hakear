@@ -637,6 +637,49 @@ ggplot2::ggplot(design_all %>%
 
 
 ```{r}
+data1  = sim_panel(nx = 2, nfacet = 3, ntimes = 500)
+simulated_data <- sim_panel(nx = 2,
+nfacet = 3,
+ntimes = 500,
+sim_dist = rep(dist_normal(seq(5, 15, 5), 5), each = 2))
+data2 = simulated_data
+data4 = sim_panel(nx = 2,
+nfacet = 3,
+ntimes = 500,
+sim_dist = dist_normal(seq(5,30, 5), 5))
+data3 = data2 %>% rename("temp" = "id_facet") %>% rename("id_facet" = "id_x") %>% rename("id_x" = "temp")
+
+library(parallel)
+library(gravitas)
+library(hakear)
+
+set.seed(1000)
+r1 <- compute_mmpd_norm(data1, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r2 <- compute_mmpd_norm(data2, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r3 <- compute_mmpd_norm(data3, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r4 <- compute_mmpd_norm(data4, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+
+
+p1 <- data1 %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +xlab("")
+
+p2 <- data2 %>% ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +xlab("")
+
+p3 <- data3 %>% ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +xlab("")
+
+p4 <- data4 %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +xlab("")
+
+
+gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, top = paste("MMPD_norm:", round(r1, 3))),
+                        gridExtra::arrangeGrob(p2, top = paste("MMPD_norm:", round(r2, 3))),
+                        gridExtra::arrangeGrob(p3, top = paste("MMPD_norm:", round(r3, 3))),
+                        gridExtra::arrangeGrob(p4, top = paste("MMPD_norm:", round(r4, 3))),
+                        ncol = 2, nrow=2)
 
 ```
 
