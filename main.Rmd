@@ -588,7 +588,7 @@ Under the null hypothesis, all the combinations of x-axis and facets are obtaine
 Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
 
 
-```{r norm-data, "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." }
+```{r norm-data, fig.cap = "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." }
 mmpd_norm = read_rds("../hakear-drake/data/data_norm_213045f.rds") 
 hist_plot = mmpd_norm %>% 
       ggplot() +
@@ -598,7 +598,7 @@ hist_plot
 ```
 
 
-```{r null-dist, echo = FALSE, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
+```{r null-dist, eval =  FALSE, echo = FALSE, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
 # all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
 # all_files
 # 
