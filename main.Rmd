@@ -289,38 +289,33 @@ The algorithm employed for computing the distance measure is summarized as follo
 
 7. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
 
+A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
 
-However, median and maximum distances are not unaffected by the number of levels and hence the distance measure MMPD_raw, which is a combination of median and maximum would also be influenced by the number of levels. It would have higher values if $C_i$ or $C_j$ has higher levels. We would ideally want a higher value of the measure if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. From the histogram we could see that th both the shape and scale of the distribution are different when we move across different levels.
+### Need for normalisation
 
-Figure \ref{fig:mean-sd-max} shows how distribution of MMPD_raw varies for different levels of $C_i$ and $C_j$. In this example, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 3, 4, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which MMPD_raw has been constructed 100 times to compute the distribution. This shows that with the increase in the number of levels of $C_i$, the distributions shift rightward and upward. With increasing number of levels of x-axis, such a direction is not clear. This implies we need to atleast normalise for the levels of the facets so that we could correctly compare MMPD_raw across different combinations. 
+Median and maximum distances are affected by the number of categories considered and hence the distance measure $MMPD_{raw}$, which is a combination of median and maximum would also be influenced by the number of levels. It would have higher values if $C_i$ or $C_j$ has higher levels. We would ideally want a higher value of the measure if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. In this example, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 3, 4, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which MMPD_raw has been constructed 100 times to compute the distribution. From the histogram we could see that both the shape and scale of the distribution are different when we move across different levels. More specifically, Figure \ref{fig:mean-sd-max} shows the marginal contribution of increasing levels of $C_i$ and $C_j$ on distribution of $MMPD_raw$. This shows that with the increase in the number of levels of $C_i$, the location of the distribution shift rightward, whereas for increasing x-axis levels, the scale of the distribution decreases.
+
+This implies we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure, so that we could correctly compare $MMPD_{raw}$ across different combinations of facet and x-axis levels. 
+
+<!-- both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. -->
+
+# Normalisation
+
+In an attempt to make the densities \ref{fig:hist_plot} same across different levels, we want to start by making their scale and location same. In that regard, we shuffle the data multiple times and compute the sampling distribution of $mmpd_{raw}$ for each combination of facet and x-axis levels. 
+
+mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds")
+data_long = mmpd_raw %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
+The null hypothesis is that the two cyclic granularities do not differ on the outcome (i.e., that the outcome is observed independently of treatment assignment). When we permute the outcome values during the test, we therefore see all of the possible alternative treatment assignments we could have had and where the mean-difference in our observed data falls relative to all of the differences we could have seen if the outcome was independent of treatment assignment. While a permutation test requires that we see all possible permutations of the data (which can become quite large), we can easily conduct “approximate permutation tests” by simply conducting a vary large number of resamples. That process should, in expectation, approximate the permutation distribution.
+
+Finally, we run some simulation experiments to see if normalisation works. If normalisation has worked, it should work for both x levle and facet-levels.
 
 
-both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$.
+    
+
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-
-```{r}
-mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds")
-data_long = mmpd_raw %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
-
-
-g1 <- data_long %>%
-filter(category == "nfacet") %>% 
-ggplot() +
-ggridges::geom_density_ridges(aes(x = raw_mmpd, y = as.factor(levels)))  + ylab("facet levels") + xlab("Raw MMPD")
-
-g2 <- data_long %>%
-filter(category == "nx") %>% 
-ggplot() +
-geom_boxplot(aes(x = as.factor(levels) , y = raw_mmpd)) +
-  xlab("x-axis levels") + ylab("Raw MMPD") +  coord_flip()
-
-library(patchwork)
-g1|g2 
-```
-
-```{r hist_plot}
+```{r hist_plot, fig.cap="density mmpd raw"}
  hist_plot = mmpd_raw %>% 
       ggplot() +
       geom_density(aes(x = raw_mmpd), fill = "blue") +
