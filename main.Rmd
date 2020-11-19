@@ -350,9 +350,20 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-
 ## Methodology
 
+The mean and sd for each combination of facet and x levels could be computed by shuffling the data repeatedly and obtaining the distribution of $MMPD_{raw}$ for different combinations. If $MMPD_{raw}$ is then adjusted by the location and scale of this distribution, we could assume that the distribution of the resultant $MMPD_{norm}$ will have same distribution across different combinations of x and facet levels. All data is repeatedly shuffled $nperm$ times in random manner to obtain the measure $MMPD_{raw}$. Then the $MMPD_{norm}$ is obtained by scaling the observed value by the mean and sd of the distribution of $MMPD_{raw}$ obtained from the permuted data.
+
+\noindent Step 7 in the Algorithm defined in Section \ref{sec:} need to be revised in order to compute $MMPD_{norm}$ instead of $MMPD_{raw}$. Step 1-6 stays the same. The entire algorithm will have to repeated for all harmony pairs considered in the context.
+
+A simulation study is conducted to see if this methodology is working.
+
+<!-- #### Method 2: -->
+
+<!-- $m' = max_{x}dist$ is obtained for each facet. -->
+<!-- All $x$ levels are shuffled for each facet to obtain several $m'$s. Hence $m'$ is normalized for each facet level and the facets are aggregated using $m''= median(m')$, which is basically median(norm(max)). We need to normalise this median across facets as well. So we shuffle all facets for each $x$ level and obtain several $m''$s. In this approach, data is shuffled $2*nperm$ times and hence distances are computed $2*nperm$ times. It is computationally very intensive. -->
+
+<!-- Hence, it was decided that the first approach will be employed to implement normalisation. One of the advantages of the second method could be to have normalisation separately for max and median measure. There is nothing that is stopping the users to implement this with more efficient computing power.  -->
 
 <!-- The harmony pairs could be arranged from highest to lowest average maximum pairwise distances across different levels of the harmonies. -->
 
@@ -418,8 +429,6 @@ Thus these median maximum pairwise distances need to be normalized for different
 
 <!-- ``` -->
 
-
-
 ## Simulation study
 
 <!-- ### Distribution of distances -->
@@ -465,18 +474,11 @@ The behavior of the measure is monitored and understood through simulation exper
  D3. Different distribution across x-axis categories but same across facet categories
  D4. Different across both x-axis and facet categories 
  
-Each of these case scenarios tried against following distribution to check if underlying distribution has a role to play.
-
- a) Normal 
- b) Exponential
- c) Gamma
- d) Weibull
-
+Each of these case scenarios tried against Normal and a non-normal (Gamma) distribution to check if underlying distribution has a role to play.
 
 ### Environment
 
 R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6
-
 
 ### Experimental set up
 
@@ -496,13 +498,15 @@ knitr::include_graphics("Figs/simulation.png")
 ```
 
 
-Observations from the null distribution are chosen as:  
-`sim_norm_null =   distributional::dist_normal(5, 10)`  
-<!--`sim_exp_null  =   distributional::dist_expoential(5)`  -->
-`sim_gamma_null  =   distributional::dist_gamma(0.5, 0.2)`  
-<!--`sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`-->  
+Observations from Normal(5, 10) and Gamma(0.5, 0.2) are3 chosen in all the designs.
 
-The various designs are selected by increasing the mean/rate/shape of these distributions proportionally with that parameter.
+<!-- . the null distribution are chosen as:   -->
+<!-- `sim_norm_null =   distributional::dist_normal(5, 10)`   -->
+<!-- <!--`sim_exp_null  =   distributional::dist_expoential(5)`  --> -->
+<!-- `sim_gamma_null  =   distributional::dist_gamma(0.5, 0.2)`   -->
+<!-- <!--`sim_weibull_null  =   distributional::dist_weibull(1.5, 3)`-->   -->
+
+<!-- The various designs are selected by increasing the mean/rate/shape of these distributions proportionally with that parameter. -->
 
 <!-- To check if different distributions impact, simulate data from different distributions. A 3 way contingency table with number of facet levels, x-axis levels and distribution type should be constructed with each cell value as the p-value. -->
 
@@ -518,9 +522,6 @@ The various designs are selected by increasing the mean/rate/shape of these dist
 <!-- Table -->
 <!-- Conclusions -->
 <!-- (in power) -->
-
-### Data Shuffling method
-
 
 <!-- ```{r} -->
 <!-- raw_data = rnorm(12, 5, 10) %>%  -->
@@ -555,20 +556,8 @@ The various designs are selected by increasing the mean/rate/shape of these dist
 <!-- | ..  	|      	|      	|      	|    	|    	|      	| -->
 <!-- | B_L 	| z_1 	| z_2 	| z_3 	| .. 	| .. 	| z_m 	| -->
 
-The mean and sd needs to be computed by permuting the data repeatedly. These permutations could be done in several ways given the design.
 
-#### Method 1:
-
-All data is repeatedly shuffled $nperm$ times in random manner to obtain the measure $m = median_{facets}(max_{x}dist)$. Then the normalised $m$ is obtained by scaling the observed value by the mean and sd of all $m$ obtained from the permutated data.
-
-#### Method 2:
-
-$m' = max_{x}dist$ is obtained for each facet.
-All $x$ levels are shuffled for each facet to obtain several $m'$s. Hence $m'$ is normalized for each facet level and the facets are aggregated using $m''= median(m')$, which is basically median(norm(max)). We need to normalise this median across facets as well. So we shuffle all facets for each $x$ level and obtain several $m''$s. In this approach, data is shuffled $2*nperm$ times and hence distances are computed $2*nperm$ times. It is computationally very intensive.
-
-Hence, it was decided that the first approach will be employed to implement normalisation. One of the advantages of the second method could be to have normalisation separately for max and median measure. There is nothing that is stopping the users to implement this with more efficient computing power. 
-
-```{r}
+```{r, eval = FALSE}
 # design_time <- readr::read_rds("../hakear-drake/data/design_time.rds")
 # write_rds(design_time, "data/design_time.rds")
 time_data <-readr::read_rds("data/design_time.rds")
@@ -598,7 +587,18 @@ Under the null hypothesis, all the combinations of x-axis and facets are obtaine
 
 Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
 
-```{r null-dist, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
+
+```{r norm-data, "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." }
+mmpd_norm = read_rds("../hakear-drake/data/data_norm_213045f.rds") 
+hist_plot = mmpd_norm %>% 
+      ggplot() +
+      geom_histogram(aes(x = raw_mmpd)) +
+      facet_grid(nx~nfacet)
+hist_plot
+```
+
+
+```{r null-dist, echo = FALSE, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
 # all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
 # all_files
 # 
