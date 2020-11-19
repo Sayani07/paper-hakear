@@ -803,36 +803,6 @@ ggplot2::ggplot(design_all %>%
 
 
 
-# Algorithm 
-
-\noindent The algorithm employed for computing MMPD is summarized as follows:
-<!-- Algorithm -->
-
-<!-- 1. Suppose $C_i$ and $C_2$ are two cyclic granularities such that $C_i$ maps index set to a set $\{A_1, A_2, A_3, \dots, A_l$\}, and $C_2$ maps index set to a set $\{B_1, B_2, B_3, \dots, B_m$\} and $v$ is the measured variable. Hence for each combination ($A_k$, $B_l$), we have the time series variable $v_{ij} \subseteq v$, $\forall i = {1, 2, \dots, l}$ and $\forall j = {1, 2, \dots, m}$ -->
-
-- **Input:** Data corresponding to all harmony pairs, i.e., data sets of the form $(C_i, C_j, v)$ 
-$\forall i, j \in N_C$  
-- **Output:** MMPD (Median Maximum Pairwise Distances) measuring the average variation across different levels of $C_i$ and $C_j$ $\forall i, j \in N_C$  
-
-1. Fix harmony pair $(C_i, C_j)$.
-
-2. Fix $k$. Then there are $L$ groups corresponding to level $A_k$ of $C_i$.
-
-3. Compute  $m = \binom{L}{2}$ pairwise distances between distributions of $L$ unordered levels and $m = L-1$ pairwise distances for $L$ ordered categories.
-
-4. Identify maximum within the $m$ computed distances.
-
-5. Compute normalized maximum distance ($NM$) using appropriate norming constants.
-<!--so that the distribution of the normalized maximum converges to a Gumbel distribution as $m\rightarrow\infty$.-->
-
-
-6. Use Steps 1-5 to compute normalized maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
-
-7. Compute MMPD = median $(NM_1, NM_2, \dots, NM_K)$/log($K$).
-
-8. Repeat Steps 1 to 7 for all harmony pairs.
-
-
 # Applications {#sec:application}
 
 ## Smart meter data of Australia {#sec:smartmeter}
