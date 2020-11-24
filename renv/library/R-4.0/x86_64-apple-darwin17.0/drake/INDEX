@@ -1,0 +1,141 @@
+bind_plans              Row-bind together drake plans *Stable*
+build_times             See the time it took to build each target.
+                        *Stable*
+cached                  List targets in the cache. *Stable*
+cached_planned          List targets in both the plan and the cache.
+                        *Stable*
+cached_unplanned        List targets in the cache but not the plan.
+                        *Stable*
+cancel                  Cancel a target mid-build *Stable*
+cancel_if               Cancel a target mid-build under some condition
+                        *Stable*)'
+clean                   Invalidate and deregister targets. *Stable*
+clean_mtcars_example    Clean the mtcars example from
+                        'drake_example("mtcars")' *Stable*
+code_to_function        Turn a script into a function. *Stable*
+code_to_plan            Turn an R script file or 'knitr' / R Markdown
+                        report into a 'drake' plan. *Questioning*
+deps_code               List the dependencies of a function or command
+                        *Stable*
+deps_knitr              Find the drake dependencies of a dynamic knitr
+                        report target. *Stable*
+deps_profile            Find out why a target is out of date. *Stable*
+deps_target             List the dependencies of a target *Stable*
+diagnose                Get diagnostic metadata on a target. *Stable*
+drake-package           drake: A pipeline toolkit for reproducible
+                        computation at scale.
+drake_build             Build/process a single target or import.
+                        *Questioning*
+drake_cache             Get the cache of a 'drake' project. *Stable*
+drake_cache_log         Get the state of the cache. *Stable*
+drake_cancelled         List cancelled targets. *Stable*
+drake_config            Ending of _drake.R for r_make() and friends
+                        *Stable*
+drake_debug             Run a single target's command in debug mode.'
+                        *Questioning*
+drake_done              List done targets. *Stable*
+drake_envir             Get the environment where drake builds targets
+                        *Questioning*
+drake_example           Download the files of an example 'drake'
+                        project. *Stable*
+drake_examples          List the names of all the drake examples.
+                        *Stable*
+drake_failed            List failed targets. *Stable*
+drake_gc                Do garbage collection on the drake cache.
+                        *Stable*
+drake_get_session_info
+                        Session info of the last call to 'make()'.
+                        *Stable*
+drake_ggraph            Visualize the workflow with 'ggraph'/'ggplot2'
+                        *Stable*
+drake_graph_info        Prepare the workflow graph for visualization
+                        *Stable*
+drake_history           History and provenance *Stable*
+drake_hpc_template_file
+                        Write a template file for deploying work to a
+                        cluster / job scheduler. *Stable*
+drake_hpc_template_files
+                        List the available example template files for
+                        deploying work to a cluster / job scheduler.
+                        *Stable*
+drake_plan              Create a drake plan for the 'plan' argument of
+                        'make()'. *Stable*
+drake_plan_source       Show the code required to produce a given
+                        'drake' plan *Stable*
+drake_progress          Get the build progress of your targets *Stable*
+drake_running           List running targets. *Stable*
+drake_script            Write an example _drake.R script to the current
+                        working directory.
+drake_slice             Take a strategic subset of a dataset. *Stable*
+drake_tempfile          drake tempfile *Stable*
+file_in                 Declare input files and directories. *Stable*
+file_out                Declare output files and directories. *Stable*
+file_store              Show a file's encoded representation in the
+                        cache *Stable*
+find_cache              Search up the file system for the nearest drake
+                        cache. *Stable*
+id_chr                  Name of the current target *Stable*
+ignore                  Ignore code *Stable*
+knitr_in                Declare 'knitr'/'rmarkdown' source files as
+                        dependencies. *Stable*
+legend_nodes            Create the nodes data frame used in the legend
+                        of the graph visualizations. *Soft-deprecated*
+load_mtcars_example     Load the mtcars example. *Stable*
+make                    Run your project (build the outdated targets).
+                        *Stable*
+missed                  Report any import objects required by your
+                        drake_plan plan but missing from your workspace
+                        or file system. *Stable*
+new_cache               Make a new 'drake' cache. '*Stable*
+no_deps                 Suppress dependency detection. *Stable*
+outdated                List the targets that are out of date. *Stable*
+plan_to_code            Turn a 'drake' plan into a plain R script file.
+                        *Questioning*
+plan_to_notebook        Turn a 'drake' plan into an R notebook.
+                        *Questioning*
+predict_runtime         Predict the elapsed runtime of the next call to
+                        'make()' for non-staged parallel backends.
+                        *Stable*
+predict_workers         Predict the load balancing of the next call to
+                        'make()' for non-staged parallel backends.
+                        *Stable*
+r_make                  Launch a drake function in a fresh new R
+                        process *Stable*
+read_drake_seed         Read the pseudo-random number generator seed of
+                        the project. *Stable*
+read_trace              Read a trace of a dynamic target. *Stable*
+readd                   Read and return a drake target/import from the
+                        cache. *Stable*
+recoverable             List the most upstream _recoverable_ outdated
+                        targets. *Stable*
+render_drake_ggraph     Visualize the workflow with 'ggplot2'/'ggraph'
+                        using 'drake_graph_info()' output. *Stable*
+render_drake_graph      Render a visualization using the data frames
+                        generated by 'drake_graph_info()'. *Stable*
+render_sankey_drake_graph
+                        Render a Sankey diagram from
+                        'drake_graph_info()'. *Stable*
+render_text_drake_graph
+                        Show a workflow graph as text in your terminal
+                        window using 'drake_graph_info()' output.
+                        *Stable*
+rescue_cache            Try to repair a drake cache that is prone to
+                        throwing 'storr'-related errors. *Questioning*
+sankey_drake_graph      Show a Sankey graph of your drake project.
+                        *Stable*
+show_source             Show how a target/import was produced. *Stable*
+subtargets              List sub-targets *Stable*
+target                  Customize a target in 'drake_plan()'. *Stable*
+text_drake_graph        Show a workflow graph as text in your terminal
+                        window. *Stable*
+tracked                 List the targets and imports that are
+                        reproducibly tracked. *Stable*
+transform_plan          Transform a plan *Stable*
+transformations         Transformations in 'drake_plan()'. *Stable*
+trigger                 Customize the decision rules for rebuilding
+                        targets *Stable*
+use_drake               Use drake in a project *Questioning*
+vis_drake_graph         Show an interactive visual network
+                        representation of your drake project. *Stable*
+which_clean             Which targets will 'clean()' invalidate?
+                        *Stable*

@@ -1,0 +1,30 @@
+augmentLHS              Augment a Latin Hypercube Design
+createAddelKemp         Create an orthogonal array using the
+                        Addelman-Kempthorne algorithm.
+createAddelKemp3        Create an orthogonal array using the
+                        Addelman-Kempthorne algorithm with '2q^3' rows.
+createAddelKempN        Create an orthogonal array using the
+                        Addelman-Kempthorne algorithm with alternate
+                        strength with '2q^n' rows.
+createBose              Create an orthogonal array using the Bose
+                        algorithm.
+createBoseBush          Create an orthogonal array using the Bose-Bush
+                        algorithm.
+createBoseBushl         Create an orthogonal array using the Bose-Bush
+                        algorithm with alternate strength >= 3.
+createBush              Create an orthogonal array using the Bush
+                        algorithm.
+createBusht             Create an orthogonal array using the Bush
+                        algorithm with alternate strength.
+create_oalhs            Create an orthogonal array Latin hypercube
+geneticLHS              Latin Hypercube Sampling with a Genetic
+                        Algorithm
+improvedLHS             Improved Latin Hypercube Sample
+maximinLHS              Maximin Latin Hypercube Sample
+oa_to_oalhs             Create a Latin hypercube from an orthogonal
+                        array
+optAugmentLHS           Optimal Augmented Latin Hypercube Sample
+optSeededLHS            Optimum Seeded Latin Hypercube Sample
+optimumLHS              Optimum Latin Hypercube Sample
+randomLHS               Construct a random Latin hypercube design
+runifint                Create a Random Sample of Uniform Integers

@@ -1,0 +1,47 @@
+add_rowindex            Add a column of row numbers to a data frame
+boost_tree              General Interface for Boosted Trees
+contr_one_hot           Contrast function for one-hot encodings
+control_parsnip         Control the fit function
+decision_tree           General Interface for Decision Tree Models
+descriptors             Data Set Characteristics Available when Fitting
+                        Models
+fit.model_spec          Fit a Model Specification to a Dataset
+glance.model_fit        Construct a single row summary "glance" of a
+                        model, fit, or other object
+linear_reg              General Interface for Linear Regression Models
+logistic_reg            General Interface for Logistic Regression
+                        Models
+mars                    General Interface for MARS
+maybe_matrix            Fuzzy conversions
+min_cols                Execution-time data dimension checks
+mlp                     General Interface for Single Layer Neural
+                        Network
+model_fit               Model Fit Object Information
+model_spec              Model Specification Information
+multi_predict           Model predictions across many sub-models
+multinom_reg            General Interface for Multinomial Regression
+                        Models
+nearest_neighbor        General Interface for K-Nearest Neighbor Models
+null_model              General Interface for null models
+nullmodel               Fit a simple, non-informative model
+rand_forest             General Interface for Random Forest Models
+repair_call             Repair a model call object
+req_pkgs                Determine required packages for a model
+set_args                Change elements of a model specification
+set_engine              Declare a computational engine and specific
+                        arguments
+show_engines            Display currently available engines for a model
+surv_reg                General Interface for Parametric Survival
+                        Models
+svm_poly                General interface for polynomial support vector
+                        machines
+svm_rbf                 General interface for radial basis function
+                        support vector machines
+tidy._elnet             tidy methods for glmnet models
+tidy.model_fit          Turn a parsnip model object into a tidy tibble
+tidy.nullmodel          Tidy method for null models
+translate               Resolve a Model Specification for a
+                        Computational Engine
+varying                 A placeholder function for argument values
+varying_args.model_spec
+                        Determine varying arguments

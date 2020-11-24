@@ -1,0 +1,32 @@
+Package: hakear
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends: R(>= 3.5.0)
+Imports: lubridate(>= 1.7.4), dplyr(>= 0.8.0), tsibble (>= 0.8.0),
+        tibble(>= 2.1.1), rlang(>= 0.3.4), tidyr(>= 0.8.3), ggplot2 (>=
+        3.1.1), stats, stringr(>= 1.4.0), ineq, magrittr, utils,
+        distributional, tidyselect, parallel
+Suggests: knitr, tsibbledata (>= 0.1.0), purrr (>= 0.3.2), testthat (>=
+        2.1.0), covr, rmarkdown, readr, testthat
+RoxygenNote: 7.1.1
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: hakear
+RemoteUsername: Sayani07
+RemoteRef: HEAD
+RemoteSha: 74b083c08ab9200c9264eacfc0c5eec60c7d3dbb
+GithubRepo: hakear
+GithubUsername: Sayani07
+GithubRef: HEAD
+GithubSHA1: 74b083c08ab9200c9264eacfc0c5eec60c7d3dbb
+NeedsCompilation: no
+Packaged: 2020-11-19 13:13:58 UTC; sgup0008
+Built: R 4.0.1; ; 2020-11-19 13:13:58 UTC; unix

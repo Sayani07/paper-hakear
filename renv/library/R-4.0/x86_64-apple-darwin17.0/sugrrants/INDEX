@@ -1,0 +1,8 @@
+facet_calendar          Lay out panels in a calendar format
+frame_calendar          Rearrange a temporal data frame to a
+                        calendar-based data format using linear algebra
+geom_acf                Autocorrelation for temporal data
+hourly_peds             Pedestrian counts in Melbourne city
+stat_acf                Autocorrelation for temporal data
+sugrrants-package       sugrrants: supporting graphs for analysing time
+                        series
