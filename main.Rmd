@@ -6,6 +6,18 @@ authors:
   email: Sayani.Gupta@monash.edu
 
 bibliography: bibliography.bib
+preamble: >
+  \usepackage{mathtools,amssymb,booktabs,amsthm,todonotes,colortbl}
+  \def\mod{~\text{mod}~}
+  \newtheorem{definition}{Definition}
+  \usepackage{mathptmx}
+  \usepackage{caption}
+  \usepackage{algorithm, algorithmicx, algpseudocode}
+  \DeclareCaptionStyle{italic}{labelfont={bf},textfont={it},labelsep=colon}
+  \captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
+  \captionsetup[table]{style=italic,format=hang,singlelinecheck=true}
+  \def\novspacing{\setlength{\aboverulesep}{0pt}\setlength{\belowrulesep}{0pt}}
+  \def\vspacing{\setlength{\aboverulesep}{0.4ex}\setlength{\belowrulesep}{0.65ex}}
 output:
   bookdown::pdf_book:
     #base_format: rticles::asa_article
@@ -16,7 +28,8 @@ output:
 ---
 
 ```{r initial, echo = FALSE, cache = FALSE, include = FALSE}
-options("knitr.graphics.auto_pdf" = TRUE)
+options("knitr.graphics.auto_pdf" = TRUE,
+        tinytex.verbose = TRUE)
 library(knitr)
 library(tidyverse)
 library(lubridate)
@@ -288,6 +301,7 @@ The algorithm employed for computing the distance measure is summarized as follo
 6. Use Steps 1-5 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
 
 7. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
+
 
 A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
 
@@ -589,7 +603,7 @@ Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fin
 
 
 ```{r norm-data, fig.cap = "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." }
-mmpd_norm = read_rds("../hakear-drake/data/data_norm_213045f.rds") 
+mmpd_norm = read_rds("../hakear-drake/data/data_norm_low_new.rds") 
 hist_plot = mmpd_norm %>% 
       ggplot() +
       geom_histogram(aes(x = raw_mmpd)) +
@@ -811,8 +825,6 @@ ggplot2::ggplot(design_all %>%
 
 
 Smart meters provide large quantities of measurements on energy usage for households across Australia. One of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney provides customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.-->The idea here is to show how to visualize the distribution of the energy consumption across different cyclic granularities in a systematic way to identify different behavioral patterns.
-
-
 
 
 ### Cyclic granularities search and computation:
