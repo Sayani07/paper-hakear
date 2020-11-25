@@ -53,8 +53,8 @@ opts_chunk$set(
 )
 knitr::opts_knit$set(root.dir = here::here())
 #                                                                read_chunk('main.R')
-read_chunk("null_distribution.R")
-read_chunk("mean_null.R")
+read_chunk("R/null_distribution.R")
+read_chunk("R/mean_null.R")
 source("R/sim_panel.R")
 # Set up plan
 #source("_drake.R")
