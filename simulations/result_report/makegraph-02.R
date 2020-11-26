@@ -1,5 +1,18 @@
+# run for raw MMPD files aggregation
+#all_data <- read_rds("simulations/result_report/all_data_raw.rds")
+# run for raw max pairwise distances files aggregation
+all_data <- read_rds("simulations/result_report/all_data_raw_pairwise_max.rds")
+# 
+# add_pairwise_max while writing if plots are for max pairwise distances
 
-all_data <- read_rds("simulations/result_report/all_data_raw.rds")
+hist_nxbyfacet <- all_data %>% 
+  ggplot(aes(x = value)) +
+  geom_histogram() +
+  facet_grid(nx~nfacet, labeller = "label_both") + 
+  xlab("raw mmpd")
+
+ggsave(hist_nxbyfacet, filename = here("simulations/result_report", "hist_nxbyfacet.png"))
+
 
 raw_nxbyfacet <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nx))) +
@@ -20,4 +33,4 @@ raw_nfacetbynx <- all_data %>%
   ylab("nfacet")
 
 
-ggsave(raw_nxbyfacet, filename = here("simulations/result_report", "nfacet_by_nx_raw.png"))
+ggsave(raw_nfacetbynx, filename = here("simulations/result_report", "nfacet_by_nx_raw.png"))

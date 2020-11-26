@@ -4,10 +4,16 @@ library(tidyverse)
 library(here)
 library(readr)
 library(rlang)
-here::here()
 
+
+# run for raw MMPD files aggregation
+#all_files = list.files(path = "simulations/results/raw/",                        pattern = "_dist.rds")
+
+# run for raw max pairwise distances files aggregation
 all_files = list.files(path = "simulations/results/raw/", 
-                       pattern = ".rds")
+                            pattern = "pairwise_max_dist.rds")
+
+
 
 
 names_levels <- map_dfr(all_files, 
@@ -29,4 +35,10 @@ all_data <- paste0("simulations/results/raw/",
   bind_cols(names_rep) %>%
   arrange(nfacet, nx)
 
-write_rds(all_data, "simulations/result_report/all_data_raw.rds")
+
+# run for raw MMPD files aggregation
+#write_rds(all_data, "simulations/result_report/all_data_raw.rds")
+
+# run for raw max pairwise distances files aggregation
+write_rds(all_data, "simulations/result_report/all_data_raw_pairwise_max.rds")
+

@@ -1,20 +1,17 @@
 compute_mmpd            Title Compute raw mmpd
 compute_mmpd_norm       Title Compute normalised mmpd
-compute_mmpd_panel      compute normalised mmpd for a panel
-compute_mmpd_panel_grid
-                        normalised mmpd for a grid after shuffling
-                        twice/once
+compute_pairwise_dist   Title computing all within and between facet
+                        distances between quantile categories given a
+                        data
+compute_pairwise_max    Title Compute raw pairwise distances
 compute_quantiles       compute quantiles of data across categories
 create_harmony_data     Create data for one harmony pair
 create_harmony_tbl_data
                         Create data for all harmony pairs in a harmony
                         table
+distance_all_pairwise   computing all within and between facet
+                        distances between quantile categories given
+                        quantile data
 distance_panel          computing distances between quantile categories
-mmpd                    aggregation across facets
-mpd                     aggregation across x levels
-mpd2                    shuffling only once mmpd
-rank_harmony            Title rank mmpd
-shuffle_x_for_each_facet
-                        Title shuffle x levels for each facet
 sim_panel               sim panel
 sim_panel_grid          sim panel grid

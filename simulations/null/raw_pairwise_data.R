@@ -1,0 +1,61 @@
+#This script calculates raw distance measure based on transforming pairwise distances for each simulation scenario
+##Read Simulation Table
+
+.libPaths(c("~/R/libs", .libPaths()))
+library(distributional)
+library(readr)
+library(drake)
+library(tidyverse)
+library(hakear)
+
+nsim = 2
+simtable<-read_csv('sim_table.csv')
+
+### Extract flags from simulation scenario
+
+scen<- 3 #If running within R uncomment this.  This will only run first scenario
+#scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
+
+simj<-simtable[scen,] #Extract row of table
+nfacetj<-simj$nfacet # Which nfacet level
+nxj<-simj$nx #Which nx level
+
+#create data for each row for null normal
+set.seed(9999)
+sim_null_normal = function(nxj, nfacetj){
+  rep(distributional::dist_normal(5, 10), 
+      times = nxj*nfacetj)
+}
+
+sim_panel_data = 
+  hakear::sim_panel(nx = nxj,
+                    nfacet = nfacetj, 
+                    ntimes = 500, 
+                    sim_dist = sim_null_normal) %>% 
+  unnest(c(data)) %>% ungroup()
+
+#shuffling this data
+set.seed(1111)
+
+raw_dist <- map(seq_len(nsim), function(i)
+{
+  new_sim_data = sample(sim_panel_data$sim_data, 
+                        size = nrow(sim_panel_data))
+  new_data = sim_panel_data %>% 
+    select(-sim_data) %>% 
+    mutate(sim_data = new_sim_data)
+  
+  # for creating one raw mmpd
+  raw_mmpd = hakear::compute_pairwise_dist(new_data, 
+                                  gran_x = "id_x",
+                                  gran_facet = "id_facet",
+                                  response = sim_data) %>% 
+    as_tibble() %>% mutate(perm_id = i)
+  
+}) %>% bind_rows()
+
+saveRDS(raw_dist, paste0('../results/raw/data/',
+                         nxj,'_',
+                         nfacetj,'_pairwise_max_data.rds'))
+
+

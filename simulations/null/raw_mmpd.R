@@ -1,9 +1,8 @@
 #This script calculates raw mmpd for each simulation scenario
 ##Read Simulation Table
-
+.libPaths(c("~/R/libs", .libPaths()))
 library(distributional)
 library(readr)
-library(drake)
 library(tidyverse)
 
 
@@ -21,9 +20,9 @@ nxj<-simj$nx #Which nx level
 
 #create data for each row for null normal
 set.seed(9999)
-sim_null_normal = function(nxj, nfacetj){
+sim_null_normal = function(nx, nfacet){
   rep(distributional::dist_normal(5, 10), 
-      times = nxj*nfacetj)
+      times = nx*nfacet)
 }
 
 sim_panel_data = 

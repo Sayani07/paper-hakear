@@ -1,6 +1,6 @@
 #This script calculates raw and normalised mmpd for each simulation scenario nsim 100, nperm 100
 ##Read Simulation Table
-
+.libPaths(c("~/R/libs", .libPaths()))
 library(distributional)
 library(parallel)
 library(readr)

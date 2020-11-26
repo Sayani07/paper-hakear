@@ -44,6 +44,7 @@ library(kableExtra)
 library(distributional)
 library(ggplot2)
 library(sugrrants)
+library(here)
 
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
@@ -53,9 +54,10 @@ opts_chunk$set(
 )
 knitr::opts_knit$set(root.dir = here::here())
 #                                                                read_chunk('main.R')
-read_chunk("R/null_distribution.R")
-read_chunk("R/mean_null.R")
-source("R/sim_panel.R")
+here::here()
+read_chunk(here::here("paper/R/", "null_distribution.R"))
+read_chunk(here::here("paper/R/", "mean_null.R"))
+source(here::here("paper/R/sim_panel.R"))
 # Set up plan
 #source("_drake.R")
 # Run all code required
@@ -78,7 +80,7 @@ set.seed(321)
 Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allows the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore.
 
 ```{r calendar-elec, fig.height = 10.5, fig.cap="Calendar display."}
-elec <- read_rds("data/elec.rds") %>% 
+elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
 
@@ -215,6 +217,10 @@ With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the ide
 
 ```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable."}
 
+
+sim_varf_dist1 = function(nx, nfacet){
+  rep(dist_normal(seq(mean,mean*nfacet, by = mean), sd), each = nx)}
+
 p1 <- sim_panel(nx = 2, nfacet = 3, ntimes = 500) %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
 
@@ -305,8 +311,9 @@ The algorithm employed for computing the distance measure is summarized as follo
 
 A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
 
+# Behavior of raw distance measure
 
-### Distribution
+## Distribution
 <!-- ### Need for normalisation -->
 
 From Figure \ref{fig:dist-across-facets} and \ref{fig:dist-across-x} shows the MMPD distribution is different for different levels of facets and x-axis levels. With increasing number of facets, the location of the distribution shift rightwards and with increasing x-axis levels, the scale of the distribution reduces. 
@@ -315,39 +322,63 @@ Median and maximum distances are affected by the number of categories considered
 
 Therefore, in order to compare $MMPD_{raw}$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure.
 
-```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained. "}
-mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds") 
-mmpd_xmore = read_rds("../hakear-drake/data/data_all213045x.rds") 
-mmpd_fmore = read_rds("../hakear-drake/data/data_all_213045f_allx.rds")
 
-data_all = bind_rows(mmpd_raw, mmpd_xmore)
 
-data_long = data_all %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels")
 
-g1 <- data_all %>% 
-  filter(!(nx %in% c(3, 4))) %>% 
-  ggplot() +
-  ggridges::geom_density_ridges(aes(x = raw_mmpd, 
-                                    y = as.factor(nfacet))) +
-  facet_wrap(~nx, nrow = 2)
-g1
+```{r hist-nx-nfacet}
+knitr::include_graphics(here::here("simulations/result_report/hist_nxbyfacet.png"))
 ```
+
+```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained."}
+here::here()
+knitr::include_graphics(here::here("simulations/result_report","nx_by_facet_raw.png"))
+```
+
+
+
+
+<!-- # ```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained. "} -->
+<!-- # mmpd_raw = read_rds("../hakear-drake/data/data_all23457914n.rds")  -->
+<!-- # mmpd_xmore = read_rds("../hakear-drake/data/data_all213045x.rds")  -->
+<!-- # mmpd_fmore = read_rds("../hakear-drake/data/data_all_213045f_allx.rds") -->
+<!-- #  -->
+<!-- # data_all = bind_rows(mmpd_raw, mmpd_xmore) -->
+<!-- #  -->
+<!-- # data_long = data_all %>% pivot_longer(c(1:2), names_to = "category", values_to = "levels") -->
+<!-- #  -->
+<!-- # g1 <- data_all %>%  -->
+<!-- #   filter(!(nx %in% c(3, 4))) %>%  -->
+<!-- #   ggplot() + -->
+<!-- #   ggridges::geom_density_ridges(aes(x = raw_mmpd,  -->
+<!-- #                                     y = as.factor(nfacet))) + -->
+<!-- #   facet_wrap(~nx, nrow = 2) -->
+<!-- # g1 -->
+<!-- # ``` -->
+
 
 ```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. "}
-g2 <- data_all %>% 
-  filter(nfacet<=14, nfacet!=3) %>% 
-  ggplot() +
-  geom_boxplot(aes(y = raw_mmpd, 
-                                    x = as.factor(nx))) +
-  facet_wrap(~nfacet) + coord_flip()
-
-#  hist_plot = data_all %>% 
-#       ggplot() +
-#       geom_density(aes(x = raw_mmpd), fill = "blue") +
-#       facet_grid(nx~nfacet)
-# hist_plot
-g2
+knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_raw.png"))
 ```
+
+
+
+
+
+<!-- # ```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. "} -->
+<!-- # g2 <- data_all %>%  -->
+<!-- #   filter(nfacet<=14, nfacet!=3) %>%  -->
+<!-- #   ggplot() + -->
+<!-- #   geom_boxplot(aes(y = raw_mmpd,  -->
+<!-- #                                     x = as.factor(nx))) + -->
+<!-- #   facet_wrap(~nfacet) + coord_flip() -->
+<!-- #  -->
+<!-- # #  hist_plot = data_all %>%  -->
+<!-- # #       ggplot() + -->
+<!-- # #       geom_density(aes(x = raw_mmpd), fill = "blue") + -->
+<!-- # #       facet_grid(nx~nfacet) -->
+<!-- # # hist_plot -->
+<!-- # g2 -->
+<!-- # ``` -->
 
 
 <!-- both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. -->
@@ -508,7 +539,7 @@ This section describes the design of simulation runs, in terms of the scenarios 
  <!-- - distance between which quantiles are computed `quantile_prob_vec = seq(0.01, 0.99, 0.01)`   -->
 
 ```{r}
-knitr::include_graphics("Figs/simulation.png")
+knitr::include_graphics(here::here("paper/Figs/simulation.png"))
 ```
 
 
@@ -1132,8 +1163,8 @@ cricket_tsibble %>%
 
 library(tsibble)
 
-cricket_all <- read_csv("data-raw/deliveries_all.csv")
-matches_all <- read_csv("data-raw/matches_all.csv")
+cricket_all <- read_csv("paper/data-raw/deliveries_all.csv")
+matches_all <- read_csv("paper/data-raw/matches_all.csv")
 
 cricket_season <- cricket_all %>% left_join(matches_all, by = c("match_id" = "id"))
 
