@@ -253,13 +253,9 @@ ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
 
 ## Computation
 
-### Notations
-
-Consider two cyclic granularities $C_i$ and $C_j$, such that $C_i$ maps index set to a set $\{A_k \mid k=1,\dots,K\}$ and $C_j$ maps index set to a set $\{B_\ell \mid \ell =1,\dots,L\}$. Here, $A_k$ and $B_\ell$ are the levels/categories corresponding to $C_i$ and $C_j$ respectively. Let $S_{k\ell}$ be a subset of the index set such that for all $s \in S_{k\ell}$, $C_i(s) = A_k$ and $C_j(s) = B_\ell$. There are $KL$ such data subsets, one for each combination of levels ($A_k$, $B_\ell$). Moreover, consider that in the graphical space, $C_i$ is mapped to facets and $C_j$ is mapped to x-axis. 
-
 ### Characterising distribution
 
-Each of the $KL$ data subsets in the data structure have multiple observations and may vary widely across different subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. The set of observations corresponding to each combination is assumed to be a sample from an unknown probability density function.
+Each of the data subsets in the data structure have multiple observations and may vary widely across different subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. The set of observations corresponding to each combination is assumed to be a sample from an unknown probability density function.
 While the whole population of observations has certain characteristics, we can typically never measure all of them. Often shape, central tendency, and variability are the common characteristics used to describe the distribution. Another way to describe the probability distribution is through quantiles. (Define quantiles here) <!--There are two broad approaches to quantile estimation, viz, parameteric and non-parameteric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data.--> Sample quantiles could be thought to estimate the population quantiles. But there are a large number of different definitions used for sample quantiles. The median-unbiased estimator is recommended (Rob's paper) because of its desirable properties of a quantile estimator and can be defined independently of the underlying distribution. 
 
 
@@ -292,6 +288,9 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 
 ### Algorithm
 
+Consider two cyclic granularities $C_i$ and $C_j$, such that $C_i$ maps index set to a set $\{A_k \mid k=1,\dots,K\}$ and $C_j$ maps index set to a set $\{B_\ell \mid \ell =1,\dots,L\}$. Here, $A_k$ and $B_\ell$ are the levels/categories corresponding to $C_i$ and $C_j$ respectively. Let $S_{k\ell}$ be a subset of the index set such that for all $s \in S_{k\ell}$, $C_i(s) = A_k$ and $C_j(s) = B_\ell$. There are $KL$ such data subsets, one for each combination of levels ($A_k$, $B_\ell$). Moreover, consider that in the graphical space, $C_i$ is mapped to facets and $C_j$ is mapped to x-axis. 
+
+
 The algorithm employed for computing the distance measure is summarized as follows:
 
 1. Fix harmony pair $(C_i, C_j)$.
@@ -302,18 +301,41 @@ The algorithm employed for computing the distance measure is summarized as follo
 
 4. Identify maximum within the $m$ computed distances.
 
-5. Compute maximum distance ($M$) using appropriate norming constants.
+<!-- 5. Compute distribution of maximum distance ($M$) by shuffling the data $200$ times and finishing Steps1-4 in each case. Scale $M$ using the mean and sd of the distribution.  -->
 
-6. Use Steps 1-5 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+5. Use Steps 1-4 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
 
-7. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
+6. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
 
+
+<!-- \begin{algorithm}[!thb] -->
+<!-- 	\caption{Calculation for a raw distance measure between two cyclic granularities $A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.}\label{alg:scoreopt}. -->
+<!-- 	\begin{algorithmic}[1] -->
+<!-- 		\Procedure{RawMMPD}{$A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$, $v = \{ v_t: t = 1, 2, \dots, T\}$}. -->
+<!-- 		\For{$k=1:K$, $j=1:J$} -->
+<!-- 		\State Find distances between pairs of all possible combinations of categories $(a_jb_k,a_j'b_k')$ by computing JSD between quantiles of the measured variable $q(v)$ across these combinations. -->
+<!-- 		\State $d \gets JSD(\tilde{q(v)_{a_{j}b_{k}}},\tilde{q(v)_{a_{j}'b_{k}'}})$ -->
+<!-- 		\If {$b_k = b_k'$}  -->
+<!-- 		\State $d* \gets \lambda d$  \Comment{upweight within-facet distances} -->
+<!-- 		\Else  -->
+<!-- 		\State $d* \gets 1/\lambda d $ \Comment{downweight across-facet distances} -->
+<!-- 		\EndFor -->
+<!-- 		\State Set the raw distance measure as $max(d*)$ where max is taken over all $j, j', k, k'$. -->
+
+<!-- 		\EndProcedure -->
+<!-- 	\end{algorithmic} -->
+<!-- \end{algorithm} -->
 
 A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
 
 # Behavior of raw distance measure
 
-## Distribution
+## Simulation study
+
+To understand the behavior of raw MMPD for different parameters $nperm$ <number of permutations>, $n$ <sample size> ($n_x$, $n_f$ and combination), $D$ <different data set>, $l_x$<levels of x-axis>, $l_f$ <levels of facets>.
+
+
+## Distribution across facet and x categories
 <!-- ### Need for normalisation -->
 
 From Figure \ref{fig:dist-across-facets} and \ref{fig:dist-across-x} shows the MMPD distribution is different for different levels of facets and x-axis levels. With increasing number of facets, the location of the distribution shift rightwards and with increasing x-axis levels, the scale of the distribution reduces. 
@@ -382,6 +404,10 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 
 <!-- both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. -->
+
+## Distribution across different sample size
+## Distribution across different permutation size
+## Distribution across normal and non-normal underlying distribution
 
 # Normalisation
 

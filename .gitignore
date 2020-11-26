@@ -6,4 +6,4 @@ cache/*
 .html
 structure.html
 simulations/results/raw
-simulations/results/.rds
+.DS_Store
