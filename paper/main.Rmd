@@ -733,6 +733,16 @@ r3 <- compute_mmpd_norm(data3, "id_x", "id_facet", response = sim_data, nperm = 
 
 r4 <- compute_mmpd_norm(data4, "id_x", "id_facet", response = sim_data, nperm = 200)
 
+r1prime <- compute_norm_pairwise_max(data1, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r2prime <- compute_norm_pairwise_max(data2, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r3prime <- compute_norm_pairwise_max(data3, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+r4prime <- compute_norm_pairwise_max(data4, "id_x", "id_facet", response = sim_data, nperm = 200)
+
+
+
 
 
 p1 <- data1 %>%
@@ -746,10 +756,10 @@ p4 <- data4 %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +xlab("")
 
 
-gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, top = paste("MMPD_norm:", round(r1, 3))),
-                        gridExtra::arrangeGrob(p2, top = paste("MMPD_norm:", round(r2, 3))),
-                        gridExtra::arrangeGrob(p3, top = paste("MMPD_norm:", round(r3, 3))),
-                        gridExtra::arrangeGrob(p4, top = paste("MMPD_norm:", round(r4, 3))),
+gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, top = paste("MMPD", round(r1, 3), "pairwise", round(r1prime, 3))),
+                        gridExtra::arrangeGrob(p2, top = paste("MMPD", round(r2, 3), "pairwise", round(r2prime, 3))),
+                        gridExtra::arrangeGrob(p3, top = paste("MMPD", round(r3, 3), "pairwise", round(r3prime, 3))),
+                        gridExtra::arrangeGrob(p4, top = paste("MMPD", round(r4, 3), "pairwise", round(r4prime, 3))),
                         ncol = 2, nrow=2)
 
 ```

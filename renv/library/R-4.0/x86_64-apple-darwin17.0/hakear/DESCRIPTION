@@ -22,11 +22,11 @@ RemoteHost: api.github.com
 RemoteRepo: hakear
 RemoteUsername: Sayani07
 RemoteRef: HEAD
-RemoteSha: 311f458c086ee5b250b77056498b94bbe6c31be8
+RemoteSha: 5c580553933c9a966c7743077ec0692fcbd7c5c0
 GithubRepo: hakear
 GithubUsername: Sayani07
 GithubRef: HEAD
-GithubSHA1: 311f458c086ee5b250b77056498b94bbe6c31be8
+GithubSHA1: 5c580553933c9a966c7743077ec0692fcbd7c5c0
 NeedsCompilation: no
-Packaged: 2020-11-26 10:38:44 UTC; sgup0008
-Built: R 4.0.1; ; 2020-11-26 10:38:44 UTC; unix
+Packaged: 2020-11-26 23:20:39 UTC; sgup0008
+Built: R 4.0.1; ; 2020-11-26 23:20:39 UTC; unix
