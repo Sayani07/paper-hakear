@@ -6,4 +6,5 @@ cache/*
 .html
 structure.html
 simulations/results/raw
+simulations/results/norm
 .DS_Store
