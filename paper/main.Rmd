@@ -12,7 +12,9 @@ preamble: >
   \newtheorem{definition}{Definition}
   \usepackage{mathptmx}
   \usepackage{caption}
-  \usepackage{algorithm, algorithmicx, algpseudocode}
+  \usepackage{algorithm}
+  \usepackage{algorithmicx}
+  \usepackage{algpseudocode}
   \DeclareCaptionStyle{italic}{labelfont={bf},textfont={it},labelsep=colon}
   \captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
   \captionsetup[table]{style=italic,format=hang,singlelinecheck=true}
@@ -308,23 +310,23 @@ The algorithm employed for computing the distance measure is summarized as follo
 6. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
 
 
-<!-- \begin{algorithm}[!thb] -->
-<!-- 	\caption{Calculation for a raw distance measure between two cyclic granularities $A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.}\label{alg:scoreopt}. -->
-<!-- 	\begin{algorithmic}[1] -->
-<!-- 		\Procedure{RawMMPD}{$A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$, $v = \{ v_t: t = 1, 2, \dots, T\}$}. -->
-<!-- 		\For{$k=1:K$, $j=1:J$} -->
-<!-- 		\State Find distances between pairs of all possible combinations of categories $(a_jb_k,a_j'b_k')$ by computing JSD between quantiles of the measured variable $q(v)$ across these combinations. -->
-<!-- 		\State $d \gets JSD(\tilde{q(v)_{a_{j}b_{k}}},\tilde{q(v)_{a_{j}'b_{k}'}})$ -->
-<!-- 		\If {$b_k = b_k'$}  -->
-<!-- 		\State $d* \gets \lambda d$  \Comment{upweight within-facet distances} -->
-<!-- 		\Else  -->
-<!-- 		\State $d* \gets 1/\lambda d $ \Comment{downweight across-facet distances} -->
-<!-- 		\EndFor -->
-<!-- 		\State Set the raw distance measure as $max(d*)$ where max is taken over all $j, j', k, k'$. -->
+\begin{algorithm}[!thb]
+	\caption{Calculation for a raw distance measure between two cyclic granularities $A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.}\label{alg:scoreopt}.
+	\begin{algorithmic}[1]
+		\Procedure{RawMMPD}{$A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$, $v = \{ v_t: t = 1, 2, \dots, T\}$}.
+		\For{$k=1:K$, $j=1:J$}
+		\State Find distances between pairs of all possible combinations of categories $(a_jb_k,a_j'b_k')$ by computing JSD between quantiles of the measured variable $q(v)$ across these combinations.
+		\State $d \gets JSD(\tilde{q(v)_{a_{j}b_{k}}},\tilde{q(v)_{a_{j}'b_{k}'}})$
+		\If {$b_k = b_k'$}
+		\State $d* \gets \lambda d$  \Comment{upweight within-facet distances}
+		\Else
+		\State $d* \gets 1/\lambda d $ \Comment{downweight across-facet distances}
+		\EndFor
+		\State Set the raw distance measure as $max(d*)$ where max is taken over all $j, j', k, k'$.
 
-<!-- 		\EndProcedure -->
-<!-- 	\end{algorithmic} -->
-<!-- \end{algorithm} -->
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
 
 A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
 

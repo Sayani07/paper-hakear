@@ -12,6 +12,10 @@ library(rlang)
 # run for raw max pairwise distances files aggregation
 all_files = list.files(path = "simulations/results/raw/", 
                             pattern = "pairwise_max_dist.rds")
+# 
+# all_files = list.files(path = "simulations/results/norm/", 
+#                        pattern = "_dist.rds")
+
 
 
 
@@ -41,4 +45,5 @@ all_data <- paste0("simulations/results/raw/",
 
 # run for raw max pairwise distances files aggregation
 write_rds(all_data, "simulations/result_report/all_data_raw_pairwise_max.rds")
-
+# 
+# write_rds(all_data, "simulations/result_report/all_data_norm_mmpd.rds")

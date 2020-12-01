@@ -5,6 +5,10 @@ all_data <- read_rds("simulations/result_report/all_data_raw_pairwise_max.rds")
 # 
 # add_pairwise_max while writing if plots are for max pairwise distances
 
+# normalised mmpd
+# all_data <- read_rds("simulations/result_report/all_data_norm_mmpd.rds")
+
+
 hist_nxbyfacet <- all_data %>% 
   ggplot(aes(x = value)) +
   geom_histogram() +

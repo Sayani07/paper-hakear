@@ -1,0 +1,36 @@
+---
+title: "Simulation objectives"
+author: "Sayani Gupta"
+date: "01/12/2020"
+output: pdf_document
+---
+
+This file contains objectives of the simulations and description of parameters and files or folders in simulations/Results/ with corresponding objective in parenthesis.
+
+## Objectives:
+
+(A) to understand how the measure (raw or normalised) changes across different levels of facets and x-axis for fixed $nsim$, $nperm$ and $\lambda$ in null case. Original values are not scaled., sim_table has just nx and nfacet. Description of parameters: 
+ - $nfacet = nx = c(2, 3, 5, 7, 14, 20, 31, 50)$
+ - $nsim = 200$
+ - $nperm = 100$
+ - $lambda = 0.67$
+ - $sim_dist = normal(5, 10)$
+ - $weights (dist_{within-facet}, dist_{across-facet}) = (\lambda, 1/\lambda)$
+ 
+
+(B) 
+(C)
+(D)
+
+## Description of files 
+
+Folder raw/
+
+- Files ending with _dist.rds : ran from null/job-raw.sh (A)
+- Files ending with _pairwise_max_dist.rds: ran from null/job-pairwise_max.sh (A)
+- Folder data:  ran from null/job-pairwise_data.sh (A)
+
+Folder norm/
+
+- Files ending with _dist.rds: run from null/job-norm.sh (A)
+
