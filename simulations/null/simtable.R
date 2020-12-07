@@ -7,13 +7,13 @@ sim_table <- expand.grid(#data = c(99, 9999), # different data with same specifi
   #nobs_diff_comb  = c("comb1", "comb2"), # different number of observations for different combinations for each panel
   #nsim = c(100, 500), # number of simulations of the entire exercise to compute distribution and CI of MMPD 
   #dist = c("norm", "non-norm"), # distributions from where data is generated
-  nfacet = c(2, 3, 5, 7, 14, 20, 31, 50), # range of facet levels 
-   #nfacet = c(2, 3),
-   #nx = c(2, 3),
-   nx = c(2, 3, 5, 7, 14, 20, 31, 50) # range of x levels
+  # nfacet = c(2, 3, 5, 7, 14, 20, 31, 50), # range of facet levels 
+   nfacet = c(2, 3),
+   nx = c(2, 3)
+   #nx = c(2, 3, 5, 7, 14, 20, 31, 50) # range of x levels
 ) %>% tibble()
 
 
 #Export as .csv
 
-write_csv(sim_table,'simulations/null/sim_table.csv')
+write_csv(sim_table,'sim_table.csv')

@@ -12,8 +12,8 @@ simtable<-read_csv('sim_table.csv')
 
 ### Extract flags from simulation scenario
 
-scen<- 3 #If running within R uncomment this.  This will only run first scenario
-#scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
+#scen<- 3 #If running within R uncomment this.  This will only run first scenario
+scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
 
 simj<-simtable[scen,] #Extract row of table
 nfacetj<-simj$nfacet # Which nfacet level
@@ -55,7 +55,7 @@ mmpd_dist <- map(seq_len(nsim), function(i)
   
 }) %>% bind_rows()
 
-saveRDS(raw_dist, 
+saveRDS(mmpd_dist, 
           paste0('../results/norm/',
                         nxj,'_',
                         nfacetj,'_dist.rds'))

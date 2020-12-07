@@ -1,4 +1,4 @@
-#This script calculates raw distance measure based on transforming pairwise distances for each simulation scenario
+#This script calculates raw mmpd for each simulation scenario
 ##Read Simulation Table
 
 .libPaths(c("~/R/libs", .libPaths()))
@@ -46,7 +46,7 @@ set.seed(1111)
     mutate(sim_data = new_sim_data)
   
   # for creating one raw mmpd
-  raw_mmpd = hakear::compute_pairwise_max(new_data, 
+  raw_mmpd = compute_pairwise_max(new_data, 
                                  gran_x = "id_x",
                                  gran_facet = "id_facet",
                                  response = sim_data) %>% 

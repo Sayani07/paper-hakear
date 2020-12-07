@@ -8,13 +8,13 @@ library(drake)
 library(tidyverse)
 library(hakear)
 
-nsim = 2
+nsim = 200
 simtable<-read_csv('sim_table.csv')
 
 ### Extract flags from simulation scenario
 
-scen<- 3 #If running within R uncomment this.  This will only run first scenario
-#scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
+#scen<- 3 #If running within R uncomment this.  This will only run first scenario
+scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
 
 simj<-simtable[scen,] #Extract row of table
 nfacetj<-simj$nfacet # Which nfacet level
