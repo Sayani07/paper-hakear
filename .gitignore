@@ -8,3 +8,5 @@ structure.html
 simulations/results/raw
 simulations/results/norm
 .DS_Store
+.log
+.toc
