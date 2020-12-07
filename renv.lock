@@ -597,8 +597,8 @@
       "RemoteRepo": "hakear",
       "RemoteUsername": "Sayani07",
       "RemoteRef": "HEAD",
-      "RemoteSha": "74b083c08ab9200c9264eacfc0c5eec60c7d3dbb",
-      "Hash": "d4075a552f3773a90972a0a1e5e4258f"
+      "RemoteSha": "91820758d6420f58ee6a0c9d313a29c3c2a7a630",
+      "Hash": "95c9be74625643d88ecefe538667913d"
     },
     "hardhat": {
       "Package": "hardhat",
@@ -1083,6 +1083,13 @@
       "Repository": "CRAN",
       "Hash": "76c9e04c712a05848ae7a23d2f170a40"
     },
+    "remotes": {
+      "Package": "remotes",
+      "Version": "2.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "430a0908aee75b1fcba0e62857cab0ce"
+    },
     "renv": {
       "Package": "renv",
       "Version": "0.12.2",
@@ -1106,10 +1113,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.8",
+      "Version": "0.4.9",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "843a6af51414bce7f8a8e372f11d6cd0"
+      "Hash": "9d7aba7bed9a79e2403b4777428a2b12"
     },
     "rmarkdown": {
       "Package": "rmarkdown",

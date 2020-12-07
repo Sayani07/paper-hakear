@@ -2,12 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
-cache/*
+paper/cache/*
 .html
 structure.html
-simulations/results/raw
-simulations/results/norm
+simulations/results/*
 .DS_Store
-.log
-.toc
-.tex
+paper/main.log
+paper/main.toc
+paper/main.tex

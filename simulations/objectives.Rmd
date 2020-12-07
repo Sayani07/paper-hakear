@@ -9,7 +9,7 @@ This file contains objectives of the simulations and description of parameters a
 
 ## Objectives:
 
-(A) to understand how the measure (raw or normalised) changes across different levels of facets and x-axis for fixed $nsim$, $nperm$ and $\lambda$ in null case. Original values are not scaled., sim_table has just nx and nfacet. Description of parameters: 
+ (1A) to understand how the measure (raw or normalised) changes across different levels of facets and x-axis for fixed $nsim$, $nperm$ and $\lambda$ in null case. Original values are **not scaled**, sim_table has just nx and nfacet. Description of parameters: 
  - $nfacet = nx = c(2, 3, 5, 7, 14, 20, 31, 50)$
  - $nsim = 200$
  - $nperm = 100$
@@ -17,10 +17,10 @@ This file contains objectives of the simulations and description of parameters a
  - $sim_dist = normal(5, 10)$
  - $weights (dist_{within-facet}, dist_{across-facet}) = (\lambda, 1/\lambda)$
  
+(1B)  Original values are **scaled** and other parameters look exactly like (A)
 
-(B) 
-(C)
-(D)
+(2)  Original values are **scaled** and $weights (dist_{within-facet}, dist_{across-facet}) = (\lambda, 1 - \lambda)$, other parameters like (A), for $lambda = seq(0.1, 0.9, 0.05)$
+
 
 ## Description of files 
 
