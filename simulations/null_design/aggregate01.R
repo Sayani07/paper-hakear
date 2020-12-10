@@ -49,3 +49,8 @@ aggregate01(folder_name = "wpd_N05")
 aggregate01(folder_name = "wpd_N51")
 aggregate01(folder_name = "wpd_N55")
 
+
+aggregate01(folder_name = "wpd_Gamma01")
+aggregate01(folder_name = "wpd_Gamma21")
+
+

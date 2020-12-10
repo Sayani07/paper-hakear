@@ -58,9 +58,11 @@ normal_ridge_nxbynfacet <- all_data %>%
   ggridges::geom_density_ridges(aes(fill = distribution)) +
   facet_grid(nx~nfacet, labeller = "label_both") + 
   xlab("raw wpd") +
-  scale_fill_manual(values = c("#999999", "#D55E00"))
+  scale_fill_manual(values =
+                      c("#999999", "#D55E00")) + 
+  theme(legend.position = "bottom")
 
-ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "normal_ridge_nxbynfacet_", folder_name,".png"))
+ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "normal_ridge_nxbynfacet.png"))
 
 
 
@@ -80,3 +82,26 @@ all_data3 %>%
   scale_fill_manual(values = c("#999999", "#D55E00", "#0072B2"))
 
 ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "normal3_ridge_nxbynfacet_", folder_name,".png"))
+
+
+## for gamma might go in the paper
+
+makegraph02(folder_name = "wpd_Gamma01")
+makegraph02(folder_name = "wpd_Gamma21")
+
+# N(0,1) and N(5,1) together as they will go in the paper
+
+gamma_0.5_1 <- aggregate01(folder_name = "wpd_Gamma01")
+gamma_2_1 <- aggregate01(folder_name = "wpd_Gamma21")
+
+all_data <- bind_rows(gamma_0.5_1, gamma_2_1, .id = "distribution") %>% mutate(distribution = if_else(distribution == 1, "gamma_0.5_1", "gamma_2_1"))
+
+gamma_ridge_nxbynfacet <- all_data %>% 
+  ggplot(aes(x = value, y = distribution)) +
+  ggridges::geom_density_ridges(aes(fill = distribution)) +
+  facet_grid(nx~nfacet, labeller = "label_both") + 
+  xlab("raw wpd") +
+  scale_fill_manual(values = c("#999999", "#D55E00"))+
+  theme(legend.position = "bottom")
+
+ggsave(gamma_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "gamma_ridge_nxbynfacet.png"))
