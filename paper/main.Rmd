@@ -367,9 +367,7 @@ D2 - Design vary_f:
 D3 - Design var_x:
 B4 - Design vary_all:
 
-## Choice of parameters of the distribution
-
-Under null distribution
+## Effect of parameters of the distribution under null distribution
 
 Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$
 Dist 1: $N(0,1)$ individual graph
@@ -377,7 +375,24 @@ Dist 2: $N(\mu, 1)$ (faceted with different values of $\mu$: not yet just for on
 Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now)
 Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters.
 
+**Objective:** 1. Behavior of wpd under different null designs N(0,1), N(5, 1), N(0,5) and N(5,5), Gamma(0,1), Gamma(0, 0.2) for different nx and nfacets. Here, we have to fix a value of lambda = 0.67.
 
+**Assumptions:** There is no difference in distribution between any facet or x-category
+nsim = 200
+lambda = 0.67
+
+**Questions:** 
+- How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
 
 
 ### Choice of alternate designs
@@ -396,10 +411,6 @@ sd = 1
 range_sd = c(1, 3,  5, 7, 15, 20)
 range_w =  c(1, 2, 3, 4, 5)
 range_lambda = seq(0.1, 0.9, 0.05)
-
-## Parameters of the distribution
-
-
 
 
 
