@@ -4,45 +4,79 @@ library(tidyverse)
 # run for raw MMPD files aggregation
 #all_data <- read_rds("simulations/result_report/all_data_raw.rds")
 # run for raw max pairwise distances files aggregation
-all_data <- read_rds(here::here("simulations/tuning_param/all_data.rds")) %>% 
-  filter(nx<30)
+
+
+makegraph02 <- function(folder_name){
+all_data <- read_rds(paste0("simulations/null_design/data/all_data_", folder_name, ".rds"))
   
-# for omega 8
+
 nxbyfacet <- all_data %>% 
-  filter(omega == 8) %>% 
-  ggplot(aes(x = lambda, y = wpd)) +
-  geom_line(aes(colour = design)) +
+  ggplot(aes(x = value)) + 
+  geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  xlab("raw mmpd")
+  xlab("raw wpd")
 
-ggsave(nxbyfacet, filename = here("simulations/tuning_param/figs/", "nxbyfacet_omega8.png"))
-
-# for omega 1
-nxbyfacet <- all_data %>% 
-  filter(omega == 1) %>% 
-  ggplot(aes(x = lambda, y = wpd)) +
-  geom_line(aes(colour = design)) +
-  facet_grid(nx~nfacet,
-             labeller = "label_both") + 
-  xlab("raw mmpd")
-
-ggsave(nxbyfacet, filename = here("simulations/tuning_param/figs/", "nxbyfacet_omega1.png"))
-
-# graph of intersection
-
-intersection_data <- all_data %>% 
-  pivot_wider(id_cols = -c(design), names_from = design, values_from = wpd) %>% 
-  group_by(nx, nfacet, omega) %>% 
-  mutate(intersection_point = abs(vary_x - vary_facet)) %>% filter(intersection_point == min(intersection_point)) %>% 
-  mutate(factor = as.factor(omega))
-
-intersection_plot <- ggplot(intersection_data %>% ungroup(), aes(x = omega, y = lambda)) +
-  geom_line() +
-  geom_point() + 
-  facet_grid(nx~nfacet, labeller = "label_both")
+ggsave(nxbyfacet, filename = paste0("simulations/null_design/figs/", "density_nx_by_nfacet_", folder_name,".png"))
 
 
-ggsave(intersection_plot, filename = here("simulations/tuning_param/figs/", "intersection_plot.png"))
+raw_nxbyfacet <- all_data %>% 
+  ggplot(aes(x = value, y = as.factor(nx))) +
+  ggridges::geom_density_ridges() +
+  facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
+  xlab("raw mmpd") +
+  ylab("nx")
+
+ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "ridge_by_nfacet_", folder_name,".png"))
 
 
+raw_nfacetbynx <- all_data %>% 
+  ggplot(aes(x = value, y = as.factor(nfacet))) +
+  ggridges::geom_density_ridges() +
+  facet_wrap(~nx, labeller = "label_both", nrow = 2) + 
+  xlab("raw mmpd") +
+  ylab("nfacet")
+
+ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "ridge_by_nx_", folder_name,".png"))
+}
+
+makegraph02(folder_name = "wpd_N01")
+makegraph02(folder_name = "wpd_N05")
+makegraph02(folder_name = "wpd_N51")
+makegraph02(folder_name = "wpd_N55")
+
+
+# N(0,1) and N(5,1) together as they will go in the paper
+
+normal_0_1 <- aggregate01(folder_name = "wpd_N01")
+normal_5_1 <- aggregate01(folder_name = "wpd_N51")
+
+all_data <- bind_rows(normal_0_1, normal_5_1, .id = "distribution") %>% mutate(distribution = if_else(distribution == 1, "normal_0_1", "normal_5_1"))
+
+normal_ridge_nxbynfacet <- all_data %>% 
+  ggplot(aes(x = value, y = distribution)) +
+  ggridges::geom_density_ridges(aes(fill = distribution)) +
+  facet_grid(nx~nfacet, labeller = "label_both") + 
+  xlab("raw wpd") +
+  scale_fill_manual(values = c("#999999", "#D55E00"))
+
+ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "normal_ridge_nxbynfacet_", folder_name,".png"))
+
+
+
+# Extra
+
+# N(0,1), N(5,1), N(0,5) together as they will go in the paper
+
+normal_0_5 <- aggregate01(folder_name = "wpd_N05") %>% mutate(distribution = "normal_0_5")
+
+all_data3 <- bind_rows(all_data, normal_0_5)
+
+all_data3 %>% 
+  ggplot(aes(x = value, y = distribution)) +
+  ggridges::geom_density_ridges(aes(fill = distribution)) +
+  facet_grid(nx~nfacet, labeller = "label_both") + 
+  xlab("raw wpd") +
+  scale_fill_manual(values = c("#999999", "#D55E00", "#0072B2"))
+
+ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "normal3_ridge_nxbynfacet_", folder_name,".png"))

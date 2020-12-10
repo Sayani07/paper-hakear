@@ -1,13 +1,14 @@
-# contains aggregated data from the file simulations/results/raw/ and tidy them up
-
+# contains function to aggregate data each for from N(0,1), N(0,5), N(5,1), N(5,5), Gamma(0.5, 1), Gamma(2, 1)
+#  aggregated data from the file simulations/results/raw/folder_name and tidy them up
 library(tidyverse)
 library(here)
 library(readr)
 library(rlang)
 
-all_files = list.files(path = "simulations/results/raw/tuning_param", 
+aggregate01 <-  function(folder_name){
+  
+all_files = list.files(path = paste0("simulations/results/raw/", folder_name), 
                        pattern = ".rds")
-
 
 names_levels <- map_dfr(all_files, 
                         function(x){
@@ -17,12 +18,12 @@ names_levels <- map_dfr(all_files,
                                     nfacet = as.numeric(z[2]))
                         })
 
-len_file = read_rds(("simulations/results/raw/tuning_param/2_2_tuning_param.rds"))
-
-names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
+# len_file = read_rds(("simulations/results/raw/tuning_param/2_2_tuning_param.rds"))
+# 
+# names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
 
   
-all_files_path <- paste0("simulations/results/raw/tuning_param/",
+all_files_path <- paste0("simulations/results/raw/",folder_name,"/",
          all_files)  
   
 
@@ -37,12 +38,14 @@ all_data <- lapply(1:length(all_files_path), function(x){
   }) %>% bind_rows() %>% 
     arrange(nfacet, nx)
     
-    
+write_rds(all_data, paste0("simulations/null_design/data/all_data_", folder_name, ".rds"))
+}
 
-# run for raw MMPD files aggregation
-#write_rds(all_data, "simulations/result_report/all_data_raw.rds")
 
-# run for raw max pairwise distances files aggregation
-write_rds(all_data, "simulations/tuning_param/all_data.rds")
-# 
-# write_rds(all_data, "simulations/result_report/all_data_norm_mmpd.rds")
+# use functions for all folders
+
+aggregate01(folder_name = "wpd_N01")
+aggregate01(folder_name = "wpd_N05")
+aggregate01(folder_name = "wpd_N51")
+aggregate01(folder_name = "wpd_N55")
+
