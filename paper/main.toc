@@ -1,0 +1,47 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Distance measure}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Idea}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Methodology}{6}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Characterising distribution}{6}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Distance between distributions}{7}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Definitions}{7}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {3}Behavior of raw distance measure}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Simulation study}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Choice of parameters of the distribution}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Choice of alternate designs}{8}{subsubsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.3}Parameters of the distribution}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Choice of tuning parameters}{9}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Distribution across facet and x categories}{13}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Distribution across different sample size}{14}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Distribution across different permutation size}{14}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Distribution across normal and non-normal underlying distribution}{14}{subsection.3.8}%
+\contentsline {section}{\numberline {4}Normalisation}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Methodology}{17}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Simulation study}{17}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Simulated designs}{17}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Environment}{17}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Experimental set up}{18}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}Results}{18}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Null distribution}{18}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Performance of normalised MMPD}{20}{subsubsection.4.3.2}%
+\contentsline {section}{\numberline {5}The statistical test}{20}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Algorithm}{20}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Size, power and confidence interval}{21}{subsection.5.2}%
+\contentsline {paragraph}{\numberline {5.2.0.1}Characteristics under different simulation designs}{21}{paragraph.5.2.0.1}%
+\contentsline {section}{\numberline {6}Applications}{23}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Smart meter data of Australia}{23}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Cyclic granularities search and computation:}{23}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Screening and visualizing harmonies}{23}{subsubsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.2}T20 cricket data of Indian Premiere League}{25}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Discussion points and future work}{26}{section.7}%
+\contentsline {section}{\numberline {8}Appendix}{26}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Null distribution}{26}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{26}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}Normalised maximum distances follow standard Gumbel distribution}{26}{subsubsection.8.1.2}%
+\contentsline {subsubsection}{\numberline {8.1.3}Limiting distribution of median of normalised maximum distances is normal}{26}{subsubsection.8.1.3}%
+\contentsline {subsection}{\numberline {8.2}Power}{26}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Confidence interval}{26}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Varying distribution across facet}{28}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Varying distribution across x-axis}{28}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}Varying distribution across both facets and x-axis}{28}{subsubsection.8.3.3}%
+\contentsline {subsubsection}{\numberline {8.3.4}Repeat all with varying facet and x-axis levels}{28}{subsubsection.8.3.4}%

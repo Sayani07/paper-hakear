@@ -148,13 +148,13 @@ In this paper, we aim to build a new measure to follow through these two main ob
   To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
 \end{itemize}
 
-\hypertarget{median-maximum-pairwise-distances-mmpd}{%
-\section{Median Maximum Pairwise Distances (MMPD)}\label{median-maximum-pairwise-distances-mmpd}}
+\hypertarget{distance-measure}{%
+\section{Distance measure}\label{distance-measure}}
 
 We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (MMPD) to evaluate structure in such a design.
 
-\hypertarget{idea}{%
-\subsection{Idea}\label{idea}}
+\hypertarget{sec:idea}{%
+\subsection{Idea}\label{sec:idea}}
 
 The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d.~It might be argued that it is not clear if b should precede or succeed c.~Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
 
@@ -169,8 +169,8 @@ With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the ide
 \caption{ A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable.}\label{fig:null4by2}
 \end{figure}
 
-\hypertarget{computation}{%
-\subsection{Computation}\label{computation}}
+\hypertarget{methodology}{%
+\subsection{Methodology}\label{methodology}}
 
 \hypertarget{characterising-distribution}{%
 \subsubsection{Characterising distribution}\label{characterising-distribution}}
@@ -189,53 +189,35 @@ In the context of this paper, the pairwise distances between the distributions o
 where \(M = \frac{P+Q}{2}\) and
 \(D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})\) is the KL divergence between distributions \(p(x)\) and \(q(x)\). Probability distributions are estimated through quantiles instead of kernel density so that there is minimal dependency on selecting kernel or bandwidth.
 
-\hypertarget{algorithm}{%
-\subsubsection{Algorithm}\label{algorithm}}
+\hypertarget{definitions}{%
+\subsubsection{Definitions}\label{definitions}}
 
-Consider two cyclic granularities \(C_i\) and \(C_j\), such that \(C_i\) maps index set to a set \(\{A_k \mid k=1,\dots,K\}\) and \(C_j\) maps index set to a set \(\{B_\ell \mid \ell =1,\dots,L\}\). Here, \(A_k\) and \(B_\ell\) are the levels/categories corresponding to \(C_i\) and \(C_j\) respectively. Let \(S_{k\ell}\) be a subset of the index set such that for all \(s \in S_{k\ell}\), \(C_i(s) = A_k\) and \(C_j(s) = B_\ell\). There are \(KL\) such data subsets, one for each combination of levels (\(A_k\), \(B_\ell\)). Moreover, consider that in the graphical space, \(C_i\) is mapped to facets and \(C_j\) is mapped to x-axis.
+Consider two cyclic granularities \(A\) and \(B\), such that \(A = \{ a_j: j = 1, 2, \dots, J\}\) and \(B = \{ b_k: k = 1, 2, \dots, K\}\) with \(A\) placed across x-axis and \(B\) across facets. Let the pairwise distances between pairs \((a_{j} b_{k}, a_{j'}, b_{k})\) be denoted as \(d_{(jk, j', k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})\). Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets (\(d_{w}\)) when \(b_{k} = b_{k'}\), that is, between pairs of the form \((a_{j}b_{k}, a_{j'}b_{k})\) as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where \(a_{j'} = (a_{j+1})\) are considered (panel (4)). Pairwise distances are between-facets (\(d_{b}\)) when they are considered between pairs of the form \((a_{j}b_{k}, a_{j}b_{k'})\).
 
-The algorithm employed for computing the distance measure is summarized as follows:
+\begin{figure}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Fix harmony pair \((C_i, C_j)\).
-\item
-  Fix \(k\). Then there are \(L\) groups corresponding to level \(A_k\) of \(C_i\).
-\item
-  Compute \(m = \binom{L}{2}\) pairwise distances between distributions of \(L\) unordered levels and \(m = L-1\) pairwise distances for \(L\) ordered categories.
-\item
-  Identify maximum within the \(m\) computed distances.
-\end{enumerate}
+{\centering \includegraphics[width=\textwidth]{/Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain} 
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\item
-  Use Steps 1-4 to compute maximum distance for \(\forall k \in \{1, 2, \ldots, K\}\).
-\item
-  Compute the distance measure MMPD\_raw = median \((M_1, M_2, \dots, M_K)\).
-\end{enumerate}
+}
 
-\begin{algorithm}[!thb]
-    \caption{Calculation for a raw distance measure between two cyclic granularities $A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.}\label{alg:scoreopt}.
-    \begin{algorithmic}[1]
-        \Procedure{RawMMPD}{$A = \{ a_j: j = 1, 2, \dots, J\}$, $B = \{ b_k: k = 1, 2, \dots, K\}$, $v = \{ v_t: t = 1, 2, \dots, T\}$}.
-        \For{$k=1:K$, $j=1:J$}
-        \State Find distances between pairs of all possible combinations of categories $(a_jb_k,a_j'b_k')$ by computing JSD between quantiles of the measured variable $q(v)$ across these combinations.
-        \State $d \gets JSD(\tilde{q(v)_{a_{j}b_{k}}},\tilde{q(v)_{a_{j}'b_{k}'}})$
-        \If {$b_k = b_k'$}
-        \State $d* \gets \lambda d$  \Comment{upweight within-facet distances}
-        \Else
-        \State $d* \gets 1/\lambda d $ \Comment{downweight across-facet distances}
-        \EndFor
-        \State Set the raw distance measure as $max(d*)$ where max is taken over all $j, j', k, k'$.
+\caption{Within and between-facet distances shown for two cyclic granularities A and B, where A is mapped to x-axis and B is mapped to facets. The dotted lines represent the distances between different categories. Panel 1) and 2) show the between-facet distances. Panel 3) and 4) are used to illustrate within-facet distances when categories are un-ordered or ordered respectively. When categories are ordered, distances should only be considered for consecutive x-axis categories. Between-facet distances are distances between different facet levels for the same x-axis category, for example, distances between {($a_1$,$b_1$) and ($a_1$, $b_2$)} or {($a_1$,$b_1$) and ($a_1$, $b_3$)}.}\label{fig:distance-explain}
+\end{figure}
 
-        \EndProcedure
-    \end{algorithmic}
-\end{algorithm}
+From Section \ref{sec:idea}, the idea is to put more weights on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter \(\lambda > 1\), the pairwise distances \(d_{(jk, j'k')}\) are transformed based on the distance type as follows:
 
-A stronger measure ``max'' is chosen for aggregating x-axis categories compared to ``median'' for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories.
+\begin{equation}
+d*_{(j,k), (j'k')} =
+\begin{cases}
+\lambda d_{(j,k), (j'k')},& \text{if } d = d_w\\
+(1-\lambda)  d_{(j,k), (j', k')},              & \text{if } d = d_b\\
+\end{cases}
+\end{equation}
+
+The maximum weighted pairwise distances are defined as:
+\[WPD = max_{j, j', k, k'}(d*_{(j,k), (j', k')})
+\forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}\].
+
+--\textgreater{}
 
 \hypertarget{behavior-of-raw-distance-measure}{%
 \section{Behavior of raw distance measure}\label{behavior-of-raw-distance-measure}}
@@ -244,6 +226,68 @@ A stronger measure ``max'' is chosen for aggregating x-axis categories compared 
 \subsection{Simulation study}\label{simulation-study}}
 
 To understand the behavior of raw MMPD for different parameters \(nperm\) , \(n\) (\(n_x\), \(n_f\) and combination), \(D\) , \(l_x\), \(l_f\) .
+
+D1 - Design null:
+D2 - Design vary\_f:
+D3 - Design var\_x:
+B4 - Design vary\_all:
+
+\hypertarget{choice-of-parameters-of-the-distribution}{%
+\subsection{Choice of parameters of the distribution}\label{choice-of-parameters-of-the-distribution}}
+
+Under null distribution
+
+Null design only where all combinations are equal for fixed values of \(\mu\) and \(\sigma\)
+Dist 1: \(N(0,1)\) individual graph
+Dist 2: \(N(\mu, 1)\) (faceted with different values of \(\mu\): not yet just for one value now)
+Dist 3: \(N(0, \sigma)\) (faceted with different values of \(\sigma\): not yet just for one value now)
+Dist 4: \(N(\mu, \sigma)\) faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters.
+
+\hypertarget{choice-of-alternate-designs}{%
+\subsubsection{Choice of alternate designs}\label{choice-of-alternate-designs}}
+
+A normal distribution is taken for this purpose. We would calibrate the values of \(WPD\) for different designs illustrated in Section \ref{sec:idea}.
+
+\[\mu_{j.} = \mu + j\omega\]
+or, \[\mu_{.k} = \mu + k\omega\] where,\\
+\(j\) and \(k\) are the index of the x and facet category respectively
+\(\mu\) is the mean of the first category and \(\omega\) is the increment from the starting value.
+
+mean = 0
+range\_mean = c(0, 1, 3, 5, 7, 15, 20)
+sd = 1
+range\_sd = c(1, 3, 5, 7, 15, 20)
+range\_w = c(1, 2, 3, 4, 5)
+range\_lambda = seq(0.1, 0.9, 0.05)
+
+\hypertarget{parameters-of-the-distribution}{%
+\subsection{Parameters of the distribution}\label{parameters-of-the-distribution}}
+
+\hypertarget{choice-of-tuning-parameters}{%
+\subsection{Choice of tuning parameters}\label{choice-of-tuning-parameters}}
+
+Objective: Choice of optimal tuning parameter \(lambda\) with the help of two alternate designs (vary\_x and vary\_f) for different nx and nfacets. The lambda for which the two designs intersect have to be chosen to put appropriate weights for within-facet and between-facet distances.
+
+Assumptions: The initial combination has a \(N(\mu,\sigma)\) distribution and then every combination increases as follows:
+- \[\mu_{j.} = \mu + j\omega\] (for design vary\_x)
+- \[\mu_{.k} = \mu + k\omega\] (for design vary\_f)
+Value of the parameters chosen for this simulation are \(\mu = 0\), \(\sigma = 1\) and \(\omega = {1, 2, \dots, 10}\)
+
+Fixing omega, where the design interacts
+
+\begin{center}\includegraphics[width=\textwidth]{/Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/intersection_plot} \end{center}
+
+How value of lambda changes with increasing omega
+
+\begin{center}\includegraphics[width=\textwidth]{/Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/intersection_plot} \end{center}
+
+How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation?
+
+\begin{center}\includegraphics[width=\textwidth]{/Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_omega_mean_3_2} \end{center}
+
+How value of lambda changes with increasing omega and sd for fixed nx, nfacet and mean?
+
+\begin{center}\includegraphics[width=\textwidth]{/Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_omega_sd_3_2} \end{center}
 
 \hypertarget{distribution-across-facet-and-x-categories}{%
 \subsection{Distribution across facet and x categories}\label{distribution-across-facet-and-x-categories}}
@@ -298,8 +342,8 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher--Tippett--Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-\hypertarget{methodology}{%
-\subsection{Methodology}\label{methodology}}
+\hypertarget{methodology-1}{%
+\subsection{Methodology}\label{methodology-1}}
 
 The mean and sd for each combination of facet and x levels could be computed by shuffling the data repeatedly and obtaining the distribution of \(MMPD_{raw}\) for different combinations. If \(MMPD_{raw}\) is then adjusted by the location and scale of this distribution, we could assume that the distribution of the resultant \(MMPD_{norm}\) will have same distribution across different combinations of x and facet levels. All data is repeatedly shuffled \(nperm\) times in random manner to obtain the measure \(MMPD_{raw}\). Then the \(MMPD_{norm}\) is obtained by scaling the observed value by the mean and sd of the distribution of \(MMPD_{raw}\) obtained from the permuted data.
 
@@ -366,8 +410,8 @@ Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fin
 \hypertarget{the-statistical-test}{%
 \section{The statistical test}\label{the-statistical-test}}
 
-\hypertarget{algorithm-1}{%
-\subsection{Algorithm}\label{algorithm-1}}
+\hypertarget{algorithm}{%
+\subsection{Algorithm}\label{algorithm}}
 
 for computation for all harmony pairs
 

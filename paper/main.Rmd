@@ -7,7 +7,7 @@ authors:
 
 bibliography: bibliography.bib
 preamble: >
-  \usepackage{mathtools,amssymb,booktabs,amsthm,todonotes,colortbl}
+  \usepackage{mathtools,booktabs,amsthm,todonotes,colortbl}
   \def\mod{~\text{mod}~}
   \newtheorem{definition}{Definition}
   \usepackage{mathptmx}
@@ -31,7 +31,7 @@ output:
 
 ```{r initial, echo = FALSE, cache = FALSE, include = FALSE}
 options("knitr.graphics.auto_pdf" = TRUE,
-        tinytex.verbose = TRUE)
+        tinytex.verbose = FALSE)
 library(knitr)
 library(tidyverse)
 library(lubridate)
@@ -199,7 +199,7 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# Median Maximum Pairwise Distances (MMPD)
+# Distance measure
 
 We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (MMPD) to evaluate structure in such a design.
 
@@ -253,7 +253,7 @@ ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
 <!-- in the same group would be important to bring out different patterns of the data. -->
 
 
-## Computation
+## Methodology
 
 ### Characterising distribution
 
@@ -288,16 +288,16 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
 
 
-### Methodology
+### Definitions
 
 Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}, b_{k})$ be denoted as $d_{(jk, j', k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
 
 
-```{r distance-explain, fig.pos="p", fig.cap = "Within and between-facet distances shown for two cyclic granularities A and B, where A is mapped to x-axis and B is mapped to facets. The dotted lines represent the distances between different categories. Panel 1) and 2) show the between-facet distances. Panel 3) and 4) are used to illustrate within-facet distances when categories are un-ordered or ordered respectively. When categories are ordered, distances should only be considered for consecutive x-axis categories. Between-facet distances are distances between different facet levels for the same x-axis category, for example, distances between {($a_1$,$b_1$) and ($a_1$, $b_2$)} or {($a_1$,$b_1$) and ($a_1$, $b_3$)}."}
+```{r distance-explain, fig.cap = "Within and between-facet distances shown for two cyclic granularities A and B, where A is mapped to x-axis and B is mapped to facets. The dotted lines represent the distances between different categories. Panel 1) and 2) show the between-facet distances. Panel 3) and 4) are used to illustrate within-facet distances when categories are un-ordered or ordered respectively. When categories are ordered, distances should only be considered for consecutive x-axis categories. Between-facet distances are distances between different facet levels for the same x-axis category, for example, distances between {($a_1$,$b_1$) and ($a_1$, $b_2$)} or {($a_1$,$b_1$) and ($a_1$, $b_3$)}."}
 knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 ```
   
-From Section \ref{sec:idea}, the idea is to put more weightage on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter $\lambda > 1$, the pairwise distances $d_{(jk, j'k')}$ are transformed based on the distance type as follows:
+From Section \ref{sec:idea}, the idea is to put more weights on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter $\lambda > 1$, the pairwise distances $d_{(jk, j'k')}$ are transformed based on the distance type as follows:
 
 \begin{equation}
 d*_{(j,k), (j'k')} =
@@ -307,10 +307,9 @@ d*_{(j,k), (j'k')} =
 \end{cases}
 \end{equation}
 
-<!-- The maximum weighted pairwise distances are defined as: -->
-<!-- $$MEPD = max_{j, j', k, k'}(d*_{(j,k), (j', k')}) -->
-<!-- \forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$$ -->
-<!-- where,  -->
+The maximum weighted pairwise distances are defined as:
+$$WPD = max_{j, j', k, k'}(d*_{(j,k), (j', k')})
+\forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$$.
 
 
 <!-- _j$ maps index set to a set $\{B_\ell \mid \ell =1,\dots,L\}$. Here, $A_k$ and $B_\ell$ are the levels/categories corresponding to $C_i$ and $C_j$ respectively. Let $S_{k\ell}$ be a subset of the index set such that for all $s \in S_{k\ell}$, $C_i(s) = A_k$ and $C_j(s) = B_\ell$. There are $KL$ such data subsets, one for each combination of levels ($A_k$, $B_\ell$). Moreover, consider that in the graphical space, $C_i$ is mapped to facets and $C_j$ is mapped to x-axis. -->
@@ -362,6 +361,82 @@ d*_{(j,k), (j'k')} =
 ## Simulation study
 
 To understand the behavior of raw MMPD for different parameters $nperm$ <number of permutations>, $n$ <sample size> ($n_x$, $n_f$ and combination), $D$ <different data set>, $l_x$<levels of x-axis>, $l_f$ <levels of facets>.
+
+D1 - Design null: 
+D2 - Design vary_f:
+D3 - Design var_x:
+B4 - Design vary_all:
+
+## Choice of parameters of the distribution
+
+Under null distribution
+
+Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$
+Dist 1: $N(0,1)$ individual graph
+Dist 2: $N(\mu, 1)$ (faceted with different values of $\mu$: not yet just for one value now)
+Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now)
+Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters.
+
+
+
+
+### Choice of alternate designs
+
+A normal distribution is taken for this purpose. We would calibrate the values of $WPD$ for different designs illustrated in Section \ref{sec:idea}.
+
+$$\mu_{j.} = \mu + j\omega$$
+or, $$\mu_{.k} = \mu + k\omega$$ where,   
+$j$ and $k$ are the index of the x and facet category respectively 
+$\mu$ is the mean of the first category and $\omega$ is the increment from the starting value.
+
+
+mean = 0
+range_mean = c(0, 1, 3,  5, 7, 15, 20)
+sd = 1
+range_sd = c(1, 3,  5, 7, 15, 20)
+range_w =  c(1, 2, 3, 4, 5)
+range_lambda = seq(0.1, 0.9, 0.05)
+
+## Parameters of the distribution
+
+
+
+
+
+
+## Choice of tuning parameters
+
+Objective: Choice of optimal tuning parameter $lambda$ with the help of two alternate designs (vary_x and vary_f)  for different nx and nfacets. The lambda for which the two designs intersect have to be chosen to put appropriate weights for within-facet and between-facet distances.
+
+Assumptions: The initial combination has a $N(\mu,\sigma)$ distribution and then every combination increases as follows:
+- $$\mu_{j.} = \mu + j\omega$$ (for design vary_x)
+- $$\mu_{.k} = \mu + k\omega$$ (for design vary_f)
+Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ and $\omega = {1, 2, \dots, 10}$
+
+
+Fixing omega, where the design interacts
+
+```{r tuning-one-omega}
+knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
+```
+
+How value of lambda changes with increasing omega
+
+```{r tuning-parameter-intersection}
+knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
+```
+
+How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation?
+
+```{r lambda-omega-mean}
+knitr::include_graphics(here::here("simulations/result_report/lambda_omega_mean_3_2.png"))
+```
+
+How value of lambda changes with increasing omega and sd for fixed nx, nfacet and mean?
+
+```{r lambda-omega-sd}
+knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_2.png"))
+```
 
 
 ## Distribution across facet and x categories
