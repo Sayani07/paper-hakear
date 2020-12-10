@@ -5,7 +5,7 @@
 - $\mu_{.k} = \mu + k\omega$ (for design vary_f)  
 Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ and $\omega = {1, 2, \dots, 10}$
 
-**Results:** 
+**Questions:** 
 - Fixing $\omega$, which is the value of $\lambda$ where the design interacts
 - How value of $\lambda$ changes with increasing $\omega$
 - How value of $\lambda$ changes with increasing $\omega$ and mean for fixed nx, nfacet and standard deviation?
