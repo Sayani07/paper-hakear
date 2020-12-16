@@ -1,9 +1,9 @@
 library(here)
 library(readr)
 library(tidyverse)
-# run for raw MMPD files aggregation
-#all_data <- read_rds("simulations/result_report/all_data_raw.rds")
-# run for raw max pairwise distances files aggregation
+# run for  norm MMPD files aggregation
+#all_data <- read_rds("simulations/result_report/all_data_ norm.rds")
+# run for  norm max pairwise distances files aggregation
 
 
 makegraph02 <- function(folder_name){
@@ -15,29 +15,29 @@ nxbyfacet <- all_data %>%
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  xlab("raw wpd")
+  xlab(" norm wpd")
 
-ggsave(nxbyfacet, filename = paste0("simulations/null_design/figs/", "density_nx_by_nfacet_", folder_name,".png"))
+ggsave(nxbyfacet, filename = paste0("simulations/null_design/figs/normalised/", "density_nx_by_nfacet_", folder_name,".png"))
 
 
-raw_nxbyfacet <- all_data %>% 
+ norm_nxbyfacet <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nx))) +
   ggridges::geom_density_ridges() +
   facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
-  xlab("raw mmpd") +
+  xlab(" norm mmpd") +
   ylab("nx")
 
-ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "ridge_by_nfacet_", folder_name,".png"))
+ggsave( norm_nxbyfacet, filename = paste0("simulations/null_design/figs/normalised/", "ridge_by_nfacet_", folder_name,".png"))
 
 
-raw_nfacetbynx <- all_data %>% 
+ norm_nfacetbynx <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nfacet))) +
   ggridges::geom_density_ridges() +
   facet_wrap(~nx, labeller = "label_both", nrow = 2) + 
-  xlab("raw mmpd") +
+  xlab(" norm mmpd") +
   ylab("nfacet")
 
-ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "ridge_by_nx_", folder_name,".png"))
+ggsave( norm_nxbyfacet, filename = paste0("simulations/null_design/figs/normalised/", "ridge_by_nx_", folder_name,".png"))
 }
 
 makegraph02(folder_name = "wpd_N01")
@@ -57,12 +57,12 @@ normal_ridge_nxbynfacet <- all_data %>%
   ggplot(aes(x = value, y = distribution)) +
   ggridges::geom_density_ridges(aes(fill = distribution)) +
   facet_grid(nx~nfacet, labeller = "label_both") + 
-  xlab("raw wpd") +
+  xlab(" norm wpd") +
   scale_fill_manual(values =
                       c("#999999", "#D55E00")) + 
   theme(legend.position = "bottom")
 
-ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "normal_ridge_nxbynfacet.png"))
+ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/normalised", "normal_ridge_nxbynfacet.png"))
 
 
 
@@ -78,10 +78,10 @@ all_data3 %>%
   ggplot(aes(x = value, y = distribution)) +
   ggridges::geom_density_ridges(aes(fill = distribution)) +
   facet_grid(nx~nfacet, labeller = "label_both") + 
-  xlab("raw wpd") +
+  xlab(" norm wpd") +
   scale_fill_manual(values = c("#999999", "#D55E00", "#0072B2"))
 
-ggsave(raw_nxbyfacet, filename = paste0("simulations/null_design/figs/", "normal3_ridge_nxbynfacet_", folder_name,".png"))
+ggsave( norm_nxbyfacet, filename = paste0("simulations/null_design/figs/normalised", "normal3_ridge_nxbynfacet_", folder_name,".png"))
 
 
 ## for gamma might go in the paper
@@ -100,8 +100,8 @@ gamma_ridge_nxbynfacet <- all_data %>%
   ggplot(aes(x = value, y = distribution)) +
   ggridges::geom_density_ridges(aes(fill = distribution)) +
   facet_grid(nx~nfacet, labeller = "label_both") + 
-  xlab("raw wpd") +
+  xlab(" norm wpd") +
   scale_fill_manual(values = c("#999999", "#D55E00"))+
   theme(legend.position = "bottom")
 
-ggsave(gamma_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/", "gamma_ridge_nxbynfacet.png"))
+ggsave(gamma_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/normalised/", "gamma_ridge_nxbynfacet.png"))

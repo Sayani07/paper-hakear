@@ -1,5 +1,5 @@
 # contains function to aggregate data each for from N(0,1), N(0,5), N(5,1), N(5,5), Gamma(0.5, 1), Gamma(2, 1)
-#  aggregated data from the file simulations/results/raw/folder_name and tidy them up
+#  aggregated data from the file simulations/results/norm/folder_name and tidy them up
 library(tidyverse)
 library(here)
 library(readr)
@@ -7,7 +7,7 @@ library(rlang)
 
 aggregate01 <-  function(folder_name){
   
-all_files = list.files(path = paste0("simulations/results/raw/", folder_name), 
+all_files = list.files(path = paste0("simulations/results/norm/", folder_name), 
                        pattern = ".rds")
 
 names_levels <- map_dfr(all_files, 
@@ -18,12 +18,12 @@ names_levels <- map_dfr(all_files,
                                     nfacet = as.numeric(z[2]))
                         })
 
-# len_file = read_rds(("simulations/results/raw/tuning_param/2_2_tuning_param.rds"))
+# len_file = read_rds(("simulations/results/norm/tuning_param/2_2_tuning_param.rds"))
 # 
 # names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
 
   
-all_files_path <- paste0("simulations/results/raw/",folder_name,"/",
+all_files_path <- paste0("simulations/results/norm/",folder_name,"/",
          all_files)  
   
 
