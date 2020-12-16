@@ -9,6 +9,10 @@ compute_pairwise_dist   Title computing all within and between facet
                         data
 compute_pairwise_max    Title Compute raw pairwise distances
 compute_quantiles       compute quantiles of data across categories
+compute_wpd_dist        Title computing all within and between facet
+                        distances between quantile categories given a
+                        data
+compute_wpd_norm        Title Compute raw pairwise distances
 create_harmony_data     Create data for one harmony pair
 create_harmony_tbl_data
                         Create data for all harmony pairs in a harmony
