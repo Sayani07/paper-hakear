@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.12.10)  10 DEC 2020 23:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.12.10)  11 DEC 2020 13:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,24 +598,24 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 3.
-[1
-
-{/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 )
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=149, 565.11125pt x 743.77875pt>
+[1
+
+{/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<figure/calendar-elec-1.pdf, id=144, 565.11125pt x 743.77875pt>
 File: figure/calendar-elec-1.pdf Graphic file (type pdf)
 <use figure/calendar-elec-1.pdf>
 Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
 (pdftex.def)             Requested size: 469.76654pt x 618.28954pt.
-<figure/id2-1.pdf, id=151, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=146, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=152, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=147, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -650,7 +650,7 @@ LaTeX Warning: Reference `@Gupta2020-vo' on page 5 undefined on input line 161.
 
 
 [5]
-<figure/null4by2-1.pdf, id=214, 569.12625pt x 352.31625pt>
+<figure/null4by2-1.pdf, id=209, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 165.
@@ -667,7 +667,7 @@ has been already used, duplicate ignored
                                                   
 l.185 
        <./figure/null4by2-1.pdf>]
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=233, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=228, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -675,168 +675,197 @@ c file (type png)
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist
 _explain.png  used on input line 199.
 (pdftex.def)             Requested size: 469.7605pt x 166.61986pt.
-[7] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
-5}) has been already used, duplicate ignored
+[7]
+</Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/normal_rid
+ge_nxbynfacet_wpd_N01.png, id=245, 2926.935pt x 1860.9525pt>
+File: /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/norma
+l_ridge_nxbynfacet_wpd_N01.png Graphic file (type png)
+<use /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/normal
+_ridge_nxbynfacet_wpd_N01.png>
+Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/nul
+l_design/figs/normal_ridge_nxbynfacet_wpd_N01.png  used on input line 258.
+(pdftex.def)             Requested size: 469.74834pt x 298.66714pt.
+</Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/gamma_ridg
+e_nxbynfacet.png, id=246, 2107.875pt x 2107.875pt>
+File: /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/gamma
+_ridge_nxbynfacet.png Graphic file (type png)
+<use /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/gamma_
+ridge_nxbynfacet.png>
+Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/nul
+l_design/figs/gamma_ridge_nxbynfacet.png  used on input line 270.
+(pdftex.def)             Requested size: 469.74852pt x 469.74852pt.
+[8pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.259 or, \[\mu_{.k} = \mu + k\omega\]
-                                       where,\\ </Users/sgup0008/Documents/pape
-r-hakear/paper/Figs/dist_explain.png>]
+l.275 \end{figure}
+                   </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_expl
+ain.png>] [9pdfTeX warning (ext4): destination with the same identifier (name{f
+igure.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.275 \end{figure}
+                   </Users/sgup0008/Documents/paper-hakear/simulations/null_des
+ign/figs/normal_ridge_nxbynfacet_wpd_N01.png>]
+</Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/fixed_ome
+ga.png, id=261, 2805.48125pt x 1931.215pt>
+File: /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/fixe
+d_omega.png Graphic file (type png)
+<use /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/fixed
+_omega.png>
+Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/tun
+ing_param/figs/fixed_omega.png  used on input line 289.
+(pdftex.def)             Requested size: 469.73375pt x 323.3516pt.
 </Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/intersect
-ion_plot.png, id=260, 2107.875pt x 2107.875pt>
+ion_plot.png, id=262, 2805.48125pt x 1931.215pt>
 File: /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inte
 rsection_plot.png Graphic file (type png)
 <use /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inter
 section_plot.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/tun
-ing_param/figs/intersection_plot.png  used on input line 282.
-(pdftex.def)             Requested size: 469.74852pt x 469.74852pt.
-[9]
-File: /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inte
-rsection_plot.png Graphic file (type png)
-<use /Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inter
-section_plot.png>
-Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/tun
-ing_param/figs/intersection_plot.png  used on input line 286.
-(pdftex.def)             Requested size: 469.74852pt x 469.74852pt.
-[10 </Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inter
-section_plot.png>]
+ing_param/figs/intersection_plot.png  used on input line 293.
+(pdftex.def)             Requested size: 469.73375pt x 323.3516pt.
+[10 </Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/fixed
+_omega.png>] [11pdfTeX warning (ext4): destination with the same identifier (na
+me{figure.7}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.293 ...aram/figs/intersection_plot} \end{center}
+                                                   </Users/sgup0008/Documents/p
+aper-hakear/simulations/null_design/figs/gamma_ridge_nxbynfacet.png>]
 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_omega_
-mean_3_2.png, id=271, 2090.81125pt x 2090.81125pt>
+mean_3_2.png, id=278, 2090.81125pt x 2090.81125pt>
 File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_o
 mega_mean_3_2.png Graphic file (type png)
 <use /Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_om
 ega_mean_3_2.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/res
-ult_report/lambda_omega_mean_3_2.png  used on input line 290.
+ult_report/lambda_omega_mean_3_2.png  used on input line 297.
 (pdftex.def)             Requested size: 469.74228pt x 469.74228pt.
-[11]
+[12 </Users/sgup0008/Documents/paper-hakear/simulations/tuning_param/figs/inter
+section_plot.png>]
 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_omega_
-sd_3_2.png, id=276, 2090.81125pt x 2090.81125pt>
+sd_3_2.png, id=284, 2090.81125pt x 2090.81125pt>
 File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_o
 mega_sd_3_2.png Graphic file (type png)
 <use /Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_om
 ega_sd_3_2.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/res
-ult_report/lambda_omega_sd_3_2.png  used on input line 294.
+ult_report/lambda_omega_sd_3_2.png  used on input line 301.
 (pdftex.def)             Requested size: 469.74228pt x 469.74228pt.
-[12 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_om
-ega_mean_3_2.png>] [13 </Users/sgup0008/Documents/paper-hakear/simulations/resu
-lt_report/lambda_omega_sd_3_2.png>]
-</Users/sgup0008/Documents/paper-hakear/simulations/result_report/hist_nxbyface
-t.png, id=295, 3069.4675pt x 2191.18625pt>
-File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report/hist_nxb
-yfacet.png Graphic file (type png)
-<use /Users/sgup0008/Documents/paper-hakear/simulations/result_report/hist_nxby
-facet.png>
+[13 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_om
+ega_mean_3_2.png>]
+</Users/sgup0008/Documents/paper-hakear/simulations/result_report/wpd_alterate_
+designs.png, id=291, 2182.1525pt x 1484.54625pt>
+File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report/wpd_alte
+rate_designs.png Graphic file (type png)
+<use /Users/sgup0008/Documents/paper-hakear/simulations/result_report/wpd_alter
+ate_designs.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/res
-ult_report/hist_nxbyfacet.png  used on input line 305.
-(pdftex.def)             Requested size: 469.72067pt x 335.31728pt.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-07.
-(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-</Users/sgup0008/Documents/paper-hakear/simulations/result_report/nx_by_facet_r
-aw.png, id=296, 3069.4675pt x 2191.18625pt>
-File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report/nx_by_fa
-cet_raw.png Graphic file (type png)
-<use /Users/sgup0008/Documents/paper-hakear/simulations/result_report/nx_by_fac
-et_raw.png>
-Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/res
-ult_report/nx_by_facet_raw.png  used on input line 313.
-(pdftex.def)             Requested size: 469.72067pt x 335.31728pt.
-</Users/sgup0008/Documents/paper-hakear/simulations/result_report//nfacet_by_nx
-_raw.png, id=297, 3069.4675pt x 2191.18625pt>
-File: /Users/sgup0008/Documents/paper-hakear/simulations/result_report//nfacet_
-by_nx_raw.png Graphic file (type png)
-<use /Users/sgup0008/Documents/paper-hakear/simulations/result_report//nfacet_b
-y_nx_raw.png>
-Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/res
-ult_report//nfacet_by_nx_raw.png  used on input line 322.
-(pdftex.def)             Requested size: 469.72067pt x 335.31728pt.
+ult_report/wpd_alterate_designs.png  used on input line 306.
+(pdftex.def)             Requested size: 469.75299pt x 319.57896pt.
+[14 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/lambda_om
+ega_sd_3_2.png>]
 
-LaTeX Warning: Reference `fig:hist_plot' on page 14 undefined on input line 341
+LaTeX Warning: Reference `fig:dist-across-facets' on page 15 undefined on input
+ line 310.
+
+
+LaTeX Warning: Reference `fig:dist-across-x' on page 15 undefined on input line
+ 310.
+
+
+LaTeX Warning: Reference `fig:dist-across-facets' on page 15 undefined on input
+ line 312.
+
+
+LaTeX Warning: Reference `fig:dist-across-x' on page 15 undefined on input line
+ 312.
+
+
+LaTeX Warning: Reference `fig:hist_plot' on page 15 undefined on input line 325
 .
 
-[14 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/hist_nxby
-facet.png>] [15pdfTeX warning (ext4): destination with the same identifier (nam
-e{figure.6}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.345 F
-       inally, we run some simulation experiments to see if normalisation wo...
- </Users/sgup0008/Documents/paper-hakear/simulations/result_report/nx_by_facet_
-raw.png>] [16pdfTeX warning (ext4): destination with the same identifier (name{
-figure.7}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.345 F
-       inally, we run some simulation experiments to see if normalisation wo...
- </Users/sgup0008/Documents/paper-hakear/simulations/result_report//nfacet_by_n
-x_raw.png>]
+[15 </Users/sgup0008/Documents/paper-hakear/simulations/result_report/wpd_alter
+ate_designs.png>]
+</Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/normalised
+/gamma_ridge_nxbynfacet.png, id=304, 2182.1525pt x 1484.54625pt>
+File: /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/norma
+lised/gamma_ridge_nxbynfacet.png Graphic file (type png)
+<use /Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/normal
+ised/gamma_ridge_nxbynfacet.png>
+Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/simulations/nul
+l_design/figs/normalised/gamma_ridge_nxbynfacet.png  used on input line 333.
+(pdftex.def)             Requested size: 469.75299pt x 319.57896pt.
+[16 </Users/sgup0008/Documents/paper-hakear/simulations/null_design/figs/normal
+ised/gamma_ridge_nxbynfacet.png>]
 
-LaTeX Warning: Reference `sec:' on page 17 undefined on input line 354.
+LaTeX Warning: Reference `sec:' on page 17 undefined on input line 340.
 
-[17]
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/simulation.png, id=330, 1019
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/simulation.png, id=314, 1019
 .81pt x 539.01375pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/simulation.png Graphic 
 file (type png)
 <use /Users/sgup0008/Documents/paper-hakear/paper/Figs/simulation.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/paper/Figs/simu
-lation.png  used on input line 383.
+lation.png  used on input line 369.
 (pdftex.def)             Requested size: 469.7563pt x 248.28653pt.
+[17]
 
-LaTeX Warning: Reference `fig:null-dist' on page 18 undefined on input line 398
+LaTeX Warning: Reference `fig:null-dist' on page 18 undefined on input line 384
 .
 
-<figure/norm-data-1.pdf, id=331, 568.1225pt x 351.3125pt>
+<figure/norm-data-1.pdf, id=326, 568.1225pt x 351.3125pt>
 File: figure/norm-data-1.pdf Graphic file (type pdf)
 <use figure/norm-data-1.pdf>
-Package pdftex.def Info: figure/norm-data-1.pdf  used on input line 402.
+Package pdftex.def Info: figure/norm-data-1.pdf  used on input line 388.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-<figure/unnamed-chunk-6-1.pdf, id=332, 568.1225pt x 338.26375pt>
-File: figure/unnamed-chunk-6-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-6-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-6-1.pdf  used on input line 412.
+<figure/unnamed-chunk-5-1.pdf, id=327, 568.1225pt x 338.26375pt>
+File: figure/unnamed-chunk-5-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-5-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-5-1.pdf  used on input line 398.
 (pdftex.def)             Requested size: 469.7731pt x 279.70589pt.
 [18 </Users/sgup0008/Documents/paper-hakear/paper/Figs/simulation.png>] [19pdfT
 eX warning (ext4): destination with the same identifier (name{figure.8}) has be
 en already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.412 ...h]{figure/unnamed-chunk-6-1} \end{center}
+l.398 ...h]{figure/unnamed-chunk-5-1} \end{center}
                                                    <./figure/norm-data-1.pdf>] 
-[20 <./figure/unnamed-chunk-6-1.pdf>]
-<figure/sim_all-1.pdf, id=378, 562.1pt x 351.3125pt>
+[20 <./figure/unnamed-chunk-5-1.pdf>]
+<figure/sim_all-1.pdf, id=372, 562.1pt x 351.3125pt>
 File: figure/sim_all-1.pdf Graphic file (type pdf)
 <use figure/sim_all-1.pdf>
-Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 456.
+Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 442.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=379, 562.1pt x 351.3125pt>
+<figure/sim_all-2.pdf, id=373, 562.1pt x 351.3125pt>
 File: figure/sim_all-2.pdf Graphic file (type pdf)
 <use figure/sim_all-2.pdf>
-Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 456.
+Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 442.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=380, 562.1pt x 351.3125pt>
+<figure/sim_all-3.pdf, id=374, 562.1pt x 351.3125pt>
 File: figure/sim_all-3.pdf Graphic file (type pdf)
 <use figure/sim_all-3.pdf>
-Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 456.
+Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 442.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=381, 562.1pt x 351.3125pt>
+<figure/sim_all-4.pdf, id=375, 562.1pt x 351.3125pt>
 File: figure/sim_all-4.pdf Graphic file (type pdf)
 <use figure/sim_all-4.pdf>
-Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 456.
+Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 442.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
 [21 <./figure/sim_all-1.pdf> <./figure/sim_all-2.pdf>] [22 <./figure/sim_all-3.
 pdf> <./figure/sim_all-4.pdf>]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 4
+55.
+(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 
 LaTeX Warning: Reference `sec:cyclic-calendar' on page 23 undefined on input li
-ne 469.
+ne 455.
 
 
-Underfull \hbox (badness 1043) in paragraph at lines 469--470
+Underfull \hbox (badness 1043) in paragraph at lines 455--456
 \T1/lmr/m/n/10 The tsib-ble ob-ject \T1/lmtt/m/n/10 smart_meter10 \T1/lmr/m/n/1
 0 from R pack-age \T1/lmtt/m/n/10 gravitas \T1/lmr/m/n/10 (Gupta et al. 2019) c
 on-sist-ing of
@@ -844,57 +873,57 @@ on-sist-ing of
 
 
 LaTeX Warning: Reference `tab:harmony-tab' on page 23 undefined on input line 4
-74.
+60.
 
 
-LaTeX Warning: Reference `sec:levels' on page 23 undefined on input line 474.
+LaTeX Warning: Reference `sec:levels' on page 23 undefined on input line 460.
 
 [23]
-<figure/bothcust-1.pdf, id=455, 570.13pt x 353.32pt>
+<figure/bothcust-1.pdf, id=450, 570.13pt x 353.32pt>
 File: figure/bothcust-1.pdf Graphic file (type pdf)
 <use figure/bothcust-1.pdf>
-Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 485.
+Package pdftex.def Info: figure/bothcust-1.pdf  used on input line 471.
 (pdftex.def)             Requested size: 422.77695pt x 262.00261pt.
 [24pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.494 T
+l.480 T
        his case study shows systematic exploration of energy behavior for a ...
  <./figure/bothcust-1.pdf>] [25pdfTeX warning (ext4): destination with the same
  identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.524 
+l.510 
       ]
-<figure/cricex-1.pdf, id=483, 566.115pt x 350.30875pt>
+<figure/cricex-1.pdf, id=478, 566.115pt x 350.30875pt>
 File: figure/cricex-1.pdf Graphic file (type pdf)
 <use figure/cricex-1.pdf>
-Package pdftex.def Info: figure/cricex-1.pdf  used on input line 527.
+Package pdftex.def Info: figure/cricex-1.pdf  used on input line 513.
 (pdftex.def)             Requested size: 422.78845pt x 261.6191pt.
-<figure/cricex-2.pdf, id=484, 566.115pt x 352.31625pt>
+<figure/cricex-2.pdf, id=479, 566.115pt x 352.31625pt>
 File: figure/cricex-2.pdf Graphic file (type pdf)
 <use figure/cricex-2.pdf>
-Package pdftex.def Info: figure/cricex-2.pdf  used on input line 527.
+Package pdftex.def Info: figure/cricex-2.pdf  used on input line 513.
 (pdftex.def)             Requested size: 422.78845pt x 263.11835pt.
 [26] [27pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.10}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.574 ...label{varying-distribution-across-facet}}
+l.560 ...label{varying-distribution-across-facet}}
                                                    <./figure/cricex-1.pdf> <./f
 igure/cricex-2.pdf>] [28] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: B84D88B76687E080B2B0AAB1BB504646;4882.
+(rerunfilecheck)             Checksum: D8E086418C27DB4C774BFFA988A1F9CC;4306.
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 12707 strings out of 481306
- 188157 string characters out of 5915733
- 488053 words of memory out of 5000000
- 29146 multiletter control sequences out of 15000+600000
+ 12724 strings out of 481306
+ 189707 string characters out of 5915733
+ 488156 words of memory out of 5000000
+ 29161 multiletter control sequences out of 15000+600000
  459741 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  66i,10n,72p,2111b,400s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -918,10 +947,10 @@ ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmtt10.pfb>
-Output written on main.pdf (28 pages, 4064220 bytes).
+Output written on main.pdf (28 pages, 4875133 bytes).
 PDF statistics:
- 635 PDF objects out of 1000 (max. 8388607)
- 530 compressed objects within 6 object streams
+ 630 PDF objects out of 1000 (max. 8388607)
+ 521 compressed objects within 6 object streams
  151 named destinations out of 1000 (max. 500000)
- 322 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 324 words of extra memory for PDF output out of 10000 (max. 10000000)
 

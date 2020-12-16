@@ -356,18 +356,18 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 <!-- A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories. -->
 
-# Behavior of raw distance measure
+# Behavior of raw wpd (weighted pairwise distances)
 
 ## Simulation study
 
-To understand the behavior of raw MMPD for different parameters $nperm$ <number of permutations>, $n$ <sample size> ($n_x$, $n_f$ and combination), $D$ <different data set>, $l_x$<levels of x-axis>, $l_f$ <levels of facets>.
+We conduct simulations to understand the behavior of raw WPD for different parameters
+$l_x$ (levels of x-axis), $l_f$ (levels of facets), $\lambda$ (tuning parameter), $\omega$ (increment in each panel design) $data$ (data sets), $sample-size$ (tuning parameter), $nsim$ (number of simulations), $nperm$ (number of permutations (might not need depending on if norm works) and designs  
+$D_{null}$  (No difference in distribution)  
+$D_{var_f}$ (Difference in distribution only across facets)  
+$D_{var_x}$ (Difference in distribution only across x-axis)  
+$D_{var_{all}}$ (Difference in distribution in both facets and x-axis)  
 
-D1 - Design null: 
-D2 - Design vary_f:
-D3 - Design var_x:
-B4 - Design vary_all:
-
-## Effect of parameters of the distribution under null distribution
+## Location and scale of the distribution under null design
 
 Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$
 Dist 1: $N(0,1)$ individual graph
@@ -381,15 +381,16 @@ Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all 
 nsim = 200
 lambda = 0.67
 
-
 **Questions:** 
 - How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution
 
+### Normal Distribution
 
 ```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution"}
 knitr::include_graphics(here::here("simulations/null_design/figs/normal_ridge_nxbynfacet_wpd_N01.png"))
 ```
 
+### Gamma Distribution
 
 ```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal."}
 knitr::include_graphics(here::here("simulations/null_design/figs/gamma_ridge_nxbynfacet.png"))
@@ -413,7 +414,7 @@ knitr::include_graphics(here::here("simulations/null_design/figs/gamma_ridge_nxb
 <!-- range_lambda = seq(0.1, 0.9, 0.05) -->
 
 
-## Choice of tuning parameters
+## Choice of tuning parameters and effect of different increments
 
 Objective: Choice of optimal tuning parameter $lambda$ with the help of two alternate designs (vary_x and vary_f)  for different nx and nfacets. The lambda for which the two designs intersect have to be chosen to put appropriate weights for within-facet and between-facet distances.
 
@@ -448,7 +449,15 @@ knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_
 ```
 
 
-## Distribution across facet and x categories
+## Alternate designs
+
+```{r lamba-omega-alternate-design}
+knitr::include_graphics((here::here("simulations/result_report/wpd_alterate_designs.png")))
+```
+
+
+
+ Distribution across facet and x categories
 <!-- ### Need for normalisation -->
 
 From Figure \ref{fig:dist-across-facets} and \ref{fig:dist-across-x} shows the MMPD distribution is different for different levels of facets and x-axis levels. With increasing number of facets, the location of the distribution shift rightwards and with increasing x-axis levels, the scale of the distribution reduces. 
@@ -458,18 +467,14 @@ Median and maximum distances are affected by the number of categories considered
 Therefore, in order to compare $MMPD_{raw}$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure.
 
 
-
-
-```{r hist-nx-nfacet}
+```{r hist-nx-nfacet, eval = FALSE}
 knitr::include_graphics(here::here("simulations/result_report/hist_nxbyfacet.png"))
 ```
 
-```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained."}
+```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained.", eval = FALSE}
 here::here()
 knitr::include_graphics(here::here("simulations/result_report","nx_by_facet_raw.png"))
 ```
-
-
 
 
 <!-- # ```{r dist-across-facets, fig.cap = "Distribution of $MMPD_{raw}$ for different facet levels are shown. The location of the distribution shifts rightwards implying that as the number of facets increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained. "} -->
@@ -490,8 +495,7 @@ knitr::include_graphics(here::here("simulations/result_report","nx_by_facet_raw.
 <!-- # g1 -->
 <!-- # ``` -->
 
-
-```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. "}
+```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. ", eval = FALSE}
 knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_raw.png"))
 ```
 
@@ -518,9 +522,8 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 <!-- both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. -->
 
-## Distribution across different sample size
-## Distribution across different permutation size
-## Distribution across normal and non-normal underlying distribution
+## Sample size
+## Number of permutations
 
 # Normalisation
 
@@ -533,6 +536,11 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
+
+```{r}
+knitr::include_graphics(here::here("simulations/null_design/figs/normalised","gamma_ridge_nxbynfacet.png"))
+```
+
 
 ## Methodology
 
