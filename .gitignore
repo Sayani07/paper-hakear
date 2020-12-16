@@ -7,7 +7,7 @@ paper/cache/*
 structure.html
 simulations/results/*
 .DS_Store
-paper/main.log
-paper/main.toc
-paper/main.tex
+*.log
+*.tex
+*.toc
 *.rds
