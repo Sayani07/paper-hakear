@@ -1,3 +1,4 @@
+.DS_Store
 .Rproj.user
 .Rhistory
 .RData
@@ -6,7 +7,6 @@ paper/cache/*
 .html
 structure.html
 simulations/results/*
-.DS_Store
 *.log
 *.tex
 *.toc
