@@ -10,3 +10,4 @@ simulations/results/*
 paper/main.log
 paper/main.toc
 paper/main.tex
+.rds
