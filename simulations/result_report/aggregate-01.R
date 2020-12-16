@@ -17,8 +17,11 @@ library(rlang)
 #                        pattern = "_dist.rds")
 
 # objective 2
-all_files = list.files(path = "simulations/results/demo_all_design/", 
-                        pattern = "_dist.rds")
+# all_files = list.files(path = "simulations/results/demo_all_design/", 
+#                         pattern = "_dist.rds")
+
+all_files = list.files(path = "simulations/results/raw/wpd_N55", 
+                       pattern = ".rds")
 
 
 names_levels <- map_dfr(all_files, 
@@ -33,7 +36,7 @@ names_levels <- map_dfr(all_files,
 names_rep <- names_levels %>% slice(rep(1:n(), each = 200))
 
 
-all_data <- paste0("simulations/results/raw/", 
+all_data <- paste0("simulations/results/raw/wpd_N55/", 
                    all_files)%>%
   map(readRDS) %>% 
   bind_rows() %>%
@@ -45,6 +48,6 @@ all_data <- paste0("simulations/results/raw/",
 #write_rds(all_data, "simulations/result_report/all_data_raw.rds")
 
 # run for raw max pairwise distances files aggregation
-write_rds(all_data, "simulations/result_report/all_data_raw_pairwise_max.rds")
+write_rds(all_data, "simulations/result_report/data/wpd_N55.rds")
 # 
 # write_rds(all_data, "simulations/result_report/all_data_norm_mmpd.rds")
