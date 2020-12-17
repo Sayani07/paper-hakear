@@ -45,9 +45,9 @@ write_rds(all_data, paste0("simulations/null_design/data/all_data_", folder_name
 # use functions for all folders
 
 aggregate01(folder_name = "wpd_N01")
-aggregate01(folder_name = "wpd_N05")
+#aggregate01(folder_name = "wpd_N05")
 aggregate01(folder_name = "wpd_N51")
-aggregate01(folder_name = "wpd_N55")
+#aggregate01(folder_name = "wpd_N55")
 
 
 aggregate01(folder_name = "wpd_Gamma01")
