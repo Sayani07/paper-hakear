@@ -1,0 +1,67 @@
+---
+title: "vary_distribution"
+author: "Sayani Gupta"
+date: "18/12/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Behavior of raw wpd (weighted pairwise distances)
+
+## Simulation study
+
+We conduct simulations to understand the behavior of raw WPD for different parameters
+$l_x$ (levels of x-axis), $l_f$ (levels of facets), $\lambda$ (tuning parameter), $\omega$ (increment in each panel design) $data$ (data sets), $sample-size$ (tuning parameter), $nsim$ (number of simulations), $nperm$ (number of permutations (might not need depending on if norm works) and designs  
+$D_{null}$  (No difference in distribution)  
+$D_{var_f}$ (Difference in distribution only across facets)  
+$D_{var_x}$ (Difference in distribution only across x-axis)  
+$D_{var_{all}}$ (Difference in distribution in both facets and x-axis)  
+
+## Location and scale of the distribution under null design
+
+Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$
+Dist 1: $N(0,1)$ individual graph
+Dist 2: $N(\mu, 1)$ (faceted with different values of $\mu$: not yet just for one value now)
+Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now)
+Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters.
+
+**Objective:** 1. Behavior of wpd under different null designs N(0,1), N(5, 1), Gamma(0.5,1), Gamma(2,1) for different nx and nfacets. Here, we have to fix a value of lambda = 0.67.
+
+**Assumptions:** There is no difference in distribution between any facet or x-category
+nsim = 200
+lambda = 0.67
+
+**Questions:** 
+- How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution
+
+### Standard normal distribution
+
+```{r normal, fig.cap="Density plots of raw wpd is shown for N(0,1) distribution. The densities change across different facet and x levels, which implies wpd value changes with increasing and facet levels"}
+
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_density_wpd_N01.png"))
+```
+
+### Comparing normal distributions with different means
+
+```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change in mean value of the normal distribution"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
+```
+
+### Gamma Distribution with different locations
+
+```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal."}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/extra/gamma_ridge_nxbynfacet.png"))
+```
+
+### Gamma Distribution with different locations after quantile transformation
+
+
+```{r gamma-diff-trans, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution after quantile transformation looks similar and hence is unaffected by change in location"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
+```
+
+
+
