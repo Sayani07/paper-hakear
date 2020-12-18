@@ -13,7 +13,7 @@ set.seed(9999)
 nsim = 200
 # change path while running it on HPC
 # simtable<-read_csv(here::here('simulations/null/sim_table.csv'))
-simtable<-read_csv(here::here('sim_table.csv'))
+simtable<-read_csv('../../../sim_table/sim_table.csv')
 
 ### Extract flags from simulation scenario
 
@@ -57,8 +57,7 @@ set.seed(1111)
   
 }) %>% bind_rows()
 
-saveRDS(raw_dist, paste0('data-ind/wpd_N01/',
-                         nxj,'_',
-                         nfacetj,'_wpd_N01.rds'))
-
-
+saveRDS(raw_dist,
+          paste0('../data-ind/wpd_N01/',
+                 nxj,'_',
+                 nfacetj,'_wpd.rds'))

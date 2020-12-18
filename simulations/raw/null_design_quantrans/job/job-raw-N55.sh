@@ -9,4 +9,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --export=NONE
 module load R/4.0.0-openblas
-Rscript raw_pairwise_N55.R $SLURM_ARRAY_TASK_ID 
+Rscript ../R-ind/raw_pairwise_N55.R $SLURM_ARRAY_TASK_ID 

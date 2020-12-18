@@ -7,14 +7,13 @@ library(readr)
 library(drake)
 library(tidyverse)
 library(hakear)
-library(here)
 
-set.seed(1096)
+set.seed(9999)
 
 nsim = 200
 # change path while running it on HPC
 # simtable<-read_csv(here::here('simulations/null/sim_table.csv'))
-simtable<-read_csv('../null/sim_table.csv')
+simtable<-read_csv('../../../sim_table/sim_table.csv')
 
 ### Extract flags from simulation scenario
 
@@ -25,10 +24,10 @@ simj<-simtable[scen,] #Extract row of table
 nfacetj<-simj$nfacet # Which nfacet level
 nxj<-simj$nx #Which nx level
 
-#create data for each row for null gamma
+#create data for each row for null normal
 
-sim_null_gamma = function(nxj, nfacetj){
-  rep(distributional::dist_gamma(2, 1), 
+sim_null_normal = function(nxj, nfacetj){
+  rep(distributional::dist_gamma(0.5, 1), 
       times = nxj*nfacetj)
 }
 
@@ -36,12 +35,12 @@ sim_panel_data =
   hakear::sim_panel(nx = nxj,
                     nfacet = nfacetj, 
                     ntimes = 500, 
-                    sim_dist = sim_null_gamma) %>% 
+                    sim_dist = sim_null_normal) %>% 
   unnest(c(data)) %>% ungroup()
 
-set.seed(7777)
+set.seed(1111)
 
-  raw_dist <- map(seq_len(nsim), function(i)
+raw_dist <- map(seq_len(nsim), function(i)
 {
   new_sim_data = sample(sim_panel_data$sim_data, 
                         size = nrow(sim_panel_data))
@@ -51,15 +50,14 @@ set.seed(7777)
   
   # for creating one raw mmpd
   raw_mmpd = compute_pairwise_max(new_data, 
-                                 gran_x = "id_x",
-                                 gran_facet = "id_facet",
-                                 response = sim_data) %>% 
+                                  gran_x = "id_x",
+                                  gran_facet = "id_facet",
+                                  response = sim_data) %>% 
     as_tibble() %>% mutate(perm_id = i)
   
 }) %>% bind_rows()
 
-  saveRDS(raw_dist, here(paste0('../results/raw/wpd_Gamma02/',
-                           nxj,'_',
-                           nfacetj,'_wpd_Gamma02.rds')))
-
-
+saveRDS(raw_dist,
+        paste0('../data-ind/wpd_Gamma01/',
+               nxj,'_',
+               nfacetj,'_wpd.rds'))
