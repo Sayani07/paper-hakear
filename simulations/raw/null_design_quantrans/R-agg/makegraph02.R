@@ -16,7 +16,8 @@ nxbyfacet_density <- all_data %>%
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  xlab("wpd")
+  xlab("wpd") +
+  scale_x_continuous(breaks = scales::breaks_extended(3))
 
 ggsave(nxbyfacet_density, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nxbyfacet_density_", folder_name,".png"))
 
@@ -26,7 +27,8 @@ nxbyfacet_ridge <- all_data %>%
   ggridges::geom_density_ridges() +
   facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
   xlab("mmpd") +
-  ylab("nx")
+  ylab("nx") +
+  scale_x_continuous(breaks = scales::breaks_extended(4))
 
 ggsave(nxbyfacet_ridge, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nxbyfacet_ridge_", folder_name,".png"))
 
@@ -36,7 +38,8 @@ nfacetbynx_ridge <- all_data %>%
   ggridges::geom_density_ridges() +
   facet_wrap(~nx, labeller = "label_both", nrow = 2) + 
   xlab("mmpd") +
-  ylab("nfacet")
+  ylab("nfacet") +
+  scale_x_continuous(breaks = scales::breaks_extended(4))
 
 ggsave(nfacetbynx_ridge, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nfacetbynx_ridge_", folder_name,".png"))
 }
@@ -63,7 +66,8 @@ normal_ridge_nxbynfacet <- all_data %>%
   xlab("wpd") +
   scale_fill_manual(values =
                       c("#999999", "#D55E00")) + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  scale_x_continuous(breaks = scales::breaks_extended(4))
 
 ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/normalised", "diff_mean_normal.png"))
 
@@ -86,7 +90,8 @@ nxbyfacet <- all_data3 %>%
   theme(strip.text = 
           element_text(size = 10, margin = margin(b = 0, t = 0)), 
                                   legend.position = "bottom"
-  ) 
+  )  +
+  scale_x_continuous(breaks = scales::breaks_extended(4))
 
 ggsave(nxbyfacet, filename = paste0("simulations/raw/null_design_quantrans/figs/", "diff_mean3_normal.png"))
 
@@ -110,8 +115,45 @@ gamma_ridge_nxbynfacet <- all_data %>%
   xlab("wpd") +
   scale_fill_manual(values = c("#999999", "#D55E00"))+
   theme(strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)), legend.position = "bottom"
-  )
+  ) +
+  scale_x_continuous(breaks = scales::breaks_extended(4))
 
 ggsave(gamma_ridge_nxbynfacet, 
 filename = paste0("simulations/raw/null_design_quantrans/figs/", 
                   "diff_mean3_gamma.png"))
+
+
+## How mean and sd changes with nx and nfacet individually
+
+data_N01 <- aggregate01(folder_name = "wpd_N01")
+
+data_x <- data_N01 %>% 
+  group_by(nx) %>% 
+  summarise(mean = mean(value, na.rm = TRUE), 
+            sd = sd(value, na.rm = TRUE)) %>% pivot_longer(-1, names_to = "statistic", 
+                                                           values_to = "value") %>% 
+  rename("axis" = "nx")
+
+data_facet <- data_N01 %>% 
+  group_by(nfacet) %>% 
+  summarise(mean = mean(value, na.rm = TRUE), 
+            sd = sd(value, na.rm = TRUE)) %>% pivot_longer(-1, names_to = "statistic", 
+                                                           values_to = "value")%>% 
+  rename("axis" = "nfacet")
+
+data_all <- bind_rows(data_x, data_facet, .id = "axis_name") %>% 
+  mutate(axis_name = if_else(axis_name==1, "nx", "nfacet")) %>% 
+  rename("level" = "axis_name",
+         "nlevel" = "axis")
+
+mean_sd_nx_nfacet <- ggplot(data_all, aes(x = nlevel,
+                               y = value, colour = level)) +
+  facet_wrap(~statistic,
+             scales = "free_y")  + ylab("wpd") + geom_line() + 
+  scale_colour_manual(values =
+                                                                                 c("#0072B2", "#D55E00")) + geom_point() 
+
+ggsave(mean_sd_nx_nfacet, 
+       filename = paste0("simulations/raw/null_design_quantrans/figs/", 
+                         "mean_sd_nx_nfacet.png"))
+

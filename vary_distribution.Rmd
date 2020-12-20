@@ -43,6 +43,14 @@ lambda = 0.67
 
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_density_wpd_N01.png"))
 ```
+# How mean and sd changes with increasing x-axis and facet levels?
+
+```{r mean-sd-ns-nfacet, fig.cap="Movement of mean and sd for raw wpd is shown for different number of levels (nlevel) of x-axis and facets through line plots. Mean increases and sd decreases more sharply for increasing x-axis levels as compared to facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels."}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/mean_sd_nx_nfacet.png"))
+```
+
+
+
 
 ### Comparing normal distributions with different means
 
@@ -62,6 +70,17 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/e
 ```{r gamma-diff-trans, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution after quantile transformation looks similar and hence is unaffected by change in location"}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
 ```
+
+# Normalise by dividing log(number of distances)
+
+```{r normalise-n01, fig.cap="Density plots of raw wpd is shown for N(0,1) distribution after dividing max by log(number of distances). The densities are reduced to zero and varies. So this normalisation approach is not efficient. The raw wpd values are already very low and then dividing them by logarithm of a large number brings it back to zero."}
+
+knitr::include_graphics(here::here("simulations/norm/null_design_quantrans/figs/nxbyfacet_density_wpd_N01.png"))
+```
+
+# How to design the alternate designs when distributions are actually different?
+
+
 
 
 
