@@ -597,8 +597,8 @@
       "RemoteRepo": "hakear",
       "RemoteUsername": "Sayani07",
       "RemoteRef": "HEAD",
-      "RemoteSha": "9b346fae03ace8b3b6433fef78c9a95f928509a0",
-      "Hash": "2f051bdcd993128d29be03c453261934"
+      "RemoteSha": "a8ec6197f4e6585af3e173f48ece688ee5989871",
+      "Hash": "949a24b1d09d3835061a3cb0119e620e"
     },
     "hardhat": {
       "Package": "hardhat",
@@ -700,10 +700,10 @@
     },
     "jsonlite": {
       "Package": "jsonlite",
-      "Version": "1.7.1",
+      "Version": "1.7.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1ec84e070b88b37ed169f19def40d47c"
+      "Hash": "98138e0994d41508c7a6b84a0600cfcb"
     },
     "kableExtra": {
       "Package": "kableExtra",
