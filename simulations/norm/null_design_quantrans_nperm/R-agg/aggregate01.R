@@ -7,7 +7,7 @@ library(rlang)
 
 aggregate01 <-  function(folder_name){
   
-all_files = list.files(path = paste0("simulations/norm/null_design_quantrans/data-ind/", folder_name), 
+all_files = list.files(path = paste0("simulations/norm/null_design_quantrans_nperm/data-ind/", folder_name), 
                        pattern = ".rds")
 
 names_levels <- map_dfr(all_files, 
@@ -23,7 +23,7 @@ names_levels <- map_dfr(all_files,
 # names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
 
   
-all_files_path <- paste0("simulations/norm/null_design_quantrans/data-ind/",folder_name,"/",
+all_files_path <- paste0("simulations/norm/null_design_quantrans_nperm/data-ind/",folder_name,"/",
          all_files)  
   
 
@@ -38,7 +38,7 @@ all_data <- lapply(1:length(all_files_path), function(x){
   }) %>% bind_rows() %>% 
     arrange(nfacet, nx)
     
-write_rds(all_data, paste0("simulations/norm/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
+write_rds(all_data, paste0("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_", folder_name, ".rds"))
 }
 
 
