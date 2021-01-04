@@ -10,7 +10,7 @@ library(hakear)
 library(parallel)
 
 
-nsim = 200
+nsim = 2
 # change path while running it on HPC
 simtable<-read_csv(here::here('simulations/null/sim_table.csv'))
 #simtable<-read_csv('sim_table.csv')
