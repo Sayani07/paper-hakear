@@ -7,40 +7,41 @@
 \contentsline {subsubsection}{\numberline {2.2.3}Definitions}{7}{subsubsection.2.2.3}%
 \contentsline {section}{\numberline {3}Behavior of raw wpd (weighted pairwise distances)}{8}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Simulation study}{8}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Location and scale of the distribution under null design}{8}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Normal Distribution}{10}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Gamma Distribution}{10}{subsubsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.3}Choice of tuning parameters and effect of different increments}{10}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Alternate designs}{15}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Sample size}{16}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Number of permutations}{16}{subsection.3.6}%
-\contentsline {section}{\numberline {4}Normalisation}{16}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Methodology}{17}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Simulation study}{17}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Simulated designs}{17}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Environment}{17}{subsubsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.3}Experimental set up}{17}{subsubsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.3}Results}{18}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Null distribution}{18}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Performance of normalised MMPD}{20}{subsubsection.4.3.2}%
-\contentsline {section}{\numberline {5}The statistical test}{20}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Algorithm}{20}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Size, power and confidence interval}{21}{subsection.5.2}%
-\contentsline {paragraph}{\numberline {5.2.0.1}Characteristics under different simulation designs}{21}{paragraph.5.2.0.1}%
-\contentsline {section}{\numberline {6}Applications}{23}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Smart meter data of Australia}{23}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Cyclic granularities search and computation:}{23}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Screening and visualizing harmonies}{23}{subsubsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.2}T20 cricket data of Indian Premiere League}{25}{subsection.6.2}%
-\contentsline {section}{\numberline {7}Discussion points and future work}{26}{section.7}%
-\contentsline {section}{\numberline {8}Appendix}{26}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Null distribution}{26}{subsection.8.1}%
-\contentsline {subsubsection}{\numberline {8.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{26}{subsubsection.8.1.1}%
-\contentsline {subsubsection}{\numberline {8.1.2}Normalised maximum distances follow standard Gumbel distribution}{26}{subsubsection.8.1.2}%
-\contentsline {subsubsection}{\numberline {8.1.3}Limiting distribution of median of normalised maximum distances is normal}{26}{subsubsection.8.1.3}%
-\contentsline {subsection}{\numberline {8.2}Power}{26}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Confidence interval}{26}{subsection.8.3}%
-\contentsline {subsubsection}{\numberline {8.3.1}Varying distribution across facet}{28}{subsubsection.8.3.1}%
-\contentsline {subsubsection}{\numberline {8.3.2}Varying distribution across x-axis}{28}{subsubsection.8.3.2}%
-\contentsline {subsubsection}{\numberline {8.3.3}Varying distribution across both facets and x-axis}{28}{subsubsection.8.3.3}%
-\contentsline {subsubsection}{\numberline {8.3.4}Repeat all with varying facet and x-axis levels}{28}{subsubsection.8.3.4}%
+\contentsline {subsection}{\numberline {3.2}Distribution of wpd under \(D_{null}\)}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}dist}{9}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Normal Distribution}{9}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Gamma Distribution}{9}{subsubsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.3}Choice of tuning parameters and effect of different increments}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Alternate designs}{10}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Sample size}{11}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Number of permutations}{11}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Normalisation}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Methodology}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Simulation study}{11}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Simulated designs}{12}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Environment}{12}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Experimental set up}{12}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}Results}{12}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Null distribution}{12}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Performance of normalised MMPD}{14}{subsubsection.4.3.2}%
+\contentsline {section}{\numberline {5}The statistical test}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Algorithm}{14}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Size, power and confidence interval}{15}{subsection.5.2}%
+\contentsline {paragraph}{\numberline {5.2.0.1}Characteristics under different simulation designs}{15}{paragraph.5.2.0.1}%
+\contentsline {section}{\numberline {6}Applications}{17}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Smart meter data of Australia}{17}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Cyclic granularities search and computation:}{17}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Screening and visualizing harmonies}{17}{subsubsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.2}T20 cricket data of Indian Premiere League}{19}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Discussion points and future work}{20}{section.7}%
+\contentsline {section}{\numberline {8}Appendix}{20}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Null distribution}{20}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{20}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}Normalised maximum distances follow standard Gumbel distribution}{20}{subsubsection.8.1.2}%
+\contentsline {subsubsection}{\numberline {8.1.3}Limiting distribution of median of normalised maximum distances is normal}{20}{subsubsection.8.1.3}%
+\contentsline {subsection}{\numberline {8.2}Power}{20}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Confidence interval}{20}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Varying distribution across facet}{22}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Varying distribution across x-axis}{22}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}Varying distribution across both facets and x-axis}{22}{subsubsection.8.3.3}%
+\contentsline {subsubsection}{\numberline {8.3.4}Repeat all with varying facet and x-axis levels}{22}{subsubsection.8.3.4}%
