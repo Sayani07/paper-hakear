@@ -290,7 +290,7 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 
 ### Definitions
 
-Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}, b_{k})$ be denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
+Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ b   e denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
 
 
 ```{r distance-explain, fig.cap = "Within and between-facet distances shown for two cyclic granularities A and B, where A is mapped to x-axis and B is mapped to facets. The dotted lines represent the distances between different categories. Panel 1) and 2) show the between-facet distances. Panel 3) and 4) are used to illustrate within-facet distances when categories are un-ordered or ordered respectively. When categories are ordered, distances should only be considered for consecutive x-axis categories. Between-facet distances are distances between different facet levels for the same x-axis category, for example, distances between {($a_1$,$b_1$) and ($a_1$, $b_2$)} or {($a_1$,$b_1$) and ($a_1$, $b_3$)}."}
@@ -360,39 +360,97 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 ## Simulation study
 
-We conduct simulations to understand the behavior of raw WPD for different parameters
-$l_x$ (levels of x-axis), $l_f$ (levels of facets), $\lambda$ (tuning parameter), $\omega$ (increment in each panel design) $data$ (data sets), $sample-size$ (tuning parameter), $nsim$ (number of simulations), $nperm$ (number of permutations (might not need depending on if norm works) and designs  
+Most of the behavior was studied via simulation. The simulations explore how wpd performs under various simulations and its limitations. Numerous simulations were carried out in a wide range of scenarios. Same scenarios were used, when possible with normalized wpd, keeping all other simulation variables constant.
+
+The factors that are thought to potentially have some impact on wpd are as follows: 
+
+- $nx$ (number of levels of x-axis)
+- $nfacet$ (number of levels of facets)
+- $\lambda$ (tuning parameter)
+- $\omega$ (increment in each panel design)
+- $dist$ (normal/non-normal distributions with different location and scale)
+- $n$ (sample size for each combination of categories)
+- $nsim$ (number of simulations)
+- $nperm$ (number of permutations of data)  
+- $designs$  
 $D_{null}$  (No difference in distribution)  
 $D_{var_f}$ (Difference in distribution only across facets)  
 $D_{var_x}$ (Difference in distribution only across x-axis)  
 $D_{var_{all}}$ (Difference in distribution in both facets and x-axis)  
 
-## Location and scale of the distribution under null design
+```{r simtable, eval = FALSE}
+variable = c("nx", "nfacet", "lambda", "omega", "dist", "n", "nsim", "nperm", "design")
 
-Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$
-Dist 1: $N(0,1)$ individual graph
-Dist 2: $N(\mu, 1)$ (faceted with different values of $\mu$: not yet just for one value now)
-Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now)
-Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters.
+description = c("number of levels of x-axis", "number of levels of facets",
+                "tuning parameter","increment in each panel design", "normal/non-normal distributions with different location and scale", "sample size", "number of simulations", "number of permutations of data", 
+                "$D_{null}$ (No difference in distribution), $D_{var_f}$ (Difference in distribution only across facets), $D_{var_x}$ (Difference in distribution only across x-axis), $D_{var_all}$ (Difference in distribution in both facets and x-axis)")
+table = tibble::tibble(variable, description)
 
-**Objective:** 1. Behavior of wpd under different null designs N(0,1), N(5, 1), Gamma(0.5,1), Gamma(2,1) for different nx and nfacets. Here, we have to fix a value of lambda = 0.67.
+table %>% 
+knitr::kable(format = "latex",
+             escape = TRUE) %>% 
+  kableExtra::kable_styling(
+    bootstrap_options = "striped", 
+    full_width = T, 
+    font_size = 7)
 
-**Assumptions:** There is no difference in distribution between any facet or x-category
-nsim = 200
-lambda = 0.67
+```
 
-**Questions:** 
-- How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution
 
-### Normal Distribution
+## Distribution of wpd under $D_{null}$
 
-```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution"}
+In this section, the effect of all the factors are evaluated under the null design $D_{null}$, that is, there is no difference in distribution between any facet or x-category. It is further assumed that the values of the following factors are fixed to $nsim = 200$, $n = 500$, $\lambda = 0.67$ and $\omega = 0$, since there is no significant differences between distributions in the null case.
+
+### dist
+
+wpd is computed for different normal and non-normal distributions to see how the underlying distribution has a role to play in the value of wpd. Since we are concerned with detecting the differences in distributions, it would be ideal if wpd has minimal dependency on the type, location and scale of the  underlying distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type.
+The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make the mostly asymmetrical distributed real world measured variables more
+treatable and normal-like.
+
+Following the work of Krzysztofowicz (1997) the empirical NQT involves the following steps:
+1. Sort the sample of measured variable $X$ from the smallest to the largest observation $x_{(1)},\dots, x_{(i)}, .., x_{(n)}$.
+2. Estimate the cumulative probabilities $p_{(1)},\dots, p_{(i)}, .., p_{(n)}$.
+using a plotting position like $i/(n + 1)$ such that $p_{(i)} = P(X \leq x_{(i)})$.
+3. Transforming each observation $x_(i)$ of $X$ into observation $y(i) = Q^{-1}(p(i))$ of the standard normal variate $Y$ , with $Q$ denoting the standard normal distribution and
+$Q^{-1}$ its inverse, applying discrete mapping.
+
+wpd is computed with the initial distribution set as N(0,1), N(5, 1), N(0,5), G(0.5, 1) and G(2, 1).
+
+<!-- Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$ -->
+<!-- Dist 1: $N(0,1)$ individual graph -->
+<!-- Dist 2: $N(\mu, 1)$ (faceted with different values of $\mu$: not yet just for one value now) -->
+<!-- Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now) -->
+<!-- Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters. -->
+
+**Objective:** 1. Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$.
+<!-- **Assumptions:** There is no difference in distribution between any facet or x-category -->
+<!-- nsim = 200 -->
+<!-- lambda = 0.67 -->
+
+<!-- **Questions:**  -->
+<!-- - How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution -->
+
+Figure \ref{fig:normal-3diff} shows distribution of wpd for N(0,1), N(5,1) and N(0,5) distribution to see the effect of changing location and scale on the distribution of wpd. It seems like the  distribution changes across different facet and x levels but look same for different  normal distributions, which implies wpd value is unaffected by the change is location and scale of the the normal distribution. 
+
+```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution", eval = FALSE}
 knitr::include_graphics(here::here("simulations/null_design/figs/normal_ridge_nxbynfacet_wpd_N01.png"))
+```
+
+```{r normal-3diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution", eval = FALSE}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
+```
+
+
+
+
+```{r mean-sd-ns-nfacet, fig.cap="Movement of mean and sd for raw wpd is shown for different number of levels (nlevel) of x-axis and facets through line plots. Mean increases and sd decreases more sharply for increasing x-axis levels as compared to facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels.", fig.pos="h"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/mean_sd_nx_nfacet.png"))
+
 ```
 
 ### Gamma Distribution
 
-```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal."}
+```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal.", eval = FALSE}
 knitr::include_graphics(here::here("simulations/null_design/figs/gamma_ridge_nxbynfacet.png"))
 ```
 
@@ -426,25 +484,25 @@ Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ a
 
 Fixing omega, where the design interacts
 
-```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
+```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5", eval = FALSE}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.png"))
 ```
 
 How value of lambda changes with increasing omega
 
-```{r tuning-parameter-intersection}
+```{r tuning-parameter-intersection, eval = FALSE}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
 ```
 
 How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation?
 
-```{r lambda-omega-mean}
+```{r lambda-omega-mean, eval = FALSE}
 knitr::include_graphics(here::here("simulations/result_report/lambda_omega_mean_3_2.png"))
 ```
 
 How value of lambda changes with increasing omega and sd for fixed nx, nfacet and mean?
 
-```{r lambda-omega-sd}
+```{r lambda-omega-sd, eval = FALSE}
 knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_2.png"))
 ```
 
@@ -537,7 +595,7 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-```{r}
+```{r, eval = FALSE}
 knitr::include_graphics(here::here("simulations/null_design/figs/normalised","gamma_ridge_nxbynfacet.png"))
 ```
 
