@@ -199,7 +199,7 @@ knitr::include_graphics("simulations/norm/null_design_quantrans_nperm/figs/nxbyf
 
 ```{r normal55-norm, fig.cap="Density plots of normalised wpd is shown for Normal(5,5) distribution. The mean and sd of the distribution looks almost similar for different facet and x-axis categories.", fig.pos="h"}
 
-knitr::include_graphics("simulations/norm/null_design_quantrans_nperm/figs/nxbyfacet_density_wpd_N55.png")
+knitr::include_graphics("simulations/norm/null_design_quxantrans_nperm/figs/nxbyfacet_density_wpd_N55.png")
 ```
 
 # How to design the alternate designs when distributions are actually different?

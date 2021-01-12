@@ -396,15 +396,17 @@ knitr::kable(format = "latex",
 
 ```
 
+## Distribution of wpd 
 
-## Distribution of wpd under $D_{null}$
+### $D_{null}$
+
+
+**Objective:**  Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$
 
 In this section, the effect of all the factors are evaluated under the null design $D_{null}$, that is, there is no difference in distribution between any facet or x-category. It is further assumed that the values of the following factors are fixed to $nsim = 200$, $n = 500$, $\lambda = 0.67$ and $\omega = 0$, since there is no significant differences between distributions in the null case.
 
-### dist
-
 wpd is computed for different normal and non-normal distributions to see how the underlying distribution has a role to play in the value of wpd. Since we are concerned with detecting the differences in distributions, it would be ideal if wpd has minimal dependency on the type, location and scale of the  underlying distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type.
-The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make the mostly asymmetrical distributed real world measured variables more
+The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more
 treatable and normal-like.
 
 Following the work of Krzysztofowicz (1997) the empirical NQT involves the following steps:
@@ -422,7 +424,7 @@ wpd is computed with the initial distribution set as N(0,1), N(5, 1), N(0,5), G(
 <!-- Dist 3: $N(0, \sigma)$ (faceted with different values of $\sigma$: not yet just for one value now) -->
 <!-- Dist 4: $N(\mu, \sigma)$ faceted with different values of mu and sigma, for all levels of x and facet to see how value of wpd changes with that of change in parameters. -->
 
-**Objective:** 1. Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$.
+
 <!-- **Assumptions:** There is no difference in distribution between any facet or x-category -->
 <!-- nsim = 200 -->
 <!-- lambda = 0.67 -->
@@ -430,7 +432,9 @@ wpd is computed with the initial distribution set as N(0,1), N(5, 1), N(0,5), G(
 <!-- **Questions:**  -->
 <!-- - How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution -->
 
-Figure \ref{fig:normal-3diff} shows distribution of wpd for N(0,1), N(5,1) and N(0,5) distribution to see the effect of changing location and scale on the distribution of wpd. It seems like the  distribution changes across different facet and x levels but look same for different  normal distributions, which implies wpd value is unaffected by the change is location and scale of the the normal distribution. 
+Figure \ref{fig:normal-3diff} shows distribution of wpd for N(0,1), N(5,1) and N(0,5) distribution to see the effect of changing location and scale on the distribution of wpd. It seems like the  distribution changes across different facet and x levels but look same for different  normal distributions, which implies wpd value is unaffected by the change in location and scale of the the normal distribution. 
+
+Figure \ref{fig:mean-sd-ns-nfacet} shows how mean and sd of the distribution of wpd changes with the increasing x and facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels.
 
 ```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution", eval = FALSE}
 knitr::include_graphics(here::here("simulations/null_design/figs/normal_ridge_nxbynfacet_wpd_N01.png"))
@@ -441,18 +445,21 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/d
 ```
 
 
-
-
 ```{r mean-sd-ns-nfacet, fig.cap="Movement of mean and sd for raw wpd is shown for different number of levels (nlevel) of x-axis and facets through line plots. Mean increases and sd decreases more sharply for increasing x-axis levels as compared to facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels.", fig.pos="h"}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/mean_sd_nx_nfacet.png"))
 
 ```
 
-### Gamma Distribution
 
 ```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal.", eval = FALSE}
 knitr::include_graphics(here::here("simulations/null_design/figs/gamma_ridge_nxbynfacet.png"))
 ```
+
+```{r gamma-diff-trans, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution after quantile transformation looks similar and hence is unaffected by change in location.", fig.pos="h"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
+```
+
+
 
 <!-- ### Choice of alternate designs -->
 
@@ -471,10 +478,10 @@ knitr::include_graphics(here::here("simulations/null_design/figs/gamma_ridge_nxb
 <!-- range_w =  c(1, 2, 3, 4, 5) -->
 <!-- range_lambda = seq(0.1, 0.9, 0.05) -->
 
+### Alternate designs
 
-## Choice of tuning parameters and effect of different increments
+Objective: Study the effect of different tuning parameters $\lambda$ and $\omega$     with the help of two alternate designs ($vary_x$ and $vary_f$) for different $nx$ and $nfacet$. The $\lambda$ for which the two designs intersect will then be chosen as the optimal $\lambda$ that could then be weighed appropriately to up-weigh the within-facet distances and down-weigh the between-facet distances. Figure \ref{fig:tuning-one-omega} are plotted for different values of $\lambda$ for a relatively small and higher $\omega$. Designs mostly intersect at $\lambda = 0.5$ for the higher value of $\lambda$. Figure \ref{fig:tuning-parameter-intersection} shows how the value of lambda changes with increasing omega.
 
-Objective: Choice of optimal tuning parameter $lambda$ with the help of two alternate designs (vary_x and vary_f)  for different nx and nfacets. The lambda for which the two designs intersect have to be chosen to put appropriate weights for within-facet and between-facet distances.
 
 Assumptions: The initial combination has a $N(\mu,\sigma)$ distribution and then every combination increases as follows:
 - $$\mu_{j.} = \mu + j\omega$$ (for design vary_x)
@@ -484,13 +491,11 @@ Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ a
 
 Fixing omega, where the design interacts
 
-```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5", eval = FALSE}
+```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.png"))
 ```
 
-How value of lambda changes with increasing omega
-
-```{r tuning-parameter-intersection, eval = FALSE}
+```{r tuning-parameter-intersection, fig.cap="For most panels it is observed that the most common values for which the "}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
 ```
 
@@ -505,9 +510,6 @@ How value of lambda changes with increasing omega and sd for fixed nx, nfacet an
 ```{r lambda-omega-sd, eval = FALSE}
 knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_2.png"))
 ```
-
-
-## Alternate designs
 
 ```{r lamba-omega-alternate-design}
 knitr::include_graphics((here::here("simulations/result_report/wpd_alterate_designs.png")))
