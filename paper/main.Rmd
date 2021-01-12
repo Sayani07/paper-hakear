@@ -358,11 +358,12 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 # Behavior of raw wpd (weighted pairwise distances)
 
-## Simulation study
+Most of the behavior of the measure wpd was studied via simulation. The simulations explore how wpd performs under various designs and parameters and its limitations. To study the behavior of wpd, simulations were carried out for four different designs and the following factors that could potentially have an impact on the values of wpd:
 
-Most of the behavior was studied via simulation. The simulations explore how wpd performs under various simulations and its limitations. Numerous simulations were carried out in a wide range of scenarios. Same scenarios were used, when possible with normalized wpd, keeping all other simulation variables constant.
 
-The factors that are thought to potentially have some impact on wpd are as follows: 
+<!-- Numerous simulations were carried out in a wide range of scenarios. -->
+
+<!-- Same scenarios were used, when possible with normalized wpd, keeping all other simulation variables constant. -->
 
 - $nx$ (number of levels of x-axis)
 - $nfacet$ (number of levels of facets)
@@ -391,22 +392,14 @@ knitr::kable(format = "latex",
              escape = TRUE) %>% 
   kableExtra::kable_styling(
     bootstrap_options = "striped", 
-    full_width = T, 
+    full_width = F, 
     font_size = 7)
 
 ```
 
-## Distribution of wpd 
+## Null design $D_{null}$
 
-### $D_{null}$
-
-
-**Objective:**  Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$
-
-In this section, the effect of all the factors are evaluated under the null design $D_{null}$, that is, there is no difference in distribution between any facet or x-category. It is further assumed that the values of the following factors are fixed to $nsim = 200$, $n = 500$, $\lambda = 0.67$ and $\omega = 0$, since there is no significant differences between distributions in the null case.
-
-wpd is computed for different normal and non-normal distributions to see how the underlying distribution has a role to play in the value of wpd. Since we are concerned with detecting the differences in distributions, it would be ideal if wpd has minimal dependency on the type, location and scale of the  underlying distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type.
-The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more
+This section explores the behavior of wpd in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Since the measure wpd is essentially set up to detect differences in distributions irrespective of underlying distribution, it would be ideal if it has minimal dependency on the type, location and scale of the initial distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type. The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more
 treatable and normal-like.
 
 Following the work of Krzysztofowicz (1997) the empirical NQT involves the following steps:
@@ -416,7 +409,17 @@ using a plotting position like $i/(n + 1)$ such that $p_{(i)} = P(X \leq x_{(i)}
 3. Transforming each observation $x_(i)$ of $X$ into observation $y(i) = Q^{-1}(p(i))$ of the standard normal variate $Y$ , with $Q$ denoting the standard normal distribution and
 $Q^{-1}$ its inverse, applying discrete mapping.
 
-wpd is computed with the initial distribution set as N(0,1), N(5, 1), N(0,5), G(0.5, 1) and G(2, 1).
+Further, we want to study the distribution of wpd for different $nx$ and $nfacet$.
+
+
+### Simulation set up
+
+<!-- Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$ -->
+
+Using two types of distributions, viz. normal and gamma (non-normal), we generated observations for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{2, 3, 5, 7, 14, 20, 31, 50\}$ and $nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$, since we want to up-weigh the within-facet distances and that of $\omega$ is set to $0$, since there is no significant differences between distributions in the null case. Observations were generated for each type of distribution changing the shape and scale to study the effect of shape, scale and type of distribution on wpd. The set of distributions considered for this purpose is ${N(0,1), N(5, 1), N(0,5), \Gamma(0.5, 1), \Gamma(2, 1)}$. Each of the scenario is run $nsim = 200$ times to see the distribution of wpd values for each scenario.
+
+<!-- wpd is computed for different normal and non-normal distributions to see how the underlying distribution has a role to play in the value of wpd. Since we are concerned with detecting the differences in distributions, it would be ideal if wpd has minimal dependency on the type, location and scale of the  underlying distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type. -->
+
 
 <!-- Null design only where all combinations are equal for fixed values of $\mu$ and $\sigma$ -->
 <!-- Dist 1: $N(0,1)$ individual graph -->
@@ -432,16 +435,19 @@ wpd is computed with the initial distribution set as N(0,1), N(5, 1), N(0,5), G(
 <!-- **Questions:**  -->
 <!-- - How raw value of wpd changes with different nx and nfacet for different location and scale of a Normal and non-normal distribution -->
 
-Figure \ref{fig:normal-3diff} shows distribution of wpd for N(0,1), N(5,1) and N(0,5) distribution to see the effect of changing location and scale on the distribution of wpd. It seems like the  distribution changes across different facet and x levels but look same for different  normal distributions, which implies wpd value is unaffected by the change in location and scale of the the normal distribution. 
+Figure \ref{fig:normal-diff-quantrans} and \ref{fig:gamma-diff-quantrans} show distribution of wpd for different initial normal and gamma distribution to study the effect of changing location and scale on the distribution of wpd. It seems like the  distribution changes across different facet and x levels but look the same for each panel, which implies wpd value is unaffected by the change in location and scale of the the normal distribution. Figure \ref{fig:mean-sd-ns-nfacet} shows how mean and sd of the distribution of wpd changes with the increasing x and facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels. Figure \ref{fig:nxbyfacet-ridge-N05} gives another way to look at the effect of changing facet and x levels on the distribution of wpd for an initial distribution $N(0,5)$. Clearly, the location of the distribution shifts to the right for increasing x levels and scale is different for low and high values of facet levels with a longer left tail for lower facet levels. We have considered alternate distribution, location and scale for this simulation setting, but do not present the results as they are behaviorally similar. 
 
-Figure \ref{fig:mean-sd-ns-nfacet} shows how mean and sd of the distribution of wpd changes with the increasing x and facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels.
+<!-- # ```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change in mean and standard deviation of the normal distribution", eval = FALSE} -->
+<!-- # knitr::include_graphics(here::here("simulations/null_design/figs/normal_ridge_nxbynfacet_wpd_N01.png")) -->
+<!-- # ``` -->
 
-```{r normal-diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1) and N(5,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution", eval = FALSE}
-knitr::include_graphics(here::here("simulations/null_design/figs/normal_ridge_nxbynfacet_wpd_N01.png"))
+```{r normal-diff-quantrans, fig.cap = "Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for each panel, which implies wpd value is unaffected by the change in mean and standard deviation of the normal distribution"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
 ```
 
-```{r normal-3diff, fig.cap="Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change is mean value of the normal distribution", eval = FALSE}
-knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
+
+```{r gamma-diff-quantrans, fig.cap="Ridge plots of raw wpd is shown for Gamma(0.5,1), Gamma(2,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change in the shape paramter of the gamma distribution"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
 ```
 
 
@@ -449,6 +455,14 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/d
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/mean_sd_nx_nfacet.png"))
 
 ```
+
+
+```{r nxbyfacet-ridge-N05, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_ridge_wpd_N05.png"))
+```
+
+
+
 
 
 ```{r gamma-diff, fig.cap="Ridge plots of raw wpd is shown for G(0.5,1) and G(2,1) distribution. The densities change across different facet and x levels and also for the two distributions, which implies wpd value is affected by the change in location value when distributions are not normal.", eval = FALSE}
