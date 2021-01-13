@@ -201,14 +201,14 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 # Distance measure
 
-We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (MMPD) to evaluate structure in such a design.
+We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Median Maximum Pairwise Distances (wpd) to evaluate structure in such a design.
 
 
 ## Idea {#sec:idea}
 
 The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.
 
-With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. Thus the metric could be obtained by computing maximum pairwise distances between distributions of the continuous random variable across x-axis categories for all facets and then taking the median of those maximum pairwise distances across facets. This would help capture the average maximum difference in distribution of the measurement variable explained by the two cyclic granularities together. We call this metric MMPD which stands for Median Maximum Pairwise Distances. In the next section we shall see how we go about computing this measure.
+With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. Thus the metric could be obtained by computing maximum pairwise distances between distributions of the continuous random variable across x-axis categories for all facets and then taking the median of those maximum pairwise distances across facets. This would help capture the average maximum difference in distribution of the measurement variable explained by the two cyclic granularities together. We call this metric wpd which stands for Median Maximum Pairwise Distances. In the next section we shall see how we go about computing this measure.
 
 
 
@@ -571,6 +571,34 @@ knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_p
 
 We now discuss the values wpd takes for different designs. Ideally the wpd should have the higherst values for $D_{var_{all}}$, followed by $D_{var_x}$ and $D_{var_y}$ for $\lambda \geq 0.5$. We test this for lower and higher values of $\omega = c(1, 8, 15, 50)$
 
+
+```{r all-design-relative, fig.cap = "Distribution of wpd under different designs are overlapped to see how they measure relative to each other. We would have expected values of wpd to be such that vary_facet is less than vary_x is less than vary_all but distribution of vary_x to lie above vary_facet."}
+
+library(readr)
+library(tidyverse)
+
+vary_x <- read_rds("simulations/vary_x/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+
+vary_all <- read_rds("simulations/vary_all/raw/data-agg/all_data_wpd_N01.rds")
+
+vary_facet <- read_rds("simulations/vary_facet/raw/data-agg/all_data_wpd_N01.rds")
+
+all_design <- bind_rows(vary_facet, vary_x, vary_all, .id = "design") %>% 
+  mutate(design = case_when(
+    design=="1" ~ "vary_facet",
+    design=="2" ~ "vary_x",
+    design=="3" ~ "vary_all",
+    TRUE ~ as.character(design)                                                                 ))
+
+all_design %>% 
+  ggplot() +
+  geom_histogram(aes(x=value, fill = design), 
+                 alpha = 0.7) +
+  scale_fill_brewer(palette = "Dark2")  +
+  facet_wrap(~w, labeller = "label_both")
+```
+
+
 <!-- How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation? -->
 
 <!-- # ```{r lambda-omega-mean, eval = FALSE} -->
@@ -662,8 +690,9 @@ Finally, we run some simulation experiments to see if normalisation works. If no
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
-```{r, eval = FALSE}
-knitr::include_graphics(here::here("simulations/null_design/figs/normalised","gamma_ridge_nxbynfacet.png"))
+```{r normal01-norm, fig.cap="Density plots of normalised wpd is shown for Normal(0,1) distribution. The mean and sd of the distribution looks almost similar for different facet and x-axis categories.", fig.pos="h"}
+
+knitr::include_graphics(here::here("simulations/norm/null_design_quantrans_nperm/figs/nxbyfacet_density_wpd_N01.png"))
 ```
 
 

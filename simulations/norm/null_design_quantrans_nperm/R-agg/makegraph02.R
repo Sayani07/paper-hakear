@@ -13,7 +13,7 @@ all_data <- read_rds(paste0("simulations/norm/null_design_quantrans_nperm/data-a
 
 nxbyfacet_density <- all_data %>% 
   ggplot(aes(x = value)) + 
-  geom_histogram(fill = "blue") +
+  geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both",
              scales = "free_y") + 
