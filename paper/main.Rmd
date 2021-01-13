@@ -288,7 +288,7 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
 
 
-### Definitions
+### Notations Definitions
 
 Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ b   e denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
 
@@ -397,7 +397,7 @@ knitr::kable(format = "latex",
 
 ```
 
-## Null design $D_{null}$
+## Null design
 
 This section explores the behavior of wpd in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Since the measure wpd is essentially set up to detect differences in distributions irrespective of underlying distribution, it would be ideal if it has minimal dependency on the type, location and scale of the initial distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type. The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more
 treatable and normal-like.
@@ -412,7 +412,7 @@ $Q^{-1}$ its inverse, applying discrete mapping.
 Further, we want to study the distribution of wpd for different $nx$ and $nfacet$.
 
 
-### Simulation set up
+### Simulation setup
 
 <!-- Study the behavior of wpd under different initial distributions for different $nx$ and $nfacet$ -->
 
@@ -492,24 +492,78 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/d
 <!-- range_w =  c(1, 2, 3, 4, 5) -->
 <!-- range_lambda = seq(0.1, 0.9, 0.05) -->
 
-### Alternate designs
+## Alternate designs
 
-Objective: Study the effect of different tuning parameters $\lambda$ and $\omega$     with the help of two alternate designs ($vary_x$ and $vary_f$) for different $nx$ and $nfacet$. The $\lambda$ for which the two designs intersect will then be chosen as the optimal $\lambda$ that could then be weighed appropriately to up-weigh the within-facet distances and down-weigh the between-facet distances. Figure \ref{fig:tuning-one-omega} are plotted for different values of $\lambda$ for a relatively small and higher $\omega$. Designs mostly intersect at $\lambda = 0.5$ for the higher value of $\lambda$. Figure \ref{fig:tuning-parameter-intersection} shows how the value of lambda changes with increasing omega.
-
-
-Assumptions: The initial combination has a $N(\mu,\sigma)$ distribution and then every combination increases as follows:
-- $$\mu_{j.} = \mu + j\omega$$ (for design vary_x)
-- $$\mu_{.k} = \mu + k\omega$$ (for design vary_f)
-Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ and $\omega = {1, 2, \dots, 10}$
+This section explores the behavior of wpd in designs where there is infact difference in distribution between facet categories ($D_{var_f}$) or across x-categories ($D_{var_x}$) or both ($D_{var_{all}}$). Since it is established in the last section that after preprocessing the data through NQT, the initial distribution does not have a role to play in the values of wpd, we proceed with a N(0,1) distribution only. Supposably, the tuning parameter ($\lambda$) and increment parameter ($\omega$) should impact the values of wpd.
 
 
-Fixing omega, where the design interacts
+### Simulation setup
+
+Using $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$, observations are drawn from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet =  \{2, 3, 5, 7, 14, 20, 31, 50\}$. $ntimes = 500$ is assumed for this setup as well. Furthermore, to generate different distributions across different combination of facet and x levels, the following method is deployed - suppose the distribution of the combination of first levels of x and facet category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). Table \ref{tab:explain-design} shows an example of how initial distributions are assigned in a panel with $nfacet = 3$ and $nx = 2$ for different designs using $\omega = 1$.
+
+
+```{r explain-design}
+sim_varx_normal = function(nx, nfacet, mean, sd, w)
+{
+  rep(dist_normal((mean + seq(0, nx-1, by  = 1)*w), sd), nfacet)
+}
+
+sim_varf_normal = function(nx, nfacet, mean, sd, w)
+{
+  rep(dist_normal((mean + seq(0, nfacet-1, by  = 1)*w), sd), each = nx)
+}
+  sim_varall_normal = function(nx, nfacet, mean, sd, w)
+  {
+    dist_normal((mean + seq(0, (nx*nfacet - 1), by  = 1)*w), sd)
+  }
+  
+mean = 0
+sd = 1
+w = 1
+nx = 2
+nfacet = 3
+
+
+raw_levels = expand.grid(facet = c("$b_1$", "$b_2$", "$b_3$"),
+                         x = c("$a_1$", "$a_2$"))
+
+facet = rep(c("$b_1$", "$b_2$", "$b_3$"), each = nx)
+x =  rep(c("$a_1$", "$a_2$"), nfacet)
+
+vary_f <-  sim_varf_normal(nx, nfacet, mean, sd, w) %>% tibble()
+vary_x <-  sim_varx_normal(nx, nfacet, mean, sd, w) %>% tibble()
+vary_all <-  sim_varall_normal(nx, nfacet, mean, sd, w) %>% tibble()
+
+raw_table <- bind_cols(x = x, 
+                       facet = facet, 
+                       vary_f = vary_f, 
+                       vary_x = vary_x, 
+                       vary_all = vary_all) %>% 
+  tibble() 
+names(raw_table) = c("x", "facet", "$D_{var_f}$", "$D_{var_x}$", "$D_{var_{all}}$" )
+raw_table %>% 
+  kable(format = "latex",
+    booktabs = TRUE, 
+    escape = FALSE,
+    caption = "Simulation setup for a panel with 3 facet levels and 2 x-axis levels for different designs starting from an initial distribution N(0, 1) for the combination $(a_1, b_1)$.") %>% kable_styling()
+```
+
+
+<!--  - Exploring the effect of tuning parameter $\lambda$: -->
+
+We now discuss the effect of different tuning parameters $\lambda$ and $\omega$ with the help of two alternate designs ($D_{var_x}$ and $D_{var_f}$). Figure \ref{fig:tuning-one-omega} displays different values of $\lambda$ for a relatively small and higher $\omega$ for $nx = nfacet =  \{2, 3, 5, 7, 9\}$. The $\lambda$ for which the two designs intersect will then be chosen as the optimal $\lambda$ that could then be weighed appropriately to up-weigh the within-facet distances and down-weigh the between-facet distances. The design $D_{var_x}$ increases linearly with increasing $\lambda$, whereas $D_{var_f}$ decreases linearly with increasing $\lambda$. This is expected as wpd has a linear relationship with $\lambda$ by construction. The two designs mostly intersect at $\lambda = 0.5$ for a higher value of $\omega$.  \autoref{fig:tuning-parameter-intersection} shows how the value of $\lambda$ changes with increasing $\omega$ for $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$.
+
+
+<!-- Assumptions: The initial combination has a $N(\mu,\sigma)$ distribution and then every combination increases as follows: -->
+<!-- - $$\mu_{j.} = \mu + j\omega$$ (for design vary_x) -->
+<!-- - $$\mu_{.k} = \mu + k\omega$$ (for design vary_f) -->
+<!-- Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ and $\omega = {1, 2, \dots, 10}$ -->
 
 ```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.png"))
 ```
 
-```{r tuning-parameter-intersection, fig.cap="For most panels it is observed that the most common values for which the "}
+```{r tuning-parameter-intersection, fig.cap="For most panels it is observed that the most common value of the tuning paramter for which the designs interact is 0.5, which implies any value greater than 0.5 could be chosen to up-weigh the within-facet distances and down-weigh the between-facet distances for most sitatuions."}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
 ```
 
@@ -1499,7 +1553,7 @@ cricket_data$lag_field <- factor(cricket_data$field, levels = c("0", "1+"))
 
 Wickets per over are considered as an aperiodic cyclic granularity with wickets as an aperiodic linear granularity. These granularities do not appear in the hierarchy table since it is difficult to position them in a hierarchy. These are similar to holidays or special events in temporal data.
 <!-- CONTENT CUT -->
-<!--While any special event that corresponds to a time domain can be treated as an aperiodic linear granularity in a temporal case, dot balls or wickets that corresponds to certain balls (index) could be treated as aperiodic events in cricket.-->
+<!--While any special event that corresponds to a time domain can be treated as an aperiodic linear granularity in a temporal xacase, dot balls or wickets that corresponds to certain balls (index) could be treated as aperiodic events in cricket.-->
 
 
 # Discussion points and future work
