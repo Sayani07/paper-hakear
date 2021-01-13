@@ -288,7 +288,7 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
 
 
-### Notations Definitions
+### Notations and Definitions
 
 Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ b   e denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
 
@@ -356,7 +356,7 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 <!-- A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories. -->
 
-# Behavior of raw wpd (weighted pairwise distances)
+# Behavior of raw wpd
 
 Most of the behavior of the measure wpd was studied via simulation. The simulations explore how wpd performs under various designs and parameters and its limitations. To study the behavior of wpd, simulations were carried out for four different designs and the following factors that could potentially have an impact on the values of wpd:
 
@@ -551,7 +551,7 @@ raw_table %>%
 
 <!--  - Exploring the effect of tuning parameter $\lambda$: -->
 
-We now discuss the effect of different tuning parameters $\lambda$ and $\omega$ with the help of two alternate designs ($D_{var_x}$ and $D_{var_f}$). Figure \ref{fig:tuning-one-omega} displays different values of $\lambda$ for a relatively small and higher $\omega$ for $nx = nfacet =  \{2, 3, 5, 7, 9\}$. The $\lambda$ for which the two designs intersect will then be chosen as the optimal $\lambda$ that could then be weighed appropriately to up-weigh the within-facet distances and down-weigh the between-facet distances. The design $D_{var_x}$ increases linearly with increasing $\lambda$, whereas $D_{var_f}$ decreases linearly with increasing $\lambda$. This is expected as wpd has a linear relationship with $\lambda$ by construction. The two designs mostly intersect at $\lambda = 0.5$ for a higher value of $\omega$.  \autoref{fig:tuning-parameter-intersection} shows how the value of $\lambda$ changes with increasing $\omega$ for $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$.
+We now discuss the effect of different tuning parameters $\lambda$  with the help of two alternate designs ($D_{var_x}$ and $D_{var_f}$) and $\omega$. \autoref{fig:tuning-oneomega} displays different values of $\lambda$ for a relatively small and higher $\omega$ for $nx = nfacet =  \{2, 3, 5, 7, 9\}$. The $\lambda$ for which the two designs intersect will then be chosen as the optimal $\lambda$ that could then be weighed appropriately to up-weigh the within-facet distances and down-weigh the between-facet distances. The design $D_{var_x}$ increases linearly with increasing $\lambda$, whereas $D_{var_f}$ decreases linearly with increasing $\lambda$. This is expected as wpd has a linear relationship with $\lambda$ by construction. The two designs mostly intersect at $\lambda = 0.5$ for a higher value of $\omega$.  \autoref{fig:tuning-parameter-inter} shows how the value of $\lambda$ changes with increasing $\omega$ for $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$.
 
 
 <!-- Assumptions: The initial combination has a $N(\mu,\sigma)$ distribution and then every combination increases as follows: -->
@@ -559,40 +559,45 @@ We now discuss the effect of different tuning parameters $\lambda$ and $\omega$ 
 <!-- - $$\mu_{.k} = \mu + k\omega$$ (for design vary_f) -->
 <!-- Value of the parameters chosen for this simulation are $\mu = 0$, $\sigma = 1$ and $\omega = {1, 2, \dots, 10}$ -->
 
-```{r tuning-one-omega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
+```{r tuning-oneomega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.png"))
 ```
 
-```{r tuning-parameter-intersection, fig.cap="For most panels it is observed that the most common value of the tuning paramter for which the designs interact is 0.5, which implies any value greater than 0.5 could be chosen to up-weigh the within-facet distances and down-weigh the between-facet distances for most sitatuions."}
+
+```{r tuning-parameter-inter, fig.cap ="For most panels it is observed that the most common value of the tuning paramter for which the designs interact is 0.5, which implies any value greater than 0.5 could be chosen to up-weigh the within-facet distances and down-weigh the between-facet distances for most sitatuions."}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
 ```
 
-How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation?
 
-```{r lambda-omega-mean, eval = FALSE}
-knitr::include_graphics(here::here("simulations/result_report/lambda_omega_mean_3_2.png"))
-```
+We now discuss the values wpd takes for different designs. Ideally the wpd should have the higherst values for $D_{var_{all}}$, followed by $D_{var_x}$ and $D_{var_y}$ for $\lambda \geq 0.5$. We test this for lower and higher values of $\omega = c(1, 8, 15, 50)$
 
-How value of lambda changes with increasing omega and sd for fixed nx, nfacet and mean?
+<!-- How value of lambda changes with increasing omega and mean for fixed nx, nfacet and standard deviation? -->
 
-```{r lambda-omega-sd, eval = FALSE}
-knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_2.png"))
-```
+<!-- # ```{r lambda-omega-mean, eval = FALSE} -->
+<!-- # knitr::include_graphics(here::here("simulations/result_report/lambda_omega_mean_3_2.png")) -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- # How value of lambda changes with increasing omega and sd for fixed nx, nfacet and mean? -->
+<!-- #  -->
+<!-- # ```{r lambda-omega-sd, eval = FALSE} -->
+<!-- # knitr::include_graphics(here::here("simulations/result_report/lambda_omega_sd_3_2.png")) -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- # ```{r lamba-omega-alternate-design} -->
+<!-- # knitr::include_graphics((here::here("simulations/result_report/wpd_alterate_designs.png"))) -->
+<!-- # ``` -->
 
-```{r lamba-omega-alternate-design}
-knitr::include_graphics((here::here("simulations/result_report/wpd_alterate_designs.png")))
-```
 
-
-
- Distribution across facet and x categories
+ <!-- Distribution across facet and x categories -->
 <!-- ### Need for normalisation -->
 
-From Figure \ref{fig:dist-across-facets} and \ref{fig:dist-across-x} shows the MMPD distribution is different for different levels of facets and x-axis levels. With increasing number of facets, the location of the distribution shift rightwards and with increasing x-axis levels, the scale of the distribution reduces. 
 
-Median and maximum distances are affected by the number of categories considered and hence the distance measure $MMPD_{raw}$, which is a combination of median and maximum would also be influenced by the number of levels. It would have higher values if $C_i$ or $C_j$ has higher levels. We would ideally want a higher value of the measure if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. In Figures \ref{fig:dist-across-facets} and \ref{fig:dist-across-x}, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which $MMPD_{raw}$ has been constructed $100$ times to compute the distribution. <!--More specifically, Figure \ref{fig:mean-sd-max} shows the marginal contribution of increasing levels of $C_i$ and $C_j$ on distribution of $MMPD_raw$. This shows that with the increase in the number of levels of $C_i$, the location of the distribution shift rightward, whereas for increasing x-axis levels, the scale of the distribution decreases.-->
+### Discussion
 
-Therefore, in order to compare $MMPD_{raw}$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure.
+The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define wpd is affected by the number of categories. The measure would have higher values if $C_i$ or $C_j$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. Therefore, in order to compare wpd across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure discussed as $wpd_{raw}$ and the normalised measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a dataset.
+
+
+<!-- In Figures \ref{fig:dist-across-facets} and \ref{fig:dist-across-x}, both the cyclic granularities $C_i$ and $C_j$ are considered such that their levels vary in the range $(2, 5,7 ,9, 14, 21, 30, 45)$. Each of these combinations is considered a panel for each of which $MMPD_{raw}$ has been constructed $100$ times to compute the distribution. <!--More specifically, Figure \ref{fig:mean-sd-max} shows the marginal contribution of increasing levels of $C_i$ and $C_j$ on distribution of $MMPD_raw$. This shows that with the increase in the number of levels of $C_i$, the location of the distribution shift rightward, whereas for increasing x-axis levels, the scale of the distribution decreases.--> 
 
 
 ```{r hist-nx-nfacet, eval = FALSE}
@@ -628,9 +633,6 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 ```
 
 
-
-
-
 <!-- # ```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. "} -->
 <!-- # g2 <- data_all %>%  -->
 <!-- #   filter(nfacet<=14, nfacet!=3) %>%  -->
@@ -650,18 +652,13 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 <!-- both mean and standard deviation of the distribution of maximum and median varies for different sample sizes ($n$). There is a rightward shift in the location and decrease in scale with increasing $n$. -->
 
-## Sample size
-## Number of permutations
-
 # Normalisation
 
-In an attempt to make the densities \ref{fig:hist_plot} same across different levels, we want to start by making their scale and location same. In that regard, we shuffle the data multiple times and compute the sampling distribution of $mmpd_{raw}$ for each combination of facet and x-axis levels. 
+In an attempt to make the densities \ref{fig:hist_plot} same across different levels, we want to start by making their scale and location same. In that regard, we shuffle the data multiple times and compute the sampling distribution of  for each combination of facet and x-axis levels. 
 
 The null hypothesis is that the two cyclic granularities do not differ on the outcome (i.e., that the outcome is observed independently of treatment assignment). When we permute the outcome values during the test, we therefore see all of the possible alternative treatment assignments we could have had and where the mean-difference in our observed data falls relative to all of the differences we could have seen if the outcome was independent of treatment assignment. While a permutation test requires that we see all possible permutations of the data (which can become quite large), we can easily conduct “approximate permutation tests” by simply conducting a vary large number of resamples. That process should, in expectation, approximate the permutation distribution.
 
 Finally, we run some simulation experiments to see if normalisation works. If normalisation has worked, it should work for both x levle and facet-levels.
-
-
 
 Thus these median maximum pairwise distances need to be normalized for different harmonies in a way that eliminates the effect of different levels, consequently enabling comparison across different harmonies. The Fisher–Tippett–Gnedenko theorem in the field of Extreme Value Theory states that the maximum of a sample of iid random variables after proper re-normalization can converge in distribution to only one of Weibull, Gumbel or Freschet distribution, independent of the underlying data or process.
 
@@ -749,7 +746,9 @@ A simulation study is conducted to see if this methodology is working.
 
 <!-- ``` -->
 
-## Simulation study
+## Null design
+
+## Alternate designs
 
 <!-- ### Distribution of distances -->
 
@@ -813,9 +812,10 @@ This section describes the design of simulation runs, in terms of the scenarios 
  <!-- - ordered or un-ordered categories of x levels while computing distances `dist_ordered_val = TRUE`   -->
  <!-- - distance between which quantiles are computed `quantile_prob_vec = seq(0.01, 0.99, 0.01)`   -->
 
-```{r}
+```{r, eval = FALSE}
 knitr::include_graphics(here::here("paper/Figs/simulation.png"))
 ```
+
 
 
 Observations from Normal(5, 10) and Gamma(0.5, 0.2) are3 chosen in all the designs.
@@ -898,7 +898,17 @@ time_data %>%
 
 ```
 
-## Results 
+## Sample size
+
+How smaller or different sample size play a role in the distribution of the measure.
+
+## Number of permutations
+
+Find the number of permutations which are sufficient for consistent estimation of mean and standard deviation
+
+## Discussion
+
+Did normalisation work?
 
 ### Null distribution 
 
@@ -908,7 +918,7 @@ Under the null hypothesis, all the combinations of x-axis and facets are obtaine
 Currently, we see in Figure \ref{fig:null-dist} that the normalisation works fine for each facet since the distributions for each column are equal irrespective of the distribution type. But it does not work along the x-axis.
 
 
-```{r norm-data, fig.cap = "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." }
+```{r norm-data, fig.cap = "Distribution of $MMPD_{norm}$ across different levels of facet and x-axis. These distributions should look the same if normalisation worked." , eval = F}
 mmpd_norm = read_rds("../hakear-drake/data/data_norm_low_new.rds") 
 hist_plot = mmpd_norm %>% 
       ggplot() +
@@ -918,7 +928,7 @@ hist_plot
 ```
 
 
-```{r null-dist, eval =  FALSE, echo = FALSE, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis."}
+```{r null-dist, eval =  FALSE, echo = FALSE, fig.cap="Distribution of mmpd across different facet levels (columns) and x-axis levels (rows) for null ditribution normal(5,10) and gamma(0.5, 0.2). The distribution of MMPD is unaffected by the null distribution considered. It is also the same across all facet levels but not across the x-axis, which means normalisation is failing across x-axis.", eval = F}
 # all_files = list.files(path = "../hakear-drake/data", pattern = ".rds")
 # all_files
 # 
@@ -953,10 +963,10 @@ ggplot2::ggplot(design_all %>%
   xlab("MMPD")
 ```
 
-### Performance of normalised MMPD
+<!-- ### Performance of normalised MMPD -->
 
 
-```{r}
+```{r, eval = FALSE}
 data1  = sim_panel(nx = 2, nfacet = 3, ntimes = 500)
 simulated_data <- sim_panel(nx = 2,
 nfacet = 3,
@@ -1012,8 +1022,6 @@ gridExtra::grid.arrange(gridExtra::arrangeGrob(p1, top = paste("MMPD", round(r1,
                         ncol = 2, nrow=2)
 
 ```
-
-
 
 
 # The statistical test

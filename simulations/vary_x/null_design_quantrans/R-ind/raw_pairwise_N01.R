@@ -12,7 +12,7 @@ set.seed(9999)
 
 nsim = 200
 # change path while running it on HPC
-# simtable<-read_csv(here::here('simulations/null/sim_table.csv'))
+# simtable<-read_csv(here::here('simulations/vary_x/null_design_quantrans/sim_table.csv'))
 
 simtable<-read_csv('../sim_table.csv')
 

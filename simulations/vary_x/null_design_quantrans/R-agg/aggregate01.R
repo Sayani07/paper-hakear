@@ -15,7 +15,8 @@ names_levels <- map_dfr(all_files,
                           z = str_split(str_remove(x, "_dist.rds"), "_") %>% 
                             unlist()
                           bind_cols(nx = as.numeric(z[1]),
-                                    nfacet = as.numeric(z[2]))
+                                    nfacet = as.numeric(z[2]),
+                                    w = as.numeric(z[3]))
                         })
 
 # len_file = read_rds(("simulations/results/norm/tuning_param/2_2_tuning_param.rds"))

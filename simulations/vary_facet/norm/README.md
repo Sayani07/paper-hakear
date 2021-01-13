@@ -1,4 +1,4 @@
-# All simulation scenarios under null design after quantile transforming the data to standard normal distribution
+# All simulation scenarios under null design after quantile transforming the data to standard normal distribution and generating 100 permutations to scale by mean and standard deviation
 
 **Objective:**  Behavior of raw wpd under different null designs N(0,1), N(5, 1), N(0,5) and N(5,5), Gamma(0,1), Gamma(0,5) for different nx and nfacets. Here, we have to fix a value of lambda = 0.67.
 

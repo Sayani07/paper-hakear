@@ -8,18 +8,18 @@ library(tidyverse)
 
 makegraph02 <- function(folder_name){
   
-all_data <- read_rds(paste0("simulations/raw/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
+all_data <- read_rds(paste0("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_", folder_name, ".rds"))
   
 
 nxbyfacet_density <- all_data %>% 
   ggplot(aes(x = value)) + 
-  geom_density(fill = "blue") +
+  geom_histogram(fill = "blue") +
   facet_grid(nx~nfacet,
-             labeller = "label_both") + 
-  xlab("wpd") +
-  scale_x_continuous(breaks = scales::breaks_extended(3))
+             labeller = "label_both",
+             scales = "free_y") + 
+  xlab("wpd")
 
-ggsave(nxbyfacet_density, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nxbyfacet_density_", folder_name,".png"))
+ggsave(nxbyfacet_density, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nxbyfacet_density_", folder_name,".png"))
 
 
 nxbyfacet_ridge <- all_data %>% 
@@ -27,10 +27,9 @@ nxbyfacet_ridge <- all_data %>%
   ggridges::geom_density_ridges() +
   facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
   xlab("mmpd") +
-  ylab("nx") +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  ylab("nx")
 
-ggsave(nxbyfacet_ridge, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nxbyfacet_ridge_", folder_name,".png"))
+ggsave(nxbyfacet_ridge, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nxbyfacet_ridge_", folder_name,".png"))
 
 
 nfacetbynx_ridge <- all_data %>% 
@@ -38,17 +37,17 @@ nfacetbynx_ridge <- all_data %>%
   ggridges::geom_density_ridges() +
   facet_wrap(~nx, labeller = "label_both", nrow = 2) + 
   xlab("mmpd") +
-  ylab("nfacet") +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  ylab("nfacet")
 
-ggsave(nfacetbynx_ridge, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nfacetbynx_ridge_", folder_name,".png"))
+ggsave(nfacetbynx_ridge, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nfacetbynx_ridge_", folder_name,".png"))
 }
 
 makegraph02(folder_name = "wpd_N01")
 makegraph02(folder_name = "wpd_N05")
 makegraph02(folder_name = "wpd_N51")
 makegraph02(folder_name = "wpd_N55")
-
+makegraph02(folder_name = "wpd_Gamma01")
+makegraph02(folder_name = "wpd_Gamma21")
 
 
 
@@ -66,8 +65,7 @@ normal_ridge_nxbynfacet <- all_data %>%
   xlab("wpd") +
   scale_fill_manual(values =
                       c("#999999", "#D55E00")) + 
-  theme(legend.position = "bottom") +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  theme(legend.position = "bottom")
 
 ggsave(normal_ridge_nxbynfacet, filename = paste0("simulations/null_design/figs/normalised", "diff_mean_normal.png"))
 
@@ -90,10 +88,9 @@ nxbyfacet <- all_data3 %>%
   theme(strip.text = 
           element_text(size = 10, margin = margin(b = 0, t = 0)), 
                                   legend.position = "bottom"
-  )  +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  ) 
 
-ggsave(nxbyfacet, filename = paste0("simulations/raw/null_design_quantrans/figs/", "diff_mean3_normal.png"))
+ggsave(nxbyfacet, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "diff_mean3_normal.png"))
 
 
 ## for gamma might go in the paper
@@ -115,45 +112,8 @@ gamma_ridge_nxbynfacet <- all_data %>%
   xlab("wpd") +
   scale_fill_manual(values = c("#999999", "#D55E00"))+
   theme(strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)), legend.position = "bottom"
-  ) +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  )
 
 ggsave(gamma_ridge_nxbynfacet, 
-filename = paste0("simulations/raw/null_design_quantrans/figs/", 
+filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", 
                   "diff_mean3_gamma.png"))
-
-
-## How mean and sd changes with nx and nfacet individually
-
-data_N01 <- aggregate01(folder_name = "wpd_N01")
-
-data_x <- data_N01 %>% 
-  group_by(nx) %>% 
-  summarise(mean = mean(value, na.rm = TRUE), 
-            sd = sd(value, na.rm = TRUE)) %>% pivot_longer(-1, names_to = "statistic", 
-                                                           values_to = "value") %>% 
-  rename("axis" = "nx")
-
-data_facet <- data_N01 %>% 
-  group_by(nfacet) %>% 
-  summarise(mean = mean(value, na.rm = TRUE), 
-            sd = sd(value, na.rm = TRUE)) %>% pivot_longer(-1, names_to = "statistic", 
-                                                           values_to = "value")%>% 
-  rename("axis" = "nfacet")
-
-data_all <- bind_rows(data_x, data_facet, .id = "axis_name") %>% 
-  mutate(axis_name = if_else(axis_name==1, "nx", "nfacet")) %>% 
-  rename("level" = "axis_name",
-         "nlevel" = "axis")
-
-mean_sd_nx_nfacet <- ggplot(data_all, aes(x = nlevel,
-                               y = value, colour = level)) +
-  facet_wrap(~statistic,
-             scales = "free_y")  + ylab("wpd") + geom_line() + 
-  scale_colour_manual(values =
-                                                                                 c("#0072B2", "#D55E00")) + geom_point() 
-
-ggsave(mean_sd_nx_nfacet, 
-       filename = paste0("simulations/raw/null_design_quantrans/figs/", 
-                         "mean_sd_nx_nfacet.png"))
-

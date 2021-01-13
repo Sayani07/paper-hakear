@@ -28,20 +28,21 @@ wj <- simj$w
 
 #create data for each row for null normal
 
-sim_varf = function(nx, 
-                    nfacet,
-                    mean = 0, 
-                    sd = 5,
-                    w)
+
+sim_varall = function(nx,
+                      nfacet,
+                      mean = 0,
+                      sd = 5,
+                      w)
 {
-  rep(dist_normal((mean + seq(0, nfacet-1, by  = 1)*w), sd), each = nx)
+  dist_normal((mean + seq(0, (nx*nfacet - 1), by  = 1)*w), sd)
 }
 
 sim_panel_data = 
   hakear::sim_panel(nx = nxj,
                     nfacet = nfacetj, 
                     ntimes = 500, 
-                    sim_dist = sim_varf(nx = nxj, nfacet = nfacetj, w = wj)) %>% 
+                    sim_dist = sim_varall(nx = nxj, nfacet = nfacetj, w = wj)) %>% 
   unnest(c(data)) %>% ungroup() %>% 
   bind_cols(w = wj)
 
@@ -65,9 +66,9 @@ raw_dist <- map(seq_len(nsim), function(i)
 }) %>% bind_rows()
 
 
-if(!dir.exists("simulations/vary_facet/raw/data-ind/wpd_N05"))
+if(!dir.exists("simulations/vary_all/raw/data-ind/wpd_N05"))
 {
-  dir.create("simulations/vary_facet/raw/data-ind/wpd_N05")
+  dir.create("simulations/vary_all/raw/data-ind/wpd_N05")
 }
 saveRDS(raw_dist,
         paste0('../data-ind/wpd_N05/',
