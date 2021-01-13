@@ -445,18 +445,23 @@ Figure \ref{fig:normal-diff-quantrans} and \ref{fig:gamma-diff-quantrans} show d
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
 ```
 
+
 ```{r gamma-diff-quantrans, fig.cap="Ridge plots of raw wpd is shown for Gamma(0.5,1), Gamma(2,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change in the shape paramter of the gamma distribution"}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
 ```
+
 
 ```{r mean-sd-ns-nfacet, fig.cap="Movement of mean and sd for raw wpd is shown for different number of levels (nlevel) of x-axis and facets through line plots. Mean increases and sd decreases more sharply for increasing x-axis levels as compared to facet levels. It seems like both mean and standard deviation are affected more by change in the x-axis levels than the facet levels.", fig.pos="h"}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/mean_sd_nx_nfacet.png"))
 
 ```
 
+
 ```{r nxbyfacet-ridge-N05, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_ridge_wpd_N05.png"))
 ```
+
+
 
 
 
