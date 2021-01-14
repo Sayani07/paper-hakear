@@ -16,7 +16,10 @@ all_design <- bind_rows(vary_facet, vary_x, vary_all, .id = "design") %>%
 
 all_design %>% 
   ggplot() +
-  geom_density(aes(x=value), 
+  geom_boxplot(aes(x = design, y = value)) + 
+  facet_grid(nx~nfacet)
+  
+  geom_histogram(aes(x=value, fill = design), 
                  alpha = 0.7) +
   scale_fill_brewer(palette = "Dark2")  +
   facet_wrap(~w, labeller = "label_both")
