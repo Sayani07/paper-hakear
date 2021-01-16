@@ -684,13 +684,6 @@
       "Repository": "CRAN",
       "Hash": "816a7f746179f159f8faa87af730f3c1"
     },
-    "isoband": {
-      "Package": "isoband",
-      "Version": "0.2.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "53647fb507373700028b2ce6cd30751a"
-    },
     "iterators": {
       "Package": "iterators",
       "Version": "1.0.13",
@@ -999,13 +992,6 @@
       "Repository": "CRAN",
       "Hash": "95ef9167b75dde9d2ccc3c7528393e7e"
     },
-    "processx": {
-      "Package": "processx",
-      "Version": "3.4.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "22aab6098cb14edd0a5973a8438b569b"
-    },
     "prodlim": {
       "Package": "prodlim",
       "Version": "2019.11.13",
@@ -1026,13 +1012,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "a8730dcbdd19f9047774909f0ec214a4"
-    },
-    "ps": {
-      "Package": "ps",
-      "Version": "1.5.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ebaed51a03411fd5cfc1e12d9079b353"
     },
     "purrr": {
       "Package": "purrr",
@@ -1113,17 +1092,17 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.9",
+      "Version": "0.4.10",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9d7aba7bed9a79e2403b4777428a2b12"
+      "Hash": "599df23c40a4fce9c7b4764f28c37857"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.5",
+      "Version": "2.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "20a0a94af9e8f7040510447763aab3e9"
+      "Hash": "bc4bac38960b446c183957bfd563e763"
     },
     "rpart": {
       "Package": "rpart",
