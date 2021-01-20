@@ -374,7 +374,7 @@ Most of the behavior of the measure wpd was studied via simulation. The simulati
 - $\omega$ (increment in each panel design)
 - $dist$ (normal/non-normal distributions with different location and scale)
 - $n$ (sample size for each combination of categories)
-- $nsim$ (number of simulations)
+- $nsim$ (number of simulations)a
 - $nperm$ (number of permutations of data)  
 - $designs$  
 $D_{null}$  (No difference in distribution)  
@@ -386,7 +386,6 @@ $D_{var_{all}}$ (Difference in distribution in both facets and x-axis)
 ### Environment
 
 R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community. The nodes and the storage used are as follows:
-
 
 
 ### Results
@@ -406,6 +405,7 @@ The tabulated values and graphical representations of the simulation results are
 
 
 
+
 # Applications {#sec:application}
 
 ## Smart meter data of Australia {#sec:smartmeter}
@@ -416,186 +416,16 @@ The tabulated values and graphical representations of the simulation results are
 Smart meters provide large quantities of measurements on energy usage for households across Australia. One of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney provides customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.-->The idea here is to show how to visualize the distribution of the energy consumption across different cyclic granularities in a systematic way to identify different behavioral patterns.
 
 
-### Cyclic granularities search and computation:
-  
-The tsibble object `smart_meter10` from R package `gravitas` [@R-gravitas] consisting of `reading_datetime`, `customer_id` and `general_supply_kwh` denoting the index, key and measured variable of the tsibble is used to facilitate the systematic exploration. While trying to explore the energy behavior of these customers systematically across cyclic time granularities, the first thing to consider is which cyclic time granularities we can look at exhaustively. Let us consider conventional time deconstructions for a Gregorian calendar (second, minute, half-hour, hour, day, week, month, year). Since the interval of this tsibble is 30 minutes, the temporal granularities may range from half-hour to year. Considering $6$ linear granularities half-hour, hour, day, week, month and year in the hierarchy table, $N_C = (6*5/2) = 15$. <!--(via Section \ref{sec:data-structure}) circular or quasi-circular granularities that could be formed relating two linear granularities at a time.--> If $N_C$ seem too large, the smallest and largest linear granularities could be considered to be removed from the hierarchy table. We remove half-year and year to have $N_C = (4*3/2) = 6$ and obtain cyclic granularities namely "hour_day", "hour_week", "hour_month", "day_week", "day_month" and "week_month", read as "hour of the day", etc. Further, we add cyclic granularity day-type( "wknd_wday") to capture weekend and weekday behavior. Now that we have a list of cyclic granularities to look at, we should be able to compute the multiple-order-up granularities using Section \ref{sec:cyclic-calendar}. 
-
-```{r search, echo=FALSE, eval = FALSE}
-library(gravitas)
-smart_meter %>%
-  search_gran(filter_out = c("semester", 
-                             "quarter",
-                             "fortnight"))
-```
+### 50 households together
 
 
-```{r search_gran_limit2, echo = FALSE, eval = FALSE}
-smart_meter10 %>% search_gran(
-  highest_unit = "month",
-  filter_out = c("hhour", "fortnight"))%>%
-  knitr::kable(format = "latex",
-      booktabs = TRUE) %>%
-  #row_spec(0, bold = TRUE)%>%
-  kable_styling()
-```
+### Multidimensional scaling
 
 
-<!-- # smart_meter_limit2 <- smart_meter10 %>% search_gran(highest_unit = "month", -->
-<!-- #                               filter_out = c("hhour", "fortnight") -->
-<!-- # ) -->
-<!-- # knitr::kable(smart_meter_limit2, format = "markdown") -->
-
-<!-- Now that we have a list of cyclic granularities to look at, we should be able to compute them from the data using Sections \ref{sec:circular-gran-def}, \ref{sec:quasi-circular-gran-def} and \ref{sec:aperiodic-gran-def}. -->
-
-### Screening and visualizing harmonies
-
-From the search list, $N_C = 7$ cyclic granularities are chosen for which we would like to derive insights of energy behavior. Recalling the data structure <$C_i$, $C_j$, `general_supply_kwh`> for exploration $\forall i, j \in \{1, 2, \ldots, 7\}$, each of these $7$ cyclic granularities can either be mapped to x-axis or to facet. Choosing $2$ of the possible $7$ granularities, which is equivalent to having $^{7}P_2 = 42$ candidates for visualization. Fortunately, harmonies can be identified among those $42$ possibilities to narrow the search. \autoref{tab:harmony-tab} shows $16$ harmony pairs after removing clashes and any cyclic granularities with levels more than $31$, as effective  exploration becomes difficult with many levels (Section \ref{sec:levels}). The MMPD is also shown along with indicator (*) only when variation of measured variable across the harmony pair significant. Starting from $42$ possible pairs of cyclic granularities to visualize, we are finally left with only $6$, which is a very sizable number of displays for exploration.
-
-
-Few harmony pairs are displayed in \autoref{fig:bothcust} to illustrate the significance of MMPD, threshold and the impact of different distribution plots and reverse mapping.
-\noindent For each of \autoref{fig:bothcust} (b) and (c), $C_i$ is the circular granularity day-type (weekday/weekend) and $C_j$ is hour of the day. The geometry used for displaying the distribution is chosen as area-quantiles and violins in \autoref{fig:bothcust} (b and c respectively). \autoref{fig:bothcust} (a) displays reverse mapping of $C_i$ and $C_j$ with $C_i$ denoting hour of the day and $C_j$ denoting day-type with distribution geometrically displayed as boxplots.
-
-<!-- From the search list, we found six cyclic granularities for which we would like to derive insights of energy behavior. Given the data structure <$C1$, $C2$, `general_supply_kwh`>, each of those six cyclic granularities can either be mapped to x-axis or to facet. Thus the problem is equivalent to taking 2 granularities at a time from six, which essentially is equivalent to having 30 data subsets for visualization. However, harmony/clash pairs can be identified among those 30 possibilities to determine feasibility of plotting any pairs together. \autoref{tab:harmony-tab} shows 13 harmonies pairs, each of which can be plotted together to look at the energy behavior from different perspectives. -->
-
-<!-- We will look at few harmony pairs and see how the proposed workflow can be utilized.  -->
-
-<!-- From the Gestalt theory with the same data  <$C1$ $C2$, `general_supply_kwh`>, mapping $C1$ on the x-axis vs facet might lead to different insights. -->
-
-```{r harmony-tab, echo=FALSE, eval = FALSE, cache=TRUE}
-# if(!dir.exists("cache/"))
-# {
-#   dir.create("cache")
-# }
-# 
-# if (!file.exists("cache/smart_harmony.rds")) {
-  sm <- smart_meter10 %>%
-  filter(customer_id %in% c(10017936))
-  
-  harmonies <- sm %>%
-  harmony(ugran = "month",
-          filter_in = "wknd_wday", 
-          filter_out = c("hhour", "fortnight"))
-set.seed(12345)
-
-global_harmony <- sm %>%
-  global_threshold(harmony_tbl = harmonies,
-                   response = "general_supply_kwh", nsamp = 5) %>%
-  rename(`facet variable` = facet_variable,
-         `x-axis variable` = x_variable,
-         `facet levels` = facet_levels,
-         `x-axis levels` = x_levels) %>% 
-  mutate(MMPD = if_else(gt_MMPD == TRUE,
-                        paste0(MMPD, "*"), paste0(MMPD))) %>%
-  select(`facet variable`,`x-axis variable`,
-         `facet levels`,`x-axis levels` ,MMPD) 
-
-#   write_rds(smart_harmony,"cache/smart_harmony_ak.rds")
-# }
-#smart_harmony <- read_rds("cache/smart_harmony.rds")
-
-  knitr::kable(global_harmony,
-               format = "latex",
-               booktabs = TRUE,
-                caption = "Harmonies with a pair of cyclic granularity one placed on facet and the other on x-axis. Out of 42 possible combinations of cyclic granularities, only 16 are harmony pairs. The harmony pairs are ranked basis highest to lowest MMPD and only the first 6 show significant variation in the measured variable.") %>%
-    #row_spec(0, bold = TRUE) %>%
-    kable_styling()
-```
-
-
-In \autoref{fig:bothcust} (b), <!--the distribution of energy consumption is plotted across the harmony pair (weekday/weekend, hour of the day) through an area quantile plot-->the black line is the median, whereas the purple band covers 25th to 75th percentile, the orange band covers 10th to 90th percentile and the green band covers 1st to 99th percentile. The first facet represents the weekday behavior while the second one displays the weekend behavior and energy consumption across each hours of the day is shown inside each facet. The energy consumption is extremely (positive- or right-) skewed with the 1st, 10th and 25th percentile lying relatively close whereas 75th, 90th and 99th lying further away from each other. This is common across both weekdays and weekends. For the first few hours on weekdays, median energy consumption starts and continues to be higher for longer as compared to weekends.
-
-Consider looking at violin plots instead of quantile plots to look at the same data in \autoref{fig:bothcust}(c). There is additional information that we can derive looking at the distribution. There is bimodality in the early hours of the day, implying both low and high energy consumption is probable in the early hours of the day both for weekdays and weekends. <!--Also the hours from 7 to 13 look most volatile.--> If we visualize the same data with reverse mapping of the cyclic granularities, then the natural tendency would be to compare weekend and weekday behavior within each hour and not across hours. For example in \autoref{fig:bothcust}(a), it can be seen that median energy consumption for the early morning hours is extremely high for weekdays compared to weekends. Also, outliers are more prominent in the latter part of the day. All of these indicate that looking at different distribution geometry or changing the mapping might shed lights on different aspect of the energy behavior for the same sample population.
+### Putting similar households on linear scale 
 
 
 
-
-
-```{r bothcust, fig.cap = "Energy consumption of a single customer shown with different distribution displays, and granularity arrangements. Two granularities are used: hour of the day (I) and weekday/weekend (II). Plot (a) shows granularity I facetted by granularity II, and plots (b), (c) shows the converse mapping. Plot (a) makes a comparison of usage by workday within each hour of the day using side-by-side boxplots. Generally, on a work day there is more consumption early in the day.  Plots (b) and (c) examine the temporal trend of consumption over the course of a day, separately for the type of day. Plot (b) uses an area quantile to put the emphasis on the time series, for example, the median consumption over time shows prolonged usage in the morning on weekdays. Plot (c) uses a violin plot to place emphasis on distributional differences across hours. It can be seen that the morning use on weekdays is bimodal, some work days there is low usage, which might indicate the person is working from home and also having a late start.", out.width="90%"}
-
-
-cust2_quantile <- smart_meter10 %>%
-  filter(customer_id %in% c(10017936)) %>%
-  prob_plot("wknd_wday",
-    "hour_day",
-    response = "general_supply_kwh",
-    plot_type = "quantile",
-    symmetric = TRUE,
-    quantile_prob = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)
-  ) +
-  scale_y_sqrt() +
-  #ggtitle(" (b) Area quantile plot faceted by weekend-weekday") +
-  ylab("electricity demand [KWh]") + xlab("hours of the day") + ggtitle("") + ylab("")+ 
-  theme_minimal()
-
-cust2_violin <- smart_meter10 %>%
-  filter(customer_id %in% c(10017936)) %>%
-  prob_plot("wknd_wday",
-    "hour_day",
-    response = "general_supply_kwh",
-    plot_type = "violin"
-  ) +
-  scale_y_sqrt()+
-  #ggtitle(" (c) Violin plot faceted by weekend-weekday") +
-  ylab("") + xlab("hours of the day") + ggtitle("") +
-  scale_x_discrete( breaks = seq(0, 23, 5))+ 
-  theme_minimal()
-
-cust2_box <- smart_meter10 %>%
-  filter(customer_id %in% c(10017936)) %>%
-  prob_plot("hour_day",
-    "wknd_wday",
-    response = "general_supply_kwh",
-    plot_type = "boxplot"
-  ) +
-  scale_y_sqrt() +
-  #ggtitle(" (a) Box plot faceted by hour-of-day") +
-  xlab("") +
-  ggtitle("") + ylab("") +
-  scale_x_discrete(labels = c('wday','wend')) +
-  ggplot2::theme(axis.text.x = element_text(size = 7))+ 
-  theme_minimal()
-
-
-
-#ggarrange(cust2_quantile, cust2_violin, nrow = 2)
-
-
-gg_fig <- ggarrange(cust2_box,
-          ggarrange(cust2_quantile, cust2_violin, nrow = 2, labels = c("b", "c")),
-          ncol = 2, labels = "a")
-          #label.y = "electricity demand [KWh]"\
-
-
-ggpubr::annotate_figure(gg_fig,
-                left = text_grob("electricity demand [KWh]",  rot = 90))
-```
-
-<!-- # ```{r cust-ridge, fig.cap ="Boxplot of energy consumption across hours of the day faceted by weekday/weekend for customer id: 10017936. The change in mapping of the cyclic granularities leads to easier comparison within weekdays and weekends for each hour. Median consumption till 6am is higher for weekends compared to weekdays although the quartiles look similar. Outliers appear more during the end of the day implying more uncertain behavior in latter hours of the day compared to early morning hours."} -->
-<!-- #  -->
-<!-- # smart_meter10 %>% -->
-<!-- #   filter(customer_id %in% c(10017936)) %>% -->
-<!-- #   prob_plot("hour_day", -->
-<!-- #     "wknd_wday", -->
-<!-- #     response = "general_supply_kwh", -->
-<!-- #     plot_type = "boxplot" -->
-<!-- #   ) + -->
-<!-- #   scale_y_sqrt() -->
-<!-- # ``` -->
-
-<!-- Now, we would like to see how these customers' behavior relate to the rest of the 50 households across these two measures -   -->
-
-<!-- - if energy distribution is skewed towards extreme? -->
-
-<!-- - if the weekend and weekday behavior are different for most of these households? -->
-
-If the data for all keys are visualized together, it might lead to Simpson's paradox, which occurs when one observation shows a particular behavior, but this behavior paradoxically becomes obscured by aggregation. For example in a particular neighborhood one household may have the least daily power consumption for a full week, yet still not be the household with the minimum weekly power consumption. This is an intuitive possibility, because heterogeneous `customer_id`'s with very different occupation or demographics will tend to have very different energy behavior and combining them together will somehow weaken any typical or extreme behavior. A strategy for analyzing multiple keys together could be to first group them basis time series or demographic features and then look at their energy behavior. This is beyond the scope of the current work.
-
-<!-- For the purpose of this paper, the smart meter data is filtered for two customers to illustrate kinds of insights that can be drawn after proceeding with the systematic exploration. -->
-
-<!-- For example, Figure \ref{fig:wknd-wday50} shows the quantile plot of energy consumption of a sample of 50 households. Quantiles for weekends and weekdays for these customers look exactly the same. It is not clear if the behaviors of most of these customers do not alter between weekdays and weekends or looking at all customers together balances out the behaviors. Consider another example in Figure \ref{fig:my-hd} showing the area quantile plots of 50 customers. The median is very close to the lower boundaries of all the other bands implying energy consumption for these households are left skewed. The pink band changes significantly in winter months (May - August) implying that much of the behavioral changes occur in the quartiles, that too in peak hours of the day. It is to be noted here that the the level of all quantiles increased too in winter months (increased energy usage in weather conditions), the interesting part is to notice that the relationship between bands other than quartile stayed same across seasons. -->
-
-This case study shows systematic exploration of energy behavior for a household to gain exhaustive insights on periodic behavior of the households. 
-<!--First, it helps us to find the list of cyclic granularities to look at, then shrinks the number of possible visualizations by identifying harmonies, visualize a harmony pair and shows the effect of different distribution plots or reverse mapping.-->
 
 ## T20 cricket data of Indian Premiere League {#sec:cricket}
 
