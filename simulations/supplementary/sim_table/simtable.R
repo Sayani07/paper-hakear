@@ -2,10 +2,10 @@
 library(tidyverse)
 # nperm and nsim can run parallelly
 sim_table <- expand.grid(#data = c(99, 9999), # different data with same specifications
-  #nperm = c(10, 30, 50, 100, 300, 500),
-  nperm = c(10, 30, 500),
-  #ntimes = c(2, 5, 10, 30, 100, 500),
-  ntimes = c(5, 500),
+  nperm = c(10, 30, 50, 100, 300, 500),
+  #nperm = c(10, 30, 500),
+  ntimes = c(2, 5, 10, 30, 100, 500),
+  #ntimes = c(5, 500),
   # different permutations to compute mean and sd
   #nobs_each_comb  = c(10, 40, 500), # different number of observations for each combinations for each panel
   #nobs_diff_comb  = c("comb1", "comb2"), # different number of observations for different combinations for each panel

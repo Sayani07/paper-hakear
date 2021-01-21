@@ -11,3 +11,5 @@ simulations/results/*
 *.tex
 *.toc
 *.rds
+*.7z
+*.csv
