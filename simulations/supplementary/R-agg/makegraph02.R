@@ -10,11 +10,15 @@ all_data <- read_rds("simulations/supplementary/data-agg/wpd_N01/all_data.rds")
 
 
 # raw categories
-draw_esign_by_categories <- all_data %>% 
-  filter(type == "raw") %>% 
-  ggplot(aes(x = value)) + 
-  geom_density(aes(fill = design)) +
+draw_design_by_categories <- all_data %>% 
+  filter(ntimes == 500, w == 1) %>% 
+  ggplot()+
+  ggridges::geom_density_ridges(aes(x = value, y = design)) + 
+  #geom_boxplot(aes(fill = design), alpha = 0.5) +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  xlab("wpd") +
+  xlab("wpd")
+  
+  
+  +
   scale_x_continuous(breaks = scales::breaks_extended(3))

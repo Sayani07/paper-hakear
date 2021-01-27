@@ -55,12 +55,12 @@ if(designj=="vary_f")
   
 }
 if(designj=="vary_all"){
-  function(nx, nfacet, mean, sd, w)
+  
+  sim_function <- function(nx, nfacet, mean, sd, w)
   {
-    sim_function <-  dist_normal((mean + seq(0,
-                            (nx*
-                               nfacet - 1), by  = 1)*w), sd)
+    dist_normal((mean + seq(0, (nx*nfacet - 1), by  = 1)*w), sd)
   }
+  
   
 }
 
