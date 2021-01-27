@@ -480,15 +480,10 @@
     },
     "glue": {
       "Package": "glue",
-      "Version": "1.4.1.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "glue",
-      "RemoteUsername": "tidyverse",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "f0a7b2a21162980c153edd68a9f5d279af1d426b",
-      "Hash": "7ff8e21ec32a114e0cbb36b6572ade35"
+      "Version": "1.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6efd734b14c6471cfe443345f3e35e29"
     },
     "gravitas": {
       "Package": "gravitas",
