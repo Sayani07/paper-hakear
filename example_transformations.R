@@ -4,6 +4,8 @@ library(tidyverse)
 ## --- read
 N01 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
 
+write_csv(N01, "simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
+
 ## ---raw
 N01 %>% 
   ggplot(aes(x = value)) + 
@@ -125,9 +127,49 @@ N01 %>%
 
 
 
+N01_median <- N01 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+# fit  <- lm(median_value ~`nx * nfacet` , data = N01_median)
+# #second degree
+# fit2 <- lm(median_value~poly(`nx * nfacet` ,2, raw=TRUE), data = N01_median)
+# #third degree
+# fit3 <- lm(median_value~poly(`nx * nfacet` ,3, raw=TRUE), data = N01_median)
+# #fourth degree
+# fit4 <- lm(median_value~poly(`nx * nfacet` ,4, raw=TRUE), data = N01_median)
+# 
+
+N01_median %>% 
+  mutate(lm  = predict(lm(actual ~`nx * nfacet` , data = N01_median)),
+         lm_order2 = predict(lm(actual ~ poly(`nx * nfacet` ,2, raw=TRUE), data = N01_median)),
+         fit3 = predict(lm(actual ~ poly(`nx * nfacet` ,3, raw=TRUE), data = N01_median)),
+         fit4 = predict(lm(actual ~ poly(`nx * nfacet` ,4, raw=TRUE), data = N01_median)),
+         glm_order1 = predict(glm(actual ~ `nx * nfacet`), N01_median, family = Gamma(link = "identity")), 
+         glm_order2 = predict(glm(actual ~ poly(`nx * nfacet` ,2), N01_median, family = Gamma(link = "identity")))) %>% 
+  
+  pivot_longer(cols = 2:7, names_to = "model", values_to = "fitted_values") %>% 
+  filter(model %in% c("glm_order2", "lm_order2", "actual")) %>% 
+  ggplot(aes(x=`nx * nfacet`,
+             y = fitted_values, 
+             color = model)) + 
+  geom_line(alpha = 0.5)
+         
 
 
-model1 <- lm(value ~ sqrt(nx*nfacet), data = N01)
+
+         
+         
+  
+
+
+xx <- N01_median$`nx * nfacet`
+plot(N01_median$`nx * nfacet`, N01_median$median_value)
+lines(xx, predict(fit), col="red")
+lines(xx, predict(fit2), col="green")
+lines(xx, predict(fit3), col="blue")
+lines(xx, predict(fit4), col="purple")
+model1 <- lm(median_value ~`nx * nfacet` , data = N01_median)
 model2 <- lm(value^2 ~ I(nx*nfacet), data = N01)
 
 
