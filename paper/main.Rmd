@@ -57,9 +57,9 @@ opts_chunk$set(
 knitr::opts_knit$set(root.dir = here::here())
 #                                                                read_chunk('main.R')
 here::here()
-read_chunk(here::here("paper/R/", "null_distribution.R"))
-read_chunk(here::here("paper/R/", "mean_null.R"))
-source(here::here("paper/R/sim_panel.R"))
+#knitr::read_chunk(here::here("paper/R/", "null_distribution.R"))
+#knitr::read_chunk(here::here("paper/R/", "mean_null.R"))
+#source(here::here("paper/R/sim_panel.R"))
 # Set up plan
 #source("_drake.R")
 # Run all code required
@@ -398,8 +398,10 @@ First, the behavior of $wpd_{raw}$ and $wpd_{norm}$ is explored in designs where
 Secondly, the behavior of raw and normalized wpd is explored in designs where there is in fact difference in distribution between facet categories ($D_{var_f}$) or across x-categories ($D_{var_x}$) or both ($D_{var_{all}}$). Using $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$, observations are drawn from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet =  \{2, 3, 5, 7, 14, 20, 31, 50\}$. $ntimes = 500$ is assumed for this setup as well. Furthermore, to generate different distributions across different combination of facet and x levels, the following method is deployed - suppose the distribution of the combination of first levels of x and facet category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). 
 
 The tabulated values and graphical representations of the simulation results are provided in Appendix. The learning from the simulations are as follows:
+The values of the measure $wpd_{raw}$ is least for $D_{null}$, followed by 
+$D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{raw}$ was designed such that this relationship holds.
+Furthermore, the distribution of the measure $wpd_{raw}$ changes for different facet and x categories. The location of the distribution shifts to the right and it also becomes more skewed for more higher facet and x-axis categories. Now this is not desirable, as it would mean that we can't compare the $wpd_{raw}$ values across different panels. The distribution of $wpd_{norm}$ looks more similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independepent of the intial distribution of the underlying data and hence is also comparable across different datasets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
 
-## Properties
 
 # Choosing harmonies with significant wpd
 
