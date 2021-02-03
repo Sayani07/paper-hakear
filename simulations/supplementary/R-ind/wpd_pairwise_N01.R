@@ -8,7 +8,7 @@ library(drake)
 library(tidyverse)
 library(hakear)
 
-set.seed(9999)
+# seed has been set later in the code when sampling part comes - to be included as a parameter later at least for two more seeds results hold true
 
 nsim = 200
 # change path while running it on HPC
@@ -16,7 +16,7 @@ simtable<-read_csv(here::here('simulations/supplementary/sim_table/sim_table.csv
 
 ### Extract flags from simulation scenario
 
-scen<- 1000#If running within R uncomment this.  This will only run first scenario
+#scen<- 28800 #If running within R uncomment this.  This will only run first scenario
 scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
 
 simj<-simtable[scen,] #Extract row of table
@@ -67,6 +67,8 @@ if(designj=="vary_all"){
 #create data for each row for null normal
 
 set.seed(seedj)
+
+
 sim_panel_data = 
   hakear::sim_panel(nx = nxj,
                     nfacet = nfacetj, 
@@ -75,6 +77,9 @@ sim_panel_data =
                                             mean = 0, sd = 1, w = wj)) %>% 
   unnest(c(data)) %>% ungroup() %>% 
   bind_cols(w = wj)
+
+# permuting the data keeping other columns constant  
+
 
 if(typej == "raw")
 {
@@ -86,34 +91,35 @@ dist_data <- map(seq_len(nsim), function(i)
   new_data = sim_panel_data %>% 
     select(-sim_data) %>% 
     mutate(sim_data = new_sim_data)
-  
+
   # for creating one raw mmpd
-  raw_mmpd = compute_pairwise_max(new_data, 
+  wpd = compute_pairwise_max(new_data, 
                                   gran_x = "id_x",
                                   gran_facet = "id_facet",
                                   response = sim_data) %>% 
     as_tibble() %>% mutate(perm_id = i)
-  
 }) %>% bind_rows()
 }
 
 
-if(typej == "norm")
+if(typej == "norm-nperm")
 {
   dist_data <- map(seq_len(nsim), function(i)
   {
     new_sim_data = sample(sim_panel_data$sim_data, 
                           size = nrow(sim_panel_data))
+    
     new_data = sim_panel_data %>% 
       select(-sim_data) %>% 
       mutate(sim_data = new_sim_data)
     
     # for creating one raw mmpd
-    raw_mmpd = compute_pairwise_norm(new_data, 
+    wpd = compute_pairwise_norm(new_data, 
                                      gran_x = "id_x",
                                      gran_facet = "id_facet",
                                      response = sim_data,
-                                     nperm = npermj) %>% 
+                                     nperm = npermj, 
+                                seed = seedj) %>% 
       as_tibble() %>% mutate(perm_id = i)
     
   }) %>% bind_rows()

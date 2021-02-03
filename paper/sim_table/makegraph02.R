@@ -25,22 +25,51 @@ mds<- one_harmony_data %>%
 colnames(mds) <- c("Dim.1", "Dim.2")
 rownames(mds) <- unique(one_harmony_data$customer_id)
 mds <- mds %>%
-  mutate(customer_id = unique(one_harmony_data$customer_id)) %>% 
+  mutate(customer_id = unique(one_harmony_data$customer_id)) %>%
   select(customer_id, Dim.1, Dim.2)
-?
+
+
+
+mds_shared_data <- highlight_key(mds, ~customer_id)
+
+gg <- ggpubr::ggscatter(mds,
+                        x = "Dim.1",
+                        y = "Dim.2", 
+                        label = rownames(mds),
+                        size = 1,
+                        repel = TRUE) %>%
+  highlight_key() %>% 
+  plot_ly()
+
+p1 <- highlight(ggplotly(gg), "plotly_hover")
+  
+  
+  
+  
 # Plot MDS
+
+library(plotly)
 df <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
           label = rownames(mds),
           size = 1,
-          repel = TRUE)
+          repel = TRUE) %>%
+  highlight_key() %>% 
+  plot_ly()
 
-library(leaflet)
-library(sp)
-mds_new <- mds %>% scale() 
-Sr1 = Polygon(mds)
 
-Srs1 = Polygons(list(mds), "s1")
-SpP = SpatialPolygons(list(Srs1), 1L)
-leaflet(mds) %>% addPolygons(data = PolygonData)
-leaflet(options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% addPolygons(data = Srs1)
-mapview(SpP, native.crs = TRUE)
+
+
+# leaflet try
+
+# library(leaflet)
+# library(sp)
+# mds_new <- mds %>% scale() 
+# Sr1 = Polygon(mds)
+# 
+# Srs1 = Polygons(list(mds), "s1")
+# 
+# SpP = SpatialPolygons(list(Srs1), 1L)
+# 
+# leaflet(mds) %>% addPolygons(data = PolygonData)
+# leaflet(options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% addPolygons(data = Srs1)
+# mapview(SpP, native.crs = TRUE)

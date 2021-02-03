@@ -2,9 +2,9 @@
 library(tidyverse)
 # nperm and nsim can run parallelly
 sim_table <- expand.grid(#data = c(99, 9999), # different data with same specifications
-  nperm = c(10, 30, 50, 100, 300, 500),
+  nperm = c(10, 30, 50, 100, 300),
   #nperm = c(10, 30, 500),
-  ntimes = c(2, 5, 10, 30, 100, 500),
+  ntimes = c(5, 30, 100, 500),
   #ntimes = c(5, 500),
   # different permutations to compute mean and sd
   #nobs_each_comb  = c(10, 40, 500), # different number of observations for each combinations for each panel
@@ -20,8 +20,9 @@ sim_table <- expand.grid(#data = c(99, 9999), # different data with same specifi
   design = c("null", "vary_x", "vary_f", "vary_all"),
   #seed = seq(1500, 7500, 1000),
   seed = c(1500),
-  w = c(seq(1, 20, 7), 50),
-  type = c("raw", "norm-nperm")
+  #w = c(seq(1, 20, 7), 50),
+  w = c(1, 10, 50),
+  type = c("norm-nperm")
              
 ) %>% tibble()
 

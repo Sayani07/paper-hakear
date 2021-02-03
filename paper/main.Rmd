@@ -405,6 +405,118 @@ Furthermore, the distribution of the measure $wpd_{raw}$ changes for different f
 
 # Choosing harmonies with significant wpd
 
+Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, irrespective of the different cyclic granularities; which essentially implies there is no interesting distinct across any particular time deconstruction. We can remove the harmonies for which no interesting patterns are observed through a randomisation permutation method. Essentially, this method is
+based on the generation of randomly chosen reassignments
+(permutations) of the data across different cyclic granularities and the the computation for each permutated data of the theoretical distribution of $wpd_{norm}$ expected under the null hypothesis. The percentages of the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and used to obtain the P value. The procedure for the permutation test is:
+
+
+**Assumption:** random permutation without considering ordering 
+(global)
+
+1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_norm$ is computed and is represented by $wpd_{obs}$.
+
+2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
+
+3. $wpd_norm$ is computed for all random permutation of the data and is represented by $wpd_{sample}$.
+
+4.  Steps (2) and (3) are repeated a large number
+of times M (e.g. 200).
+
+5. For each permutation, one $wpd_{sample}$ value is obtained.
+
+6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$.
+
+7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
+
+Pros: Considering thresholds global for all harmony pairs would imply less computation time.
+
+
+```{r, eval = FALSE, echo = FALSE}
+smart_harmony <-read_rds("data/smart_harmony_nonst.rds")
+smart_harmony
+```
+
+
+
+```{r smart_harmony,eval = FALSE, echo = FALSE}
+
+sm <- smart_meter10 %>% dplyr::filter(customer_id %in% c("10017936"))
+
+harmonies <- sm %>% 
+  harmony(ugran = "month",
+          filter_in = "wknd_wday",
+          filter_out = c("hhour", "fortnight"))
+
+
+harmony_tbl =  harmonies
+
+smart_harmony <- sm %>% 
+  rank_harmony(harmony_tbl = harmonies,
+               response = "general_supply_kwh", 
+               dist_ordered = TRUE)
+
+smart_harmony %>% 
+  mutate(MMPD = round(MMPD, 3), max_pd = round(max_pd, 3)) %>% 
+  mutate(rankn = row_number()) %>%
+  rename("rankun" = "r") %>% kable()
+```
+
+## Size, power and confidence interval
+
+#### Characteristics under different simulation designs   
+A set of simulation runs that are conducted and some outputs of which are reported.
+
+
+```{r sim_all, echo = FALSE}
+bind_files = readr::read_rds("../hakear-drake/data/compute_p_value.rds")
+
+bind_files$design = 
+  factor(bind_files$design,
+         levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
+
+ggplot(bind_files %>% 
+         filter(distribution == "normal")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "exponential")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "gamma")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+
+ggplot(bind_files %>% 
+         filter(distribution == "weibull")) +
+  geom_point(aes(x=design, y = p_value),
+                 alpha = 0.5)+
+  facet_grid(nx~nfacet) +
+  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
+```
+
+```{r sim_conf, echo = FALSE, eval = FALSE}
+library(dplyr)
+library(ggplot2)
+ggplot2::ggplot(design_all %>% 
+                      filter(design == "D1", distribution == "norm")) +
+  geom_boxplot(aes(x = as.factor(nx), 
+                   y = mmpd.x), width = 0.1) + 
+  facet_wrap(~nfacet) +
+  scale_fill_viridis_d() +
+  xlab("number of x levels") +
+  coord_flip()
+
+```
+
 
 
 
@@ -419,6 +531,15 @@ Smart meters provide large quantities of measurements on energy usage for househ
 
 
 ### 50 households together
+
+
+Cluster analysis and multidimensional scaling (MDS) methods are used to explore the temporal structure of various households, their interrelations and determine similar behaving clusters of households in this study. 
+
+$wpd_norm$ is considered as the measure of similarity or dissimilarity while using MDS and clustering techniques. $wpd_norm$ could be constructed for each pair of harmony for each household and then similarity could be measured across individual or all harmonies together. MDS methods are used to produce a lower dimensional display space where each household is represented by a point and the distance between these points give the measure of similarity between these households. On the other hand, clustering techniques are used to provide information about the clustering structure of the households. Households that are in the same cluster can be considered to be more similar, while households are more dissimilar in their energy behavior across one or few temporal deconstructions.
+
+
+
+
 
 
 
