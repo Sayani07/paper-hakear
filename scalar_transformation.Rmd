@@ -1,7 +1,6 @@
 ---
 title: "Choosing an appropriate scalar transformation to normalise wpd"
 author: "Sayani Gupta"
-date: "28/01/2021"
 output: pdf_document
 ---
 
