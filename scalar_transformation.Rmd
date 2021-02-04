@@ -20,13 +20,10 @@ library(ggplot2)
 
 Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd is obtained.
 
-
- - How the distribution of the raw wpd looks across nfacets and nx?
- 
- Both shape and scale of the distribution changes for different nx and nfacet categories.
+ - How the distribution of the raw wpd (without any transformation for normalization) looks across nfacets and nx? Both shape and scale of the distribution changes for different nx and nfacet categories.
 
 ```{r read}
-N01 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+N01 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
 ```
 
 
@@ -41,86 +38,92 @@ N01 %>%
 ```
 
 
- - Plot the values of wpd against nx*nfacet to see the rough relationship
+ - Plot the values of raw wpd against nx*nfacet to see the rough relationship
 
 ```{r}
 N01 %>% 
-  ggplot(aes(x=as.factor(nx*nfacet), y = value)) +
-  geom_boxplot() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd")
+  ggplot(aes(x=nx*nfacet, y = value)) +
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd")
 
 ```
- - Plot the values of wpd against nx*nfacet to see if the same relationship holds for different nx and nfacet relationships
 
-Looks like for all the variations, there is a quadratic relationship between wpd values and nx*nfacet
+
+**Current attempt**
+
+- Fit a log-linear relationship of median(values) to log(nx*nfacet) as discussed today. The fit is pretty good.
+
+```{r, echo = TRUE}
+N01_median <- N01 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = N01_median)
+summary(fit_lm2)
+```
+
+- Make it a horizontal line so that the values are not affected by 
+nx\*nfacet by plotting (value - intercept)/log(nx\*nfacet) against log(nx*nfacet). The line actually becomes horizontal after this transformation.
 
 
 ```{r}
-every_nth = function(n) {
-  return(function(x) {x[c(TRUE, rep(FALSE, n - 1))]})
-}
+intercept <- fit_lm2$coefficients[1]
+slope <- fit_lm2$coefficients[2]
+
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - intercept)/log(nx*nfacet))) +
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
+
 ```
+- See distribution of the transformed variable across nx and nfacets. For higher values of nx and nfacet, the distribution is similar, but not for lower values.
 
 ```{r}
 N01 %>% 
-  mutate(comp_lev = if_else(nx<nfacet, "nx<nfacet",
-                            if_else(nx>nfacet,
-                               "nx>nfacet", "nx=nfacet"))) %>% 
-  ggplot(aes(x=as.factor(nx*nfacet), y = value)) +
-  geom_boxplot() + facet_wrap(~comp_lev) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd") + scale_x_discrete(breaks = every_nth(n = 5))
-```
-
- - Attempt to linearize it with sqrt, sqrt(sqrt) and log (sqrt(sqrt))
-
- The transformation log (sqrt(sqrt())) on nx*nfacet finally makes it approximately linear. 
-
-```{r}
-N01 %>% 
-  mutate(comp_lev = if_else(nx<nfacet, "nx<nfacet",
-                            if_else(nx>nfacet,
-                                    "nx>nfacet", "nx=nfacet"))) %>% 
-  ggplot(aes(x=sqrt(nx*nfacet), y = value)) +
-  geom_point() + facet_wrap(~comp_lev) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + ylab("raw wpd") 
-
-
-N01 %>% 
-  mutate(comp_lev = if_else(nx<nfacet, "nx<nfacet",
-                            if_else(nx>nfacet,
-                                    "nx>nfacet", "nx=nfacet"))) %>% 
-  ggplot(aes(x=sqrt(sqrt(nx*nfacet)), y = value)) +
-  geom_point() + facet_wrap(~comp_lev) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + ylab("raw wpd") 
-
-
-N01 %>% 
-  mutate(comp_lev = if_else(nx<nfacet, "nx<nfacet",
-                            if_else(nx>nfacet,
-                                    "nx>nfacet", "nx=nfacet"))) %>% 
-  ggplot(aes(x=log(sqrt(sqrt(nx*nfacet))), y = value)) +
-  geom_point() + facet_wrap(~comp_lev) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + ylab("raw wpd") 
+  ggplot(aes(x = (value - intercept)/(log(nx*nfacet)))) + 
+  geom_density(fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  xlab("wpd") +
+  scale_x_continuous(breaks = scales::breaks_extended(3))
 
 ```
 
- - Distribution after linearizing it
-
-The distribution of $wpd_{norm} = log(sqrt(sqrt(nx*nfacet)))/wpd$ is plotted. The shape and spread look similar but location is shifting to the right. 
-
-(If we define $wpd_{norm}$ as the inverse of it, the values become too small and the distribution too skewed. Hence the inverse of it is considered.)
+**Earlier attempt**
+ - The distribution of $wpd_{norm} = log(sqrt(sqrt(nx*nfacet)))/wpd$ is plotted since the plot of log(sqrt(sqrt(nx * nfacet))) against wpd looked linear. The shape and spread look similar but location is shifting to the right. (If we define $wpd_{norm}$ as the inverse of it, the values become too small and the distribution too skewed. Hence the inverse of it is considered.)
 
 <!-- even after doing Box-cox transformation to up-weight the lower values of nx*nfacet and down-weigh higher values -->
 
 ```{r}
+
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet),
+             y = log(sqrt(nx*nfacet))/value)) +
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
+
+
  N01 %>% 
-  ggplot(aes(x = forecast::BoxCox(log(sqrt(sqrt(nx*nfacet)))/value,
-             lambda = "auto"))) + 
+  ggplot(aes(x = log(sqrt(nx*nfacet))/value)) + 
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   xlab("wpd norm")
-
-
-
-
-
 ```
- 
 
 What we want is a transformation which will be constant and not linear to obtain similar locations for all panels.
+
+
+```{r}
+fit2 <- lm(log(sqrt(nx*nfacet))/value ~ log(nx*nfacet), N01)
+intercept <- fit2$coefficients[1]
+slope <- fit2$coefficients[2]
+
+N01 %>% 
+ggplot(aes(x = 
+             (log(sqrt(nx*nfacet)) - intercept)/log(nx*nfacet))) +
+geom_density(fill = "blue") +
+facet_grid(nx~nfacet,
+labeller = "label_both") +
+xlab("wpd norm")
+
+```
+
+
