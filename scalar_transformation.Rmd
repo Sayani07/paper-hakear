@@ -84,54 +84,17 @@ N01 %>%
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   xlab("wpd") +
-  scale_x_continuous(breaks = scales::breaks_extended(3))
+  scale_x_continuous(breaks = scales::breaks_extended(3)) +
+  xlab("wpd_norm = (wpd - intercept)/(log(nx*nfacet)")
 
 
 ```
 
-**Earlier attempt**
- - The distribution of $wpd_{norm} = log(sqrt(sqrt(nx*nfacet)))/wpd$ is plotted since the plot of log(sqrt(sqrt(nx * nfacet))) against wpd looked linear. The shape and spread look similar but location is shifting to the right. (If we define $wpd_{norm}$ as the inverse of it, the values become too small and the distribution too skewed. Hence the inverse of it is considered.)
+It was suggested that we can do permutation normalization for smaller levels and this scalar transformation for higher levels as this transformation is working well when both nx and nfacet are high enough. There are potentially two problems if we follow that approach:
 
-<!-- even after doing Box-cox transformation to up-weight the lower values of nx*nfacet and down-weigh higher values -->
-
-```{r, fig.cap = "Earlier attempt: A different transformation was used for making the relationship linear and then horizontal. The linear relationship looks promising but when the same method was applied to make it horizonal and eventually look at the distribution, it was again found that the distributions across different nx and nfacets are not similar."}
-
-N01 %>% 
-  ggplot(aes(x=log(nx*nfacet),
-             y = log(sqrt(nx*nfacet))/value)) +
-  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
-
- N01 %>% 
-  ggplot(aes(x = log(sqrt(nx*nfacet))/value)) + 
-  geom_density(fill = "blue") +
-  facet_grid(nx~nfacet,
-             labeller = "label_both") + 
-  xlab("log(sqrt(nx*nfacet))/value")
-```
-
-What we want is a transformation which will be constant and not linear to obtain similar locations for all panels.
+- Since the normalized wpd's for different harmonies will be on different scales, harmonies could not be ranked even for the same objects (households) to select the most important household for that object - which was essentially the idea. Hence, the normalized wpd's would have to be brought on the same scale irrespective of the approach (whether permutation approach or scalar transformation).
 
 
-```{r, fig.cap="Same approach was employed to make it" }
-fit2 <- lm(log(sqrt(nx*nfacet))/value ~ log(nx*nfacet), N01)
-intercept <- fit2$coefficients[1]
-slope <- fit2$coefficients[2]
-
-
-N01 %>% 
-  ggplot(aes(x=log(nx*nfacet), 
-             y = ((log(sqrt(nx*nfacet))/value - intercept)/log(nx*nfacet)))) +
-  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
-
-
-N01 %>% 
-ggplot(aes(x = 
-             (log(sqrt(nx*nfacet))/value - intercept)/log(nx*nfacet))) +
-geom_density(fill = "blue") +
-facet_grid(nx~nfacet,
-labeller = "label_both") +
-xlab("wpd norm")
-
-```
+- We have to think about the cut-offs, that is, for which level of nx and nfacets, we want to move to scalar transformation like this.
 
 
