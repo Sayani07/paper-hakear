@@ -20,14 +20,14 @@ library(ggplot2)
 
 Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd is obtained.
 
- - How the distribution of the raw wpd (without any transformation for normalization) looks across nfacets and nx? Both shape and scale of the distribution changes for different nx and nfacet categories.
+ - How the distribution of the raw wpd (without any transformation for normalization) looks across nfacets and nx? Both shape and scale of the distribution changes for different nx and nfacet categories as could be seen in Figure \ref{fig:raw}.
 
 ```{r read}
 N01 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
 ```
 
 
-```{r raw}
+```{r raw, fig.cap="Distribution of raw wpd is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different nx and nfacet categories."}
 N01 %>% 
   ggplot(aes(x = value)) + 
   geom_density(fill = "blue") +
@@ -38,19 +38,18 @@ N01 %>%
 ```
 
 
- - Plot the values of raw wpd against nx*nfacet to see the rough relationship
+ - Plot the values of raw wpd against nx*nfacet to see the rough relationship (\ref{fig:quadratic}).
 
-```{r}
+```{r quadratic, fig.cap = "The raw wpd is plotted against nx*nfacet and the blue line represents the median of the multiple values for each nx*nfacet levels."}
 N01 %>% 
   ggplot(aes(x=nx*nfacet, y = value)) +
   geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd")
 
 ```
 
-
 **Current attempt**
 
-- Fit a log-linear relationship of median(values) to log(nx*nfacet) as discussed today. The fit is pretty good.
+- Fit a log-linear model of median(values) to log(nx*nfacet) as discussed today. The fit is pretty good and the summary of the fit is shown below.
 
 ```{r, echo = TRUE}
 N01_median <- N01 %>% 
@@ -62,21 +61,23 @@ summary(fit_lm2)
 ```
 
 - Make it a horizontal line so that the values are not affected by 
-nx\*nfacet by plotting (value - intercept)/log(nx\*nfacet) against log(nx*nfacet). The line actually becomes horizontal after this transformation.
+nx\*nfacet by plotting $wpd_{norm} = (value - intercept)/log(nx*nfacet)$ against log(nx*nfacet). The line actually becomes horizontal after this transformation as could be seen in Figure \ref{fig:horizontal}.
 
 
-```{r}
+```{r horizontal, fig.cap = "wpd_{norm} is plotted against log(nx*nfacet). The relationship changed from being non-linear to almost horizontal. The horizontal line would imply that median values of wpd are unaffected by the value of nx* nfacet."}
+
 intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
 
 N01 %>% 
   ggplot(aes(x=log(nx*nfacet), y = (value - intercept)/log(nx*nfacet))) +
-  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue")  +
+  ylab("wpd_norm = (wpd - intercept)/log(nx*nfacet)")
 
 ```
-- See distribution of the transformed variable across nx and nfacets. For higher values of nx and nfacet, the distribution is similar, but not for lower values.
+- See distribution of the transformed variable $wpd_{norm}$ across nx and nfacets. For higher values of nx and nfacet, the distribution is similar, but not for lower values.
 
-```{r}
+```{r, fig.cap = "The distribution of the transformed wpd is plotted. The shape and the scale of the distribution still changes across different nx and nfacet levels, but seems uniform for higher levels." }
 N01 %>% 
   ggplot(aes(x = (value - intercept)/(log(nx*nfacet)))) + 
   geom_density(fill = "blue") +
@@ -85,6 +86,7 @@ N01 %>%
   xlab("wpd") +
   scale_x_continuous(breaks = scales::breaks_extended(3))
 
+
 ```
 
 **Earlier attempt**
@@ -92,33 +94,39 @@ N01 %>%
 
 <!-- even after doing Box-cox transformation to up-weight the lower values of nx*nfacet and down-weigh higher values -->
 
-```{r}
+```{r, fig.cap = "Earlier attempt: A different transformation was used for making the relationship linear and then horizontal. The linear relationship looks promising but when the same method was applied to make it horizonal and eventually look at the distribution, it was again found that the distributions across different nx and nfacets are not similar."}
 
 N01 %>% 
   ggplot(aes(x=log(nx*nfacet),
              y = log(sqrt(nx*nfacet))/value)) +
   geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
 
-
  N01 %>% 
   ggplot(aes(x = log(sqrt(nx*nfacet))/value)) + 
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  xlab("wpd norm")
+  xlab("log(sqrt(nx*nfacet))/value")
 ```
 
 What we want is a transformation which will be constant and not linear to obtain similar locations for all panels.
 
 
-```{r}
+```{r, fig.cap="Same approach was employed to make it" }
 fit2 <- lm(log(sqrt(nx*nfacet))/value ~ log(nx*nfacet), N01)
 intercept <- fit2$coefficients[1]
 slope <- fit2$coefficients[2]
 
+
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet), 
+             y = ((log(sqrt(nx*nfacet))/value - intercept)/log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") 
+
+
 N01 %>% 
 ggplot(aes(x = 
-             (log(sqrt(nx*nfacet)) - intercept)/log(nx*nfacet))) +
+             (log(sqrt(nx*nfacet))/value - intercept)/log(nx*nfacet))) +
 geom_density(fill = "blue") +
 facet_grid(nx~nfacet,
 labeller = "label_both") +
