@@ -77,8 +77,6 @@ N01 %>%
   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") 
 
 
-
-
 ##----raw-nx_nfacet_product_cat
 # seeing if the relationship differs for nx<nfacet or nx>nfacet
 N01 %>% 
@@ -230,6 +228,8 @@ summary(fit_lm2)
 intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
 
+
+## attempt 1
 # relationship of mean and nx*nfacet
 
 N01 %>% 
@@ -245,3 +245,53 @@ N01 %>%
   xlab("wpd") +
   scale_x_continuous(breaks = scales::breaks_extended(3))
 
+
+
+## attempt 2
+# suggested by Rob again
+
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - intercept - slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") 
+
+
+N01 %>% 
+  ggplot(aes(x = ((value - intercept - slope*log(nx*nfacet))))) + 
+  geom_density(fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  xlab("wpd") +
+  scale_x_continuous(breaks = scales::breaks_extended(3))
+
+
+## attempt 3 (check if other distribution also leads to this)
+## for this you need to change the input files and check if the coefficients are kind of same
+
+N01 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
+
+
+
+N01_median <- N01 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = N01_median)
+
+summary(fit_lm2)
+
+intercept <- fit_lm2$coefficients[1]
+slope <- fit_lm2$coefficients[2]
+
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - intercept - slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") 
+
+
+N01 %>% 
+  ggplot(aes(x = ((value - intercept - slope*log(nx*nfacet))))) + 
+  geom_density(fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  xlab("wpd") +
+  scale_x_continuous(breaks = scales::breaks_extended(3))
