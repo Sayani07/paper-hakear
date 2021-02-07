@@ -1,7 +1,14 @@
 ---
 title: "Choosing an appropriate scalar transformation to normalise wpd"
 author: "Sayani Gupta"
-output: pdf_document
+output:
+  bookdown::pdf_book:
+    #base_format: rticles::asa_article
+    fig_height: 5
+    fig_width: 8
+    fig_caption: yes
+    dev: "pdf"
+    toc: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -71,7 +78,7 @@ slope <- fit_lm2$coefficients[2]
 N01 %>% 
   ggplot(aes(x=log(nx*nfacet), y = (value - intercept)/log(nx*nfacet))) +
   geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue")  +
-  ylab("wpd_norm = (wpd - intercept)/log(nx*nfacet)")
+  ylab("wpd_norm1 = (wpd - intercept)/log(nx*nfacet)")
 
 ```
 - See distribution of the transformed variable $wpd_{norm}$ across nx and nfacets. For higher values of nx and nfacet, the distribution is similar, but not for lower values.
@@ -84,7 +91,7 @@ N01 %>%
              labeller = "label_both") + 
   xlab("wpd") +
   scale_x_continuous(breaks = scales::breaks_extended(3)) +
-  xlab("wpd_norm = (wpd - intercept)/(log(nx*nfacet)")
+  xlab("wpd_norm1")
 
 
 ```
@@ -96,4 +103,52 @@ It was suggested that we can do permutation normalization for smaller levels and
 
 - We have to think about the cut-offs, that is, for which level of nx and nfacets, we want to move to scalar transformation like this.
 
+
+# Reduce the heteroskedasticity by the transformation y - a - b*log(n)
+
+
+In Figure \ref{fig:new-transform}, we see that the transformed wpd value $wpd_{norm2} = wpd - intercept - slope*log(nx*nfacet)$ has lower heteroscedasticity as compared to $wpd_{norm1}$ when plotted across $log(nx*nfacet)$.
+
+
+```{r new-transform, echo = TRUE, fig.cap = "$wpd_{norm2}$ is plotted against log(nx*nfacet). The relationship is horizontal with reduced heteroscedasticity."}
+N01 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - intercept - slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  xlab("wpd_norm2 =  value - intercept - slope*log(nx*nfacet)")
+```
+
+In Figure \ref{fig:dist-new-transform}, we see that the distribution of $wpd_{norm2}$ is more similar across nx and nfacets than $wpd_{norm1}$.
+
+```{r dist-new-transform, echo = TRUE, fig.cap = " The distribution of $wpd_{norm2}$ is plotted. The distributions are more similar across different nx and nfacets as compared to $wpd_{norm1}$."}
+N01 %>% 
+  ggplot(aes(x = ((value - intercept - slope*log(nx*nfacet))))) + 
+  geom_density(fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  xlab("wpd_norm2 =  value - intercept - slope*log(nx*nfacet)") +
+  scale_x_continuous(breaks = scales::breaks_extended(3))
+```
+
+In Figure \ref{fig:dist-new-approx}, we see that the distribution of $wpd_{norm2}$ is similar when normalised with true or approximate estimates of a and b.
+
+```{r dist-new-approx, echo = TRUE, fig.cap = " The distribution of $wpd_{norm2}$ is plotted for approximate estimate of a and b. The distributions are similar when plotted against true estimate of and b."}
+N01_compare <- N01 %>% 
+  mutate(with_true_est = (value - intercept - slope*log(nx*nfacet)),
+                               
+                          with_approx_est = (value - 0.04 - 0.003*log(nx*nfacet))) %>% 
+  pivot_longer(cols = 5:6,
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+
+N01_compare %>% 
+  ggplot() +
+  geom_density(aes(x = value_estimate, fill = type_estimate), alpha = 0.5) +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  xlab("value - intercept - slope*log(nx*nfacet)") +
+  scale_x_continuous(breaks = scales::breaks_extended(3)) +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  xlab("wpd_norm2")
+```
 
