@@ -7,7 +7,7 @@ library(tidyverse)
 N01 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
 
 
-write_csv(N01, "simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
+#write_csv(N01, "simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
 
 ## ---raw
 
@@ -267,29 +267,31 @@ N01 %>%
 ## attempt 3 (check if other distribution also leads to this)
 ## for this you need to change the input files and check if the coefficients are kind of same
 
-N01 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
+G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma01.rds")
 
-N01_median <- N01 %>% 
+G21_median <- G21 %>% 
   group_by(nx*nfacet) %>% 
   summarise(actual = median(value))
 
+G21_median %>% summary(actual)
 
-fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = N01_median)
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
 
 summary(fit_lm2)
 
 intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
 
-N01 %>% 
+G21 %>% 
   ggplot(aes(x=log(nx*nfacet), y = (value - intercept - slope*log(nx*nfacet)))) +
   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") 
 
 
-N01 %>% 
+G21 %>% 
   ggplot(aes(x = ((value - intercept - slope*log(nx*nfacet))))) + 
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   xlab("wpd") +
   scale_x_continuous(breaks = scales::breaks_extended(3))
+
