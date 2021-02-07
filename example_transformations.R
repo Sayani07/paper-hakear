@@ -267,9 +267,7 @@ N01 %>%
 ## attempt 3 (check if other distribution also leads to this)
 ## for this you need to change the input files and check if the coefficients are kind of same
 
-N01 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
-
-
+N01 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
 
 N01_median <- N01 %>% 
   group_by(nx*nfacet) %>% 
