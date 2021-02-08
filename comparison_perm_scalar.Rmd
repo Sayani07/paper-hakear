@@ -1,0 +1,85 @@
+---
+title: "Compare permutation and scalar transformation approaches on simulated and real data"
+author: "Sayani Gupta"
+date: "08/02/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      eval = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+knitr::read_chunk("example_transformations.R")
+library(tidyverse)
+library(readr)
+library(ggplot2)
+```
+
+
+**Simulated data generation:** Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd $wpd_{raw}$ is obtained.
+
+
+## Scalar transformation approach to normalisation
+
+A log-linear model is fitted to see how the values of $wpd_{raw}$ changes with the values of $nx$ and $nfacet$. The model is of the form $$y = a+b*log(x) +e$$, where $y = median(wpd_{raw})$ and $x = nx*nfacet$. $wpd_norm$ is a transformation on $wpd_{raw}$ which should be designed to remove the effect of $nx*nfacet$ on $wpd_{raw}$ and thus is defined as follows:
+$wpd_{norm} = wpd_{raw} - b*log(nx*nfacet)$
+
+
+## Permutation approach to normalisation
+
+The simulated data for each of the panels is permuted/shuffled $nperm = 100$ times and for each of those permutations $wpd_{norm}$ is computed as follows: $wpd_{norm} =  (wpd_{raw} - mean(wpd_{raw}))/sd(wpd_{raw})$
+. This is done so that the distribution of the normalised measure $wpd_{norm}$ has the same mean and standard deviation across different nx and nfacet.
+
+
+## Comparing the two approaches for simulated data
+
+In Figure \ref{fig:dist-new-transform}, we see that the distribution of $wpd_{norm2}$ is more similar across nx and nfacets than $wpd_{norm1}$.
+
+
+In Figure \ref{fig:dist-new-approx}, we see that the distribution of $wpd_{norm2}$ is similar when normalised with true or approximate estimates of a and b.
+
+```{r dist-new-approx, echo = TRUE, fig.cap = " The distribution of $wpd_{norm2}$ is plotted for approximate estimate of a and b. The distributions are similar when plotted against true estimate of and b."}
+
+G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
+
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+# fit model median to log(nx*nfacet)
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
+
+summary(fit_lm2)
+
+intercept <- fit_lm2$coefficients[1]
+slope <- fit_lm2$coefficients[2]
+
+
+
+G21_compare <- G21 %>% 
+  mutate(with_true_est = (value - slope*log(nx*nfacet)),
+                               
+                          with_approx_est = (value - 0.0027*log(nx*nfacet))) %>% 
+  pivot_longer(cols = 5:6,
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+
+G21_compare %>% 
+  ggplot() +
+  geom_density(aes(x = value_estimate, fill = type_estimate), alpha = 0.5) +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  scale_x_continuous(breaks = scales::breaks_extended(3)) +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  xlab("wpd_norm2")
+```
+
+
+
+
+## Comparing the two approaches from real data
+
+

@@ -285,12 +285,12 @@ intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
 
 G21 %>% 
-  ggplot(aes(x=log(nx*nfacet), y = (value - intercept - slope*log(nx*nfacet)))) +
+  ggplot(aes(x=log(nx*nfacet), y = (value - slope*log(nx*nfacet)))) +
   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") 
 
 
 G21 %>% 
-  ggplot(aes(x = ((value - intercept - slope*log(nx*nfacet))))) + 
+  ggplot(aes(x = ((value - 0.0027*log(nx*nfacet))))) + 
   geom_density(fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
