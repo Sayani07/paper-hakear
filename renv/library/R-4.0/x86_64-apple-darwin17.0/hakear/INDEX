@@ -9,6 +9,9 @@ compute_pairwise_dist   Title computing all within and between facet
                         data
 compute_pairwise_max    Title Compute raw pairwise distances
 compute_pairwise_norm   Title Compute normalised mmpd
+compute_pairwise_norm_scalar
+                        Title Compute scalar normalised pairwise
+                        distances
 compute_quantiles       compute quantiles of data across categories
 compute_wpd_dist        Title computing all within and between facet
                         distances between quantile categories given a

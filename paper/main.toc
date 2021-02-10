@@ -11,21 +11,22 @@
 \contentsline {section}{\numberline {3}Choosing harmonies with significant wpd}{10}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Size, power and confidence interval}{10}{subsection.3.1}%
 \contentsline {paragraph}{\numberline {3.1.0.1}Characteristics under different simulation designs}{10}{paragraph.3.1.0.1}%
-\contentsline {section}{\numberline {4}Applications}{13}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Smart meter data of Australia}{13}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}50 households together}{13}{subsubsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.2}Multidimensional scaling}{13}{subsubsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.3}Putting similar households on linear scale}{13}{subsubsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.2}T20 cricket data of Indian Premiere League}{13}{subsection.4.2}%
-\contentsline {section}{\numberline {5}Discussion points and future work}{14}{section.5}%
-\contentsline {section}{\numberline {6}Appendix}{14}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Null distribution}{14}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{14}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Normalised maximum distances follow standard Gumbel distribution}{14}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}Limiting distribution of median of normalised maximum distances is normal}{14}{subsubsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.2}Power}{16}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Confidence interval}{16}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}Varying distribution across facet}{16}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}Varying distribution across x-axis}{16}{subsubsection.6.3.2}%
-\contentsline {subsubsection}{\numberline {6.3.3}Varying distribution across both facets and x-axis}{16}{subsubsection.6.3.3}%
-\contentsline {subsubsection}{\numberline {6.3.4}Repeat all with varying facet and x-axis levels}{16}{subsubsection.6.3.4}%
+\contentsline {section}{\numberline {4}Application}{13}{section.4}%
+\contentsline {subsubsection}{\numberline {4.0.1}Multidimensional scaling and cluster analysis}{13}{subsubsection.4.0.1}%
+\contentsline {subsubsection}{\numberline {4.0.2}Advantage over taditional feature based methods}{15}{subsubsection.4.0.2}%
+\contentsline {subsubsection}{\numberline {4.0.3}Write the method in notations}{15}{subsubsection.4.0.3}%
+\contentsline {subsubsection}{\numberline {4.0.4}Distinction, repeatability, and robustness metrics}{15}{subsubsection.4.0.4}%
+\contentsline {subsubsection}{\numberline {4.0.5}Putting similar households on linear scale}{15}{subsubsection.4.0.5}%
+\contentsline {subsection}{\numberline {4.1}T20 cricket data of Indian Premiere League}{15}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Discussion points and future work}{18}{section.5}%
+\contentsline {section}{\numberline {6}Appendix}{18}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Null distribution}{18}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{18}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Normalised maximum distances follow standard Gumbel distribution}{18}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}Limiting distribution of median of normalised maximum distances is normal}{18}{subsubsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.2}Power}{18}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Confidence interval}{18}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Varying distribution across facet}{19}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Varying distribution across x-axis}{19}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Varying distribution across both facets and x-axis}{19}{subsubsection.6.3.3}%
+\contentsline {subsubsection}{\numberline {6.3.4}Repeat all with varying facet and x-axis levels}{19}{subsubsection.6.3.4}%

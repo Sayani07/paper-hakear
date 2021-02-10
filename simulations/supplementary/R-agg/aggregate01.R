@@ -11,7 +11,7 @@ library(rlang)
 
   names_levels <- map_dfr(all_files, 
                           function(x){
-                            z = str_split(str_remove(x, "_dist.rds"), "-") %>% 
+                            z = str_split(str_remove(x, "-wpd.rds"), "-") %>% 
                               unlist()
                             bind_cols(type = z[1],
                                       design = z[2],

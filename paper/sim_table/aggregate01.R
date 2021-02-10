@@ -1,12 +1,12 @@
 # contains function to aggregate data each for from N(0,1), N(0,5), N(5,1), N(5,5), Gamma(0.5, 1), Gamma(2, 1)
-#  aggregated data from the file simulations/results/norm/folder_name and tidy them up
+#  aggregated data from the file simulations/results_norm_scalar/norm/folder_name and tidy them up
 library(tidyverse)
 library(here)
 library(readr)
 library(rlang)
 
   
-  all_files = list.files(path = paste0("paper/sim_table/results/"), 
+  all_files = list.files(path = paste0("paper/sim_table/results_norm_scalar/"), 
                          pattern = ".rds")
   
   names_levels <- map_dfr(all_files, 
@@ -20,12 +20,12 @@ library(rlang)
                                       x_variable = z[3])
                           })
   
-  # len_file = read_rds(("simulations/results/norm/tuning_param/2_2_tuning_param.rds"))
+  # len_file = read_rds(("simulations/results_norm_scalar/norm/tuning_param/2_2_tuning_param.rds"))
   # 
   # names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
   
   
-  all_files_path <- paste0("paper/sim_table/results/",
+  all_files_path <- paste0("paper/sim_table/results_norm_scalar/",
                            all_files)  
   
   
@@ -41,4 +41,4 @@ library(rlang)
     bind_rows() %>%
     arrange(customer_id)
   
-  write_rds(all_data, "paper/sim_table/all_data.rds")
+  write_rds(all_data, "paper/sim_table/all_data_scalar.rds")

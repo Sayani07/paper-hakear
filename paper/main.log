@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.1.13)  31 JAN 2021 16:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.1.13)  9 FEB 2021 15:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,7 +602,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=94, 565.11125pt x 743.77875pt>
+<figure/calendar-elec-1.pdf, id=89, 565.11125pt x 743.77875pt>
 File: figure/calendar-elec-1.pdf Graphic file (type pdf)
 <use figure/calendar-elec-1.pdf>
 Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
@@ -616,12 +616,12 @@ has been already used, duplicate ignored
                                                   
 l.111 
        <./figure/calendar-elec-1.pdf>]
-<figure/id2-1.pdf, id=119, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=114, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=120, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=115, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -649,7 +649,7 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 LaTeX Warning: Reference `@Gupta2020-vo' on page 5 undefined on input line 161.
 
 
-<figure/null4by2-1.pdf, id=160, 569.12625pt x 352.31625pt>
+<figure/null4by2-1.pdf, id=155, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 165.
@@ -666,7 +666,7 @@ Underfull \hbox (badness 1635) in paragraph at lines 181--182
                                                   
 l.182 
        <./figure/null4by2-1.pdf>]
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=186, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=181, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -686,65 +686,83 @@ has been already used, duplicate ignored
 l.257 
        </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>] [9
 ]
-<figure/sim_all-1.pdf, id=217, 562.1pt x 351.3125pt>
+<figure/sim_all-1.pdf, id=212, 562.1pt x 351.3125pt>
 File: figure/sim_all-1.pdf Graphic file (type pdf)
 <use figure/sim_all-1.pdf>
 Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 312.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=218, 562.1pt x 351.3125pt>
+<figure/sim_all-2.pdf, id=213, 562.1pt x 351.3125pt>
 File: figure/sim_all-2.pdf Graphic file (type pdf)
 <use figure/sim_all-2.pdf>
 Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 312.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=219, 562.1pt x 351.3125pt>
+<figure/sim_all-3.pdf, id=214, 562.1pt x 351.3125pt>
 File: figure/sim_all-3.pdf Graphic file (type pdf)
 <use figure/sim_all-3.pdf>
 Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 312.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=220, 562.1pt x 351.3125pt>
+<figure/sim_all-4.pdf, id=215, 562.1pt x 351.3125pt>
 File: figure/sim_all-4.pdf Graphic file (type pdf)
 <use figure/sim_all-4.pdf>
 Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 312.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
 [10] [11 <./figure/sim_all-1.pdf> <./figure/sim_all-2.pdf>] [12 <./figure/sim_a
 ll-3.pdf> <./figure/sim_all-4.pdf>]
+<figure/clustering-1.pdf, id=284, 568.1225pt x 342.27875pt>
+File: figure/clustering-1.pdf Graphic file (type pdf)
+<use figure/clustering-1.pdf>
+Package pdftex.def Info: figure/clustering-1.pdf  used on input line 332.
+(pdftex.def)             Requested size: 469.7731pt x 283.02583pt.
+[13]
+<figure/unnamed-chunk-3-1.pdf, id=292, 558.085pt x 350.30875pt>
+File: figure/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-3-1.pdf  used on input line 334.
+(pdftex.def)             Requested size: 469.76752pt x 294.87204pt.
+<figure/unnamed-chunk-4-1.pdf, id=293, 558.085pt x 348.30125pt>
+File: figure/unnamed-chunk-4-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 336.
+(pdftex.def)             Requested size: 469.76752pt x 293.18224pt.
+[14 <./figure/clustering-1.pdf> <./figure/unnamed-chunk-3-1.pdf>] [15 <./figure
+/unnamed-chunk-4-1.pdf>]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-36.
+71.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [13pdfTeX warning (ext4): destination with the same identifier (name{table.1}
-) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.355 
-      ]
-<figure/cricex-1.pdf, id=308, 566.115pt x 350.30875pt>
+)
+<figure/cricex-1.pdf, id=339, 566.115pt x 350.30875pt>
 File: figure/cricex-1.pdf Graphic file (type pdf)
 <use figure/cricex-1.pdf>
-Package pdftex.def Info: figure/cricex-1.pdf  used on input line 362.
+Package pdftex.def Info: figure/cricex-1.pdf  used on input line 397.
 (pdftex.def)             Requested size: 422.78845pt x 261.6191pt.
-<figure/cricex-2.pdf, id=309, 566.115pt x 352.31625pt>
+<figure/cricex-2.pdf, id=340, 566.115pt x 352.31625pt>
 File: figure/cricex-2.pdf Graphic file (type pdf)
 <use figure/cricex-2.pdf>
-Package pdftex.def Info: figure/cricex-2.pdf  used on input line 362.
+Package pdftex.def Info: figure/cricex-2.pdf  used on input line 397.
 (pdftex.def)             Requested size: 422.78845pt x 263.11835pt.
-[14] [15pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.6}) has been already used, duplicate ignored
+[16pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.396 
-       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>] [16] (./main.aux)
+l.410 
+      ] [17pdfTeX warning (ext4): destination with the same identifier (name{fi
+gure.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.410 
+       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>] [18] [19] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5ABF7BA3F391F8AE14D4794242A58254;3129.
+(rerunfilecheck)             Checksum: 50DE98DA4BBC6AB27BAFF12A23182197;2909.
  ) 
 Here is how much of TeX's memory you used:
- 12619 strings out of 481227
- 182635 string characters out of 5913627
- 490477 words of memory out of 5000000
- 29197 multiletter control sequences out of 15000+600000
+ 12645 strings out of 481227
+ 183539 string characters out of 5913627
+ 490749 words of memory out of 5000000
+ 29215 multiletter control sequences out of 15000+600000
  459741 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2111b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -768,10 +786,10 @@ ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmtt10.pfb>
-Output written on main.pdf (16 pages, 521073 bytes).
+Output written on main.pdf (19 pages, 7883138 bytes).
 PDF statistics:
- 447 PDF objects out of 1000 (max. 8388607)
- 379 compressed objects within 4 object streams
- 104 named destinations out of 1000 (max. 500000)
- 200 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 488 PDF objects out of 1000 (max. 8388607)
+ 407 compressed objects within 5 object streams
+ 109 named destinations out of 1000 (max. 500000)
+ 207 words of extra memory for PDF output out of 10000 (max. 10000000)
 

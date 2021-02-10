@@ -356,7 +356,7 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 ## Normalisation
 
-The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define wpd is affected by the number of categories. The measure would have higher values if $C_i$ or $C_j$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. Therefore, in order to compare wpd across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure discussed as $wpd_{raw}$ and the normalised measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a dataset.
+The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define wpd is affected by the number of categories. The measure would have higher values if $C_i$ or $C_j$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. Therefore, in order to compare wpd across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalised measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. In the coming section, we have discussed two approaches to normalisation both through simulations.
 
 
 ## Simulation study
@@ -520,30 +520,349 @@ ggplot2::ggplot(design_all %>%
 
 
 
-# Applications {#sec:application}
+# Application {#sec:application}
 
-## Smart meter data of Australia {#sec:smartmeter}
+<!-- ## Smart meter data of Australia {#sec:smartmeter} -->
 
 <!-- # how data looks -->
 
+Clustering of electricity customers based on their consumption behavior facilitate effective market segmentation and hence better management and pricing.
+Electricity demand time series are the primary source of information of customers' consumption behavior.
+Due to technological developments, smart meters could provide large quantities of measurements on energy usage at more and more finer time intervals. Due to this extreme dimensionality along time of the demand data, it is a challenge to have clustering methods which could reduce the dimensionality to produce distinct clusters. One of the potential solutions is time series feature extraction. However, it is limited by the type of noisy, patchy and unequal time series that is very common in data sets of any residential customers. The idea is to choose similarity measures, which do not lose the core characteristic information of demand across different time deconstructions in aggregation processes and is robust against asynchronous or incomplete time series.
 
-Smart meters provide large quantities of measurements on energy usage for households across Australia. One of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney provides customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.-->The idea here is to show how to visualize the distribution of the energy consumption across different cyclic granularities in a systematic way to identify different behavioral patterns.
+We use the data from one of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney. The data has customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.--> The idea here is to
+use our similarity measure and show improved cluster distinction as compared to baseline feature based approaches. A data set of 100 homes is used to evaluate both approaches. This is different to deterministic segmentation which attempts to characterise load as a function of a fixed number of parameters, such as occupancy or types of appliances, and use those parameters for classification. We only use their load patterns across time deconstructions to define the similarity measure.
 
-
-### 50 households together
-
-
-Cluster analysis and multidimensional scaling (MDS) methods are used to explore the temporal structure of various households, their interrelations and determine similar behaving clusters of households in this study. 
-
-$wpd_norm$ is considered as the measure of similarity or dissimilarity while using MDS and clustering techniques. $wpd_norm$ could be constructed for each pair of harmony for each household and then similarity could be measured across individual or all harmonies together. MDS methods are used to produce a lower dimensional display space where each household is represented by a point and the distance between these points give the measure of similarity between these households. On the other hand, clustering techniques are used to provide information about the clustering structure of the households. Households that are in the same cluster can be considered to be more similar, while households are more dissimilar in their energy behavior across one or few temporal deconstructions.
+<!-- Write about common load clustering methods -->
 
 
+### Multidimensional scaling and cluster analysis
+
+Cluster analysis and multidimensional scaling (MDS) methods are used to explore the temporal structure of various households, their interrelations and determine similar behaving clusters of households in this study.
+MDS methods are used to produce a lower dimensional display space where each household is represented by a point and the distance between these points give the measure of similarity between these households. On the other hand, clustering techniques are used to provide information about the clustering structure of the households. Households that are in the same cluster can be considered to be more similar, while households are more dissimilar in their energy behavior across one or few temporal deconstructions.
+
+$wpd_norm$ is considered as the measure of similarity or dissimilarity while using MDS and clustering techniques. $wpd_norm$ could be constructed for each pair of harmony for each household and then similarity could be measured across single or all harmonies together. 
+
+
+```{r mds}
+set.seed(7777)
+library(gravitas)
+library(tsibble)
+library(lubridate)
+library(readr)
+
+all_data <- read_rds("sim_table/all_data.rds")
+sm_cust_data <- read_rds("data/sm_cust_data.rds") %>% 
+  as_tsibble(index = reading_datetime,
+             key = customer_id)
+
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+
+#sm_30 <- sample(sm_unique_cust$customer_id, 30)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(year(reading_datetime) == 2012)  %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+                    x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+
+# ggpubr::ggscatter(mds,
+#                   x = "Dim.1",
+#                   y = "Dim.2", 
+#                   label = rownames(mds),
+#                   size = 1,
+#                   repel = TRUE) 
+```
+
+
+```{r clustering}
+# K-means clustering
+clust <- kmeans(mds, 3)$cluster %>%
+  as.factor()
+mds <- mds %>%
+  mutate(groups = clust)
+
+
+# Plot and color by groups
+ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = rownames(mds),
+          color = "groups",
+          palette = "jco",
+          size = 1, 
+          ellipse = TRUE,
+          ellipse.type = "convex",
+          repel = TRUE)
+
+
+
+#   d = one_harmony_data %>%
+#     select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+#     dist()
+#   
+#   hc = stats::hclust(d,method="complete")
+#   plot(hc)
+#   groups<-cutree(hc, k=4)
+#   
+#   all_data_cluster <- cbind(one_harmony_data, groups) %>% 
+#     left_join(mds, by = "customer_id") %>% 
+#     mutate(groups = as.factor(groups))
+# 
+# 
+# 
+# ggpubr::ggscatter(all_data_cluster,
+#                   x = "Dim.1",
+#                   y = "Dim.2", 
+#                   label = rownames(mds),
+#                   color = "groups",
+#                   size = 1,
+#                   repel = TRUE) 
+
+```
+  
+10018272 is a customer from cluster 3, for which hour_day/wknd-wday comes after wknd-wday/day-month as opposed to 10006414 (cluster 1) for whom the direction is reversed.
+
+```{r}
+
+10006414
+
+
+all_data %>% 
+  filter(customer_id ==  10006414) %>% 
+  arrange(-wpd_norm)
+
+sm_cust_data %>% 
+  filter(customer_id ==  10006414) %>% 
+  prob_plot("hour_day",
+            "wknd_wday",
+            plot_type = "quantile",
+            quantile_prob = c(0.5),
+            symmetric = FALSE,
+            response = "general_supply_kwh")
+
+
+sm_cust_data %>% 
+  filter(customer_id ==  10006414) %>% 
+  prob_plot("hour_day",
+            "day_week",
+            plot_type = "quantile",
+            quantile_prob = c(0.5),
+            symmetric = FALSE,
+            response = "general_supply_kwh")
 
 
 
 
+all_data %>% 
+  filter(customer_id ==  10007340) %>% 
+  arrange(-wpd_norm)
 
-### Multidimensional scaling
+sm_cust_data %>% 
+  filter(customer_id ==  10007340) %>% 
+  prob_plot("day_month",
+            "day_week",
+            plot_type = "quantile",
+            quantile_prob = c(0.5),
+            symmetric = FALSE,
+            response = "general_supply_kwh")
+
+
+sm_cust_data %>% 
+  filter(customer_id ==  10007340) %>% 
+  prob_plot("hour_day",
+            "day_month",
+            plot_type = "quantile",
+            quantile_prob = c(0.5),
+            symmetric = FALSE,
+            response = "general_supply_kwh")
+
+
+all_data %>% 
+  filter(customer_id ==  10018272) %>% 
+  arrange(-wpd_norm)
+
+
+```
+
+  
+  
+  
+
+```{r}
+raw_data <- sm_cust_data %>% 
+  left_join(mds, by = "customer_id") 
+
+p1 <- raw_data %>% 
+  filter(groups==1) %>% 
+  ggplot() + 
+  geom_line(aes(x = reading_datetime,
+            y = general_supply_kwh)
+  )
+
+
+p2 <- raw_data %>% 
+  filter(groups==2) %>% 
+  ggplot() + 
+  geom_line(aes(x = reading_datetime,
+            y = general_supply_kwh)
+  )
+
+p3 <- raw_data %>% 
+  filter(groups==3) %>% 
+  ggplot() + 
+  geom_line(aes(x = reading_datetime,
+            y = general_supply_kwh)
+  )
+library(patchwork)
+p1/p2/p3
+
+```
+
+
+```{r}
+raw_data <- sm_cust_data %>% 
+  left_join(mds, by = "customer_id") 
+
+p1 <- raw_data %>% 
+  filter(groups==1) %>% 
+  prob_plot("day_week",
+            "hour_day",
+            response = "general_supply_kwh",
+            plot_type = "quantile",
+            symmetric = FALSE
+)
+
+p2 <- raw_data %>% 
+  filter(groups==2) %>% 
+  prob_plot("day_week",
+            "hour_day",
+            response = "general_supply_kwh",
+            plot_type = "quantile",
+            symmetric = FALSE
+)
+
+p3 <- raw_data %>% 
+  filter(groups==3) %>% 
+  prob_plot("day_week",
+            "hour_day",
+            response = "general_supply_kwh",
+            plot_type = "quantile",
+            symmetric = FALSE
+)
+library(patchwork)
+p1/p2/p3
+
+```
+
+
+
+```{r hour-day-day-month, eval = FALSE}
+
+set.seed(7777)
+library(gravitas)
+library(tsibble)
+library(lubridate)
+library(readr)
+
+all_data <- read_rds("sim_table/all_data.rds")
+sm_cust_data <- read_rds("data/sm_cust_data.rds")
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+
+#sm_30 <- sample(sm_unique_cust$customer_id, 30)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(year(reading_datetime) == 2012) %>% #for demo just show one column
+  as_tsibble(index = reading_datetime,
+             key = customer_id) %>% 
+  create_gran("wknd_wday") %>% 
+  create_gran("week_month")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "wknd_wday"
+x_variable = "week_month"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "wknd_wday",
+                    x_variable == "week_month") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+
+
+clust <- kmeans(mds, 3)$cluster %>%
+  as.factor()
+mds <- mds %>%
+  mutate(groups = clust)
+
+
+# Plot and color by groups
+ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = rownames(mds),
+          color = "groups",
+          palette = "jco",
+          size = 1, 
+          ellipse = TRUE,
+          ellipse.type = "convex",
+          repel = TRUE)
+
+
+
+
+```
+
+
+### Advantage over taditional feature based methods
+
+Since probability distribution of the load is considered across different cyclic granularity, there is no discarding of valuable data that might result from bringing all customers to the same time horizon.
+Moreover, since our metric is based on probability distribution, it will not be sensitive to outlier days and hence the clustering process will not be biased.
+Moreover, feature extraction applies to all days for all customers at once and therefore does not support parallel computing. Our metric is computed for each household separately and can even run for each each harmonies separately and thus fits well into the parallel computing framework.
+
+
+### Write the method in notations
+
+-  notation of time series for each customer
+-  wpd
+-  harmonies
+-  cluster
+
+
+### Distinction, repeatability, and robustness metrics
+
 
 
 ### Putting similar households on linear scale 

@@ -15,7 +15,7 @@ set.seed(7777)
 sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
 sm_30 <- sample(sm_unique_cust$customer_id, 30)
 sm_cust_samp <- sm_cust_data %>% 
-  filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
   filter(year(reading_datetime) == 2012) %>% #for demo just show one column
   as_tsibble(index = reading_datetime,
              key = customer_id) %>% 
@@ -28,7 +28,7 @@ facet_variable = "day_week"
 x_variable = "hour_day"
 
 one_harmony_data <- all_data %>%
-  filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
   filter(facet_variable == "day_week",
                     x_variable == "hour_day") %>% 
   mutate(customer_id = as.character(customer_id))
@@ -252,6 +252,5 @@ base %>%
   filter_select("id",
                 "select a customer_id", 
                 sm,
-                ~customer_id),
-                ) %>%
+                customer_id) %>%
   add_lines(x = ~reading_datetime, y = ~general_supply_kwh)
