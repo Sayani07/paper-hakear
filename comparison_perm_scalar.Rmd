@@ -64,6 +64,13 @@ summary(fit_lm2)
 intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
 
+
+G21 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  xlab("$wpd_norm =  wpd_raw - slope*log(nx*nfacet)$")
+
+
 G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds") %>% 
   rename("wpd_permutation" = "value")
 

@@ -20,7 +20,7 @@ sm_cust_data <- read_rds("paper/data/sm_cust_data.rds")
 
 ### Extract flags from simulation scenario
 
-# scen<- 170 #If running within R uncomment this.  This will only run first scenario
+# scen<- 200 #If running within R uncomment this.  This will only run first scenario
 #scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
 
 simj<-simtable[scen,] #Extract row of table
@@ -48,17 +48,16 @@ wpd_norm <- compute_pairwise_norm_scalar(all_data,
                         gran_facet = "id_facet",
                         response = sim_data,
                         quantile_prob =
-                          seq(0.01, 0.99, 0.01), 
-                        nperm = 200)
+                          seq(0.01, 0.99, 0.01))
 
   
-wpd_harmonies <- bind_cols(customer_id = customer_idj, 
+swpd_harmonies <- bind_cols(customer_id = customer_idj, 
                            harmony_tbl_rowj,
           wpd_norm = wpd_norm %>% unlist() %>% round(digits = 3))
 
 
 saveRDS(wpd_harmonies,
-        paste0('paper/sim_table/results/',
+        paste0('paper/sim_table/results_norm_scalar/',
                customer_idj,"-",
                facetj, "-", 
                xj, '.rds')) # seed and dist not included yet

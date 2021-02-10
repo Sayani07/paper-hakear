@@ -354,7 +354,7 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 <!-- A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories. -->
 
 
-## Normalisation
+# Normalisation
 
 The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define wpd is affected by the number of categories. The measure would have higher values if $C_i$ or $C_j$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. Therefore, in order to compare wpd across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalised measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. In the coming section, we have discussed two approaches to normalisation both through simulations.
 
@@ -383,12 +383,78 @@ $D_{var_x}$ (Difference in distribution only across x-axis)
 $D_{var_{all}}$ (Difference in distribution in both facets and x-axis)
 
 
-### Environment
+## Simulation environment
 
 R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community. The nodes and the storage used are as follows:
 
+## Methodology
 
-### Results
+### Notations
+
+Let $\{nx_{i}, i = 1, 2, \dots, nx\}$, $\{nfacet_{j}, j = 1, 2, \dots, nfacet\}$ be the set of x-axis and facet categories respectively. Each combination of $nx_{i}$ and $nfacet_{j}$is being referred to as a _panel_. Then the total number of panel is $nx*nfacet$. Let the total number of pairwise distances that could result in each panel be $\{z_k, k = 1, 2 , \dots, nx*nfacet\}$. Here, $\{z_1 = nx_1*nfacet_1\}$, $\{z_2 = nx_2*nfacet_2\}$ and $\{z_k = nx*nfacet\}$. Now, let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd_{raw}$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd_{raw}$.
+
+### Data generation
+
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The value of $\lambda$ is set to $0.67$. $nsim = 200$, which means each of these scenarios are run $200$ times by permuting the data in each of the panels. And hence $200$ values of $wpd_{raw}$ are obtained for each of those 64 panels. 
+
+
+### Permutation approach
+
+The permutation approach ensures that the distribution of the normalised weighted pairwise distance measure has the same mean and standard deviation across all combinations of $nx_i$ and $nfacet_j$. Thus, the normalised distances is computed as follows: $x^{norm}_{k} =  (x_{k} - mean_l(x_{k,l}))/sd_l(x_{k, l})$,  $x^{norm}_{k}$ is the value of the $wpd_{norm}$ for the $k^{th}$ panel.
+
+While this works successfully to make the mean and standard deviation across different nx and nfacet (as seen in Figure \ref{fig:}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalisation which is more approximate than exact but still has the same accuracy when compared to the permutation approach.
+
+### Modelling approach
+
+A log-linear model is fitted to see how the values of $wpd_{raw}$ changes with the values of $nx$ and $nfacet$.  The model is of the form $$y_k = a+b*log(z_k) + e_k$$, where, $y_k = median_l(x_{k, l})$ and $e_k$ are idiosyncratic errors. We have gone with the approach of fitting a linear regression model to estimate the parameters $a$ and $b$. The estimates and other model summary is given in \ref{tab:linear-model}.
+
+```{r linear-model}
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
+
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+# fit model median to log(nx*nfacet)
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
+
+summary(fit_lm2)
+```
+
+
+The final idea is to find a transformation on $wpd_{raw}$ which would remove the effect of $nx*nfacet$ on $wpd_{raw}$ and thus is defined as follows:
+$y^* =  y - \hat b*log(z)$, where 
+$y^*$ is the $median(wpd_{norm})$, 
+$y$ is the $median(wpd_{raw})$,
+$\hat b$ is the estimated value of the parameter $b$, 
+and $z = nx*nfacet$.
+
+The above takes care of the mean and the heterogeneity of the median transformed measure. But, the original distribution will still have some dissimilarities in shape and location specially for small values of $nx$ and $nfacet$ as could be seen in \ref{fig:}
+
+
+```{r}
+
+intercept <- fit_lm2$coefficients[1]
+slope <- fit_lm2$coefficients[2]
+
+G21 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  ylab("wpd_norm =  wpd_raw - slope*log(nx*nfacet)")
+
+
+```
+
+
+<!-- Let ${x_p, p = 1, 2, \dots, npanel}$ denote the total number of distances $nx*nfacet$ obtained in each panel. So for each $nx*nfacet$, we have $nsim = 200$ values of ${y_i}$. -->
+
+
+
+<!-- from $nx_{i}$ x-categories and $nfacet_{j}$ facet-categories is $nx_{i}*nfacet_{j}$ and  -->
+
+
+## Results
 
 This section reports the results of a simulation study that was carried out to evaluate the
 behavior of our distance measure across all potential factors. The results are reported in two parts: for the a) raw measure and then b) normalised one to show how the loopholes for the raw measures were removed using the normalized ones.
@@ -551,8 +617,8 @@ library(tsibble)
 library(lubridate)
 library(readr)
 
-all_data <- read_rds("sim_table/all_data.rds")
-sm_cust_data <- read_rds("data/sm_cust_data.rds") %>% 
+all_data <- read_rds(here("paper/sim_table/all_data.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds")) %>% 
   as_tsibble(index = reading_datetime,
              key = customer_id)
 
@@ -868,238 +934,6 @@ Moreover, feature extraction applies to all days for all customers at once and t
 ### Putting similar households on linear scale 
 
 
-
-
-## T20 cricket data of Indian Premiere League {#sec:cricket}
-
-The method is not only restricted to temporal data, and can be generalized to many hierarchical granularities (with  continuous and uni-directional nature). We illustrate this with an application to the sport cricket. Although there is no conventional time component in cricket, each ball can be thought to represent an ordering from past to future with the game progressing forward with each ball. In the Twenty20 format, an over will consist of 6 balls (with some exceptions), an inning is restricted to a maximum of 20 overs, a match will consist of 2 innings and a season consists of several matches. Thus, similar to time, there is a hierarchy where ball is nested within overs, overs nested within innings and innings within matches. The idea of cyclic granularities can be likewise mapped to this hierarchy. Example granularites then include ball of the over, over of the inning and ball of the inning. Although most of these cyclic granularities are circular in design of the hierarchy, in application of the rules some granularities are aperiodic. For example, in most cases an over will consist of 6 balls with some exceptions like wide balls or when an inning finishes before the over finishes. Thus, the cyclic granularity ball-of-over will be circular in most cases and aperiodic in others.
-
-<!-- However, irrespective of the type of cyclic granularities, it can be interesting to visualize the distribution of a measured variable across these cyclic granularities to throw light on the periodic behavior of a non-temporal data set similar to any temporal data set. -->
-
-The Indian Premier League (IPL) is a professional Twenty20 cricket league in India contested by eight teams representing eight different cities in India. The ball by ball data for IPL season 2008 to 2016 is fetched from [Kaggle](https://www.kaggle.com/josephgpinto/ipl-data-analysis/data). The `cricket` data set in the `gravitas` package summarizes the ball-by-ball data across overs and contains information for a sample of 214 matches spanning 9 seasons (2008 to 2016) such that each over has 6 balls, each inning has 20 overs and each match has 2 innings. This could be useful in a periodic world when we wish to compute any circular/quasi-circular granularity based on a hierarchy table which look like \autoref{tab:hierarchy-cric}.
-
-```{r hierarchy-cric}
-library(gravitas)
-library(tibble)
-hierarchy_model <- tibble::tibble(
-  `linear (G)` = c("over", "inning", "match", "season"),
-  `single-order-up cyclic (C)` = c("over-of-inning", "inning-of-match", "match-of-season", 1),
-  `period length/conversion operator (K)` = c(20, 2, "k(match, season)", 1)
-)
-knitr::kable(hierarchy_model,
-             format = "latex",
-             booktabs = TRUE,
-             caption = "Hierarchy table for cricket where overs are nested within an inning, innings nested within a match and matches within a season.") %>%
-  #row_spec(0, bold = TRUE)%>%
-  kable_styling()
-```
-
-
-However, even if the situation is not periodic and a similar hierarchy can not be formed, it can be interesting to visualize the distribution of a measured variable across relevant cyclic granularities to shed light on the aperiodic behavior of a non-temporal data set similar to aperiodic events like formal meetings, workshops, conferences, school semesters in a temporal set up. There are many interesting questions that could possibly be answered with such a data set irrespective of the type of cyclic granularities. <!--We will explore a few interesting questions and understand how the proposed approach in the paper can help answer some of the questions.-->
-
-<!-- the two teams have a single innings each, which is restricted to a maximum of 20 overs. Hence, in this format of cricket, a match will consist of 2 innings, an innings will consist of 20 overs, an over will consist of 6 balls with some exceptions. -->
-
-<!-- ```{r hierarchy, echo=FALSE} -->
-<!-- hierarchy_model <- tibble::tibble(linear gran = c("ball", "over", "inning", "match"),  -->
-<!--                                   convert_fct = c(6, 20, 2, 1)) -->
-<!-- knitr::kable(hierarchy_model, caption = " A hierarchy table for T20 cricket") -->
-<!-- ``` -->
-
-<!-- Each team is given a two-and-a-half-minute "strategic timeout" during each innings; one must be taken by the bowling team between the ends of the 6th and 9th overs, and one by the batting team between the ends of the 13th and 16th overs. -->
-
-<!-- Suppose, we are interested to see how the distribution of scores vary from the start to the end of the game. Let us brainstorm some of the questions that might help us comprehend that. -->
-
-<!-- a) What is the most common pattern for batting and bowling teams across balls, overs, innings and matches? Which are the teams which are typical and which are exceptions? -->
-
-<!-- How the scores per over vary across granularities/categorizations like innings of a match or matches of a season? Are these different for the winning teams in that season and the teams that couldn't qualify for the playoffs? -->
-
-<!-- Is the outcome of the game dependent on who bats first? Do some teams have more chance to win if they are batting in the first innings? -->
-
-<!-- We will look at the ball by ball data for all batting teams. Since we want a periodic world, where each over consists of 6 balls and each match consists of two innings, we shall filter out the matches or overs for which that is not true. Also, we look at runs per over as that would have more variability compared to runs per ball and it be easier to observe the strategies of the winning team through that.  -->
-
-<!-- Making it short -->
-
-<!-- First, we look at the distribution of runs (measured variable) across over-of-inning (circular granularity) and match-of-season (aperiodic cyclic granularity) in \autoref{fig:seas-over-inning}. The distribution of runs per over has not significantly changed from 2008 to 2016. There is no clear pattern/trend that runs per over is increasing or decreasing across seasons. Hence, we work with subsets of seasons to answer some of the questions: -->
-
-First, it would be interesting to see if the distribution of total runs vary depending on if a team bats in the first or second innings. The Mumbai Indians (MI) and Chennai Super kings (CSK) <!--are considered one of the best teams in IPL with multiple winning titles and --> appeared in final playoffs from 2010 to 2015. We take their example in order to dive deeper into this question. <!--Circular granularities "over-of-inning" and "inning-of-match" can be computed using \ref{sec:circular-gran-def} with over as index of the tsibble.--> From Figure \ref{fig:cricex}(a), it can be observed that for the team batting in the first inning there is an upward trend of runs per over, while there is no clear upward trend in median and quartile deviation of runs for the teams batting in the second inning. This seem to indicate that players feel mounting pressure to score more runs as they approach towards the end of the first inning. Whereas teams batting in the second inning have a set target in mind and are not subjected to such mounting pressure and may adopt a more conservative strategy, to score runs. Thus winning teams like CSK and MI seem to employ different inning strategies when it comes to their batting order.
-
-<!-- Also longer and more distinct letter values in the second innings suggests that the variability is more in the second innings. -->
-<!-- - Q1: How their run rates vary depending on if they bat first or 2nd? Is there a chance that they are more likely to win if they bat first? -->
-
-<!-- - Q2: Which team is more consistent in their approach in terms of run rate across different overs of the innings? -->
-
-<!-- # ```{r seas-over-inning, fig.cap = "Quantile plot of runs per over across overs of different seasons. There is no pattern on increase or decrease of runs across overs for seasons."} -->
-<!-- #   cricket_tsibble_all %>%  -->
-<!-- #   prob_plot("over",  -->
-<!-- #             "season", -->
-<!-- #             hierarchy_model, -->
-<!-- #             response = "runs_per_over", -->
-<!-- #             plot_type = "quantile", -->
-<!-- #             quantile_prob = c(0.25, 0.5, 0.75),  -->
-<!-- #             symmetric = FALSE)  + -->
-<!-- #      theme( # remove the vertical grid lines -->
-<!-- #             panel.grid.major.x = element_blank() , -->
-<!-- #             # explicitly set the horizontal lines (or they will disappear too) -->
-<!-- #             panel.grid.major.y = element_blank()) + scale_x_discrete(breaks = seq(2008, 2016, 3)) -->
-<!-- # ``` -->
-
-
-Another interesting question could be: do runs per over decrease in the subsequent over if fielding (defending) was good in the previous over? For establishing the fielding quality, we apply an indicator function on dismissals (1 if there was at least one wicket in the previous over due to run out or catch, 0 otherwise). Runs in the current over is then the observation variable.  <!--If a batsman is bowled out, it does not necessarily signify good fielding. So we only include number of catches and run out in an over as a measure of good fielding.
-Difference in runs across overs are likely to be negative if good fielding has an impact on the runs scored in the subsequent overs. --> Dismissals in the previous over can lead to a batsman adopting a more defensive play style. Figure \ref{fig:cricex}(b) shows that no dismissals in the previous over leads to a higher median and quartile spread of runs per over as compared to the case when there has been at least one dismissal in the previous over.
-
-<!-- Difference in runs across over should be negative if good fielding has an impact on the runs scored in the subsequent overs.  -->
-
-<!-- fetching raw data since dot and fielding information not available in dismissal type not available in cricket data gravitas. Also `cricket` is aggregated across overs -->
-
-```{r cricex, fig.cap= "Runs per over shown with different distribution displays, and granularities. Plot (a) shows letter value plot across overs faceted by innings. For the team batting in the first innings there is an upward trend of runs per over, while there is no such pattern of runs for the teams batting in the second innings. Plot (b) shows quantile plot of runs per over across an indicator of wickets in previous over faceted by current over. This indicates that at least one wicket in the previous over leads to lower median run rate and quartile spread in the subsequent over.", warning = FALSE, message = FALSE, out.width = "90%"}
-
-library(tsibble)
-cricket_tsibble <- cricket %>%
-  mutate(data_index = row_number()) %>%
-  as_tsibble(index = data_index)
-
-hierarchy_model <- tibble::tibble(
-  units = c("index", "over", "inning", "match"),
-  convert_fct = c(1, 20, 2, 1)
-)
-
-cricket_tsibble %>%
-  filter(batting_team %in% c(
-    "Mumbai Indians",
-    "Chennai Super Kings"
-  )) %>%
-  mutate(inning = paste0("innings: ", inning)) %>%
-  prob_plot("inning",
-    "over",
-    response = "runs_per_over",
-    hierarchy_model,
-    plot_type = "lv"
-  ) +
-  scale_fill_brewer(palette = "Dark2") +
-  #ggtitle("(a) Runs per over across over faceted by inning") +
-  theme(legend.position = "right") +
-  ggtitle("a") +
-  ylab("runs per over") +
-  xlab("overs of the innings") +
-  theme(plot.title = element_text(face = "bold")) +
-  ggplot2::theme(
-       strip.text = ggplot2::element_text(
-        size = 10,
-         margin = ggplot2::margin(b=0, t=0)
-      )
-     ) +  theme_minimal() 
-#geom_smooth(aes( x = over,
-#                               y=runs_per_over), method = lm, #formula = y ~ splines::bs(x, 3), se = FALSE)
-
-
-library(tsibble)
-
-cricket_all <- read_csv("paper/data-raw/deliveries_all.csv")
-matches_all <- read_csv("paper/data-raw/matches_all.csv")
-
-cricket_season <- cricket_all %>% left_join(matches_all, by = c("match_id" = "id"))
-
-# cricket_per_over <- cricket_season %>%
-#   group_by(season,
-#            match_id,
-#            batting_team,
-#            bowling_team,
-#            inning,
-#            over) %>%
-#   summarise(runs_per_over = sum(total_runs),
-#             run_rate = sum(total_runs)/length(total_runs))
-#
-# cricket_tsibble_all <- cricket_per_over %>%
-#   ungroup() %>%
-#   mutate(data_index = row_number()) %>%
-#   as_tsibble(index = data_index)
-
-cricket_dot_field <- cricket_season %>%
-  mutate(
-    fielding_proxy = if_else(dismissal_kind %in%
-      c("caught", "caught and bowled"), 1, 0),
-    dot_ball_proxy = if_else(total_runs == 0, 1, 0),
-    wicket_proxy = if_else(is.na(dismissal_kind), 0, 1)
-  ) %>%
-  group_by(
-    season,
-    match_id,
-    batting_team,
-    bowling_team,
-    inning,
-    over
-  ) %>%
-  summarise(
-    runs_per_over = sum(total_runs),
-    run_rate = sum(total_runs)*6 / length(total_runs),
-    fielding_wckts = sum(fielding_proxy),
-    dot_balls = sum(dot_ball_proxy)
-  ) %>%
-  mutate(diff_run_rate = c(0, diff(run_rate)))
-
-cricket_tsibble <- cricket_dot_field %>%
-  ungroup() %>%
-  mutate(data_index = row_number()) %>%
-  as_tsibble(index = data_index)
-
-cricket_data <- cricket_tsibble %>%
-  mutate(
-    field = if_else(fielding_wckts == 0, "0", "1+"),
-    dot = if_else(dot_balls == 0, "no dot balls", ">0 dot balls"),
-    lag_field = lag(field),
-    lag_dot = lag(dot)
-  ) %>%
-  filter(lag_field != 0, lag_dot != 0) 
-
-cricket_data$lag_field <- factor(cricket_data$field, levels = c("0", "1+"))
-
-# filter(fielding_wckts %in% c(0,1)) %>%
-#
- cricket_data %>%
-  filter(over!=1) %>%
-  prob_plot("over", "lag_field",
-  hierarchy_model,
-  response = "run_rate",
-  plot_type = "quantile",
-  symmetric = FALSE,
- quantile_prob = c(0.25, 0.5, 0.75)) +
-   #ggtitle("(b) Runs per over across overs faceted by number of wickets in previous over") +
-  ylab("runs per over")  +
-  xlab("number of wickets in previous over") +
-  ggtitle("b") +
-   theme(plot.title = element_text(face = "bold")) +
-        theme(axis.ticks = element_blank(), legend.background = element_blank(),
-            legend.key = element_blank(), panel.background = element_blank(), strip.background = element_blank(),
-            plot.background = element_blank(), complete = TRUE, panel.grid.major = element_line(colour = "#E0E0E0"),
-            panel.border = element_rect(colour = "#E0E0E0", fill = NA))
-```
-
-<!-- Q2: Among good fielding and bowling - which affect the runs of the subsequent overs more? -->
-
-<!-- Q3: Are runs set to reduce in the next over for dot balls in the previous over? -->
-
-<!-- A dot ball is a delivery bowled without any runs scored off it. The number of dot balls is reflective of the quality of bowling in the game. Run rate of an over should ideally decrease if the number of dot balls increase. However, what is the effect of dot balls on runs scored in the subsequent over. Will players batsman likely to go for big shots because they couldn't score good runs in the previous over? Or they should play consistently and avoid scoring high? Figure \ref{fig:exdot} shows the quantile plot of runs across overs for at least one dot ball per over (facet 1) or no dot balls per over (facet 2). -->
-<!-- With at least one dot balls per over, the distribution of run rates in facet 1 increase slower compared to that in facet 2. This implies that run rates are likely to decrease in the subsequent over as a result of dot balls in the previous over. -->
-
-
-<!-- ```{r exdot, fig.cap="25th, 50th, 75th quantiles of runs per over are drawn across overs of the innings with no (facet 2), more than zero (facet 1) dot balls per over. For all quantiles, run rates mostly increase at a higher rate in facet 2 compared to facet 1 implying run rates decrease with at least one dot ball in the previous over.", fig.pos="ht"} -->
-
-
-<!-- cricket_data %>% -->
-<!--   # filter(dot_balls %in% c(0, 1, 2)) %>% -->
-<!--   prob_plot("lag_dot", -->
-<!--     "over", -->
-<!--     hierarchy_model, -->
-<!--     response = "run_rate", -->
-<!--     plot_type = "quantile", -->
-<!--     quantile_prob = c(0.25, 0.5, 0.75), -->
-<!--     symmetric = FALSE -->
-<!--   ) + ggtitle("") -->
-<!-- ``` -->
-
-Wickets per over are considered as an aperiodic cyclic granularity with wickets as an aperiodic linear granularity. These granularities do not appear in the hierarchy table since it is difficult to position them in a hierarchy. These are similar to holidays or special events in temporal data.
-<!-- CONTENT CUT -->
-<!--While any special event that corresponds to a time domain can be treated as an aperiodic linear granularity in a temporal xacase, dot balls or wickets that corresponds to certain balls (index) could be treated as aperiodic events in cricket.-->
 
 
 # Discussion points and future work

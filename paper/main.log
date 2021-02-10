@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.1.13)  9 FEB 2021 15:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  10 FEB 2021 15:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **main.tex
 (./main.tex
 LaTeX2e <2020-10-01> patch level 4
-L3 programming layer <2021-01-09> xparse <2020-03-03> (/Users/sgup0008/Library/
-TinyTeX/texmf-dist/tex/latex/base/article.cls
+L3 programming layer <2021-02-06> (/Users/sgup0008/Library/TinyTeX/texmf-dist/t
+ex/latex/base/article.cls
 Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
@@ -159,7 +159,7 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 ) (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2020-05-15 v7.00e Hypertext links for LaTeX
+Package: hyperref 2021-02-07 v7.00h Hypertext links for LaTeX
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
 )
@@ -202,34 +202,39 @@ Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
 \Hy@linkcounter=\count197
 \Hy@pagecounter=\count198
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2020-05-15 v7.00e Hyperref: PDFDocEncoding definition (HO)
+File: pd1enc.def 2021-02-07 v7.00h Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
+)
+(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref-langpat
+ches.def
+File: hyperref-langpatches.def 2021-02-07 v7.00h Hyperref: patches for babel la
+nguages
 ) (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 ) (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
 \Hy@SavedSpaceFactor=\count199
-Package hyperref Info: Option `unicode' set `true' on input line 4338.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2020-05-15 v7.00e Hyperref: PDF Unicode definition (HO)
+File: puenc.def 2021-02-07 v7.00h Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
-Package hyperref Info: Hyper figures OFF on input line 4464.
-Package hyperref Info: Link nesting OFF on input line 4469.
-Package hyperref Info: Hyper index ON on input line 4472.
-Package hyperref Info: Plain pages OFF on input line 4479.
-Package hyperref Info: Backreferencing OFF on input line 4484.
+Package hyperref Info: Option `unicode' set `true' on input line 4059.
+Package hyperref Info: Hyper figures OFF on input line 4178.
+Package hyperref Info: Link nesting OFF on input line 4183.
+Package hyperref Info: Hyper index ON on input line 4186.
+Package hyperref Info: Plain pages OFF on input line 4193.
+Package hyperref Info: Backreferencing OFF on input line 4198.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4717.
+Package hyperref Info: Bookmarks ON on input line 4431.
 \c@Hy@tempcnt=\count266
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 5076.
+LaTeX Info: Redefining \url on input line 4790.
 \XeTeXLinkMargin=\dimen149
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -242,15 +247,15 @@ Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 \Fld@menulength=\count267
 \Field@Width=\dimen150
 \Fld@charsize=\dimen151
-Package hyperref Info: Hyper figures OFF on input line 6347.
-Package hyperref Info: Link nesting OFF on input line 6352.
-Package hyperref Info: Hyper index ON on input line 6355.
-Package hyperref Info: backreferencing OFF on input line 6362.
-Package hyperref Info: Link coloring OFF on input line 6367.
-Package hyperref Info: Link coloring with OCG OFF on input line 6372.
-Package hyperref Info: PDF/A mode OFF on input line 6377.
-LaTeX Info: Redefining \ref on input line 6417.
-LaTeX Info: Redefining \pageref on input line 6421.
+Package hyperref Info: Hyper figures OFF on input line 6061.
+Package hyperref Info: Link nesting OFF on input line 6066.
+Package hyperref Info: Hyper index ON on input line 6069.
+Package hyperref Info: backreferencing OFF on input line 6076.
+Package hyperref Info: Link coloring OFF on input line 6081.
+Package hyperref Info: Link coloring with OCG OFF on input line 6086.
+Package hyperref Info: PDF/A mode OFF on input line 6091.
+LaTeX Info: Redefining \ref on input line 6131.
+LaTeX Info: Redefining \pageref on input line 6135.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty
 Package: atbegshi-ltx 2020/08/17 v1.0a Emulation of the original atbegshi packa
 ge
@@ -262,7 +267,7 @@ with kernel methods
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2020-05-15 v7.00e Hyperref driver for pdfTeX
+File: hpdftex.def 2021-02-07 v7.00h Hyperref driver for pdfTeX
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atvery packag
 e
@@ -372,7 +377,7 @@ Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
 \backup@length=\skip58
 \ar@cellbox=\box55
 ) (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/multirow/multirow.sty
-Package: multirow 2021/01/02 v2.6 Span multiple rows of a table
+Package: multirow 2021/01/29 v2.7 Span multiple rows of a table
 \multirow@colwidth=\skip59
 \multirow@cntb=\count286
 \multirow@dima=\skip60
@@ -467,8 +472,8 @@ Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
 )
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdfte
 x.def
-File: l3backend-pdftex.def 2021-01-09 L3 backend support: PDF output (pdfTeX)
-\l__kernel_color_stack_int=\count298
+File: l3backend-pdftex.def 2021-02-06 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count298
 \l__pdf_internal_box=\box68
 ) (./main.aux)
 \openout1 = `main.aux'.
@@ -505,7 +510,7 @@ e
 ))
 Package hyperref Info: Link coloring OFF on input line 89.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
@@ -602,7 +607,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=89, 565.11125pt x 743.77875pt>
+<figure/calendar-elec-1.pdf, id=99, 565.11125pt x 743.77875pt>
 File: figure/calendar-elec-1.pdf Graphic file (type pdf)
 <use figure/calendar-elec-1.pdf>
 Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
@@ -616,12 +621,12 @@ has been already used, duplicate ignored
                                                   
 l.111 
        <./figure/calendar-elec-1.pdf>]
-<figure/id2-1.pdf, id=114, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=124, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=115, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=125, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -649,24 +654,23 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 LaTeX Warning: Reference `@Gupta2020-vo' on page 5 undefined on input line 161.
 
 
-<figure/null4by2-1.pdf, id=155, 569.12625pt x 352.31625pt>
+<figure/null4by2-1.pdf, id=165, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 165.
 (pdftex.def)             Requested size: 469.7781pt x 290.81502pt.
-
+[5] [6pdfTeX warning (ext4): destination with the same identifier (name{figure.
+4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.179 ...s}\label{distance-between-distributions}}
+                                                   <./figure/null4by2-1.pdf>]
 Underfull \hbox (badness 1635) in paragraph at lines 181--182
 \T1/lmr/m/n/10 The most com-mon di-ver-gence mea-sure be-tween dis-tri-bu-tions
  is the Kullback-Leibler (KL) di-ver-
  []
 
-[5] [6pdfTeX warning (ext4): destination with the same identifier (name{figure.
-4}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.182 
-       <./figure/null4by2-1.pdf>]
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=181, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=190, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -683,93 +687,116 @@ Underfull \hbox (badness 10000) in paragraph at lines 244--246
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.257 
-       </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>] [9
-]
-<figure/sim_all-1.pdf, id=212, 562.1pt x 351.3125pt>
-File: figure/sim_all-1.pdf Graphic file (type pdf)
-<use figure/sim_all-1.pdf>
-Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 312.
-(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=213, 562.1pt x 351.3125pt>
-File: figure/sim_all-2.pdf Graphic file (type pdf)
-<use figure/sim_all-2.pdf>
-Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 312.
-(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=214, 562.1pt x 351.3125pt>
-File: figure/sim_all-3.pdf Graphic file (type pdf)
-<use figure/sim_all-3.pdf>
-Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 312.
-(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=215, 562.1pt x 351.3125pt>
-File: figure/sim_all-4.pdf Graphic file (type pdf)
-<use figure/sim_all-4.pdf>
-Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 312.
-(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-[10] [11 <./figure/sim_all-1.pdf> <./figure/sim_all-2.pdf>] [12 <./figure/sim_a
-ll-3.pdf> <./figure/sim_all-4.pdf>]
-<figure/clustering-1.pdf, id=284, 568.1225pt x 342.27875pt>
-File: figure/clustering-1.pdf Graphic file (type pdf)
-<use figure/clustering-1.pdf>
-Package pdftex.def Info: figure/clustering-1.pdf  used on input line 332.
-(pdftex.def)             Requested size: 469.7731pt x 283.02583pt.
-[13]
-<figure/unnamed-chunk-3-1.pdf, id=292, 558.085pt x 350.30875pt>
-File: figure/unnamed-chunk-3-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-3-1.pdf  used on input line 334.
-(pdftex.def)             Requested size: 469.76752pt x 294.87204pt.
-<figure/unnamed-chunk-4-1.pdf, id=293, 558.085pt x 348.30125pt>
-File: figure/unnamed-chunk-4-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 336.
-(pdftex.def)             Requested size: 469.76752pt x 293.18224pt.
-[14 <./figure/clustering-1.pdf> <./figure/unnamed-chunk-3-1.pdf>] [15 <./figure
-/unnamed-chunk-4-1.pdf>]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-71.
+l.251 \end{itemize}
+                    </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_exp
+lain.png>]
+
+LaTeX Warning: Reference `fig:' on page 9 undefined on input line 276.
+
+[9]
+
+LaTeX Warning: Reference `tab:linear-model' on page 10 undefined on input line 
+281.
+
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+83.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-<figure/cricex-1.pdf, id=339, 566.115pt x 350.30875pt>
-File: figure/cricex-1.pdf Graphic file (type pdf)
-<use figure/cricex-1.pdf>
-Package pdftex.def Info: figure/cricex-1.pdf  used on input line 397.
-(pdftex.def)             Requested size: 422.78845pt x 261.6191pt.
-<figure/cricex-2.pdf, id=340, 566.115pt x 352.31625pt>
-File: figure/cricex-2.pdf Graphic file (type pdf)
-<use figure/cricex-2.pdf>
-Package pdftex.def Info: figure/cricex-2.pdf  used on input line 397.
-(pdftex.def)             Requested size: 422.78845pt x 263.11835pt.
-[16pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.410 
-      ] [17pdfTeX warning (ext4): destination with the same identifier (name{fi
-gure.6}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.410 
-       <./figure/cricex-1.pdf> <./figure/cricex-2.pdf>] [18] [19] (./main.aux)
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
+306.
+(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+
+LaTeX Warning: Reference `fig:' on page 10 undefined on input line 315.
+
+<figure/unnamed-chunk-2-1.pdf, id=226, 572.1375pt x 352.31625pt>
+File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 317.
+(pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
+[10] [11 <./figure/unnamed-chunk-2-1.pdf>]
+<figure/sim_all-1.pdf, id=246, 562.1pt x 351.3125pt>
+File: figure/sim_all-1.pdf Graphic file (type pdf)
+<use figure/sim_all-1.pdf>
+Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 373.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-2.pdf, id=247, 562.1pt x 351.3125pt>
+File: figure/sim_all-2.pdf Graphic file (type pdf)
+<use figure/sim_all-2.pdf>
+Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 373.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-3.pdf, id=248, 562.1pt x 351.3125pt>
+File: figure/sim_all-3.pdf Graphic file (type pdf)
+<use figure/sim_all-3.pdf>
+Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 373.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+<figure/sim_all-4.pdf, id=249, 562.1pt x 351.3125pt>
+File: figure/sim_all-4.pdf Graphic file (type pdf)
+<use figure/sim_all-4.pdf>
+Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 373.
+(pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
+[12] [13 <./figure/sim_all-1.pdf> <./figure/sim_all-2.pdf>] [14 <./figure/sim_a
+ll-3.pdf> <./figure/sim_all-4.pdf>]
+<figure/clustering-1.pdf, id=320, 568.1225pt x 342.27875pt>
+File: figure/clustering-1.pdf Graphic file (type pdf)
+<use figure/clustering-1.pdf>
+Package pdftex.def Info: figure/clustering-1.pdf  used on input line 393.
+(pdftex.def)             Requested size: 469.7731pt x 283.02583pt.
+[15] [16 <./figure/clustering-1.pdf>]
+<figure/unnamed-chunk-4-1.pdf, id=341, 568.1225pt x 346.29375pt>
+File: figure/unnamed-chunk-4-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 467.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+<figure/unnamed-chunk-4-2.pdf, id=342, 568.1225pt x 346.29375pt>
+File: figure/unnamed-chunk-4-2.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-2.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-2.pdf  used on input line 467.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+<figure/unnamed-chunk-4-3.pdf, id=343, 568.1225pt x 346.29375pt>
+File: figure/unnamed-chunk-4-3.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-3.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-3.pdf  used on input line 467.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+<figure/unnamed-chunk-4-4.pdf, id=344, 568.1225pt x 346.29375pt>
+File: figure/unnamed-chunk-4-4.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-4-4.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-4-4.pdf  used on input line 467.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+[17] [18 <./figure/unnamed-chunk-4-1.pdf> <./figure/unnamed-chunk-4-2.pdf>]
+<figure/unnamed-chunk-5-1.pdf, id=367, 558.085pt x 350.30875pt>
+File: figure/unnamed-chunk-5-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-5-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-5-1.pdf  used on input line 469.
+(pdftex.def)             Requested size: 469.76752pt x 294.87204pt.
+[19 <./figure/unnamed-chunk-4-3.pdf> <./figure/unnamed-chunk-4-4.pdf>]
+<figure/unnamed-chunk-6-1.pdf, id=387, 558.085pt x 348.30125pt>
+File: figure/unnamed-chunk-6-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-6-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-6-1.pdf  used on input line 471.
+(pdftex.def)             Requested size: 469.76752pt x 293.18224pt.
+[20 <./figure/unnamed-chunk-5-1.pdf> <./figure/unnamed-chunk-6-1.pdf>] [21] [22
+] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 50DE98DA4BBC6AB27BAFF12A23182197;2909.
+(rerunfilecheck)             Checksum: 236ECFE24D4882B77344B940ACC79076;2986.
  ) 
 Here is how much of TeX's memory you used:
- 12645 strings out of 481227
- 183539 string characters out of 5913627
- 490749 words of memory out of 5000000
- 29215 multiletter control sequences out of 15000+600000
- 459741 words of font info for 71 fonts, out of 8000000 for 9000
+ 12238 strings out of 481225
+ 180378 string characters out of 5913612
+ 497364 words of memory out of 5000000
+ 28791 multiletter control sequences out of 15000+600000
+ 460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 71i,10n,74p,2111b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Us
-ers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/User
-s/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/
-sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/Users/sgup0
+ 71i,10n,74p,2111b,465s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/U
+sers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/s
+gup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/sgu
+p0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/sgup0
 008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/sgup0008/Li
 brary/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}</Users/sgup0008/Libr
 ary/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/sgup0008/Librar
@@ -786,10 +813,10 @@ ts/type1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1
 /public/lm/lmtt10.pfb>
-Output written on main.pdf (19 pages, 7883138 bytes).
+Output written on main.pdf (22 pages, 7997581 bytes).
 PDF statistics:
- 488 PDF objects out of 1000 (max. 8388607)
- 407 compressed objects within 5 object streams
- 109 named destinations out of 1000 (max. 500000)
- 207 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 537 PDF objects out of 1000 (max. 8388607)
+ 444 compressed objects within 5 object streams
+ 118 named destinations out of 1000 (max. 500000)
+ 238 words of extra memory for PDF output out of 10000 (max. 10000000)
 

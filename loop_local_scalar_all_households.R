@@ -12,7 +12,7 @@ library(parallel)
 
 
 set.seed(9999)
-
+ 
 # change path while running it on HPC
 simtable<-read_csv('paper/sim_table/sim_table.csv')
 harmonies<-read_csv('paper/sim_table/harmonies.csv')
