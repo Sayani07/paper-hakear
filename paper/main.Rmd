@@ -466,35 +466,30 @@ Secondly, the behavior of raw and normalized wpd is explored in designs where th
 The tabulated values and graphical representations of the simulation results are provided in Appendix. The learning from the simulations are as follows:
 The values of the measure $wpd_{raw}$ is least for $D_{null}$, followed by 
 $D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{raw}$ was designed such that this relationship holds.
-Furthermore, the distribution of the measure $wpd_{raw}$ changes for different facet and x categories. The location of the distribution shifts to the right and it also becomes more skewed for more higher facet and x-axis categories. Now this is not desirable, as it would mean that we can't compare the $wpd_{raw}$ values across different panels. The distribution of $wpd_{norm}$ looks more similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independepent of the intial distribution of the underlying data and hence is also comparable across different datasets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
+Furthermore, the distribution of the measure $wpd_{raw}$ changes for different facet and x categories. The location of the distribution shifts to the right and it also becomes more skewed for more higher facet and x-axis categories. Now this is not desirable, as it would mean that we can't compare the $wpd_{raw}$ values across different panels. The distribution of $wpd_{norm}$ looks more similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the intial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
 
 
 # Choosing harmonies with significant wpd
 
-Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, irrespective of the different cyclic granularities; which essentially implies there is no interesting distinct across any particular time deconstruction. We can remove the harmonies for which no interesting patterns are observed through a randomisation permutation method. Essentially, this method is
-based on the generation of randomly chosen reassignments
-(permutations) of the data across different cyclic granularities and the the computation for each permutated data of the theoretical distribution of $wpd_{norm}$ expected under the null hypothesis. The percentages of the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and used to obtain the P value. The procedure for the permutation test is:
+Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of 
+$wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is:
 
-
-**Assumption:** random permutation without considering ordering 
-(global)
+<!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
 1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_norm$ is computed and is represented by $wpd_{obs}$.
 
 2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
 
-3. $wpd_norm$ is computed for all random permutation of the data and is represented by $wpd_{sample}$.
+3. $wpd_norm$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
 
 4.  Steps (2) and (3) are repeated a large number
-of times M (e.g. 200).
+of times M (M = 200).
 
-5. For each permutation, one $wpd_{sample}$ value is obtained.
+5. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
 
 6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$.
 
 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
-
-Pros: Considering thresholds global for all harmony pairs would imply less computation time.
 
 
 ```{r, eval = FALSE, echo = FALSE}
