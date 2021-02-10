@@ -476,11 +476,11 @@ $wpd_{norm}$ for each of these reassignments. The percentages of times the theor
 
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
-1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_norm$ is computed and is represented by $wpd_{obs}$.
+1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
 
 2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
 
-3. $wpd_norm$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
+3. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
 
 4.  Steps (2) and (3) are repeated a large number
 of times M (M = 200).
@@ -490,6 +490,13 @@ of times M (M = 200).
 6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$.
 
 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
+
+
+The p-value of the design $D_{null}$ is size.
+The p-value of other designs is power.
+Confidence interval of the 
+
+
 
 
 ```{r, eval = FALSE, echo = FALSE}
@@ -522,7 +529,74 @@ smart_harmony %>%
   rename("rankun" = "r") %>% kable()
 ```
 
-## Size, power and confidence interval
+## Size
+
+The p-value is almost always greater than 0.05, which means there is no significant differences between the different categories, which is true from the simulation design.
+
+
+```{r size}
+library(readr)
+library(tidyverse)
+data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
+
+data_N01_obs <- data_N01 %>% filter(perm_id==1)
+data_N01_samp <- data_N01 %>% filter(perm_id!=1)
+
+plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+
+mmpd_dist_null_grid  = data_N01_samp
+
+mmpd_null_orig = data_N01_obs
+compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
+                               by = c("nx", "nfacet")) %>% 
+    group_by(nx, nfacet) %>% 
+    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
+
+  ggplot() + 
+    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
+    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
+    geom_text(data = round(compute_p_value, 3), size = 3,  
+              aes(x = -Inf,
+                  y =  Inf,
+                  label = paste("p-value:",p_value),
+                  hjust   = 0,
+                  vjust   = 1)) + 
+    facet_grid(nx ~ nfacet)
+```
+
+
+```{r power}
+library(readr)
+library(tidyverse)
+data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
+
+data_N01_obs <- data_N01 %>% filter(perm_id==1)
+data_N01_samp <- data_N01 %>% filter(perm_id!=1)
+
+plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+
+mmpd_dist_null_grid  = data_N01_samp
+
+mmpd_null_orig = data_N01_obs
+compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
+                               by = c("nx", "nfacet")) %>% 
+    group_by(nx, nfacet) %>% 
+    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
+
+  ggplot() + 
+    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
+    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
+    geom_text(data = round(compute_p_value, 3), size = 3,  
+              aes(x = -Inf,
+                  y =  Inf,
+                  label = paste("p-value:",p_value),
+                  hjust   = 0,
+                  vjust   = 1)) + 
+    facet_grid(nx ~ nfacet)
+```
+
+
+
 
 #### Characteristics under different simulation designs   
 A set of simulation runs that are conducted and some outputs of which are reported.
@@ -577,7 +651,6 @@ ggplot2::ggplot(design_all %>%
   coord_flip()
 
 ```
-
 
 
 

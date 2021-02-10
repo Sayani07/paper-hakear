@@ -20,10 +20,10 @@ sm_cust_data <- read_rds("paper/data/sm_cust_data.rds")
 
 ### Extract flags from simulation scenario
 
-# scen<- 170 #If running within R uncomment this.  This will only run first scenario
+# scen<- 641 #If running within R uncomment this.  This will only run first scenario
 #scen<-as.numeric(commandArgs()[[6]]) # If running batch job uncomment this
 
-mclapply(seq_len(nrow(simtable)),
+lapply(seq_len(nrow(simtable)),
          function(scen){
            
            simj<-simtable[scen,] #Extract row of table
@@ -45,7 +45,7 @@ mclapply(seq_len(nrow(simtable)),
            
            # wpd_norm <- mclapply(all_data, function(x){
            
-           
+           browser()
            wpd_norm <- compute_pairwise_norm_scalar(all_data, 
                                              gran_x = "id_x",
                                              gran_facet = "id_facet",
@@ -64,3 +64,4 @@ mclapply(seq_len(nrow(simtable)),
                           facetj, "-", 
                           xj, '.rds')) # seed and dist not included yet
          })
+
