@@ -1,10 +1,11 @@
 # contains function to aggregate data each for from N(0,1), N(0,5), N(5,1), N(5,5), Gamma(0.5, 1), Gamma(2, 1)
 #  aggregated data from the file simulations/results_norm_scalar/norm/folder_name and tidy them up
-library(tidyverse)
+library(dplyr)
 library(here)
 library(readr)
 library(rlang)
-
+library(purrr)
+library(rlang)
   
   all_files = list.files(path = paste0("paper/sim_table/results_norm_scalar/"), 
                          pattern = ".rds")

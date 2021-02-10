@@ -722,13 +722,6 @@ mds <- mds %>%
   mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
   select((customer_id)
          , Dim.1, Dim.2)
-
-# ggpubr::ggscatter(mds,
-#                   x = "Dim.1",
-#                   y = "Dim.2", 
-#                   label = rownames(mds),
-#                   size = 1,
-#                   repel = TRUE) 
 ```
 
 
@@ -750,31 +743,83 @@ ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2",
           ellipse.type = "convex",
           repel = TRUE)
 
+```
+
+# check transformation and scalar approaches are same
+  
+```{r scalar-approach}
+set.seed(7777)
+all_data <- read_rds("paper/sim_table/all_data_scalar.rds")
+sm_cust_data <- read_rds("paper/data/sm_cust_data.rds")
+set.seed(7777)
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  #filter(year(reading_datetime) == 2012) %>% #for demo just show one column
+  as_tsibble(index = reading_datetime,
+             key = customer_id) %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+         x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+
+ggpubr::ggscatter(mds,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  size = 1,
+                  repel = TRUE) 
+
+# clustering as well
+
+d = one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist()
+
+hc = stats::hclust(d,method="complete")
+plot(hc)
+groups<-cutree(hc, k=4)
+
+all_data_cluster <- cbind(one_harmony_data, groups) %>% 
+  left_join(mds, by = "customer_id") %>% 
+  mutate(groups = as.factor(groups))
 
 
-#   d = one_harmony_data %>%
-#     select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-#     dist()
-#   
-#   hc = stats::hclust(d,method="complete")
-#   plot(hc)
-#   groups<-cutree(hc, k=4)
-#   
-#   all_data_cluster <- cbind(one_harmony_data, groups) %>% 
-#     left_join(mds, by = "customer_id") %>% 
-#     mutate(groups = as.factor(groups))
-# 
-# 
-# 
-# ggpubr::ggscatter(all_data_cluster,
-#                   x = "Dim.1",
-#                   y = "Dim.2", 
-#                   label = rownames(mds),
-#                   color = "groups",
-#                   size = 1,
-#                   repel = TRUE) 
+
+ggpubr::ggscatter(all_data_cluster,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  color = "groups",
+                  size = 1,
+                  repel = TRUE) 
+
 
 ```
+  
+  
   
 10018272 is a customer from cluster 3, for which hour_day/wknd-wday comes after wknd-wday/day-month as opposed to 10006414 (cluster 1) for whom the direction is reversed.
 
@@ -906,7 +951,9 @@ p3 <- raw_data %>%
             symmetric = FALSE
 )
 library(patchwork)
-p1/p2/p3
+p1
+p2
+p3
 
 ```
 
