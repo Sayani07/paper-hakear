@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  10 FEB 2021 16:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  11 FEB 2021 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -607,7 +607,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=99, 565.11125pt x 743.77875pt>
+<figure/calendar-elec-1.pdf, id=94, 565.11125pt x 743.77875pt>
 File: figure/calendar-elec-1.pdf Graphic file (type pdf)
 <use figure/calendar-elec-1.pdf>
 Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
@@ -621,12 +621,12 @@ has been already used, duplicate ignored
                                                   
 l.111 
        <./figure/calendar-elec-1.pdf>]
-<figure/id2-1.pdf, id=124, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=119, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=125, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=120, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -654,7 +654,7 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 LaTeX Warning: Reference `@Gupta2020-vo' on page 5 undefined on input line 161.
 
 
-<figure/null4by2-1.pdf, id=165, 569.12625pt x 352.31625pt>
+<figure/null4by2-1.pdf, id=160, 569.12625pt x 352.31625pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 165.
@@ -670,7 +670,7 @@ Underfull \hbox (badness 1635) in paragraph at lines 181--182
  is the Kullback-Leibler (KL) di-ver-
  []
 
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=190, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=185, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -711,7 +711,7 @@ File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 LaTeX Warning: Reference `fig:' on page 10 undefined on input line 315.
 
-<figure/unnamed-chunk-2-1.pdf, id=226, 572.1375pt x 352.31625pt>
+<figure/unnamed-chunk-2-1.pdf, id=221, 572.1375pt x 352.31625pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 317.
@@ -724,79 +724,107 @@ y/m/n/10 f\OML/lmm/m/it/10 wpd[]; wpd[]; [] ; wpd[]\OMS/lmsy/m/n/10 g$\T1/lmr/m
 /n/10 . 
  []
 
-<figure/sim_all-1.pdf, id=246, 562.1pt x 351.3125pt>
+<figure/size-1.pdf, id=241, 568.1225pt x 349.305pt>
+File: figure/size-1.pdf Graphic file (type pdf)
+<use figure/size-1.pdf>
+Package pdftex.def Info: figure/size-1.pdf  used on input line 365.
+(pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
+[12]
+<figure/power-1.pdf, id=255, 568.1225pt x 349.305pt>
+File: figure/power-1.pdf Graphic file (type pdf)
+<use figure/power-1.pdf>
+Package pdftex.def Info: figure/power-1.pdf  used on input line 367.
+(pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
+<figure/sim_all-1.pdf, id=256, 562.1pt x 351.3125pt>
 File: figure/sim_all-1.pdf Graphic file (type pdf)
 <use figure/sim_all-1.pdf>
-Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 367.
+Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 374.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=247, 562.1pt x 351.3125pt>
+<figure/sim_all-2.pdf, id=257, 562.1pt x 351.3125pt>
 File: figure/sim_all-2.pdf Graphic file (type pdf)
 <use figure/sim_all-2.pdf>
-Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 367.
+Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 374.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=248, 562.1pt x 351.3125pt>
+<figure/sim_all-3.pdf, id=258, 562.1pt x 351.3125pt>
 File: figure/sim_all-3.pdf Graphic file (type pdf)
 <use figure/sim_all-3.pdf>
-Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 367.
+Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 374.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=249, 562.1pt x 351.3125pt>
+<figure/sim_all-4.pdf, id=259, 562.1pt x 351.3125pt>
 File: figure/sim_all-4.pdf Graphic file (type pdf)
 <use figure/sim_all-4.pdf>
-Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 367.
+Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 374.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-[12] [13 <./figure/sim_all-1.pdf> <./figure/sim_all-2.pdf>] [14 <./figure/sim_a
-ll-3.pdf> <./figure/sim_all-4.pdf>]
-<figure/clustering-1.pdf, id=321, 568.1225pt x 342.27875pt>
-File: figure/clustering-1.pdf Graphic file (type pdf)
-<use figure/clustering-1.pdf>
-Package pdftex.def Info: figure/clustering-1.pdf  used on input line 387.
-(pdftex.def)             Requested size: 469.7731pt x 283.02583pt.
-[15] [16 <./figure/clustering-1.pdf>]
-<figure/unnamed-chunk-4-1.pdf, id=342, 568.1225pt x 346.29375pt>
+[13 <./figure/size-1.pdf> <./figure/power-1.pdf>] [14 <./figure/sim_all-1.pdf> 
+<./figure/sim_all-2.pdf>] [15 <./figure/sim_all-3.pdf> <./figure/sim_all-4.pdf>
+]
+<figure/scalar-approach-1.pdf, id=335, 568.1225pt x 348.30125pt>
+File: figure/scalar-approach-1.pdf Graphic file (type pdf)
+<use figure/scalar-approach-1.pdf>
+Package pdftex.def Info: figure/scalar-approach-1.pdf  used on input line 400.
+(pdftex.def)             Requested size: 469.7731pt x 288.00577pt.
+<figure/scalar-approach-2.pdf, id=336, 556.0775pt x 330.23375pt>
+File: figure/scalar-approach-2.pdf Graphic file (type pdf)
+<use figure/scalar-approach-2.pdf>
+Package pdftex.def Info: figure/scalar-approach-2.pdf  used on input line 400.
+(pdftex.def)             Requested size: 469.76622pt x 278.97667pt.
+[16] [17 <./figure/scalar-approach-1.pdf> <./figure/scalar-approach-2.pdf>] [18
+]
+<figure/unnamed-chunk-4-1.pdf, id=368, 568.1225pt x 346.29375pt>
 File: figure/unnamed-chunk-4-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 461.
+Package pdftex.def Info: figure/unnamed-chunk-4-1.pdf  used on input line 474.
 (pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
-<figure/unnamed-chunk-4-2.pdf, id=343, 568.1225pt x 346.29375pt>
+<figure/unnamed-chunk-4-2.pdf, id=369, 568.1225pt x 346.29375pt>
 File: figure/unnamed-chunk-4-2.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-2.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-2.pdf  used on input line 461.
+Package pdftex.def Info: figure/unnamed-chunk-4-2.pdf  used on input line 474.
 (pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
-<figure/unnamed-chunk-4-3.pdf, id=344, 568.1225pt x 346.29375pt>
+<figure/unnamed-chunk-4-3.pdf, id=370, 568.1225pt x 346.29375pt>
 File: figure/unnamed-chunk-4-3.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-3.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-3.pdf  used on input line 461.
+Package pdftex.def Info: figure/unnamed-chunk-4-3.pdf  used on input line 474.
 (pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
-<figure/unnamed-chunk-4-4.pdf, id=345, 568.1225pt x 346.29375pt>
+<figure/unnamed-chunk-4-4.pdf, id=371, 568.1225pt x 346.29375pt>
 File: figure/unnamed-chunk-4-4.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-4-4.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-4-4.pdf  used on input line 461.
+Package pdftex.def Info: figure/unnamed-chunk-4-4.pdf  used on input line 474.
 (pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
-[17] [18 <./figure/unnamed-chunk-4-1.pdf> <./figure/unnamed-chunk-4-2.pdf>]
-<figure/unnamed-chunk-5-1.pdf, id=368, 558.085pt x 350.30875pt>
-File: figure/unnamed-chunk-5-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-5-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-5-1.pdf  used on input line 463.
-(pdftex.def)             Requested size: 469.76752pt x 294.87204pt.
-[19 <./figure/unnamed-chunk-4-3.pdf> <./figure/unnamed-chunk-4-4.pdf>]
-<figure/unnamed-chunk-6-1.pdf, id=388, 558.085pt x 348.30125pt>
-File: figure/unnamed-chunk-6-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-6-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-6-1.pdf  used on input line 465.
-(pdftex.def)             Requested size: 469.76752pt x 293.18224pt.
-[20 <./figure/unnamed-chunk-5-1.pdf> <./figure/unnamed-chunk-6-1.pdf>] [21] [22
-] (./main.aux)
+[19 <./figure/unnamed-chunk-4-1.pdf> <./figure/unnamed-chunk-4-2.pdf>]
+<figure/linear-1.pdf, id=391, 558.085pt x 342.27875pt>
+File: figure/linear-1.pdf Graphic file (type pdf)
+<use figure/linear-1.pdf>
+Package pdftex.def Info: figure/linear-1.pdf  used on input line 476.
+(pdftex.def)             Requested size: 469.76752pt x 288.11278pt.
+[20 <./figure/unnamed-chunk-4-3.pdf> <./figure/unnamed-chunk-4-4.pdf>]
+<figure/gravitas-1.pdf, id=410, 568.1225pt x 346.29375pt>
+File: figure/gravitas-1.pdf Graphic file (type pdf)
+<use figure/gravitas-1.pdf>
+Package pdftex.def Info: figure/gravitas-1.pdf  used on input line 478.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+<figure/gravitas-2.pdf, id=411, 568.1225pt x 346.29375pt>
+File: figure/gravitas-2.pdf Graphic file (type pdf)
+<use figure/gravitas-2.pdf>
+Package pdftex.def Info: figure/gravitas-2.pdf  used on input line 478.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+<figure/gravitas-3.pdf, id=412, 568.1225pt x 346.29375pt>
+File: figure/gravitas-3.pdf Graphic file (type pdf)
+<use figure/gravitas-3.pdf>
+Package pdftex.def Info: figure/gravitas-3.pdf  used on input line 478.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+[21 <./figure/linear-1.pdf> <./figure/gravitas-1.pdf>] [22 <./figure/gravitas-2
+.pdf> <./figure/gravitas-3.pdf>] [23] [24] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 236ECFE24D4882B77344B940ACC79076;2986.
+(rerunfilecheck)             Checksum: 947AE40D96C8CFFAE363CAD8AD696D72;2741.
  ) 
 Here is how much of TeX's memory you used:
- 12238 strings out of 481225
- 180378 string characters out of 5913612
- 497364 words of memory out of 5000000
- 28791 multiletter control sequences out of 15000+600000
+ 12271 strings out of 481225
+ 181132 string characters out of 5913612
+ 508306 words of memory out of 5000000
+ 28819 multiletter control sequences out of 15000+600000
  460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2111b,465s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -821,10 +849,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (22 pages, 8016154 bytes).
+Output written on main.pdf (24 pages, 7825555 bytes).
 PDF statistics:
- 541 PDF objects out of 1000 (max. 8388607)
- 447 compressed objects within 5 object streams
+ 583 PDF objects out of 1000 (max. 8388607)
+ 472 compressed objects within 5 object streams
  118 named destinations out of 1000 (max. 500000)
- 238 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 255 words of extra memory for PDF output out of 10000 (max. 10000000)
 

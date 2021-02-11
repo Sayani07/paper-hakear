@@ -529,8 +529,6 @@ smart_harmony %>%
   rename("rankun" = "r") %>% kable()
 ```
 
-## Size
-
 The p-value is almost always greater than 0.05, which means there is no significant differences between the different categories, which is true from the simulation design.
 
 
@@ -542,7 +540,7 @@ data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg
 data_N01_obs <- data_N01 %>% filter(perm_id==1)
 data_N01_samp <- data_N01 %>% filter(perm_id!=1)
 
-plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
 
 mmpd_dist_null_grid  = data_N01_samp
 
@@ -573,7 +571,7 @@ data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg
 data_N01_obs <- data_N01 %>% filter(perm_id==1)
 data_N01_samp <- data_N01 %>% filter(perm_id!=1)
 
-plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
 
 mmpd_dist_null_grid  = data_N01_samp
 
@@ -734,7 +732,7 @@ mds <- mds %>%
 
 
 # Plot and color by groups
-ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+q1 <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
           label = rownames(mds),
           color = "groups",
           palette = "jco",
@@ -745,12 +743,12 @@ ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2",
 
 ```
 
-# check transformation and scalar approaches are same
+- check transformation and scalar approaches are same
   
 ```{r scalar-approach}
 set.seed(7777)
-all_data <- read_rds("paper/sim_table/all_data_scalar.rds")
-sm_cust_data <- read_rds("paper/data/sm_cust_data.rds")
+all_data <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds"))
 set.seed(7777)
 sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
 sm_cust_samp <- sm_cust_data %>% 
@@ -799,8 +797,8 @@ d = one_harmony_data %>%
   dist()
 
 hc = stats::hclust(d,method="complete")
-plot(hc)
-groups<-cutree(hc, k=4)
+#plot(hc)
+groups<-cutree(hc, k=3)
 
 all_data_cluster <- cbind(one_harmony_data, groups) %>% 
   left_join(mds, by = "customer_id") %>% 
@@ -808,7 +806,7 @@ all_data_cluster <- cbind(one_harmony_data, groups) %>%
 
 
 
-ggpubr::ggscatter(all_data_cluster,
+q2 <- ggpubr::ggscatter(all_data_cluster,
                   x = "Dim.1",
                   y = "Dim.2", 
                   label = rownames(mds),
@@ -817,13 +815,14 @@ ggpubr::ggscatter(all_data_cluster,
                   repel = TRUE) 
 
 
+q1 + q2
 ```
   
   
   
 10018272 is a customer from cluster 3, for which hour_day/wknd-wday comes after wknd-wday/day-month as opposed to 10006414 (cluster 1) for whom the direction is reversed.
 
-```{r}
+```{r, echo = FALSE}
 
 10006414
 
@@ -887,18 +886,17 @@ all_data %>%
 
   
   
-  
 
-```{r}
+```{r linear}
 raw_data <- sm_cust_data %>% 
-  left_join(mds, by = "customer_id") 
+  left_join(all_data_cluster, by = "customer_id") 
 
 p1 <- raw_data %>% 
   filter(groups==1) %>% 
   ggplot() + 
   geom_line(aes(x = reading_datetime,
             y = general_supply_kwh)
-  )
+  ) + ggtitle("Group 1")
 
 
 p2 <- raw_data %>% 
@@ -906,23 +904,23 @@ p2 <- raw_data %>%
   ggplot() + 
   geom_line(aes(x = reading_datetime,
             y = general_supply_kwh)
-  )
+  ) + ggtitle("Group 2")
 
 p3 <- raw_data %>% 
   filter(groups==3) %>% 
   ggplot() + 
   geom_line(aes(x = reading_datetime,
             y = general_supply_kwh)
-  )
+  ) + ggtitle("Group 3")
 library(patchwork)
 p1/p2/p3
 
 ```
 
 
-```{r}
+```{r gravitas}
 raw_data <- sm_cust_data %>% 
-  left_join(mds, by = "customer_id") 
+  left_join(all_data_cluster, by = "customer_id") 
 
 p1 <- raw_data %>% 
   filter(groups==1) %>% 
@@ -931,7 +929,7 @@ p1 <- raw_data %>%
             response = "general_supply_kwh",
             plot_type = "quantile",
             symmetric = FALSE
-)
+)  + ggtitle("Group 1")
 
 p2 <- raw_data %>% 
   filter(groups==2) %>% 
@@ -940,7 +938,7 @@ p2 <- raw_data %>%
             response = "general_supply_kwh",
             plot_type = "quantile",
             symmetric = FALSE
-)
+)  + ggtitle("Group 2")
 
 p3 <- raw_data %>% 
   filter(groups==3) %>% 
@@ -949,7 +947,9 @@ p3 <- raw_data %>%
             response = "general_supply_kwh",
             plot_type = "quantile",
             symmetric = FALSE
-)
+)  + ggtitle("Group 3")
+
+
 library(patchwork)
 p1
 p2
@@ -1021,13 +1021,10 @@ ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2",
           ellipse.type = "convex",
           repel = TRUE)
 
-
-
-
 ```
 
 
-### Advantage over taditional feature based methods
+### Advantage over taditional feature based clustering methods
 
 Since probability distribution of the load is considered across different cyclic granularity, there is no discarding of valuable data that might result from bringing all customers to the same time horizon.
 Moreover, since our metric is based on probability distribution, it will not be sensitive to outlier days and hence the clustering process will not be biased.

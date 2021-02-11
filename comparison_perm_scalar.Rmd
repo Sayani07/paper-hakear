@@ -49,7 +49,7 @@ In Figure \ref{fig:dist-new-approx}, we see that the distribution of $wpd_{norm2
 
 ```{r dist-new-approx, echo = FALSE, fig.cap = " The distribution of $wpd_{norm2}$ is plotted for approximate estimate of b. The distributions are similar when plotted against true and approxiomate estimate and b."}
 
-G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
 
 G21_median <- G21 %>% 
   group_by(nx*nfacet) %>% 
@@ -167,10 +167,8 @@ data_filter %>%
 ```{r}
 all_data_perm <- read_rds("paper/sim_table/all_data.rds")
 
-all_data_scalar <- 
+#all_data_scalar <- 
 ```
-
-
 
 
 
