@@ -17,16 +17,16 @@
 \contentsline {paragraph}{\numberline {4.0.0.1}Characteristics under different simulation designs}{13}{paragraph.4.0.0.1}%
 \contentsline {section}{\numberline {5}Application}{16}{section.5}%
 \contentsline {subsubsection}{\numberline {5.0.1}Multidimensional scaling and cluster analysis}{16}{subsubsection.5.0.1}%
-\contentsline {subsubsection}{\numberline {5.0.2}Advantage over taditional feature based clustering methods}{22}{subsubsection.5.0.2}%
+\contentsline {subsubsection}{\numberline {5.0.2}Advantage over taditional feature based clustering methods}{23}{subsubsection.5.0.2}%
 \contentsline {subsubsection}{\numberline {5.0.3}Write the method in notations}{23}{subsubsection.5.0.3}%
 \contentsline {subsubsection}{\numberline {5.0.4}Distinction, repeatability, and robustness metrics}{23}{subsubsection.5.0.4}%
 \contentsline {subsubsection}{\numberline {5.0.5}Putting similar households on linear scale}{23}{subsubsection.5.0.5}%
 \contentsline {section}{\numberline {6}Discussion points and future work}{23}{section.6}%
-\contentsline {section}{\numberline {7}Appendix}{23}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Null distribution}{23}{subsection.7.1}%
-\contentsline {subsubsection}{\numberline {7.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{23}{subsubsection.7.1.1}%
-\contentsline {subsubsection}{\numberline {7.1.2}Normalised maximum distances follow standard Gumbel distribution}{23}{subsubsection.7.1.2}%
-\contentsline {subsubsection}{\numberline {7.1.3}Limiting distribution of median of normalised maximum distances is normal}{23}{subsubsection.7.1.3}%
+\contentsline {section}{\numberline {7}Appendix}{24}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Null distribution}{24}{subsection.7.1}%
+\contentsline {subsubsection}{\numberline {7.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{24}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}Normalised maximum distances follow standard Gumbel distribution}{24}{subsubsection.7.1.2}%
+\contentsline {subsubsection}{\numberline {7.1.3}Limiting distribution of median of normalised maximum distances is normal}{24}{subsubsection.7.1.3}%
 \contentsline {subsection}{\numberline {7.2}Power}{24}{subsection.7.2}%
 \contentsline {subsection}{\numberline {7.3}Confidence interval}{24}{subsection.7.3}%
 \contentsline {subsubsection}{\numberline {7.3.1}Varying distribution across facet}{24}{subsubsection.7.3.1}%

@@ -20,6 +20,7 @@ knitr::read_chunk("example_transformations.R")
 library(tidyverse)
 library(readr)
 library(ggplot2)
+library(here)
 ```
 
 
@@ -95,7 +96,7 @@ G21_all_data %>%
 ```
 
 
-```{r wpd-permutation, fig.cap = " The distribution of $wpd_{permutation}$ is plotted. The distributions are more similar across different nx and nfacet (specially for small nx and nfacet) but this approach has the downside of more computational time."}
+```{r wpd-permutation-d, fig.cap = " The distribution of $wpd_{permutation}$ is plotted. The distributions are more similar across different nx and nfacet (specially for small nx and nfacet) but this approach has the downside of more computational time."}
 
 G21_permutation %>% 
     ggplot() +
@@ -170,5 +171,255 @@ all_data_perm <- read_rds("paper/sim_table/all_data.rds")
 #all_data_scalar <- 
 ```
 
+
+- the two approaches permutation and modelling could be brought to the same scale so that for smaller categories, permutation could be done and for larger categories, stick to modelling approach
+
+
+## bringing both to the same scale also helps means you have a lower and upper bound for the normalised wpd
+
+
+```{r dist-new-same-scale}
+
+G21 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
+
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+# fit model median to log(nx*nfacet)
+fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
+
+summary(fit_lm2)
+
+beta_lm2 <- lm(actual ~ log(`nx * nfacet`), data = G21_median)
+
+summary(fit_lm2)
+
+
+beta_lm2 <- lm(actual ~ log(`nx * nfacet`), data = G21_median)
+
+summary(fit_lm2)
+
+
+intercept <- fit_lm2$coefficients[1]
+slope <- fit_lm2$coefficients[2]
+
+
+G21 %>% 
+  ggplot(aes(x=log(nx*nfacet), y = (value - intercept -slope*log(nx*nfacet)))) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  xlab("$wpd_norm =  wpd_raw - slope*log(nx*nfacet)$")
+
+
+G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds") %>% 
+  rename("wpd_permutation" = "value")
+
+
+G21_model_data <- G21 %>% 
+  mutate(model =
+           (value - intercept - 0.0027*log(nx*nfacet))/0.0027
+         ) %>% 
+  mutate(model_trans = 
+           (model - min(model))/(max(model) - min(model)))
+
+G21_model_data$model %>% summary()
+G21_model_data$model_trans %>% summary()
+
+
+G21_perm_data <- G21_permutation %>% 
+  mutate(perm_trans =
+           (
+             (wpd_permutation - min(wpd_permutation))/
+                (
+                  max(wpd_permutation) - min(wpd_permutation)
+                )
+             )
+           )
+
+G21_all_data <- G21_model_data %>% 
+  left_join(G21_perm_data, by = c("nx", "nfacet", "perm_id")) %>% 
+  pivot_longer(cols = c(6,8),
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+
+
+G21_all_data %>% 
+  ggplot() +
+  geom_density(aes(x = value_estimate, 
+                   fill = type_estimate), 
+               alpha = 0.7) +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("#0072B2", "#CC79A7")) +
+  xlab("wpd_norm2")
+```
+
+
+```{r wpd-permutation, fig.cap = " The distribution of $wpd_{permutation}$ is plotted. The distributions are more similar across different nx and nfacet (specially for small nx and nfacet) but this approach has the downside of more computational time."}
+
+G21_perm_data %>% 
+    ggplot() +
+  geom_density(aes(x = perm_trans), 
+                   fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") +
+  theme(legend.position = "bottom") 
+```  
+
+# bringing both to same scale
+
+```{r}
+data <- read_rds("simulations/supplementary/data-agg/wpd_N01/all_data.rds")
+
+# data_validate <-  data %>% 
+#   filter(
+#     nperm == 10, ntimes == 100, w == 1
+#   ) %>% 
+#   pivot_wider(id_cols = -2,
+#               names_from = design,
+#               values_from = value) %>% 
+#   mutate(right_order = ((null<=vary_f<=vary_x)))
+
+data_filter <- data %>% 
+    filter(
+        nperm == 10, ntimes == 100, w == 1
+    ) 
+
+
+data_filter %>% 
+    pivot_wider(id_cols = -2,
+                names_from = design,
+                values_from = value) %>% 
+    mutate(right_order = (null <= min(null, vary_f, vary_x))) 
+             
+  #            
+  #            ((null<=vary_f) & (vary_f<=vary_x))) %>% 
+  # mutate(right_order_proxy = if_else(right_order==TRUE, 1, 0)) %>% 
+  # group_by(nx, nfacet) %>% 
+  # summarise(n_order =  sum(right_order_proxy)/200) %>% View()
+  
+data_filter %>% 
+  mutate(value = value - 0.0027*log(nx*nfacet)) %>% 
+    pivot_wider(id_cols = -2,
+                names_from = design,
+                values_from = value) %>% 
+    mutate(right_order = ((null<=vary_f) & (vary_f<=vary_x))) %>% 
+  mutate(right_order_proxy = if_else(right_order==TRUE, 1, 0)) %>% 
+  group_by(nx, nfacet) %>% 
+  summarise(n_order =  sum(right_order_proxy)/200) %>% View
+
+```
+
+
+# Real Data
+
+- Check if the ranking of the harmonies from the two approaches (wpd_norm_perm and  wpd_norm_scalar) are similar or not?
+
+- Check if the threshold is visually too different
+
+
+```{r}
+all_data_perm <- read_rds("paper/sim_table/all_data.rds")
+
+#all_data_scalar <- 
+```
+
+
+- the two approaches permutation and modelling could be brought to the same scale so that for smaller categories, permutation could be done and for larger categories, stick to modelling approach
+
+
+## bringing both to the same scale also helps means you have a lower and upper bound for the normalised wpd
+
+
+
+# the following looks right where the $wpd_{norm}$ are just plotted like that and the model is GLM with distribution Gamma and link-function inverse
+
+```{r dist-new-same-scale-link}
+
+G21 <- read_csv("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.csv")
+
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+# fit model median to log(nx*nfacet)
+# fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
+# 
+# summary(fit_lm2)
+
+glm_fit <- glm(actual ~ log(`nx * nfacet`),
+              family = Gamma(link = "inverse"),
+              data = G21_median)
+
+summary(glm_fit)
+
+
+intercept <- glm_fit$coefficients[1]
+slope <- glm_fit$coefficients[2]
+
+
+G21 %>% 
+  ggplot(aes(x=log(nx*nfacet),
+             y = ((1/value)
+                  - intercept - 
+                    slope*log(nx*nfacet))/slope)) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue")
+
+
+G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds") %>% 
+  rename("wpd_permutation" = "value")
+
+
+G21_model_data <- G21 %>% 
+  mutate(model =
+           ((1/value)
+                  - intercept - 
+                    slope*log(nx*nfacet))/slope) %>% 
+  mutate(model_trans = 
+           (model - mean(model))/sd(model))
+         
+         
+G21_model_data$model %>% summary()
+
+G21_perm_data <- G21_permutation %>% 
+  mutate(perm_trans =
+           (
+             (wpd_permutation - min(wpd_permutation))/
+                (
+                  max(wpd_permutation) - min(wpd_permutation)
+                )
+             )
+           )
+
+G21_all_data <- G21_model_data %>% 
+  left_join(G21_perm_data, by = c("nx", "nfacet", "perm_id")) %>% 
+  pivot_longer(cols = c(6,7),
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+
+
+G21_all_data %>% 
+  ggplot() +
+  geom_density(aes(x = value_estimate, 
+                   fill = type_estimate), 
+               alpha = 0.7) +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("#CC79A7", "#0072B2")) +
+  xlab("wpd_norm2")
+
+# are scales same
+
+G21_model_data %>%
+  group_by(nx, nfacet) %>% 
+  summarise(sd_model = sd(model))
+
+
+
+```
 
 

@@ -254,3 +254,50 @@ base %>%
                 sm,
                 customer_id) %>%
   add_lines(x = ~reading_datetime, y = ~general_supply_kwh)
+
+
+
+# data dictionary
+
+
+data_dict <- tibble(
+  variable = c("day_month",
+  "day_week",
+  "hour_day",
+  "week_month",
+  "wknd_wday"),
+  abb  = c("dom",
+                    "dow",
+                    "hod",
+                    "wom",
+                    "wnd/wd")
+)
+ 
+
+# visualize
+
+rank_data <- all_data %>% 
+  left_join(data_dict, by = c("facet_variable" = "variable")) %>%
+  left_join(data_dict, by = c("x_variable" = "variable"))  %>% 
+  rename("facet" = "abb.x",
+         "x" = "abb.y") %>% 
+  mutate(pair = paste(facet, x,  sep = "-")) %>% 
+  group_by(customer_id) %>% 
+  arrange(-wpd_norm) %>% 
+  mutate(rank  = row_number()) %>% 
+  ungroup() %>% 
+  select(customer_id, pair, rank) 
+  
+
+rank_data %>% 
+  filter(pair == "dom-dow") %>% 
+  ggplot() +
+  geom_line(aes(x = as.character(customer_id),
+                y = as.factor(rank),
+                group = pair,
+                color = pair))  + coord_flip()
+
+
+
+ggplot(data=rank_data, aes(x = pair, 
+                            y = rank)) + geom_boxplot() 

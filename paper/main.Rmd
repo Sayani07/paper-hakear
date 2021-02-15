@@ -886,6 +886,24 @@ all_data %>%
 
   
   
+```{r}
+all_data_scalar <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
+all_data <- read_rds(here("paper/sim_table/all_data.rds"))
+
+merged_data <- left_join(all_data_scalar,all_data, by = c("customer_id",
+                                                          "facet_variable",
+                                                          "x_variable")) %>% 
+  rename("wpd_scalar"  = "wpd_norm.x",
+         "wpd_perm" = "wpd_norm.y")
+
+merged_data %>% 
+  mutate(pair = paste(facet_variable, x_variable, sep = "-")) %>% 
+  ggplot() +
+  geom_point(aes(x = wpd_scalar, y = wpd_perm, color = pair, group = pair))
+  #geom_point(aes(x = wpd_scalar, y = wpd_perm, alpha = 0.05))
+
+```
+  
 
 ```{r linear}
 raw_data <- sm_cust_data %>% 

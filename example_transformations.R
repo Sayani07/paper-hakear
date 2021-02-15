@@ -131,8 +131,6 @@ N01 %>%
 
 
 
-
-
 N01_median <- N01 %>% 
   group_by(nx*nfacet) %>% 
   summarise(actual = median(value))
