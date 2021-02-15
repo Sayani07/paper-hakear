@@ -6,7 +6,6 @@
 paper/cache/*
 .html
 structure.html
-simulations/results/*
 *.log
 *.tex
 *.toc
