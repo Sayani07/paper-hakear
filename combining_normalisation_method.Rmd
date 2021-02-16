@@ -1,6 +1,5 @@
 ---
-title: "Permutation and scalar transformation approaches to normalisation and combining them"
-author: "Sayani Gupta"
+title: "Combining the permutation and modeling approaches for normalisation"
 output:
   bookdown::pdf_book:
     #base_format: rticles::asa_article
@@ -28,7 +27,7 @@ library(patchwork)
 
 Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd $wpd_{raw}$ is obtained.
 
-Figure \ref{Fig:raw} shows the distribution of $wpd_{raw}$ is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different $nx$ and $nfacet$ categories. This is not desirable as it would mean we would not be able to compare $wpd_{raw}$ across different $nx$ and $nfacet$ as each of them are drawn from distributions of different locations and scale. In Figure \ref{fig:quadratic} we see how the median of $wpd_{raw}$ varies with the total number of distances $nx_i*nfacet_j$ for a panel with $nx = nx_i$ categories and $nfacet = nfacet_j$ categories. The median increases abruptly for lower values of $nx_i*nfacet_j$ and the increase becomes more gradual for higher $nx_i*nfacet_j$.
+Figure \ref{fig:raw} shows the distribution of $wpd_{raw}$ plotted across different nx and nfacet categories. Both shape and scale of the distributions change across panels. This is not desirable as it would mean we would not be able to compare $wpd_{raw}$ across different $nx$ and $nfacet$ as each of them are drawn from distributions with different locations and scale. In Figure \ref{fig:quadratic}, we see how the median of $wpd_{raw}$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$.
 
 
 ```{r raw, fig.cap = "Distribution of raw wpd is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different nx and nfacet categories."}
@@ -52,17 +51,18 @@ G21 %>%
 
 ```
 
-We need a transformation on $raw_{wpd}$ which will make it independent of the values of $nx*nfacet$. Two approaches have been employed for that purpose, the first one involves fitting a model and the latter involves a permutation method to make the distribution of the transformed $wpd$ similar across different $nx$ and $nfacet$.
+We need a transformation on $raw_{wpd}$ which will make it independent of the values of $nx*nfacet$. Two approaches have been employed for that purpose, the first one involves fitting a model and the latter involves a permutation method to make the distribution of the transformed $wpd_raw$ similar across different $nx$ and $nfacet$.
 
-## Scalar transformation approach to normalisation
+## Modeling approach to normalisation
 
 ### Linear model
 
-A log-linear model is fitted to see how the values of $wpd_{raw}$ changes with the values of $nx$ and $nfacet$. The model is of the form $$y = a+b*log(x) +e$$, where $y = median(wpd_{raw})$ and $x = nx*nfacet$. $wpd_{lm}$ is a transformation on $wpd_{raw}$ which should be designed to remove the effect of $nx*nfacet$ on $wpd_{raw}$ and thus is defined as follows:
+A linear model is fitted to see how the values of $wpd_{raw}$ changes with the values of $nx$ and $nfacet$. The model is of the form $$y = a+b*log(x) +e$$, where $y = median(wpd_{raw})$ and $x = nx*nfacet$. $wpd_{lm}$ is a transformation on $wpd_{raw}$ which is designed to remove the impact of $nx*nfacet$ on $wpd_{raw}$ and thus is defined as follows:
 $wpd_{lm} = wpd_{raw} - \hat a - \hat b*log(nx*nfacet)$
+$wpd-lm-horizontal$ seems to have no relationship with $nx*nfacet$ as could be seen in Figure \ref{fig:wpd-lm-horizontal}.
 
 
-```{r wpd-lm-horizontal,echo=FALSE, fig.caption = "$wpd_{lm}$ is plotted again log(nx*nfacet) and this transformation leads to median($wpd_{lm}$) to having almost no relationship with log(nx*nfacet)"}
+```{r wpd-lm-horizontal, echo=FALSE, fig.cap = "$wpd_{lm}$ is plotted against log(nx*nfacet) and this transformation leads to median($wpd_{lm}$) to having almost no relationship with log(nx*nfacet)"}
 
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
 
@@ -103,10 +103,11 @@ G21_lm %>%
 
 ### Generalised linear model
 
-In the earlier approach, $wpd_{raw} \in R$ was assumed, whereas,  $0 \leq wpd_{raw}\leq 1$ since it is a Jensen-Shannon Distance (JSD). Further, we know JSD follows a Chi-square distribution, which is a special case of Gamma distribution and hence belongs to exponential family of distributions. Therefore, we can fit a generalized linear model instead of a linear model to allow the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response to be bounded, which is applicable in our case since JSD will lie between between 0 and 1. 
+In the linear model approach, $wpd_{raw} \in R$ was assumed, whereas, $wpd_{raw}$, Jensen-Shannon Distance (JSD) lies between 0 and 1. Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution and hence belongs to exponential family of distributions. Therefore, we can fit a generalized linear model instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd_{raw}\leq 1$.
 
-We fit the Gamma generalized linear model with inverse link which is of the form:  
-$$y = 1/(a+b*log(x)) + e$$, where $y = median(wpd_{raw})$, $x = nx*nfacet$. Again, $wpd_{glm}$ which is a transformation on $wpd_{raw}$ and is designed to remove the effect of $nx*nfacet$ on $wpd_{raw}$ are chosen as the residuals and defined as
+We fit a Gamma generalized linear model with the inverse link which is of the form:  
+$$y = a+b*log(x) + e$$, where $y = median(wpd_{raw})$, $x = nx*nfacet$.
+Let $E(y) = \mu$ and $a + b*log(x) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/mu$ and $\hat \mu  = 1/(\hat a + \hat b log(x))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(x)))$ would be expected to have no dependency on $x$. Thus,  $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
 $wpd_{glm} = wpd_{raw} - 1/(\hat a + \hat b*log(nx*nfacet))$.
 
 <!-- Please note: -->
@@ -159,9 +160,8 @@ G21 %>%
   )
   ) +
   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
-  ylab("wpd_glm = 1/wpd_raw - a - b*log(nx*nfacet)")
+  ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
 ```
-
 
 ```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
 
@@ -170,7 +170,7 @@ G21_glm <- G21 %>%
                     )
                     )
              ),
-         wpd_glm_trans = ((wpd_glm*300)))
+         wpd_glm_scaled = ((wpd_glm*300)))
 
 G21_glm %>% 
   ggplot() +
@@ -180,7 +180,6 @@ G21_glm %>%
              labeller = "label_both") +
   theme(legend.position = "bottom") 
 ```
-
 
 ## Permutation approach to normalisation
 
@@ -223,16 +222,19 @@ We see that the transformation through the modeling approach leads to very simil
  
 - Make the location and scale of both the approaches similar so that they could be compared. Please note that the range of values could be different in this case, however location and scale are brought to same levels.)
 
-The measure $wpd_{glm}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_permutation$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
+
+The measure $wpd_{glm}$ has location 0 and standard deviation ~ 0.003, whereas the measure $wpd_{permutation}$ which is a z-score, has a normal distribution with location 0 and standard deviation 1. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*300$, which brings the standard deviation of $wpd_{glm-scaled}$ to almost 1, without changing the location.
+
+The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_permutation$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
 
 
-```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_glm_trans$ is plotted. In parl b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_glm_trans$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In parl b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
 hist <- ggplot(G21_glm) +
-  geom_histogram(aes(x = wpd_glm_trans)) +
+  geom_histogram(aes(x = wpd_glm_scaled)) +
   ggtitle("a")
 
 
-p <- ggplot(G21_glm, aes(sample = wpd_glm_trans))
+p <- ggplot(G21_glm, aes(sample = wpd_glm_scaled))
 qqplot <-  p + geom_qq() + geom_qq_line() + coord_fixed(ratio = 4/5) +
   ggtitle("b")
 
@@ -241,17 +243,14 @@ qqplot <-  p + geom_qq() + geom_qq_line() + coord_fixed(ratio = 4/5) +
 #     )
 #     )
 #     ),
-#     wpd_glm_trans = 300*(wpd_glm))
+#     wpd_glm_scaled = 300*(wpd_glm))
 
- # G21_glm$wpd_glm_trans %>% 
+ # G21_glm$wpd_glm_scaled %>% 
  #   range()
 hist + qqplot
 ```  
 
-
-
-```{r dist-new-same-scale-link, fig.cap="wpd_permutation and wpd_lm are in very different scale and could not be plotted together without transforming further. Whereas wpd_permutation and wpd_glm could be plotted together as they at least have the same location. Are they on the same scale though? Can they be compared?"}
-
+```{r dist-new-same-scale-link, fig.cap="w$pd_permutation$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
 # 
 # G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds") %>%
 #   rename("wpd_permutation" = "value")
@@ -273,19 +272,20 @@ G21_all_data <- G21_permutation %>%
   pivot_longer(cols = c(3, 10),
                names_to = "type_estimate",
                values_to = "value_estimate")
-G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_trans"))
+G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_scaled"))
 
 
 G21_all_data %>% 
-  filter(type_estimate %in% c("wpd_glm_trans", "wpd_permutation")) %>% 
+  filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
   ggplot() +
   geom_density(aes(x = value_estimate, 
-                   fill = type_estimate)) +
+                   fill = type_estimate), alpha = 0.5) +
   facet_grid(nx~nfacet,
              labeller = "label_both") +
   theme(legend.position = "bottom") +
-  scale_fill_manual(values = c("#999999",  "#D55E00")) +
-  xlab("wpd_norm2")
+  scale_fill_manual(values = c( "#D55E00", "#0072B2")) +
+  xlab("wpd_norm2") +
+  scale_x_continuous(breaks = c(-5, -3, 0, 3, 5))
 
 # G21_all_data %>% 
 #   filter(type_estimate %in% c("wpd_permutation", "wpd_glm")) %>% 
@@ -311,7 +311,7 @@ G21_all_data %>%
 #   range()
 # 
 # G21_all_data %>%
-#   filter(type_estimate == c("wpd_glm_trans")) %>% 
+#   filter(type_estimate == c("wpd_glm_scaled")) %>% 
 #   select(value_estimate) %>% 
 #   range()
 ```
@@ -324,10 +324,10 @@ Questions:
  2. Are $wpd_{glm}$ and $wpd_{permuation}$ be compared from this plot or both should be brought to the scale 1 for comparison?
 
  3. Forcing same range (0,1) to both $wpd_{glm}$ and $wpd_{permutation}$ could be obtained by using the transformation
-$(z- z_{min})/ (z_{max} - z_{min})$. This could be used for the permutation approach. But the modeling approach would only have one value of $wpd_{raw}$ for a panel in practice, how to scale the values in the modeling approach so that they are within 0 and 1?
+$(z- z_{min})/ (z_{max} - z_{min})$. This could be used for the permutation approach. But the modeling approach would only have one value of $wpd_{raw}$ for a panel in practice, how to scale the values in the modeling approach so that they are within 0 and 1? Getting them to 0 and 1 is changing the location making the comparison difficult.
 
 
-```{r variance}
+```{r variance, eval = FALSE}
 #glm-wpd-sd
 glm_wpd_sd <- G21_glm$wpd_glm %>% sd
 #permutation-wpd_sd
