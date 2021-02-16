@@ -1,5 +1,5 @@
 ---
-title: "Compare permutation and scalar transformation approaches on simulated and real data"
+title: "Permutation and scalar transformation approaches to normalisation and combining them"
 author: "Sayani Gupta"
 output:
   bookdown::pdf_book:
@@ -21,15 +21,13 @@ library(tidyverse)
 library(readr)
 library(ggplot2)
 library(here)
+library(patchwork)
 ```
 
-
-# Simulated data
-
-
-## Data generation
+# Data generation
 
 Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd $wpd_{raw}$ is obtained.
+
 
 
 ```{r raw, fig.cap = "Distribution of raw wpd is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different nx and nfacet categories."}
@@ -44,7 +42,9 @@ G21 %>%
   xlab("raw wpd")
 ```
 
- - Plot the values of raw wpd against nx*nfacet to see the rough relationship (\ref{fig:quadratic}).
+
+Figure \ref{Fig:raw} shows the distribution of $wpd_{raw}$ is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different $nx$ and $nfacet$ categories. This is not desirable as it would mean we would not be able to compare $wpd_{raw}$ across different $nx$ and $nfacet$ as each of them are drawn from distributions of different locations and scale. In Figure \ref{fig:quadratic} we see how the median of $wpd_{raw}$ varies with the total number of distances $nx_i*nfacet_j$ for a panel with $nx = nx_i$ categories and $nfacet = nfacet_j$ categories. The median increases abruptly for lower values of $nx_i*nfacet_j$ and the increase becomes more gradual for higher $nx_i*nfacet_j$.
+
 
 ```{r quadratic, fig.cap = "The raw wpd is plotted against nx*nfacet and the blue line represents the median of the multiple values for each nx*nfacet levels."}
 G21 %>% 
@@ -52,6 +52,8 @@ G21 %>%
   geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd")
 
 ```
+
+We need a transformation on $raw_{wpd}$ which will make it independent of the values of $nx*nfacet$. Two approaches have been employed for that purpose, the first one involves fitting a model and the latter involves a permutation method to make the distribution of the transformed $wpd$ similar across different $nx$ and $nfacet$.
 
 ## Scalar transformation approach to normalisation
 
@@ -73,7 +75,7 @@ G21_median <- G21 %>%
 # fit model median to log(nx*nfacet)
 fit_lm2 <- lm(actual ~ poly(log(`nx * nfacet`) ,1, raw=TRUE), data = G21_median)
 
-summary(fit_lm2)
+#summary(fit_lm2)
 
 intercept <- fit_lm2$coefficients[1]
 slope <- fit_lm2$coefficients[2]
@@ -178,28 +180,6 @@ G21_glm %>%
 ```
 
 
-The measure $wpd_{glm}$ seems to follow a normal distribution.
-
-```{r}
-ggplot(G21_glm) +
-  geom_histogram(aes(x = wpd_glm))
-
-
-p <- ggplot(G21_glm, aes(sample = wpd_glm))
-p + stat_qq() + stat_qq_line()
-
-# G21_glm <- G21 %>% 
-#     mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
-#     )
-#     )
-#     ),
-#     wpd_glm_trans = 300*(wpd_glm))
-
- G21_glm$wpd_glm_trans %>% 
-   range()
-
-```  
-
 ## Permutation approach to normalisation
 
 The simulated data for each of the panels is permuted/shuffled $nperm = 200$ times and for each of those permutations $wpd_{norm}$ is computed as follows: $wpd_{perm} =  (wpd_{raw} - mean(wpd_{raw}))/sd(wpd_{raw})$
@@ -224,7 +204,7 @@ G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-a
 
 G21_permutation %>% 
     ggplot() +
-  geom_density(aes(x = perm_trans), 
+  geom_density(aes(x = wpd_permutation), 
                    fill = "blue") +
   facet_grid(nx~nfacet,
              labeller = "label_both") +
@@ -235,10 +215,38 @@ G21_permutation %>%
 
 We see that the transformation through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than 7) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. However, it is  difficult to compare the transformed $wpd$ from both of these approaches, since each of the variables is measured on a different scale (each of them have location 0). The transformed variables from the two approaches could be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, we can stick to modeling approach. These could be done through the following:
 
- - Converting each scale to have the same lower and upper levels
- - Standardizing the variables and expressing scores at standard deviation units
+ - Making the range of both the variables same by using min-max scaling method. In practice, however, we would only have one value of $wpd_{raw}$ which we need to transform using the modeling appraoch. Hence, min-max scaling approach could not be used here.
 
-- making the range of both the variables same (additional advantage that we can have a bound for the normalised measure which could be compared across normalizing approaches and data sets.)
+ - Standardizing the variables and expressing scores at standard deviation units. Again in practice, however, we would only have one value of $wpd_{raw}$ which we need to transform using the modeling appraoch. Hence, standardizing scores could not be used here as we do not have the mean and standard deviation of a series while using transfomation using modeling.
+ 
+- Make the location and scale of both the approaches similar so that they could be compared. Please note that the range of values could be different in this case, however location and scale are brought to same levels.)
+
+The measure $wpd_{glm}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permuation approach ensures that $wpd_permutation$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
+
+
+```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_glm_trans$ is plotted. In parl b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_glm_trans$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+hist <- ggplot(G21_glm) +
+  geom_histogram(aes(x = wpd_glm_trans)) +
+  ggtitle("a")
+
+
+p <- ggplot(G21_glm, aes(sample = wpd_glm_trans))
+qqplot <-  p + geom_qq() + geom_qq_line() + coord_fixed(ratio = 4/5) +
+  ggtitle("b")
+
+# G21_glm <- G21 %>% 
+#     mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+#     )
+#     )
+#     ),
+#     wpd_glm_trans = 300*(wpd_glm))
+
+ # G21_glm$wpd_glm_trans %>% 
+ #   range()
+hist + qqplot
+```  
+
+
 
 ```{r dist-new-same-scale-link, fig.cap="wpd_permutation and wpd_lm are in very different scale and could not be plotted together without transforming further. Whereas wpd_permutation and wpd_glm could be plotted together as they at least have the same location. Are they on the same scale though? Can they be compared?"}
 
