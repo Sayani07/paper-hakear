@@ -536,8 +536,8 @@
       "RemoteRepo": "hakear",
       "RemoteUsername": "Sayani07",
       "RemoteRef": "HEAD",
-      "RemoteSha": "752266ab50b41392dd5166ab3ca5f4605c181790",
-      "Hash": "4d530223180421cdbb6a394dbc6e2b35"
+      "RemoteSha": "47cece5074b88594445657bd5f36245e81b6e533",
+      "Hash": "fb95ae7dffef94c4bbba8e73830764a0"
     },
     "haven": {
       "Package": "haven",
@@ -1154,6 +1154,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "9c6c10e594f32096ede0c7d373ccbddd"
+    },
+    "tictoc": {
+      "Package": "tictoc",
+      "Version": "1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f8cc5adf4671b013434bbe127f35b28c"
     },
     "tidyr": {
       "Package": "tidyr",

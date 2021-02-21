@@ -1,6 +1,3 @@
-compute_mmpd            Title Compute raw mmpd
-compute_mmpd_norm       Title Compute normalised mmpd
-compute_mmpd_panel      compute mmpd for a panel
 compute_norm_pairwise_max
                         Title Compute normalised maximum pairwise
                         distances
@@ -13,10 +10,6 @@ compute_pairwise_norm_scalar
                         Title Compute scalar normalised pairwise
                         distances
 compute_quantiles       compute quantiles of data across categories
-compute_wpd_dist        Title computing all within and between facet
-                        distances between quantile categories given a
-                        data
-compute_wpd_norm        Title Compute raw pairwise distances
 create_harmony_data     Create data for one harmony pair
 create_harmony_tbl_data
                         Create data for all harmony pairs in a harmony
@@ -24,7 +17,9 @@ create_harmony_tbl_data
 distance_all_pairwise   computing all within and between facet
                         distances between quantile categories given
                         quantile data
-distance_panel          computing distances between quantile categories
-mpd2                    shuffling only once mmpd
+select_harmonies        Select harmonies with significant patterns
 sim_panel               sim panel
-sim_panel_grid          sim panel grid
+wpd                     computes wpd for one harmony or harmony table
+                        chooses compute_pairwise_max for smaller levels
+                        (<=5) chooses compute_pairwise_norm for higher
+                        levels (>5)

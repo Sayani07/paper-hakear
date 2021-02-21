@@ -9,12 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(here)
+library(hakear)
+library(tidyr)
+library(distributional)
+library(dplyr)
+library(ggplot2)
 ```
 
 # Choosing harmonies with significant wpd
 
-In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests)
-generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
+In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
 
 Typically, a randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. We will use this procedure to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows:
 
@@ -196,5 +200,109 @@ compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
                   hjust   = 0,
                   vjust   = 1)) + 
     facet_grid(nx ~ nfacet)
+```
+
+
+
+```{r varall}
+
+sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
+  dist_normal((mean + seq(0,
+    (nx *
+      nfacet - 1),
+    by = 1
+  ) * w), sd)
+}
+sim_panel_varall <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 500,
+  sim_dist = sim_varall_normal(2, 3, 0, 1, 10)
+) %>% unnest(data)
+
+set.seed(9999)
+varall <- compute_pairwise_norm(sim_panel_varall, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+# plot
+p_varall <- sim_panel_varall %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+```
+
+
+
+```{r varx}
+sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
+   rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
+ }
+
+sim_panel_varx <- sim_panel(
+   nx = 2, nfacet = 3,
+   ntimes = 5,
+   sim_dist = sim_varx_normal(2, 3, 0, 1, 10)
+ ) %>% unnest(data)
+
+
+set.seed(9999)
+varx <- compute_pairwise_norm(sim_panel_varx, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+# plot
+p_varx <- sim_panel_varx %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+```
+
+
+```{r varf}
+sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
+  rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
+}
+sim_panel_varf <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 5,
+  sim_dist = sim_varf_normal(2, 3, 0, 1, 10)
+) %>% unnest(data)
+
+
+set.seed(9999)
+varf <- compute_pairwise_norm(sim_panel_varf, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+p_varf <- sim_panel_varf %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+```
+
+
+```{r null}
+sim_panel_null <- sim_panel(
+   nx = 2,
+   nfacet = 3,
+   ntimes = 500,
+   sim_dist = distributional
+   ::dist_normal(0, 1)
+) %>% unnest(c(data))
+
+set.seed(9999)
+
+null <- compute_pairwise_norm(sim_panel_null, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+p_null <- sim_panel_null %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
 ```
 

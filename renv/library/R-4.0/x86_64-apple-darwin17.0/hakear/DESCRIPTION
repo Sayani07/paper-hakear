@@ -6,14 +6,14 @@ Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R(>= 3.5.0)
-Imports: lubridate(>= 1.7.4), dplyr(>= 0.8.0), tsibble (>= 0.8.0),
-        tibble(>= 2.1.1), rlang(>= 0.3.4), tidyr(>= 0.8.3), ggplot2 (>=
-        3.1.1), stats, stringr(>= 1.4.0), ineq, magrittr, utils,
-        distributional, tidyselect, parallel
+Imports: gravitas, lubridate(>= 1.7.4), dplyr(>= 0.8.0), tsibble (>=
+        0.8.0), tibble(>= 2.1.1), rlang(>= 0.3.4), tidyr(>= 0.8.3),
+        ggplot2 (>= 3.1.1), stats, stringr(>= 1.4.0), ineq, magrittr,
+        utils, distributional, tidyselect, parallel
 Suggests: knitr, tsibbledata (>= 0.1.0), purrr (>= 0.3.2), testthat (>=
         2.1.0), covr, rmarkdown, readr, testthat
 RoxygenNote: 7.1.1
@@ -22,11 +22,11 @@ RemoteHost: api.github.com
 RemoteRepo: hakear
 RemoteUsername: Sayani07
 RemoteRef: HEAD
-RemoteSha: 716f11affa03654868c9a0b59c43ffacb1350336
+RemoteSha: 47cece5074b88594445657bd5f36245e81b6e533
 GithubRepo: hakear
 GithubUsername: Sayani07
 GithubRef: HEAD
-GithubSHA1: 716f11affa03654868c9a0b59c43ffacb1350336
+GithubSHA1: 47cece5074b88594445657bd5f36245e81b6e533
 NeedsCompilation: no
-Packaged: 2021-02-10 08:02:05 UTC; sgup0008
-Built: R 4.0.1; ; 2021-02-10 08:02:05 UTC; unix
+Packaged: 2021-02-21 01:49:44 UTC; sgup0008
+Built: R 4.0.1; ; 2021-02-21 01:49:45 UTC; unix
