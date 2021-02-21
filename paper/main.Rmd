@@ -1,5 +1,5 @@
 ---
-title: Selecting and ranking interesting pairs of cyclic temporal granularities
+title: An automatic approach to find all possible calendar effects (periodic patterns) for an univariate time series
 authors:
 - name: Sayani Gupta
   affiliation: Department of Econometrics and Business Statistics, Monash University
@@ -199,7 +199,7 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# The proposed distance measure
+# The distance measure for quantifying patterns in harmonies
 
 We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to evaluate structure in such a design.
 
@@ -217,11 +217,10 @@ With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the ide
 
 
 
-```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable."}
+```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable.", eval = FALSE}
 
-
-sim_varf_dist1 = function(nx, nfacet){
-  rep(dist_normal(seq(mean,mean*nfacet, by = mean), sd), each = nx)}
+# sim_varf_dist1 = function(nx, nfacet){
+#   rep(dist_normal(seq(mean,mean*nfacet, by = mean), sd), each = nx)}
 
 p1 <- sim_panel(nx = 2, nfacet = 3, ntimes = 500) %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
@@ -285,7 +284,7 @@ $D(P||Q) := \int^\infty_{-\infty} p(x)f(\frac{p(x)}{q(x)})$ is the KL divergence
 <!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
 
 
-## Definition of the proposed distance measure
+## Definition of the distance measure
 
 Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ be denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
 
@@ -294,7 +293,7 @@ Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, 
 knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 ```
   
-From Section \ref{sec:idea}, the idea is to put more weights on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter $\lambda > 1$, the pairwise distances $d_{(jk, j'k')}$ are transformed based on the distance type as follows:
+From Section \ref{sec:idea}, the idea is to put more weights on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter $0<\lambda<1$, the pairwise distances $d_{(jk, j'k')}$ are transformed based on the distance type as follows:
 
 \begin{equation}
 d*_{(j,k), (j'k')} =
@@ -305,7 +304,7 @@ d*_{(j,k), (j'k')} =
 \end{equation}
 
 The maximum weighted pairwise distances are defined as:
-$$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
+$$wpd = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 \forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$$.
 
 
@@ -353,20 +352,9 @@ $$WPD = max_{j, j', k, k'}(d*_{(jk), (j'k')})
 
 <!-- A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories. -->
 
+## Properties of the distance measure
 
-# Normalisation
-
-The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define wpd is affected by the number of categories. The measure would have higher values if $C_i$ or $C_j$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories are higher. Therefore, in order to compare wpd across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalised measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. In the coming section, we have discussed two approaches to normalisation both through simulations.
-
-
-## Simulation study
-
-Most of the behavior of the measure wpd was studied via simulation. The simulations explore how wpd performs under various designs and parameters and its limitations. To study the behavior of wpd, simulations were carried out for four different designs and the following factors that could potentially have an impact on the values of wpd:
-
-
-<!-- Numerous simulations were carried out in a wide range of scenarios. -->
-
-<!-- Same scenarios were used, when possible with normalized wpd, keeping all other simulation variables constant. -->
+A simulation study is carried out to explore how $wpd$ performs under various designs, its parameters and limitations. To this end, simulations were carried out for four different designs and the following factors that could potentially have an impact on the values of $wpd$:
 
 - $nx$ (number of levels of x-axis)
 - $nfacet$ (number of levels of facets)
@@ -374,7 +362,7 @@ Most of the behavior of the measure wpd was studied via simulation. The simulati
 - $\omega$ (increment in each panel design)
 - $dist$ (normal/non-normal distributions with different location and scale)
 - $n$ (sample size for each combination of categories)
-- $nsim$ (number of simulations)a
+- $nsim$ (number of simulations)
 - $nperm$ (number of permutations of data)  
 - $designs$  
 $D_{null}$  (No difference in distribution)  
@@ -382,27 +370,59 @@ $D_{var_f}$ (Difference in distribution only across facets)
 $D_{var_x}$ (Difference in distribution only across x-axis)  
 $D_{var_{all}}$ (Difference in distribution in both facets and x-axis)
 
+Results are presented in two parts. The dependence of $wpd$ on $nx$ and $nfacet$ under $D_{null}$ is presented here, which lays the foundation for the next section. The rest of the results that discusses the relationship of the $wpd$ with other factors is presented in the Supplementary section of the paper.
 
-## Simulation environment
+### Design of the simulation study
 
-R version 4.0.1 (2020-06-06) is used with platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community. The nodes and the storage used are as follows:
+Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$ and values of raw wpd $wpd$ is obtained. This entire design applies to the null cases and hence there is no difference in distribution between any categories in the panel.
+
+### Results
+
+Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different nx and nfacet categories. Both shape and scale of the distributions change across panels. This is not desirable as it would mean we would not be able to compare $wpd$ across different $nx$ and $nfacet$ as each of them are drawn from distributions with different locations and scale. In Figure \ref{fig:quadratic}, we see how the median of $wpd_{raw}$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$.
+
+
+```{r raw, fig.cap = "Distribution of raw wpd is plotted across different nx and nfacet categories. Both shape and scale of the distribution changes for different nx and nfacet categories."}
+G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
+
+G21 %>% 
+  ggplot(aes(x = value)) + 
+  geom_density(fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") + 
+  scale_x_continuous(breaks = scales::breaks_extended(3)) + 
+  xlab("raw wpd")
+```
+
+
+```{r quadratic, fig.cap = "$wpd_{raw}$ is plotted against nx*nfacet and the blue line represents the median of the multiple values for each nx*nfacet levels."}
+G21 %>% 
+  ggplot(aes(x=nx*nfacet, y = value)) +
+  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("raw wpd")
+
+```
+
+
+# Normalisation of the distance measure
+
+The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define $wpd$ is affected by the number of categories. The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. We discuss two approaches for normalization, both of which are based on the simulation results conducted in the earlier section.
+
+
+<!-- The nodes and the storage used are as follows: -->
 
 ## Methodology
 
-### Notations
+We need a transformation on ${wpd}$ which will make it independent of the values of $nx*nfacet$. Two approaches have been employed for that purpose, the first one involves fitting a model and the latter involves a permutation method to make the distribution of the transformed $wpd$ similar across different $nx$ and $nfacet$.
 
-Let $\{nx_{i}, i = 1, 2, \dots, nx\}$, $\{nfacet_{j}, j = 1, 2, \dots, nfacet\}$ be the set of x-axis and facet categories respectively. Each combination of $nx_{i}$ and $nfacet_{j}$is being referred to as a _panel_. Then the total number of panel is $nx*nfacet$. Let the total number of pairwise distances that could result in each panel be $\{z_k, k = 1, 2 , \dots, nx*nfacet\}$. Here, $\{z_1 = nx_1*nfacet_1\}$, $\{z_2 = nx_2*nfacet_2\}$ and $\{z_k = nx*nfacet\}$. Now, let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd_{raw}$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd_{raw}$.
+<!-- ### Notations -->
 
-### Data generation
-
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The value of $\lambda$ is set to $0.67$. $nsim = 200$, which means each of these scenarios are run $200$ times by permuting the data in each of the panels. And hence $200$ values of $wpd_{raw}$ are obtained for each of those 64 panels. 
+<!-- Let $\{nx_{i}, i = 1, 2, \dots, nx\}$, $\{nfacet_{j}, j = 1, 2, \dots, nfacet\}$ be the set of x-axis and facet categories respectively. Each combination of $nx_{i}$ and $nfacet_{j}$is being referred to as a _panel_. Then the total number of panel is $nx*nfacet$. Let the total number of pairwise distances that could result in each panel be $\{z_k, k = 1, 2 , \dots, nx*nfacet\}$. Here, $\{z_1 = nx_1*nfacet_1\}$, $\{z_2 = nx_2*nfacet_2\}$ and $\{z_k = nx*nfacet\}$. Now, let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd_{raw}$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd_{raw}$. -->
 
 
 ### Permutation approach
 
-The permutation approach ensures that the distribution of the normalised weighted pairwise distance measure has the same mean and standard deviation across all combinations of $nx_i$ and $nfacet_j$. Thus, the normalised distances is computed as follows: $x^{norm}_{k} =  (x_{k} - mean_l(x_{k,l}))/sd_l(x_{k, l})$,  $x^{norm}_{k}$ is the value of the $wpd_{norm}$ for the $k^{th}$ panel.
+The permutation approach ensures that the distribution of the normalized distance measure has the same mean and standard deviation across all combinations of $nx_i$ and $nfacet_j$. The normalized distances through permutation is computed as follows: $x^{perm}_{k} =  (x_{k} - mean_l(x_{k,l}))/sd_l(x_{k, l})$,  $x^{perm}_{k}$ is the value of the $wpd_{perm$ for the $k^{th}$ panel. Standardizing the variable $wpd_{perm}$ in this approach leads to $location = 0$ and $scale = 1$ for this variable.
 
-While this works successfully to make the mean and standard deviation across different nx and nfacet (as seen in Figure \ref{fig:}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalisation which is more approximate than exact but still has the same accuracy when compared to the permutation approach.
+While this works successfully to make the mean and standard deviation across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the same accuracy when compared to the permutation approach.
 
 *incorporate from the document combining_normalisation_method.Rmd*
 
@@ -458,8 +478,7 @@ G21 %>%
 
 ## Results
 
-This section reports the results of a simulation study that was carried out to evaluate the
-behavior of our distance measure across all potential factors. The results are reported in two parts: for the a) raw measure and then b) normalised one to show how the loopholes for the raw measures were removed using the normalized ones.
+This section reports the results of a simulation study that was carried out to evaluate the behavior of our distance measure across all potential factors. The results are reported in two parts: for the a) raw measure and then b) normalised one to show how the loopholes for the raw measures were removed using the normalized ones.
 
 First, the behavior of $wpd_{raw}$ and $wpd_{norm}$ is explored in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Using two types of distributions, viz. normal and gamma (non-normal), we generated observations for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{2, 3, 5, 7, 14, 20, 31, 50\}$ and $nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$, since we want to up-weigh the within-facet distances and that of $\omega$ is set to $0$, since there is no significant differences between distributions in the null case. Observations were generated for each type of distribution changing the shape and scale to study the effect of shape, scale and type of distribution on wpd. The set of distributions considered for this purpose is ${N(0,1), N(5, 1), N(0,5), \Gamma(0.5, 1), \Gamma(2, 1)}$. Each of the scenario is run $nsim = 200$ times to see the distribution of wpd values for each scenario.
 
@@ -470,8 +489,12 @@ The values of the measure $wpd_{raw}$ is least for $D_{null}$, followed by
 $D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{raw}$ was designed such that this relationship holds.
 Furthermore, the distribution of the measure $wpd_{raw}$ changes for different facet and x categories. The location of the distribution shifts to the right and it also becomes more skewed for more higher facet and x-axis categories. Now this is not desirable, as it would mean that we can't compare the $wpd_{raw}$ values across different panels. The distribution of $wpd_{norm}$ looks more similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the intial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
 
+## Simulation environment
 
-# Choosing harmonies with significant wpd
+Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community.
+
+
+# Ranking and selecting significant harmonies
 
 Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of 
 $wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is:
@@ -652,416 +675,61 @@ ggplot2::ggplot(design_all %>%
 
 
 
-# Application {#sec:application}
+# Application in residential smart meter data {#sec:application}
 
-<!-- ## Smart meter data of Australia {#sec:smartmeter} -->
-
-<!-- # how data looks -->
-
-Clustering of electricity customers based on their consumption behavior facilitate effective market segmentation and hence better management and pricing.
-Electricity demand time series are the primary source of information of customers' consumption behavior.
-Due to technological developments, smart meters could provide large quantities of measurements on energy usage at more and more finer time intervals. Due to this extreme dimensionality along time of the demand data, it is a challenge to have clustering methods which could reduce the dimensionality to produce distinct clusters. One of the potential solutions is time series feature extraction. However, it is limited by the type of noisy, patchy and unequal time series that is very common in data sets of any residential customers. The idea is to choose similarity measures, which do not lose the core characteristic information of demand across different time deconstructions in aggregation processes and is robust against asynchronous or incomplete time series.
-
-We use the data from one of the customer trials [@smart-meter] conducted as part of the Smart Grid Smart City project in Newcastle, New South Wales and some parts of Sydney. The data has customer wise data on energy consumption for every half hour from February 2012 to March 2014. <!--It would be interesting to explore the energy consumption distribution for these customers and gain insights on their energy behavior which are lost either due to aggregation or looking only at coarser temporal units.--> The idea here is to
-use our similarity measure and show improved cluster distinction as compared to baseline feature based approaches. A data set of 100 homes is used to evaluate both approaches. This is different to deterministic segmentation which attempts to characterise load as a function of a fixed number of parameters, such as occupancy or types of appliances, and use those parameters for classification. We only use their load patterns across time deconstructions to define the similarity measure.
-
-<!-- Write about common load clustering methods -->
-
-
-### Multidimensional scaling and cluster analysis
-
-Cluster analysis and multidimensional scaling (MDS) methods are used to explore the temporal structure of various households, their interrelations and determine similar behaving clusters of households in this study.
-MDS methods are used to produce a lower dimensional display space where each household is represented by a point and the distance between these points give the measure of similarity between these households. On the other hand, clustering techniques are used to provide information about the clustering structure of the households. Households that are in the same cluster can be considered to be more similar, while households are more dissimilar in their energy behavior across one or few temporal deconstructions.
-
-$wpd_norm$ is considered as the measure of similarity or dissimilarity while using MDS and clustering techniques. $wpd_norm$ could be constructed for each pair of harmony for each household and then similarity could be measured across single or all harmonies together. 
-
-
-```{r mds}
-set.seed(7777)
-library(gravitas)
-library(tsibble)
-library(lubridate)
-library(readr)
-
-all_data <- read_rds(here("paper/sim_table/all_data.rds"))
-sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds")) %>% 
-  as_tsibble(index = reading_datetime,
-             key = customer_id)
-
-sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
-
-#sm_30 <- sample(sm_unique_cust$customer_id, 30)
-sm_cust_samp <- sm_cust_data %>% 
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(year(reading_datetime) == 2012)  %>% 
-  create_gran("day_week") %>% 
-  create_gran("hour_day")
-
-#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
-
-facet_variable = "day_week"
-x_variable = "hour_day"
-
-one_harmony_data <- all_data %>%
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(facet_variable == "day_week",
-                    x_variable == "hour_day") %>% 
-  mutate(customer_id = as.character(customer_id))
-
-mds<- one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist() %>%          
-  cmdscale() %>%
-  as_tibble()
-
-colnames(mds) <- c("Dim.1", "Dim.2")
-rownames(mds) <- unique(one_harmony_data$customer_id)
-mds <- mds %>%
-  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
-  select((customer_id)
-         , Dim.1, Dim.2)
-```
-
-
-```{r clustering}
-# K-means clustering
-clust <- kmeans(mds, 3)$cluster %>%
-  as.factor()
-mds <- mds %>%
-  mutate(groups = clust)
-
-
-# Plot and color by groups
-q1 <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
-          label = rownames(mds),
-          color = "groups",
-          palette = "jco",
-          size = 1, 
-          ellipse = TRUE,
-          ellipse.type = "convex",
-          repel = TRUE)
-
-```
-
-- check transformation and scalar approaches are same
+```{r household2and4}
+id2_tsibble <- elec %>% 
+   filter(id == 2) %>% 
+   as_tsibble(index = date_time)
   
-```{r scalar-approach}
-set.seed(7777)
-all_data <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
-sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds"))
-set.seed(7777)
-sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
-sm_cust_samp <- sm_cust_data %>% 
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  #filter(year(reading_datetime) == 2012) %>% #for demo just show one column
-  as_tsibble(index = reading_datetime,
-             key = customer_id) %>% 
-  create_gran("day_week") %>% 
-  create_gran("hour_day")
-
-#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
-
-facet_variable = "day_week"
-x_variable = "hour_day"
-
-one_harmony_data <- all_data %>%
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(facet_variable == "day_week",
-         x_variable == "hour_day") %>% 
-  mutate(customer_id = as.character(customer_id))
-
-mds<- one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist() %>%          
-  cmdscale() %>%
-  as_tibble()
-
-colnames(mds) <- c("Dim.1", "Dim.2")
-rownames(mds) <- unique(one_harmony_data$customer_id)
-mds <- mds %>%
-  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
-  select((customer_id)
-         , Dim.1, Dim.2)
-
-ggpubr::ggscatter(mds,
-                  x = "Dim.1",
-                  y = "Dim.2", 
-                  label = rownames(mds),
-                  size = 1,
-                  repel = TRUE) 
-
-# clustering as well
-
-d = one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist()
-
-hc = stats::hclust(d,method="complete")
-#plot(hc)
-groups<-cutree(hc, k=3)
-
-all_data_cluster <- cbind(one_harmony_data, groups) %>% 
-  left_join(mds, by = "customer_id") %>% 
-  mutate(groups = as.factor(groups))
+id4_tsibble <- elec %>% 
+   filter(id == 4) %>% 
+   as_tsibble(index = date_time)
 
 
 
-q2 <- ggpubr::ggscatter(all_data_cluster,
-                  x = "Dim.1",
-                  y = "Dim.2", 
-                  label = rownames(mds),
-                  color = "groups",
-                  size = 1,
-                  repel = TRUE) 
-
-
-q1 + q2
-```
-  
-  
-  
-10018272 is a customer from cluster 3, for which hour_day/wknd-wday comes after wknd-wday/day-month as opposed to 10006414 (cluster 1) for whom the direction is reversed.
-
-```{r, echo = FALSE}
-
-10006414
-
-
-all_data %>% 
-  filter(customer_id ==  10006414) %>% 
-  arrange(-wpd_norm)
-
-sm_cust_data %>% 
-  filter(customer_id ==  10006414) %>% 
-  prob_plot("hour_day",
-            "wknd_wday",
-            plot_type = "quantile",
-            quantile_prob = c(0.5),
-            symmetric = FALSE,
-            response = "general_supply_kwh")
-
-
-sm_cust_data %>% 
-  filter(customer_id ==  10006414) %>% 
-  prob_plot("hour_day",
-            "day_week",
-            plot_type = "quantile",
-            quantile_prob = c(0.5),
-            symmetric = FALSE,
-            response = "general_supply_kwh")
+harmonies2 <- id2_tsibble %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
 
 
 
 
-all_data %>% 
-  filter(customer_id ==  10007340) %>% 
-  arrange(-wpd_norm)
-
-sm_cust_data %>% 
-  filter(customer_id ==  10007340) %>% 
-  prob_plot("day_month",
-            "day_week",
-            plot_type = "quantile",
-            quantile_prob = c(0.5),
-            symmetric = FALSE,
-            response = "general_supply_kwh")
+harmonies4 <- id4_tsibble %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
 
 
-sm_cust_data %>% 
-  filter(customer_id ==  10007340) %>% 
-  prob_plot("hour_day",
-            "day_month",
-            plot_type = "quantile",
-            quantile_prob = c(0.5),
-            symmetric = FALSE,
-            response = "general_supply_kwh")
+library(tictoc)
+tic()
+
+all_harmony2 <- hakear::select_harmonies(id2_tsibble,
+   harmony_tbl = harmonies2,
+   response = kwh,
+   nperm = 200,
+   nsamp = 200
+ )
+
+toc()
 
 
-all_data %>% 
-  filter(customer_id ==  10018272) %>% 
-  arrange(-wpd_norm)
-
+library(tictoc)
+tic()
+all_harmony4 <- hakear::select_harmonies(id2_tsibble,
+   harmony_tbl = harmonies2,
+   response = kwh,
+   nperm = 200,
+   nsamp = 20
+ )
+toc()
 
 ```
-
-  
-  
-```{r}
-all_data_scalar <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
-all_data <- read_rds(here("paper/sim_table/all_data.rds"))
-
-merged_data <- left_join(all_data_scalar,all_data, by = c("customer_id",
-                                                          "facet_variable",
-                                                          "x_variable")) %>% 
-  rename("wpd_scalar"  = "wpd_norm.x",
-         "wpd_perm" = "wpd_norm.y")
-
-merged_data %>% 
-  mutate(pair = paste(facet_variable, x_variable, sep = "-")) %>% 
-  ggplot() +
-  geom_point(aes(x = wpd_scalar, y = wpd_perm, color = pair, group = pair))
-  #geom_point(aes(x = wpd_scalar, y = wpd_perm, alpha = 0.05))
-
-```
-  
-
-```{r linear}
-raw_data <- sm_cust_data %>% 
-  left_join(all_data_cluster, by = "customer_id") 
-
-p1 <- raw_data %>% 
-  filter(groups==1) %>% 
-  ggplot() + 
-  geom_line(aes(x = reading_datetime,
-            y = general_supply_kwh)
-  ) + ggtitle("Group 1")
-
-
-p2 <- raw_data %>% 
-  filter(groups==2) %>% 
-  ggplot() + 
-  geom_line(aes(x = reading_datetime,
-            y = general_supply_kwh)
-  ) + ggtitle("Group 2")
-
-p3 <- raw_data %>% 
-  filter(groups==3) %>% 
-  ggplot() + 
-  geom_line(aes(x = reading_datetime,
-            y = general_supply_kwh)
-  ) + ggtitle("Group 3")
-library(patchwork)
-p1/p2/p3
-
-```
-
-
-```{r gravitas}
-raw_data <- sm_cust_data %>% 
-  left_join(all_data_cluster, by = "customer_id") 
-
-p1 <- raw_data %>% 
-  filter(groups==1) %>% 
-  prob_plot("day_week",
-            "hour_day",
-            response = "general_supply_kwh",
-            plot_type = "quantile",
-            symmetric = FALSE
-)  + ggtitle("Group 1")
-
-p2 <- raw_data %>% 
-  filter(groups==2) %>% 
-  prob_plot("day_week",
-            "hour_day",
-            response = "general_supply_kwh",
-            plot_type = "quantile",
-            symmetric = FALSE
-)  + ggtitle("Group 2")
-
-p3 <- raw_data %>% 
-  filter(groups==3) %>% 
-  prob_plot("day_week",
-            "hour_day",
-            response = "general_supply_kwh",
-            plot_type = "quantile",
-            symmetric = FALSE
-)  + ggtitle("Group 3")
-
-
-library(patchwork)
-p1
-p2
-p3
-
-```
-
-
-
-```{r hour-day-day-month, eval = FALSE}
-
-set.seed(7777)
-library(gravitas)
-library(tsibble)
-library(lubridate)
-library(readr)
-
-all_data <- read_rds("sim_table/all_data.rds")
-sm_cust_data <- read_rds("data/sm_cust_data.rds")
-sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
-
-#sm_30 <- sample(sm_unique_cust$customer_id, 30)
-sm_cust_samp <- sm_cust_data %>% 
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(year(reading_datetime) == 2012) %>% #for demo just show one column
-  as_tsibble(index = reading_datetime,
-             key = customer_id) %>% 
-  create_gran("wknd_wday") %>% 
-  create_gran("week_month")
-
-#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
-
-facet_variable = "wknd_wday"
-x_variable = "week_month"
-
-one_harmony_data <- all_data %>%
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(facet_variable == "wknd_wday",
-                    x_variable == "week_month") %>% 
-  mutate(customer_id = as.character(customer_id))
-
-mds<- one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist() %>%          
-  cmdscale() %>%
-  as_tibble()
-
-colnames(mds) <- c("Dim.1", "Dim.2")
-rownames(mds) <- unique(one_harmony_data$customer_id)
-mds <- mds %>%
-  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
-  select((customer_id)
-         , Dim.1, Dim.2)
-
-
-clust <- kmeans(mds, 3)$cluster %>%
-  as.factor()
-mds <- mds %>%
-  mutate(groups = clust)
-
-
-# Plot and color by groups
-ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
-          label = rownames(mds),
-          color = "groups",
-          palette = "jco",
-          size = 1, 
-          ellipse = TRUE,
-          ellipse.type = "convex",
-          repel = TRUE)
-
-```
-
-
-### Advantage over taditional feature based clustering methods
-
-Since probability distribution of the load is considered across different cyclic granularity, there is no discarding of valuable data that might result from bringing all customers to the same time horizon.
-Moreover, since our metric is based on probability distribution, it will not be sensitive to outlier days and hence the clustering process will not be biased.
-Moreover, feature extraction applies to all days for all customers at once and therefore does not support parallel computing. Our metric is computed for each household separately and can even run for each each harmonies separately and thus fits well into the parallel computing framework.
-
-
-### Write the method in notations
-
--  notation of time series for each customer
--  wpd
--  harmonies
--  cluster
-
-
-### Distinction, repeatability, and robustness metrics
-
-
-
-### Putting similar households on linear scale 
 
 
 
