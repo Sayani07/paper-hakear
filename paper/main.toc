@@ -3,29 +3,28 @@
 \contentsline {subsection}{\numberline {2.1}Idea}{5}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Characterising distributions}{5}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Distance between distributions}{6}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Definition of the distance measure}{6}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Properties of the distance measure}{7}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.4}Definition}{6}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Properties}{7}{subsection.2.5}%
 \contentsline {subsubsection}{\numberline {2.5.1}Design of the simulation study}{7}{subsubsection.2.5.1}%
 \contentsline {subsubsection}{\numberline {2.5.2}Results}{8}{subsubsection.2.5.2}%
-\contentsline {section}{\numberline {3}Normalisation of the distance measure}{9}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Methodology}{9}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Data generation}{9}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Permutation approach}{10}{subsubsection.3.1.2}%
-\contentsline {subsubsection}{\numberline {3.1.3}Modelling approach}{10}{subsubsection.3.1.3}%
-\contentsline {subsection}{\numberline {3.2}Results}{11}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Simulation environment}{12}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Ranking and selecting significant harmonies}{12}{section.4}%
-\contentsline {paragraph}{\numberline {4.0.0.1}Characteristics under different simulation designs}{14}{paragraph.4.0.0.1}%
-\contentsline {section}{\numberline {5}Application in residential smart meter data}{16}{section.5}%
-\contentsline {section}{\numberline {6}Discussion points and future work}{16}{section.6}%
-\contentsline {section}{\numberline {7}Appendix}{17}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Null distribution}{17}{subsection.7.1}%
-\contentsline {subsubsection}{\numberline {7.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{17}{subsubsection.7.1.1}%
-\contentsline {subsubsection}{\numberline {7.1.2}Normalised maximum distances follow standard Gumbel distribution}{17}{subsubsection.7.1.2}%
-\contentsline {subsubsection}{\numberline {7.1.3}Limiting distribution of median of normalised maximum distances is normal}{17}{subsubsection.7.1.3}%
-\contentsline {subsection}{\numberline {7.2}Power}{17}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Confidence interval}{17}{subsection.7.3}%
-\contentsline {subsubsection}{\numberline {7.3.1}Varying distribution across facet}{17}{subsubsection.7.3.1}%
-\contentsline {subsubsection}{\numberline {7.3.2}Varying distribution across x-axis}{17}{subsubsection.7.3.2}%
-\contentsline {subsubsection}{\numberline {7.3.3}Varying distribution across both facets and x-axis}{17}{subsubsection.7.3.3}%
-\contentsline {subsubsection}{\numberline {7.3.4}Repeat all with varying facet and x-axis levels}{17}{subsubsection.7.3.4}%
+\contentsline {section}{\numberline {3}Normalisation of the distance measure}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Simulation environment}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Methodology}{9}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Permutation approach}{10}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Modelling approach}{10}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Results}{12}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Ranking and selecting significant harmonies}{14}{section.4}%
+\contentsline {paragraph}{\numberline {4.0.0.1}Characteristics under different simulation designs}{15}{paragraph.4.0.0.1}%
+\contentsline {section}{\numberline {5}Application in residential smart meter data}{17}{section.5}%
+\contentsline {section}{\numberline {6}Discussion points and future work}{17}{section.6}%
+\contentsline {section}{\numberline {7}Appendix}{18}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Null distribution}{18}{subsection.7.1}%
+\contentsline {subsubsection}{\numberline {7.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{18}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}Normalised maximum distances follow standard Gumbel distribution}{18}{subsubsection.7.1.2}%
+\contentsline {subsubsection}{\numberline {7.1.3}Limiting distribution of median of normalised maximum distances is normal}{18}{subsubsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.2}Power}{18}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Confidence interval}{18}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}Varying distribution across facet}{18}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}Varying distribution across x-axis}{18}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}Varying distribution across both facets and x-axis}{18}{subsubsection.7.3.3}%
+\contentsline {subsubsection}{\numberline {7.3.4}Repeat all with varying facet and x-axis levels}{18}{subsubsection.7.3.4}%
