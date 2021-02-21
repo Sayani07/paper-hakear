@@ -229,7 +229,8 @@ varall <- compute_pairwise_norm(sim_panel_varall,
 
 # plot
 p_varall <- sim_panel_varall %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("Design $D_{var_{all}}$:", varall))
 ```
 
 
@@ -256,7 +257,8 @@ varx <- compute_pairwise_norm(sim_panel_varx,
 
 # plot
 p_varx <- sim_panel_varx %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{var_x}$:", varx))
 ```
 
 
@@ -280,7 +282,8 @@ varf <- compute_pairwise_norm(sim_panel_varf,
 )
 
 p_varf <- sim_panel_varf %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{var_f}$:", varf))
 ```
 
 
@@ -303,6 +306,12 @@ null <- compute_pairwise_norm(sim_panel_null,
 )
 
 p_null <- sim_panel_null %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{null}$:", null))
+```
+
+```{r}
+library(patchwork)
+(p_null + p_varf)/(p_varx + p_varall)
 ```
 

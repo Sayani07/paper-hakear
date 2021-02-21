@@ -401,8 +401,7 @@ G21 %>%
 
 ```
 
-
-# Normalisation of the distance measure
+# Normalized distance measure
 
 The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define $wpd$ is affected by the number of categories. The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. We discuss two approaches for normalization, both of which are based on the simulation results.
 
@@ -437,7 +436,7 @@ _Linear model_
 
 A log-linear model is fitted to see how the values of $wpd_{raw}$ changes with the values of $nx$ and $nfacet$.  The model is of the form $$y_k = a+b*log(z_k) + e_k$$, where, $y_k = median_l(x_{k, l})$ and $e_k$ are idiosyncratic errors. We have gone with the approach of fitting a linear regression model to estimate the parameters $a$ and $b$. The estimates and other model summary is given in \ref{tab:linear-model}.
 
-```{r linear-model,message=FALSE}
+```{r linear-model, message=FALSE}
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
 
 G21_median <- G21 %>% 
@@ -576,19 +575,117 @@ G21_glm %>%
 ```
 
 
-## Results
+## Combining normalizing approaches
 
-This section reports the results of a simulation study that was carried out to evaluate the behavior of our distance measure across all potential factors. The results are reported in two parts: for the a) raw measure and then b) normalised one to show how the loopholes for the raw measures were removed using the normalized ones.
+We see that the transformation through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than 7) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. However, it is  difficult to compare the transformed $wpd$ from both of these approaches, since each of the variables is measured on a different scale (each of them have location 0). The transformed variables from the two approaches could be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, we can stick to modeling approach. These could be done through the following:
 
-First, the behavior of $wpd_{raw}$ and $wpd_{norm}$ is explored in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Using two types of distributions, viz. normal and gamma (non-normal), we generated observations for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{2, 3, 5, 7, 14, 20, 31, 50\}$ and $nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $\lambda$ is set to $0.67$, since we want to up-weigh the within-facet distances and that of $\omega$ is set to $0$, since there is no significant differences between distributions in the null case. Observations were generated for each type of distribution changing the shape and scale to study the effect of shape, scale and type of distribution on wpd. The set of distributions considered for this purpose is ${N(0,1), N(5, 1), N(0,5), \Gamma(0.5, 1), \Gamma(2, 1)}$. Each of the scenario is run $nsim = 200$ times to see the distribution of wpd values for each scenario.
+ - Making the range of both the variables same by using min-max scaling method. In practice, however, we would only have one value of $wpd_{raw}$ which we need to transform using the modeling approach. Hence, min-max scaling approach could not be used here.
 
-Secondly, the behavior of raw and normalized wpd is explored in designs where there is in fact difference in distribution between facet categories ($D_{var_f}$) or across x-categories ($D_{var_x}$) or both ($D_{var_{all}}$). Using $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$, observations are drawn from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet =  \{2, 3, 5, 7, 14, 20, 31, 50\}$. $ntimes = 500$ is assumed for this setup as well. Furthermore, to generate different distributions across different combination of facet and x levels, the following method is deployed - suppose the distribution of the combination of first levels of x and facet category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). 
+ - Standardizing the variables and expressing scores at standard deviation units. Again in practice, however, we would only have one value of $wpd_{raw}$ which we need to transform using the modeling approach. Hence, standardizing scores could not be used here as we do not have the mean and standard deviation of a series while using transformation using modeling.
+ 
+- Make the location and scale of both the approaches similar so that they could be compared. Please note that the range of values could be different in this case, however location and scale are brought to same levels.)
 
-The tabulated values and graphical representations of the simulation results are provided in Appendix. The learning from the simulations are as follows:
-The values of the measure $wpd_{raw}$ is least for $D_{null}$, followed by 
-$D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{raw}$ was designed such that this relationship holds.
-Furthermore, the distribution of the measure $wpd_{raw}$ changes for different facet and x categories. The location of the distribution shifts to the right and it also becomes more skewed for more higher facet and x-axis categories. Now this is not desirable, as it would mean that we can't compare the $wpd_{raw}$ values across different panels. The distribution of $wpd_{norm}$ looks more similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the initial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
 
+The measure $wpd_{glm}$ has location 0 and standard deviation ~ 0.003, whereas the measure $wpd_{permutation}$ which is a z-score, has a normal distribution with location 0 and standard deviation 1. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*300$, which brings the standard deviation of $wpd_{glm-scaled}$ to almost 1, without changing the location.
+
+The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_permutation$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
+
+
+```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In parl b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+hist <- ggplot(G21_glm) +
+  geom_histogram(aes(x = wpd_glm_scaled)) +
+  ggtitle("a")
+
+
+p <- ggplot(G21_glm, aes(sample = wpd_glm_scaled))
+qqplot <-  p + geom_qq() + geom_qq_line() + coord_fixed(ratio = 4/5) +
+  ggtitle("b")
+
+# G21_glm <- G21 %>% 
+#     mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+#     )
+#     )
+#     ),
+#     wpd_glm_scaled = 300*(wpd_glm))
+
+ # G21_glm$wpd_glm_scaled %>% 
+ #   range()
+hist + qqplot
+```  
+
+```{r dist-new-same-scale-link, fig.cap="w$pd_permutation$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
+# 
+# G21_permutation <- read_rds("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds") %>%
+#   rename("wpd_permutation" = "value")
+# 
+# 
+# G21_model_data <- G21 %>%
+#   mutate(model =
+#            ((1/value)
+#                   - intercept -
+#                     slope*log(nx*nfacet))/slope) %>%
+#   mutate(model_trans =
+#            (model - mean(model))/sd(model))
+
+# G21_model_data$model %>% summary()
+
+G21_all_data <- G21_permutation %>% 
+  left_join(G21_lm, by = c("nx", "nfacet", "perm_id")) %>% 
+  left_join(G21_glm, by = c("nx", "nfacet", "perm_id")) %>% 
+  pivot_longer(cols = c(3, 10),
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_scaled"))
+
+
+G21_all_data %>% 
+  filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
+  ggplot() +
+  geom_density(aes(x = value_estimate, 
+                   fill = type_estimate), alpha = 0.5) +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c( "#D55E00", "#0072B2")) +
+  xlab("wpd_norm2") +
+  scale_x_continuous(breaks = c(-5, -3, 0, 3, 5))
+
+# G21_all_data %>% 
+#   filter(type_estimate %in% c("wpd_permutation", "wpd_glm")) %>% 
+#   ggplot() +
+#   geom_density(aes(x = value_estimate, 
+#                    fill = type_estimate), 
+#                alpha = 0.7) +
+#   facet_grid(nx~nfacet,
+#              labeller = "label_both") +
+#   theme(legend.position = "bottom") +
+#   scale_fill_manual(values = c("#CC79A7", "#0072B2")) +
+#   xlab("wpd_norm2")
+
+# are scales same
+# 
+# G21_model_data %>%
+#   group_by(nx, nfacet) %>% 
+#   summarize(sd_model = sd(model))
+#   
+# G21_all_data %>%
+#   filter(type_estimate == c("perm_trans")) %>% 
+#   select(value_estimate) %>% 
+#   range()
+# 
+# G21_all_data %>%
+#   filter(type_estimate == c("wpd_glm_scaled")) %>% 
+#   select(value_estimate) %>% 
+#   range()
+```
+
+## Properties
+
+This section reports the results of a simulation study that was carried out to evaluate the behavior of $wpd_{norm}$. The behavior of $wpd_{norm}$ is explored in designs where there is in fact difference in distribution between facet categories ($D_{var_f}$) or across x-categories ($D_{var_x}$) or both ($D_{var_{all}}$). Using $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$, observations are drawn from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet =  \{2, 3, 5, 7, 14, 20, 31, 50\}$. $ntimes = 500$ is assumed for this setup as well. Furthermore, to generate different distributions across different combination of facet and x levels, the following method is deployed - suppose the distribution of the combination of first levels of $x$ and $facet$ category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). 
+
+The tabulated values and graphical representations of the simulation results are provided in Appendix. The learning from the simulations are as follows: The values of $wpd_{norm}$ is least for $D_{null}$, followed by
+$D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{norm}$ was designed such that this relationship holds.
+Furthermore, the distribution of the measure $wpd_{norm}$ does not change for different facet and x categories. The distribution of $wpd_{norm}$ looks similar with at least the mean and standard of the distributions being uniform across panels. This means,  $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the initial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{raw}$ and $wpd_{norm}$ could be found in Appendix.
 
 # Ranking and selecting significant harmonies
 
@@ -612,6 +709,119 @@ of times M (M = 200).
 
 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
 
+
+
+
+```{r varall}
+
+sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
+  dist_normal((mean + seq(0,
+    (nx *
+      nfacet - 1),
+    by = 1
+  ) * w), sd)
+}
+sim_panel_varall <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 500,
+  sim_dist = sim_varall_normal(2, 3, 0, 1, 10)
+) %>% unnest(data)
+
+set.seed(9999)
+varall <- compute_pairwise_norm(sim_panel_varall, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+# plot
+p_varall <- sim_panel_varall %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("Design $D_{var_{all}}$:", varall))
+```
+
+
+
+```{r varx}
+sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
+   rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
+ }
+
+sim_panel_varx <- sim_panel(
+   nx = 2, nfacet = 3,
+   ntimes = 5,
+   sim_dist = sim_varx_normal(2, 3, 0, 1, 10)
+ ) %>% unnest(data)
+
+
+set.seed(9999)
+varx <- compute_pairwise_norm(sim_panel_varx, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+# plot
+p_varx <- sim_panel_varx %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{var_x}$:", varx))
+```
+
+
+```{r varf}
+sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
+  rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
+}
+sim_panel_varf <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 5,
+  sim_dist = sim_varf_normal(2, 3, 0, 1, 10)
+) %>% unnest(data)
+
+
+set.seed(9999)
+varf <- compute_pairwise_norm(sim_panel_varf, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+p_varf <- sim_panel_varf %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{var_f}$:", varf))
+```
+
+
+```{r null}
+sim_panel_null <- sim_panel(
+   nx = 2,
+   nfacet = 3,
+   ntimes = 500,
+   sim_dist = distributional
+   ::dist_normal(0, 1)
+) %>% unnest(c(data))
+
+set.seed(9999)
+
+null <- compute_pairwise_norm(sim_panel_null, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+p_null <- sim_panel_null %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle(paste("Design $D_{null}$:", null))
+```
+
+```{r plot-all}
+library(patchwork)
+(p_null + p_varf)/(p_varx + p_varall)
+```
 
 The p-value of the design $D_{null}$ is size.
 The p-value of other designs is power.

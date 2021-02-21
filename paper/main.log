@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  21 FEB 2021 23:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  22 FEB 2021 00:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -607,7 +607,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=94, 565.11125pt x 743.77875pt>
+<figure/calendar-elec-1.pdf, id=99, 565.11125pt x 743.77875pt>
 File: figure/calendar-elec-1.pdf Graphic file (type pdf)
 <use figure/calendar-elec-1.pdf>
 Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
@@ -621,12 +621,12 @@ has been already used, duplicate ignored
                                                   
 l.111 
        <./figure/calendar-elec-1.pdf>]
-<figure/id2-1.pdf, id=119, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=124, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=120, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=125, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -675,7 +675,7 @@ Underfull \hbox (badness 1635) in paragraph at lines 172--173
  is the Kullback-Leibler (KL) di-ver-
  []
 
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=166, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=171, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -694,12 +694,12 @@ has been already used, duplicate ignored
                                                   
 l.245 
        </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>]
-<figure/raw-1.pdf, id=191, 568.1225pt x 352.31625pt>
+<figure/raw-1.pdf, id=196, 568.1225pt x 352.31625pt>
 File: figure/raw-1.pdf Graphic file (type pdf)
 <use figure/raw-1.pdf>
 Package pdftex.def Info: figure/raw-1.pdf  used on input line 253.
 (pdftex.def)             Requested size: 469.7731pt x 291.32571pt.
-<figure/quadratic-1.pdf, id=192, 572.1375pt x 349.305pt>
+<figure/quadratic-1.pdf, id=197, 572.1375pt x 349.305pt>
 File: figure/quadratic-1.pdf Graphic file (type pdf)
 <use figure/quadratic-1.pdf>
 Package pdftex.def Info: figure/quadratic-1.pdf  used on input line 262.
@@ -735,7 +735,7 @@ File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 LaTeX Warning: Reference `fig:' on page 10 undefined on input line 332.
 
-<figure/unnamed-chunk-2-1.pdf, id=224, 572.1375pt x 352.31625pt>
+<figure/unnamed-chunk-2-1.pdf, id=229, 572.1375pt x 352.31625pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 334.
@@ -745,77 +745,105 @@ Underfull \hbox (badness 10000) in paragraph at lines 340--341
 
  []
 
-<figure/wpd-glm-horizontal-1.pdf, id=234, 572.1375pt x 352.31625pt>
+<figure/wpd-glm-horizontal-1.pdf, id=239, 572.1375pt x 352.31625pt>
 File: figure/wpd-glm-horizontal-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-horizontal-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 34
 5.
 (pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
 [11 <./figure/unnamed-chunk-2-1.pdf>]
-<figure/wpd-glm-dist-1.pdf, id=246, 568.1225pt x 351.3125pt>
+<figure/wpd-glm-dist-1.pdf, id=251, 568.1225pt x 351.3125pt>
 File: figure/wpd-glm-dist-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-dist-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-dist-1.pdf  used on input line 353.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[12 <./figure/wpd-glm-horizontal-1.pdf>] [13pdfTeX warning (ext4): destination 
-with the same identifier (name{figure.7}) has been already used, duplicate igno
-red
+[12 <./figure/wpd-glm-horizontal-1.pdf>]
+<figure/hist-qq-1.pdf, id=265, 557.08125pt x 269.005pt>
+File: figure/hist-qq-1.pdf Graphic file (type pdf)
+<use figure/hist-qq-1.pdf>
+Package pdftex.def Info: figure/hist-qq-1.pdf  used on input line 380.
+(pdftex.def)             Requested size: 469.76414pt x 226.84105pt.
+<figure/dist-new-same-scale-link-1.pdf, id=266, 568.1225pt x 346.29375pt>
+File: figure/dist-new-same-scale-link-1.pdf Graphic file (type pdf)
+<use figure/dist-new-same-scale-link-1.pdf>
+Package pdftex.def Info: figure/dist-new-same-scale-link-1.pdf  used on input l
+ine 389.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+[13pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
+ has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.379 
-       <./figure/wpd-glm-dist-1.pdf>]
-Overfull \hbox (18.98178pt too wide) in paragraph at lines 392--394
+l.404 
+       <./figure/wpd-glm-dist-1.pdf>] [14pdfTeX warning (ext4): destination wit
+h the same identifier (name{figure.8}) has been already used, duplicate ignored
+
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.404 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+9}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.404 
+       <./figure/hist-qq-1.pdf> <./figure/dist-new-same-scale-link-1.pdf>]
+Overfull \hbox (18.98178pt too wide) in paragraph at lines 423--425
 []\T1/lmr/m/n/10 For each per-mu-ta-tion, one $\OML/lmm/m/it/10 wpd[]$ \T1/lmr/
 m/n/10 is ob-tained. De-fine $\OML/lmm/m/it/10 wpd[] \OT1/lmr/m/n/10 = \OMS/lms
 y/m/n/10 f\OML/lmm/m/it/10 wpd[]; wpd[]; [] ; wpd[]\OMS/lmsy/m/n/10 g$\T1/lmr/m
 /n/10 . 
  []
 
-<figure/size-1.pdf, id=273, 568.1225pt x 349.305pt>
+<figure/plot-all-1.pdf, id=305, 563.10374pt x 340.27126pt>
+File: figure/plot-all-1.pdf Graphic file (type pdf)
+<use figure/plot-all-1.pdf>
+Package pdftex.def Info: figure/plot-all-1.pdf  used on input line 430.
+(pdftex.def)             Requested size: 469.75604pt x 283.86328pt.
+[15 <./figure/plot-all-1.pdf>]
+<figure/size-1.pdf, id=326, 568.1225pt x 349.305pt>
 File: figure/size-1.pdf Graphic file (type pdf)
 <use figure/size-1.pdf>
-Package pdftex.def Info: figure/size-1.pdf  used on input line 405.
+Package pdftex.def Info: figure/size-1.pdf  used on input line 438.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/power-1.pdf, id=274, 568.1225pt x 349.305pt>
+<figure/power-1.pdf, id=327, 568.1225pt x 349.305pt>
 File: figure/power-1.pdf Graphic file (type pdf)
 <use figure/power-1.pdf>
-Package pdftex.def Info: figure/power-1.pdf  used on input line 407.
+Package pdftex.def Info: figure/power-1.pdf  used on input line 440.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-[14 <./figure/size-1.pdf>]
-<figure/sim_all-1.pdf, id=295, 562.1pt x 351.3125pt>
+[16 <./figure/size-1.pdf>]
+<figure/sim_all-1.pdf, id=339, 562.1pt x 351.3125pt>
 File: figure/sim_all-1.pdf Graphic file (type pdf)
 <use figure/sim_all-1.pdf>
-Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 414.
+Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=296, 562.1pt x 351.3125pt>
+<figure/sim_all-2.pdf, id=340, 562.1pt x 351.3125pt>
 File: figure/sim_all-2.pdf Graphic file (type pdf)
 <use figure/sim_all-2.pdf>
-Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 414.
+Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=297, 562.1pt x 351.3125pt>
+<figure/sim_all-3.pdf, id=341, 562.1pt x 351.3125pt>
 File: figure/sim_all-3.pdf Graphic file (type pdf)
 <use figure/sim_all-3.pdf>
-Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 414.
+Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=298, 562.1pt x 351.3125pt>
+<figure/sim_all-4.pdf, id=342, 562.1pt x 351.3125pt>
 File: figure/sim_all-4.pdf Graphic file (type pdf)
 <use figure/sim_all-4.pdf>
-Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 414.
+Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-[15 <./figure/power-1.pdf> <./figure/sim_all-1.pdf>] [16 <./figure/sim_all-2.pd
-f> <./figure/sim_all-3.pdf>] [17 <./figure/sim_all-4.pdf>] [18] [19] (./main.au
+[17 <./figure/power-1.pdf> <./figure/sim_all-1.pdf>] [18 <./figure/sim_all-2.pd
+f> <./figure/sim_all-3.pdf>] [19 <./figure/sim_all-4.pdf>] [20] [21] (./main.au
 x)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: FFF633CE5595019983C81B45E8573B0E;3012.
+(rerunfilecheck)             Checksum: 070A5C4D21C65D8AF4A76998B24812FC;3195.
  ) 
 Here is how much of TeX's memory you used:
- 12190 strings out of 481225
- 179077 string characters out of 5913612
- 486070 words of memory out of 5000000
- 28759 multiletter control sequences out of 15000+600000
+ 12221 strings out of 481225
+ 179874 string characters out of 5913612
+ 486814 words of memory out of 5000000
+ 28781 multiletter control sequences out of 15000+600000
  460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2111b,395s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -840,10 +868,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (19 pages, 1308939 bytes).
+Output written on main.pdf (21 pages, 2013497 bytes).
 PDF statistics:
- 487 PDF objects out of 1000 (max. 8388607)
- 402 compressed objects within 5 object streams
- 104 named destinations out of 1000 (max. 500000)
- 220 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 533 PDF objects out of 1000 (max. 8388607)
+ 437 compressed objects within 5 object streams
+ 110 named destinations out of 1000 (max. 500000)
+ 243 words of extra memory for PDF output out of 10000 (max. 10000000)
 
