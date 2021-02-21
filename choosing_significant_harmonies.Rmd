@@ -1,0 +1,200 @@
+---
+title: "choosing_best"
+author: "Sayani Gupta"
+date: "17/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(here)
+```
+
+# Choosing harmonies with significant wpd
+
+In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests)
+generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
+
+Typically, a randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. We will use this procedure to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows:
+
+<!-- <!-- We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. --> 
+<!-- Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
+<!-- $wpd_{norm}$ for each of these reassignments. -->
+
+
+<!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
+
+- **Input:** All harmonies of the form $\{(A, B), A = \{ a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}\}$  with $A$ placed across x-axis and $B$ across facets $\forall (A, B) \in N_C$.
+
+- **Output:** Harmony pairs $(A, B)$ for which $wpd_{norm}$ is significant.
+
+1. Fix harmony pair $(A, B)$.
+
+2. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
+
+3. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
+
+4. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
+
+5.  Steps (3) and (4) are repeated a large number
+of times M (M = 200).
+
+6. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
+
+7. Repeat Steps (1-6) for all harmony pairs.
+
+8. $95^{th}$ percentile of $wpd_{sample}$ obtained for all harmony pairs is computed and stored in $wpd_{threshold}$.
+
+7. If $wpd_{obs_{A, B}}> wpd_{threshold}$, harmony pair $(A, B)$ is selected, otherwise rejected. 
+
+Data generation:
+
+We generate a data set from a N(0,1) distribution and simulate the cyclic granularity labels for levels  $\{2, 3, 5, 7, 14, 20, 31, 50\}$. We fix two categories at a time with levels $(i, j) \in  \{2, 3, 5, 7, 14, 20, 31, 50\}$ and compute $wpd_{sample}$ and repeat this for all categories to obtain $wpd_{threshold}$.
+
+
+Size computation:
+
+Perform the test described in the algorithm a large number
+of times M (M = 200) and detect the number of times, in total, when harmonies are chosen to be significant, when in fact they are not. Here, we test the null hypotheses:
+
+$H_0: wpd_{C_i, C_j} = 0 \forall (C_i, C_j) \in N_C$.
+
+Since, multiple tests are done, the probability of type-1 error needs to be adjusted to incorporate this multiple testing problem.
+
+
+
+```{r, eval = FALSE, echo = FALSE}
+set.seed(12345)
+
+# simulate one big data which will have all categories generated on the #fly
+
+library(distributional)
+sim_dist <- distributional::dist_normal(0,1)
+sim_orig <-  distributional::generate(sim_dist, 50000)
+sim_orig <- sim_orig[[1]]
+lensim <- length(sim_orig)
+
+
+simtable<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
+
+lapply(1:2, 
+                           function(scen){
+
+simj<-simtable[scen,] 
+nfacetj<-simj$nfacet
+nxj<-simj$nx
+nperm = 20
+
+id_x <- rep_len(seq_len(nxj), length.out = lensim) 
+id_facet <- rep_len(seq_len(nfacetj), length.out = lensim) 
+
+sim_panel_orig <- bind_cols(id_x = id_x, id_facet = id_facet, sim_data = sim_orig)
+
+wpd_orig = compute_pairwise_max(sim_panel_data, 
+                                gran_x = "id_x",
+                                gran_facet = "id_facet",
+                                response = sim_data)
+
+
+wpd_sample <- lapply(seq_len(nperm), function(x){
+  
+  
+  sample_data <- sample(sim_orig, size =  lensim)
+  
+  sim_panel_sample <- bind_cols(id_x = id_x, 
+                                id_facet = id_facet, 
+                                sim_data = sample_data)
+  
+  wpd =  compute_pairwise_max(sim_panel_sample, 
+                              gran_x = "id_x",
+                              gran_facet = "id_facet",
+                              response = sim_data) %>% 
+    as_tibble() %>% mutate(perm_id = x)
+  
+}) %>% bind_rows()
+
+wpd_all <- wpd_orig %>% as_tibble() %>% 
+  mutate(perm_id = 0) %>% 
+  bind_rows(wpd_sample)
+
+saveRDS(wpd_all,
+        paste0('simulations/supplementary/test/wpd_N01/data-ind/',
+               nxj,'-',
+               #"nfacetj-",
+               nfacetj,"-",
+               '-wpd-test.rds'))
+})
+```
+
+
+The p-value of the design $D_{null}$ is size.
+The p-value of other designs is power.
+Confidence interval of the 
+
+  
+
+The p-value is almost always greater than 0.05, which means there is no significant differences between the different categories, which is true from the simulation design.
+
+
+```{r size}
+library(readr)
+library(tidyverse)
+data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
+
+data_N01_obs <- data_N01 %>% filter(perm_id==1)
+data_N01_samp <- data_N01 %>% filter(perm_id!=1)
+
+#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+
+mmpd_dist_null_grid  = data_N01_samp
+
+mmpd_null_orig = data_N01_obs
+compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
+                               by = c("nx", "nfacet")) %>% 
+    group_by(nx, nfacet) %>% 
+    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
+
+  ggplot() + 
+    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
+    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
+    geom_text(data = round(compute_p_value, 3), size = 3,  
+              aes(x = -Inf,
+                  y =  Inf,
+                  label = paste("p-value:",p_value),
+                  hjust   = 0,
+                  vjust   = 1)) + 
+    facet_grid(nx ~ nfacet)
+```
+
+
+```{r power}
+library(readr)
+library(tidyverse)
+data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
+
+data_N01_obs <- data_N01 %>% filter(perm_id==1)
+data_N01_samp <- data_N01 %>% filter(perm_id!=1)
+
+#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
+
+mmpd_dist_null_grid  = data_N01_samp
+
+mmpd_null_orig = data_N01_obs
+compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
+                               by = c("nx", "nfacet")) %>% 
+    group_by(nx, nfacet) %>% 
+    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
+
+  ggplot() + 
+    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
+    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
+    geom_text(data = round(compute_p_value, 3), size = 3,  
+              aes(x = -Inf,
+                  y =  Inf,
+                  label = paste("p-value:",p_value),
+                  hjust   = 0,
+                  vjust   = 1)) + 
+    facet_grid(nx ~ nfacet)
+```
+

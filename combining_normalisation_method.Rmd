@@ -133,6 +133,15 @@ intercept <- glm_fit$coefficients[1]
 slope <- glm_fit$coefficients[2]
 
 
+G21_sd  = G21 %>% 
+    mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+    )
+    )
+    ))
+
+scale_fac <- 1/G21_sd$wpd_glm %>% sd()
+
+
 # checking the fit of the residuals from glm fit
 
 # fitted_glm <- fitted(glm_fit, type = "response")
@@ -165,12 +174,16 @@ G21 %>%
 
 ```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
 
+
 G21_glm <- G21 %>% 
   mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
                     )
                     )
              ),
-         wpd_glm_scaled = ((wpd_glm*300)))
+         wpd_glm_scaled = ((wpd_glm*320)))
+
+G21_glm$wpd_glm_scaled %>% sd()
+
 
 G21_glm %>% 
   ggplot() +
