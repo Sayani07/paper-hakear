@@ -47,6 +47,8 @@ library(distributional)
 library(ggplot2)
 library(sugrrants)
 library(here)
+library(ggplot2)
+library(patchwork)
 
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
@@ -81,7 +83,7 @@ set.seed(321)
 
 Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allows the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore.
 
-```{r calendar-elec, fig.height = 10.5, fig.cap="Calendar display."}
+```{r calendar- <- , fig.height = 10.5, fig.cap="Calendar display."}
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
@@ -588,7 +590,7 @@ We see that the transformation through the modeling approach leads to very simil
 
 The measure $wpd_{glm}$ has location 0 and standard deviation ~ 0.003, whereas the measure $wpd_{permutation}$ which is a z-score, has a normal distribution with location 0 and standard deviation 1. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*300$, which brings the standard deviation of $wpd_{glm-scaled}$ to almost 1, without changing the location.
 
-The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_permutation$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
+The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{permutation}$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
 
 
 ```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In parl b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
@@ -980,10 +982,98 @@ ggplot2::ggplot(design_all %>%
 ```
 
 
+# Application to smart meter datasets {#sec:application}
 
-# Application in residential smart meter data {#sec:application}
+## Residential smart meter dataset
+
+The smart meter data set from four households in Melbourne referred in @wang2020calendar has been utilized to see the use of the distance measure proposed in the paper. The data contains half-hourly electricity consumption from Jan-2018 to Jun-2018 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for two households (id 2 and 4) are shown in a linear time scale in \ref{fig:linear-scale}. It is evident from the range of the demand data that these households vary in consumption levels as in their temporal patterns. In panel A (left), the linear representation of the entire time period is shown, whereas in panel B (right) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is evident from the linear representation of the time series.  We pick household id 2 and 4 for our analysis to see which periodic patterns are important in their behavior, if they are same or different and if it makes sense using our distance metric.
+
+
+```{r linear-scale}
+library(scales)
+library(tidyquant)
+library(gghighlight)
+
+elec$date_time <- as.Date(elec$date_time)
+
+elec_linear <- elec %>% 
+  ggplot() +
+  geom_line(aes(x = date_time, y = kwh, group = time)) +
+  facet_wrap(~id, nrow = 4, labeller = "label_both",
+             strip.position =  "right",
+             scales = "free_y") +
+  theme_pubclean() 
+#+
+ # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
+
+elec_zoom <- elec_linear + 
+  coord_x_date(xlim = c("2018-02-01", "2018-02-28")) +
+  gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")),
+              unhighlighted_params = list(colour = "grey")) + geom_line(aes(x = date_time, y = kwh, group = time))
+                      
+
+elec_linear + elec_zoom +
+   xlab("Date") +
+  ylab("demand(in kwh)")
+# elec %>% dplyr::filter(date> as.Date("2018-02-01") & date<as.Date("2018-02-28"))
+
+```
+### Data preprocessing
+
+**Normal-quantile-transform** 
+
+Let $y_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. This is expected to have an assymmetrical distribution as could be seen in \ref{fig:raw-nqt} and the Normal score transform has been applied to make it more treatable. Let $y*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$.
+
+**Characterizing empirical distributions through quantiles**
+
+Let $A = \{ a_j: j = 1, 2, \dots, J\}$ be a cyclic granularity of interest. Let 
+$q^{i, p}_{A, j}$ is the quantile with probability $p$ for the $j^{th}$ category of the cyclic granularity $A$ of the $i^{th}$ household.
+Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$ for each household $i \in i = 1, 2, 3, 4$  for each category $j \in j = 1, 2, \dots, J$ and all $A \in N_C$.
+
+**Computing JS distances between harmonies for each categories of the cyclic granularity involved**
+
+
+
+```{r raw-nqt}
+elec_raw <- elec %>% 
+  ggplot() +
+  geom_density(aes(x = kwh)) +
+  facet_wrap(~id, scales = "free_y") +
+  xlab("demand (in kwh)")
+
+elec_nqt <- elec %>% 
+  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+  ggplot() +
+  geom_density(aes(x = kwh_transformed))+
+  facet_wrap(~id, scales = "free_y") +
+  xlab("NQT demand (in kwh)")
+
+# hour_day_raw <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#     ggplot() + 
+#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
+#   
+# hour_day_trans <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
+
+elec_raw + elec_nqt
+
+```
+
+
+
+
 
 ```{r household2and4}
+elec <- read_rds(here("paper/data/elec.rds")) %>% 
+  filter(date >= ymd("20180101"), date < ymd("20180701"))
+rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
+
 id2_tsibble <- elec %>% 
    filter(id == 2) %>% 
    as_tsibble(index = date_time)
@@ -991,8 +1081,6 @@ id2_tsibble <- elec %>%
 id4_tsibble <- elec %>% 
    filter(id == 4) %>% 
    as_tsibble(index = date_time)
-
-
 
 harmonies2 <- id2_tsibble %>%
   harmony(
@@ -1002,15 +1090,12 @@ harmonies2 <- id2_tsibble %>%
   )
 
 
-
-
 harmonies4 <- id4_tsibble %>%
   harmony(
     ugran = "month",
     filter_in = "wknd_wday",
     filter_out = c("hhour", "fortnight")
   )
-
 
 library(tictoc)
 tic()
@@ -1027,8 +1112,8 @@ toc()
 
 library(tictoc)
 tic()
-all_harmony4 <- hakear::select_harmonies(id2_tsibble,
-   harmony_tbl = harmonies2,
+all_harmony4 <- hakear::select_harmonies(id4_tsibble,
+   harmony_tbl = harmonies4,
    response = kwh,
    nperm = 200,
    nsamp = 20
@@ -1038,6 +1123,14 @@ toc()
 ```
 
 
+```{r}
+all_harmony2 %>% kable()
+all_harmony4 %>% kable()
+```
+
+
+
+## Australian smart meter data set
 
 
 # Discussion points and future work

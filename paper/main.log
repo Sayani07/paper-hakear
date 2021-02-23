@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  22 FEB 2021 00:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  23 FEB 2021 10:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -607,44 +607,51 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar-elec-1.pdf, id=99, 565.11125pt x 743.77875pt>
-File: figure/calendar-elec-1.pdf Graphic file (type pdf)
-<use figure/calendar-elec-1.pdf>
-Package pdftex.def Info: figure/calendar-elec-1.pdf  used on input line 103.
+<figure/calendar- <- -1.pdf, id=109, 565.11125pt x 743.77875pt>
+File: figure/calendar- <- -1.pdf Graphic file (type pdf)
+<use figure/calendar- <- -1.pdf>
+Package pdftex.def Info: figure/calendar- <- -1.pdf  used on input line 103.
 (pdftex.def)             Requested size: 469.76654pt x 618.28954pt.
+
+LaTeX Warning: Float too large for page by 4.35953pt on input line 108.
+
 [1
 
 {/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.111 
-       <./figure/calendar-elec-1.pdf>]
-<figure/id2-1.pdf, id=124, 568.1225pt x 333.245pt>
+
+LaTeX Warning: Reference `fig:calendar-elec' on page 2 undefined on input line 
+110.
+
+<figure/id2-1.pdf, id=121, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=125, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=122, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
 (pdftex.def)             Requested size: 469.7731pt x 271.40602pt.
 
-LaTeX Warning: Reference `fig:' on page 3 undefined on input line 130.
+LaTeX Warning: Reference `fig:' on page 2 undefined on input line 130.
 
-[3pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) 
-has been already used, duplicate ignored
+[2] [3pdfTeX warning (ext4): destination with the same identifier (name{figure.
+1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.131 
-       <./figure/id2-1.pdf>] [4pdfTeX warning (ext4): destination with the same
- identifier (name{figure.3}) has been already used, duplicate ignored
+l.138 
+       <./figure/calendar- <- -1.pdf>] [4pdfTeX warning (ext4): destination wit
+h the same identifier (name{figure.2}) has been already used, duplicate ignored
+
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.140 
-       <./figure/id4-1.pdf>]
+l.138 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.138 
+       <./figure/id2-1.pdf> <./figure/id4-1.pdf>]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
 46.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
@@ -675,7 +682,7 @@ Underfull \hbox (badness 1635) in paragraph at lines 172--173
  is the Kullback-Leibler (KL) di-ver-
  []
 
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=171, 87
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=180, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
@@ -694,12 +701,12 @@ has been already used, duplicate ignored
                                                   
 l.245 
        </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>]
-<figure/raw-1.pdf, id=196, 568.1225pt x 352.31625pt>
+<figure/raw-1.pdf, id=204, 568.1225pt x 352.31625pt>
 File: figure/raw-1.pdf Graphic file (type pdf)
 <use figure/raw-1.pdf>
 Package pdftex.def Info: figure/raw-1.pdf  used on input line 253.
 (pdftex.def)             Requested size: 469.7731pt x 291.32571pt.
-<figure/quadratic-1.pdf, id=197, 572.1375pt x 349.305pt>
+<figure/quadratic-1.pdf, id=205, 572.1375pt x 349.305pt>
 File: figure/quadratic-1.pdf Graphic file (type pdf)
 <use figure/quadratic-1.pdf>
 Package pdftex.def Info: figure/quadratic-1.pdf  used on input line 262.
@@ -713,7 +720,7 @@ l.273
  identifier (name{figure.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.288 
+l.283 
        <./figure/quadratic-1.pdf>]
 
 LaTeX Warning: Reference `fig:' on page 10 undefined on input line 289.
@@ -731,39 +738,39 @@ LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line
 323.
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
+) [10]
 
-LaTeX Warning: Reference `fig:' on page 10 undefined on input line 332.
+LaTeX Warning: Reference `fig:' on page 11 undefined on input line 332.
 
-<figure/unnamed-chunk-2-1.pdf, id=229, 572.1375pt x 352.31625pt>
+<figure/unnamed-chunk-2-1.pdf, id=247, 572.1375pt x 352.31625pt>
 File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use figure/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 334.
 (pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
-[10]
+
 Underfull \hbox (badness 10000) in paragraph at lines 340--341
 
  []
 
-<figure/wpd-glm-horizontal-1.pdf, id=239, 572.1375pt x 352.31625pt>
+<figure/wpd-glm-horizontal-1.pdf, id=248, 572.1375pt x 352.31625pt>
 File: figure/wpd-glm-horizontal-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-horizontal-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 34
 5.
 (pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
 [11 <./figure/unnamed-chunk-2-1.pdf>]
-<figure/wpd-glm-dist-1.pdf, id=251, 568.1225pt x 351.3125pt>
+<figure/wpd-glm-dist-1.pdf, id=260, 568.1225pt x 351.3125pt>
 File: figure/wpd-glm-dist-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-dist-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-dist-1.pdf  used on input line 353.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
 [12 <./figure/wpd-glm-horizontal-1.pdf>]
-<figure/hist-qq-1.pdf, id=265, 557.08125pt x 269.005pt>
+<figure/hist-qq-1.pdf, id=274, 557.08125pt x 269.005pt>
 File: figure/hist-qq-1.pdf Graphic file (type pdf)
 <use figure/hist-qq-1.pdf>
 Package pdftex.def Info: figure/hist-qq-1.pdf  used on input line 380.
 (pdftex.def)             Requested size: 469.76414pt x 226.84105pt.
-<figure/dist-new-same-scale-link-1.pdf, id=266, 568.1225pt x 346.29375pt>
+<figure/dist-new-same-scale-link-1.pdf, id=275, 568.1225pt x 346.29375pt>
 File: figure/dist-new-same-scale-link-1.pdf Graphic file (type pdf)
 <use figure/dist-new-same-scale-link-1.pdf>
 Package pdftex.def Info: figure/dist-new-same-scale-link-1.pdf  used on input l
@@ -793,57 +800,67 @@ y/m/n/10 f\OML/lmm/m/it/10 wpd[]; wpd[]; [] ; wpd[]\OMS/lmsy/m/n/10 g$\T1/lmr/m
 /n/10 . 
  []
 
-<figure/plot-all-1.pdf, id=305, 563.10374pt x 340.27126pt>
+<figure/plot-all-1.pdf, id=314, 563.10374pt x 340.27126pt>
 File: figure/plot-all-1.pdf Graphic file (type pdf)
 <use figure/plot-all-1.pdf>
 Package pdftex.def Info: figure/plot-all-1.pdf  used on input line 430.
 (pdftex.def)             Requested size: 469.75604pt x 283.86328pt.
 [15 <./figure/plot-all-1.pdf>]
-<figure/size-1.pdf, id=326, 568.1225pt x 349.305pt>
+<figure/size-1.pdf, id=335, 568.1225pt x 349.305pt>
 File: figure/size-1.pdf Graphic file (type pdf)
 <use figure/size-1.pdf>
 Package pdftex.def Info: figure/size-1.pdf  used on input line 438.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
-<figure/power-1.pdf, id=327, 568.1225pt x 349.305pt>
+<figure/power-1.pdf, id=336, 568.1225pt x 349.305pt>
 File: figure/power-1.pdf Graphic file (type pdf)
 <use figure/power-1.pdf>
 Package pdftex.def Info: figure/power-1.pdf  used on input line 440.
 (pdftex.def)             Requested size: 469.7731pt x 288.83575pt.
 [16 <./figure/size-1.pdf>]
-<figure/sim_all-1.pdf, id=339, 562.1pt x 351.3125pt>
+<figure/sim_all-1.pdf, id=348, 562.1pt x 351.3125pt>
 File: figure/sim_all-1.pdf Graphic file (type pdf)
 <use figure/sim_all-1.pdf>
 Package pdftex.def Info: figure/sim_all-1.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-2.pdf, id=340, 562.1pt x 351.3125pt>
+<figure/sim_all-2.pdf, id=349, 562.1pt x 351.3125pt>
 File: figure/sim_all-2.pdf Graphic file (type pdf)
 <use figure/sim_all-2.pdf>
 Package pdftex.def Info: figure/sim_all-2.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-3.pdf, id=341, 562.1pt x 351.3125pt>
+<figure/sim_all-3.pdf, id=350, 562.1pt x 351.3125pt>
 File: figure/sim_all-3.pdf Graphic file (type pdf)
 <use figure/sim_all-3.pdf>
 Package pdftex.def Info: figure/sim_all-3.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
-<figure/sim_all-4.pdf, id=342, 562.1pt x 351.3125pt>
+<figure/sim_all-4.pdf, id=351, 562.1pt x 351.3125pt>
 File: figure/sim_all-4.pdf Graphic file (type pdf)
 <use figure/sim_all-4.pdf>
 Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
 [17 <./figure/power-1.pdf> <./figure/sim_all-1.pdf>] [18 <./figure/sim_all-2.pd
-f> <./figure/sim_all-3.pdf>] [19 <./figure/sim_all-4.pdf>] [20] [21] (./main.au
-x)
+f> <./figure/sim_all-3.pdf>]
+
+LaTeX Warning: Reference `fig:linear-scale' on page 19 undefined on input line 
+455.
+
+<figure/linear-scale-1.pdf, id=402, 556.0775pt x 342.27875pt>
+File: figure/linear-scale-1.pdf Graphic file (type pdf)
+<use figure/linear-scale-1.pdf>
+Package pdftex.def Info: figure/linear-scale-1.pdf  used on input line 457.
+(pdftex.def)             Requested size: 469.76622pt x 289.15211pt.
+[19 <./figure/sim_all-4.pdf>] [20 <./figure/linear-scale-1.pdf>] [21] [22] (./m
+ain.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 070A5C4D21C65D8AF4A76998B24812FC;3195.
+(rerunfilecheck)             Checksum: 5E358C44EC597EA4E40E40A5F14EC262;3599.
  ) 
 Here is how much of TeX's memory you used:
- 12221 strings out of 481225
- 179874 string characters out of 5913612
- 486814 words of memory out of 5000000
- 28781 multiletter control sequences out of 15000+600000
+ 12241 strings out of 481225
+ 180447 string characters out of 5913612
+ 486999 words of memory out of 5000000
+ 28793 multiletter control sequences out of 15000+600000
  460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2111b,395s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -868,10 +885,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (21 pages, 2013497 bytes).
+Output written on main.pdf (22 pages, 2296036 bytes).
 PDF statistics:
- 533 PDF objects out of 1000 (max. 8388607)
- 437 compressed objects within 5 object streams
- 110 named destinations out of 1000 (max. 500000)
- 243 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 559 PDF objects out of 1000 (max. 8388607)
+ 459 compressed objects within 5 object streams
+ 117 named destinations out of 1000 (max. 500000)
+ 264 words of extra memory for PDF output out of 10000 (max. 10000000)
 
