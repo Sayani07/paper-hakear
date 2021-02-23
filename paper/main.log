@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  23 FEB 2021 10:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.10)  23 FEB 2021 15:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -839,17 +839,26 @@ Package pdftex.def Info: figure/sim_all-4.pdf  used on input line 447.
 (pdftex.def)             Requested size: 469.75067pt x 293.59415pt.
 [17 <./figure/power-1.pdf> <./figure/sim_all-1.pdf>] [18 <./figure/sim_all-2.pd
 f> <./figure/sim_all-3.pdf>]
-
-LaTeX Warning: Reference `fig:linear-scale' on page 19 undefined on input line 
-455.
-
-<figure/linear-scale-1.pdf, id=402, 556.0775pt x 342.27875pt>
+<figure/linear-scale-1.pdf, id=403, 557.08125pt x 341.275pt>
 File: figure/linear-scale-1.pdf Graphic file (type pdf)
 <use figure/linear-scale-1.pdf>
-Package pdftex.def Info: figure/linear-scale-1.pdf  used on input line 457.
-(pdftex.def)             Requested size: 469.76622pt x 289.15211pt.
-[19 <./figure/sim_all-4.pdf>] [20 <./figure/linear-scale-1.pdf>] [21] [22] (./m
-ain.aux)
+Package pdftex.def Info: figure/linear-scale-1.pdf  used on input line 459.
+(pdftex.def)             Requested size: 469.76414pt x 287.78342pt.
+
+LaTeX Warning: Reference `fig:raw-nqt' on page 19 undefined on input line 471.
+
+[19 <./figure/sim_all-4.pdf>] [20pdfTeX warning (ext4): destination with the sa
+me identifier (name{figure.10}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.478 
+       <./figure/linear-scale-1.pdf>]
+<figure/raw-nqt-1.pdf, id=443, 558.085pt x 341.275pt>
+File: figure/raw-nqt-1.pdf Graphic file (type pdf)
+<use figure/raw-nqt-1.pdf>
+Package pdftex.def Info: figure/raw-nqt-1.pdf  used on input line 481.
+(pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
+[21 <./figure/raw-nqt-1.pdf>] [22] [23] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -857,10 +866,10 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 5E358C44EC597EA4E40E40A5F14EC262;3599.
  ) 
 Here is how much of TeX's memory you used:
- 12241 strings out of 481225
- 180447 string characters out of 5913612
- 486999 words of memory out of 5000000
- 28793 multiletter control sequences out of 15000+600000
+ 12251 strings out of 481225
+ 180554 string characters out of 5913612
+ 490537 words of memory out of 5000000
+ 28800 multiletter control sequences out of 15000+600000
  460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2111b,395s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -885,10 +894,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (22 pages, 2296036 bytes).
+Output written on main.pdf (23 pages, 2350596 bytes).
 PDF statistics:
- 559 PDF objects out of 1000 (max. 8388607)
- 459 compressed objects within 5 object streams
- 117 named destinations out of 1000 (max. 500000)
- 264 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 579 PDF objects out of 1000 (max. 8388607)
+ 475 compressed objects within 5 object streams
+ 119 named destinations out of 1000 (max. 500000)
+ 269 words of extra memory for PDF output out of 10000 (max. 10000000)
 

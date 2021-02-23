@@ -988,8 +988,7 @@ ggplot2::ggplot(design_all %>%
 
 The smart meter data set from four households in Melbourne referred in @wang2020calendar has been utilized to see the use of the distance measure proposed in the paper. The data contains half-hourly electricity consumption from Jan-2018 to Jun-2018 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for two households (id 2 and 4) are shown in a linear time scale in \ref{fig:linear-scale}. It is evident from the range of the demand data that these households vary in consumption levels as in their temporal patterns. In panel A (left), the linear representation of the entire time period is shown, whereas in panel B (right) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is evident from the linear representation of the time series.  We pick household id 2 and 4 for our analysis to see which periodic patterns are important in their behavior, if they are same or different and if it makes sense using our distance metric.
 
-
-```{r linear-scale}
+```{r linear-scale, fig.cap = "Electricity demand for four households are shown in different facets from Jan-18 to Jun-18 in Fig a and it has been zoomed in for Feb-18 in Fig b, where a week in Feb-18 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
 library(scales)
 library(tidyquant)
 library(gghighlight)
@@ -1006,10 +1005,22 @@ elec_linear <- elec %>%
 #+
  # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
 
-elec_zoom <- elec_linear + 
-  coord_x_date(xlim = c("2018-02-01", "2018-02-28")) +
-  gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")),
-              unhighlighted_params = list(colour = "grey")) + geom_line(aes(x = date_time, y = kwh, group = time))
+
+elec_zoom <-  elec %>% 
+  filter(date >as.Date("2018-02-01") & date < (as.Date("2018-02-28"))) %>% 
+  ggplot(aes(x=date_time, y = kwh)) +
+  facet_wrap(~id, scales = "free_y", ncol = 1, strip.position =  "right") +
+  geom_smooth() +
+  geom_point(alpha = 0.5, size = 0.1) +
+  gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")))
+              
+  # geom_rect(xmin = as.Date("2018-02-02"), xmax = as.Date("2018-02-04"), ymin = -Inf, ymax = Inf, fill = "pink", colour = pink) 
+
+
+# elec_zoom <- elec_linear + 
+#   coord_x_date(xlim = c("2018-02-01", "2018-02-28")) +
+#   gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")),
+#               unhighlighted_params = list(colour = "grey")) + geom_line(aes(x = date_time, y = kwh, group = time))
                       
 
 elec_linear + elec_zoom +
@@ -1024,7 +1035,7 @@ elec_linear + elec_zoom +
 
 Let $y_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. This is expected to have an assymmetrical distribution as could be seen in \ref{fig:raw-nqt} and the Normal score transform has been applied to make it more treatable. Let $y*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$.
 
-**Characterizing empirical distributions through quantiles**
+**Characterizing empirical distributions through quantiles** ( write in the methodology maybe)
 
 Let $A = \{ a_j: j = 1, 2, \dots, J\}$ be a cyclic granularity of interest. Let 
 $q^{i, p}_{A, j}$ is the quantile with probability $p$ for the $j^{th}$ category of the cyclic granularity $A$ of the $i^{th}$ household.
@@ -1033,19 +1044,18 @@ Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$ for each househo
 **Computing JS distances between harmonies for each categories of the cyclic granularity involved**
 
 
-
 ```{r raw-nqt}
 elec_raw <- elec %>% 
   ggplot() +
   geom_density(aes(x = kwh)) +
-  facet_wrap(~id, scales = "free_y") +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
   xlab("demand (in kwh)")
 
 elec_nqt <- elec %>% 
   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
   ggplot() +
   geom_density(aes(x = kwh_transformed))+
-  facet_wrap(~id, scales = "free_y") +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
   xlab("NQT demand (in kwh)")
 
 # hour_day_raw <- elec %>% 
@@ -1067,6 +1077,61 @@ elec_raw + elec_nqt
 
 
 
+```{r rank-household2and4}
+elec <- read_rds(here("paper/data/elec.rds")) %>% 
+  filter(date >= ymd("20180101"), date < ymd("20180701"))
+rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
+
+id2_tsibble <- elec %>% 
+   filter(id == 2) %>% 
+   as_tsibble(index = date_time)
+  
+id4_tsibble <- elec %>% 
+   filter(id == 4) %>% 
+   as_tsibble(index = date_time)
+
+harmonies2 <- id2_tsibble %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
+
+
+harmonies4 <- id4_tsibble %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
+
+library(tictoc)
+tic()
+
+all_harmony2 <- hakear::rank_harmonies(id2_tsibble,
+   harmony_tbl = harmonies2,
+   response = kwh,
+   nperm = 200
+ )
+
+toc()
+
+
+library(tictoc)
+tic()
+all_harmony4 <- hakear::rank_harmonies(id4_tsibble,
+   harmony_tbl = harmonies4,
+   response = kwh,
+   nperm = 200
+ )
+toc()
+
+```
+
+```{r rank-harmonies}
+all_harmony2 %>% kable()
+all_harmony4 %>% kable()
+```
 
 
 ```{r household2and4}

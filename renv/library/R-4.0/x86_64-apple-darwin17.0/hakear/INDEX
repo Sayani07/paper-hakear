@@ -17,6 +17,7 @@ create_harmony_tbl_data
 distance_all_pairwise   computing all within and between facet
                         distances between quantile categories given
                         quantile data
+rank_harmonies          rank harmonies with significant patterns
 select_harmonies        Select harmonies with significant patterns
 sim_panel               sim panel
 wpd                     computes wpd for one harmony or harmony table

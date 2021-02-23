@@ -9,6 +9,7 @@ compute_quantiles	compute_quantiles
 create_harmony_data	create_harmony_data
 create_harmony_tbl_data	create_harmony_tbl_data
 distance_all_pairwise	distance_all_pairwise
+rank_harmonies	rank_harmonies
 reexports	reexports
 select_harmonies	select_harmonies
 sim_panel	sim_panel
