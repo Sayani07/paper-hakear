@@ -219,32 +219,81 @@ With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the ide
 
 
 
-```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable.", eval = FALSE}
+```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable."}
 
-# sim_varf_dist1 = function(nx, nfacet){
-#   rep(dist_normal(seq(mean,mean*nfacet, by = mean), sd), each = nx)}
+sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
+  dist_normal((mean + seq(0,
+    (nx *
+      nfacet - 1),
+    by = 1
+  ) * w), sd)
+}
+sim_panel_varall <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 500,
+  sim_dist = sim_varall_normal(2, 3, 5, 10, 5)
+) %>% unnest(data)
 
-p1 <- sim_panel(nx = 2, nfacet = 3, ntimes = 500) %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
-
-simulated_data <- sim_panel(nx = 2,
-          nfacet = 3,
-          ntimes = 500,
-          sim_dist = rep(dist_normal(seq(5, 15, 5), 5), each = 2)) 
-
-
-p2 <- simulated_data %>% ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
-
-p3 <- simulated_data %>% ggplot(aes(x = as.factor(id_facet), y = sim_data)) + facet_wrap(~id_x) + geom_boxplot()
-
-p4 <- sim_panel(nx = 2,
-          nfacet = 3,
-          ntimes = 500,
-          sim_dist = dist_normal(seq(5,30, 5), 5)) %>% 
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot()
+p_varall <- sim_panel_varall %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle("")
 
 
-ggpubr::ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2,
+sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
+   rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
+ }
+
+sim_panel_varx <- sim_panel(
+   nx = 2, nfacet = 3,
+   ntimes = 500,
+   sim_dist = sim_varx_normal(2, 3, 5, 10, 5)
+ ) %>% unnest(data)
+
+
+p_varx <- sim_panel_varx %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle("")
+
+
+sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
+  rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
+}
+
+sim_panel_varf <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 500,
+  sim_dist = sim_varf_normal(2, 3, 5, 10, 5)
+) %>% unnest(data)
+
+
+p_varf <- sim_panel_varf %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle("")
+
+
+sim_panel_null <- sim_panel(
+   nx = 2,
+   nfacet = 3,
+   ntimes = 500,
+   sim_dist = distributional
+   ::dist_normal(5, 10)
+) %>% unnest(c(data))
+
+set.seed(9999)
+
+null <- compute_pairwise_norm(sim_panel_null, 
+                           gran_x = "id_x",
+                           gran_facet = "id_facet",
+                           response = sim_data, 
+                           nperm = 200
+)
+
+p_null <- sim_panel_null %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+    ggtitle("")
+
+
+ggpubr::ggarrange(p_null, p_varf,  p_varx, p_varall, nrow = 2, ncol = 2,
                   common.legend = TRUE,
                   labels = c("a", "b", "c", "d"))
 
@@ -429,7 +478,6 @@ The permutation approach ensures that the distribution of the normalized distanc
 
 While this works successfully to make the mean and standard deviation across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the same accuracy when compared to the permutation approach.
 
-*incorporate from the document combining_normalisation_method.Rmd*
 
 ### Modelling approach
 
@@ -696,6 +744,8 @@ $wpd_{norm}$ for each of these reassignments. The percentages of times the theor
 
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
+## Algorithm
+
 1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
 
 2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
@@ -712,9 +762,9 @@ of times M (M = 200).
 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
 
 
+## Results
 
-
-```{r varall}
+```{r varall-new}
 
 sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
   dist_normal((mean + seq(0,
@@ -740,19 +790,19 @@ varall <- compute_pairwise_norm(sim_panel_varall,
 # plot
 p_varall <- sim_panel_varall %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("Design $D_{var_{all}}$:", varall))
+  ggtitle(paste("d", round(varall, 2)))
 ```
 
 
 
-```{r varx}
+```{r varx-new}
 sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
    rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
  }
 
 sim_panel_varx <- sim_panel(
    nx = 2, nfacet = 3,
-   ntimes = 5,
+   ntimes = 500,
    sim_dist = sim_varx_normal(2, 3, 0, 1, 10)
  ) %>% unnest(data)
 
@@ -768,17 +818,17 @@ varx <- compute_pairwise_norm(sim_panel_varx,
 # plot
 p_varx <- sim_panel_varx %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("Design $D_{var_x}$:", varx))
+    ggtitle(paste("c", round(varx, 2)))
 ```
 
 
-```{r varf}
+```{r varf-new}
 sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
   rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
 }
 sim_panel_varf <- sim_panel(
   nx = 2, nfacet = 3,
-  ntimes = 5,
+  ntimes = 500,
   sim_dist = sim_varf_normal(2, 3, 0, 1, 10)
 ) %>% unnest(data)
 
@@ -793,11 +843,11 @@ varf <- compute_pairwise_norm(sim_panel_varf,
 
 p_varf <- sim_panel_varf %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("Design $D_{var_f}$:", varf))
+    ggtitle(paste("b", round(varf, 2)))
 ```
 
 
-```{r null}
+```{r null-new}
 sim_panel_null <- sim_panel(
    nx = 2,
    nfacet = 3,
@@ -817,163 +867,12 @@ null <- compute_pairwise_norm(sim_panel_null,
 
 p_null <- sim_panel_null %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("Design $D_{null}$:", null))
+    ggtitle(paste("a", round(null, 2)))
 ```
 
-```{r plot-all}
+```{r plot-all-new2}
 library(patchwork)
 (p_null + p_varf)/(p_varx + p_varall)
-```
-
-The p-value of the design $D_{null}$ is size.
-The p-value of other designs is power.
-Confidence interval of the 
-  
-
-```{r, eval = FALSE, echo = FALSE}
-smart_harmony <-read_rds("data/smart_harmony_nonst.rds")
-smart_harmony
-```
-
-
-
-```{r smart_harmony,eval = FALSE, echo = FALSE}
-
-sm <- smart_meter10 %>% dplyr::filter(customer_id %in% c("10017936"))
-
-harmonies <- sm %>% 
-  harmony(ugran = "month",
-          filter_in = "wknd_wday",
-          filter_out = c("hhour", "fortnight"))
-
-
-harmony_tbl =  harmonies
-
-smart_harmony <- sm %>% 
-  rank_harmony(harmony_tbl = harmonies,
-               response = "general_supply_kwh", 
-               dist_ordered = TRUE)
-
-smart_harmony %>% 
-  mutate(MMPD = round(MMPD, 3), max_pd = round(max_pd, 3)) %>% 
-  mutate(rankn = row_number()) %>%
-  rename("rankun" = "r") %>% kable()
-```
-
-The p-value is almost always greater than 0.05, which means there is no significant differences between the different categories, which is true from the simulation design.
-
-
-```{r size, eval = FALSE}
-library(readr)
-library(tidyverse)
-data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
-
-data_N01_obs <- data_N01 %>% filter(perm_id==1)
-data_N01_samp <- data_N01 %>% filter(perm_id!=1)
-
-#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
-
-mmpd_dist_null_grid  = data_N01_samp
-
-mmpd_null_orig = data_N01_obs
-compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
-                               by = c("nx", "nfacet")) %>% 
-    group_by(nx, nfacet) %>% 
-    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
-
-  ggplot() + 
-    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
-    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
-    geom_text(data = round(compute_p_value, 3), size = 3,  
-              aes(x = -Inf,
-                  y =  Inf,
-                  label = paste("p-value:",p_value),
-                  hjust   = 0,
-                  vjust   = 1)) + 
-    facet_grid(nx ~ nfacet)
-```
-
-
-```{r power, eval = FALSE}
-library(readr)
-library(tidyverse)
-data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
-
-data_N01_obs <- data_N01 %>% filter(perm_id==1)
-data_N01_samp <- data_N01 %>% filter(perm_id!=1)
-
-#plot_mmpd_null_grid(data_N01_samp, data_N01_obs)
-
-mmpd_dist_null_grid  = data_N01_samp
-
-mmpd_null_orig = data_N01_obs
-compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
-                               by = c("nx", "nfacet")) %>% 
-    group_by(nx, nfacet) %>% 
-    summarise(p_value = sum(if_else(abs(value.x)>abs(value.y),1,0))/n(), .groups = 'drop')
-
-  ggplot() + 
-    geom_histogram(data = mmpd_dist_null_grid, aes(x = value))  + 
-    geom_vline(data = mmpd_null_orig, aes(xintercept = value),colour = "red") +
-    geom_text(data = round(compute_p_value, 3), size = 3,  
-              aes(x = -Inf,
-                  y =  Inf,
-                  label = paste("p-value:",p_value),
-                  hjust   = 0,
-                  vjust   = 1)) + 
-    facet_grid(nx ~ nfacet)
-```
-
-
-
-```{r sim_all, echo = FALSE, eval = FALSE}
-bind_files = readr::read_rds("../hakear-drake/data/compute_p_value.rds")
-
-bind_files$design = 
-  factor(bind_files$design,
-         levels = c("null","vary_f", "vary_x", "vary_all"), labels = c("D1", "D2", "D3", "D4"))
-
-ggplot(bind_files %>% 
-         filter(distribution == "normal")) +
-  geom_point(aes(x=design, y = p_value),
-                 alpha = 0.5)+
-  facet_grid(nx~nfacet) +
-  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
-
-ggplot(bind_files %>% 
-         filter(distribution == "exponential")) +
-  geom_point(aes(x=design, y = p_value),
-                 alpha = 0.5)+
-  facet_grid(nx~nfacet) +
-  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
-
-ggplot(bind_files %>% 
-         filter(distribution == "gamma")) +
-  geom_point(aes(x=design, y = p_value),
-                 alpha = 0.5)+
-  facet_grid(nx~nfacet) +
-  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
-
-ggplot(bind_files %>% 
-         filter(distribution == "weibull")) +
-  geom_point(aes(x=design, y = p_value),
-                 alpha = 0.5)+
-  facet_grid(nx~nfacet) +
-  geom_line(aes(x = design, y = p_value, group = distribution, color = distribution))
-```
-
-```{r sim_conf, echo = FALSE, eval = FALSE}
-library(dplyr)
-library(ggplot2)
-ggplot2::ggplot(design_all %>% 
-                      filter(design == "D1", distribution == "norm")) +
-  geom_boxplot(aes(x = as.factor(nx), 
-                   y = mmpd.x), width = 0.1) + 
-  facet_wrap(~nfacet) +
-  scale_fill_viridis_d() +
-  xlab("number of x levels") +
-  coord_flip()
-
 ```
 
 
@@ -1069,7 +968,7 @@ Let $y_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 We then compute the set of harmonies $H_{N_C}$  from $C_{N_C}$ by choosing pairs of cyclic granularities that are not clashes using procedures described in [@Gupta2020-vo]. The paper also shows how the number of harmonies could be identified among 42 pair of granularities by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies.
 
 Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.
-Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd_{raw}$. It is further normalised using the approach described in Section \ref{sec:normalization}. This entire process is repeated for all harmony pairs $(A, B) \in H_{N_C}$ and for each households $i \in i = \{1, 2, 3, 4\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively.  
+Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd_{raw}$. It is further normalized using the approach described in Section \ref{sec:normalization}. This entire process is repeated for all harmony pairs $(A, B) \in H_{N_C}$ and for each households $i \in i = \{1, 2, 3, 4\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively.  
 
 Table \ref{tab:} shows the rank of the harmonies for different households
 \autoref{fig:} shows the bubble chart for the four households with size as the value of wpd and color indicating how significant they are. This is a quick summary of which harmonies are significant and also which cyclic granularities are important for the context. 
@@ -1237,8 +1136,6 @@ p1 + p2/p3
 ```
 
 
-
-
 # Discussion points and future work
 
 Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. This work refines the selection of appropriate pairs of granularities by identifying those for which the differences between the displayed distributions is greatest, and rating these selected harmony pairs in order of importance for exploration.
@@ -1266,10 +1163,11 @@ elec <- read_rds(here("paper/data/elec_all-8.rds")) %>%
 
 elec_linear <- elec %>% 
   ggplot() +
-  geom_line(aes(x = reading_datetime, y = kwh)) +
-  facet_wrap(~household_id, nrow = 8, labeller = "label_both",
+  geom_line(aes(x = date_time, y = kwh)) +
+  facet_wrap(~id, nrow = 8, labeller = "label_both",
              strip.position =  "right",
              scales = "free_y") 
+elec_linear
 #+
  # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
 
@@ -1425,7 +1323,7 @@ dotplot <- elec_sig_split %>%
   scale_size_continuous() +
   theme(legend.position = "bottom") +
   scale_fill_viridis(discrete = TRUE, direction = 1) +
-  facet_wrap(~id, nrow = 1) +
+  facet_wrap(~id, nrow = 2) +
   guides(fill = guide_legend(), 
          size = guide_legend()) +
   theme_gray(base_size = 12, base_family = "Times") +
@@ -1443,8 +1341,7 @@ elec_rank <- elec_sig_split %>%
   rename("facet variable" = "facet_variable",
          "x variable" = "x_variable",
          "facet levels" = "x_levels",
-         "x levels" = "x_levels") %>% 
-  slice(1:4)
+         "x levels" = "x_levels")
 
 elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
 ```
