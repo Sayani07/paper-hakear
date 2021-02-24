@@ -1101,8 +1101,8 @@ harmonies <- data_id %>%
  hakear::select_harmonies(data_id,
    harmony_tbl = harmonies,
    response = kwh,
-   nperm = 2,
-   nsamp = 2
+   nperm = 200,
+   nsamp = 200
  )
 
 }, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
@@ -1248,6 +1248,254 @@ A future direction of work could be to look at more individuals/subjects and gro
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
 
 # Appendix
+
+## Smart meter application to 8 datasets from energy competition
+
+```{r linear-scale-8, fig.cap = "Electricity demand for four households are shown in different facets from Jan-18 to Jun-18 in Fig a and it has been zoomed in for Feb-18 in Fig b, where a week in Feb-18 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
+library(scales)
+library(tidyquant)
+library(gghighlight)
+library(lubridate)
+
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+
+elec_linear <- elec %>% 
+  ggplot() +
+  geom_line(aes(x = reading_datetime, y = kwh)) +
+  facet_wrap(~household_id, nrow = 8, labeller = "label_both",
+             strip.position =  "right",
+             scales = "free_y") 
+#+
+ # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
+
+
+  # geom_rect(xmin = as.Date("2018-02-02"), xmax = as.Date("2018-02-04"), ymin = -Inf, ymax = Inf, fill = "pink", colour = pink) 
+
+
+# elec_zoom <- elec_linear + 
+#   coord_x_date(xlim = c("2018-02-01", "2018-02-28")) +
+#   gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")),
+#               unhighlighted_params = list(colour = "grey")) + geom_line(aes(x = date_time, y = kwh, group = time))
+                      
+
+
+# elec %>% dplyr::filter(date> as.Date("2018-02-01") & date<as.Date("2018-02-28"))
+
+```
+
+
+<!-- **Normal-quantile-transform**  -->
+
+<!-- **Characterizing empirical distributions through quantiles** ( write in the methodology maybe) -->
+
+
+<!-- **Computing JS distances between harmonies for each categories of the cyclic granularity involved** -->
+
+
+```{r raw-nqt-8}
+elec_raw <- elec %>% 
+  ggplot() +
+  geom_density(aes(x = kwh)) +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("demand (in kwh)")
+
+elec_nqt <- elec %>% 
+  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+  ggplot() +
+  geom_density(aes(x = kwh_transformed))+
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("NQT demand (in kwh)")
+
+# hour_day_raw <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#     ggplot() + 
+#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
+#   
+# hour_day_trans <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
+
+elec_raw + elec_nqt
+
+```
+
+
+
+```{r rank-household-mclapply-8}
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+
+
+library(tictoc)
+#tic()
+elec_split = elec %>% group_split(id)
+
+elec_select_harmony = parallel::mclapply(1:8, function(x){
+  
+  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
+    as_tsibble(index = date_time)
+  
+harmonies <- data_id %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
+
+ hakear::select_harmonies(data_id,
+   harmony_tbl = harmonies,
+   response = kwh,
+   nperm = 200,
+   nsamp = 200
+ )
+
+}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
+#toc()
+```
+
+
+
+
+```{r elec_select_harmony-8}
+elec_harmony_all <- elec_select_harmony %>% 
+  bind_rows(.id = "id") %>% 
+  mutate(facet_variable = case_when(
+    facet_variable == "hour_day" ~ "hod" ,
+    facet_variable == "day_month" ~ "dom" ,
+    facet_variable == "day_week" ~ "dow" ,
+    facet_variable == "week_month" ~ "wom" ,
+    facet_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(x_variable = case_when(
+    x_variable == "hour_day" ~ "hod" ,
+    x_variable == "day_month" ~ "dom" ,
+    x_variable == "day_week" ~ "dow" ,
+    x_variable == "week_month" ~ "wom" ,
+    x_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(id = paste("id", id, sep = " ")) %>% 
+  group_by(id) %>% 
+  mutate(rank = row_number())
+  
+```
+
+
+```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The size represent how important the pair is and the colour represents if the harmonies are at all important or not. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which ones amongst them should be analyzed together." }
+elec_sig_split <- elec_harmony_all %>%
+  mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+  mutate(significant = case_when(
+    select_split == "***" ~ "highest",
+    select_split == "**" ~ "high",
+    select_split == "*" ~ "medium",
+    select_split == "" ~ "low"
+  )) %>% 
+   mutate(rank = case_when(
+    select_split == "***" ~ paste(rank, "***", sep = " "),
+    select_split == "**" ~  paste(rank, "**", sep = " "),
+    select_split == "*" ~  paste(rank, "*", sep = " "),
+    select_split == "" ~  paste(rank, "", sep = " ")
+  ))
+
+
+elec_sig_split$significant <- 
+  factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
+           
+           
+dotplot <- elec_sig_split %>% 
+  ggplot() +
+  geom_point(aes(x = x_variable,
+                 y = facet_variable, 
+                 size = wpd, 
+                 fill = significant),
+             shape=21,
+             alpha= 0.8) +
+  scale_size_continuous() +
+  theme(legend.position = "bottom") +
+  scale_fill_viridis(discrete = TRUE, direction = 1) +
+  facet_wrap(~id, nrow = 1) +
+  guides(fill = guide_legend(), 
+         size = guide_legend()) +
+  theme_gray(base_size = 12, base_family = "Times") +
+   theme(legend.position = "bottom")
+
+dotplot
+```
+
+```{r tab-rank-8}
+elec_rank <- elec_sig_split %>% 
+  select(-c(6,7, 9, 10)) %>% 
+  pivot_wider(
+              names_from = id,
+                values_from = rank) %>% 
+  rename("facet variable" = "facet_variable",
+         "x variable" = "x_variable",
+         "facet levels" = "x_levels",
+         "x levels" = "x_levels") %>% 
+  slice(1:4)
+
+elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
+```
+
+```{r gravitas-plot-8, message = FALSE, warning=FALSE, fig.cap="Distribution of energy demand shown for household id: 2 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+p1 <- id2_tsibble %>%
+   prob_plot("hour_day",
+             "wknd_wday",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("a") + 
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin()))
+
+
+p2 <- id2_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("b") +
+  scale_colour_brewer(name = "", palette = "Set2")   +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) + xlab("")
+
+p3 <- id4_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = 
+               c(0.25,0.5,0.75)) +
+  ggtitle("c") +
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
+        strip.text = element_text(size = 7, margin = margin())) 
+
+p1 + p2/p3  
+
+```
+
+
+
+
 
 ## Null distribution
 
@@ -1417,4 +1665,6 @@ real data. The ranking of the real test statistic among the shuffled test statis
 <!-- # Visualisation -->
 
 <!-- Leader plots like in Scagnostics paper -->
+
+
 
