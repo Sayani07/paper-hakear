@@ -863,7 +863,7 @@ smart_harmony %>%
 The p-value is almost always greater than 0.05, which means there is no significant differences between the different categories, which is true from the simulation design.
 
 
-```{r size}
+```{r size, eval = FALSE}
 library(readr)
 library(tidyverse)
 data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
@@ -894,7 +894,7 @@ compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
 ```
 
 
-```{r power}
+```{r power, eval = FALSE}
 library(readr)
 library(tidyverse)
 data_N01 <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
@@ -926,12 +926,7 @@ compute_p_value <- left_join(mmpd_dist_null_grid, mmpd_null_orig,
 
 
 
-
-#### Characteristics under different simulation designs   
-A set of simulation runs that are conducted and some outputs of which are reported.
-
-
-```{r sim_all, echo = FALSE}
+```{r sim_all, echo = FALSE, eval = FALSE}
 bind_files = readr::read_rds("../hakear-drake/data/compute_p_value.rds")
 
 bind_files$design = 
@@ -982,11 +977,10 @@ ggplot2::ggplot(design_all %>%
 ```
 
 
-# Application to smart meter datasets {#sec:application}
+# Application to residential smart meter dataset {#sec:application}
 
-## Residential smart meter dataset
 
-The smart meter data set from four households in Melbourne referred in @wang2020calendar has been utilized to see the use of the distance measure proposed in the paper. The data contains half-hourly electricity consumption from Jan-2018 to Jun-2018 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for two households (id 2 and 4) are shown in a linear time scale in \ref{fig:linear-scale}. It is evident from the range of the demand data that these households vary in consumption levels as in their temporal patterns. In panel A (left), the linear representation of the entire time period is shown, whereas in panel B (right) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is evident from the linear representation of the time series.  We pick household id 2 and 4 for our analysis to see which periodic patterns are important in their behavior, if they are same or different and if it makes sense using our distance metric.
+The smart meter data set from four households in Melbourne referred in @wang2020calendar has been utilized to see the use of the distance measure proposed in the paper. The data is a tsibble  containing half-hourly electricity consumption from Jan-2018 to Jun-2018 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in \autoref{fig:linear-scale}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of \autoref{fig:linear-scale} (a), the linear representation of the entire time period is shown, whereas in panel B (right) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is evident from the linear representation of the time series. We pick household id 2 and 4 for our analysis to see which periodic patterns are important in their behavior, if they are same or different and if it makes sense using our distance metric to select and rank the important harmonies.
 
 ```{r linear-scale, fig.cap = "Electricity demand for four households are shown in different facets from Jan-18 to Jun-18 in Fig a and it has been zoomed in for Feb-18 in Fig b, where a week in Feb-18 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
 library(scales)
@@ -1029,19 +1023,14 @@ elec_linear + elec_zoom +
 # elec %>% dplyr::filter(date> as.Date("2018-02-01") & date<as.Date("2018-02-28"))
 
 ```
-### Data preprocessing
 
-**Normal-quantile-transform** 
 
-Let $y_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. This is expected to have an assymmetrical distribution as could be seen in \ref{fig:raw-nqt} and the Normal score transform has been applied to make it more treatable. Let $y*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$.
+<!-- **Normal-quantile-transform**  -->
 
-**Characterizing empirical distributions through quantiles** ( write in the methodology maybe)
+<!-- **Characterizing empirical distributions through quantiles** ( write in the methodology maybe) -->
 
-Let $A = \{ a_j: j = 1, 2, \dots, J\}$ be a cyclic granularity of interest. Let 
-$q^{i, p}_{A, j}$ is the quantile with probability $p$ for the $j^{th}$ category of the cyclic granularity $A$ of the $i^{th}$ household.
-Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$ for each household $i \in i = 1, 2, 3, 4$  for each category $j \in j = 1, 2, \dots, J$ and all $A \in N_C$.
 
-**Computing JS distances between harmonies for each categories of the cyclic granularity involved**
+<!-- **Computing JS distances between harmonies for each categories of the cyclic granularity involved** -->
 
 
 ```{r raw-nqt}
@@ -1076,65 +1065,154 @@ elec_raw + elec_nqt
 ```
 
 
+Let $y_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. This is expected to have an assymmetrical distribution as could be seen in \ref{fig:raw-nqt} and the Normal score transform has been applied to make it more symmetric. Let $y*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Technically, this $y*_{i, t}$ is the linear granularity corresponding to half-hour since the interval of this data is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering 4 linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, we consider 7 cyclic granularities in the set of cyclic granularities of interest defined by $C_{N_C}$.
+We then compute the set of harmonies $H_{N_C}$  from $C_{N_C}$ by choosing pairs of cyclic granularities that are not clashes using procedures described in [@Gupta2020-vo]. The paper also shows how the number of harmonies could be identified among 42 pair of granularities by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies.
 
-```{r rank-household2and4}
+Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.
+Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd_{raw}$. It is further normalised using the approach described in Section \ref{sec:normalization}. This entire process is repeated for all harmony pairs $(A, B) \in H_{N_C}$ and for each households $i \in i = \{1, 2, 3, 4\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively.  
+
+Table \ref{tab:} shows the rank of the harmonies for different households
+\autoref{fig:} shows the bubble chart for the four households with size as the value of wpd and color indicating how significant they are. This is a quick summary of which harmonies are significant and also which cyclic granularities are important for the context. 
+
+
+
+
+```{r rank-household-mclapply}
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
 
-id2_tsibble <- elec %>% 
-   filter(id == 2) %>% 
-   as_tsibble(index = date_time)
+library(tictoc)
+#tic()
+elec_split = elec %>% group_split(id)
+
+elec_select_harmony = parallel::mclapply(1:4, function(x){
   
-id4_tsibble <- elec %>% 
-   filter(id == 4) %>% 
-   as_tsibble(index = date_time)
-
-harmonies2 <- id2_tsibble %>%
+  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
+    as_tsibble(index = date_time)
+  
+harmonies <- data_id %>%
   harmony(
     ugran = "month",
     filter_in = "wknd_wday",
     filter_out = c("hhour", "fortnight")
   )
 
-
-harmonies4 <- id4_tsibble %>%
-  harmony(
-    ugran = "month",
-    filter_in = "wknd_wday",
-    filter_out = c("hhour", "fortnight")
-  )
-
-library(tictoc)
-tic()
-
-all_harmony2 <- hakear::rank_harmonies(id2_tsibble,
-   harmony_tbl = harmonies2,
+ hakear::select_harmonies(data_id,
+   harmony_tbl = harmonies,
    response = kwh,
-   nperm = 200
+   nperm = 2,
+   nsamp = 2
  )
 
-toc()
-
-
-library(tictoc)
-tic()
-all_harmony4 <- hakear::rank_harmonies(id4_tsibble,
-   harmony_tbl = harmonies4,
-   response = kwh,
-   nperm = 200
- )
-toc()
-
-```
-
-```{r rank-harmonies}
-all_harmony2 %>% kable()
-all_harmony4 %>% kable()
+}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
+#toc()
 ```
 
 
-```{r household2and4}
+
+
+```{r elec_select_harmony}
+elec_harmony_all <- elec_select_harmony %>% 
+  bind_rows(.id = "id") %>% 
+  mutate(facet_variable = case_when(
+    facet_variable == "hour_day" ~ "hod" ,
+    facet_variable == "day_month" ~ "dom" ,
+    facet_variable == "day_week" ~ "dow" ,
+    facet_variable == "week_month" ~ "wom" ,
+    facet_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(x_variable = case_when(
+    x_variable == "hour_day" ~ "hod" ,
+    x_variable == "day_month" ~ "dom" ,
+    x_variable == "day_week" ~ "dow" ,
+    x_variable == "week_month" ~ "wom" ,
+    x_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(id = paste("id", id, sep = " ")) %>% 
+  group_by(id) %>% 
+  mutate(rank = row_number())
+  
+```
+
+
+```{r dotplot, fig.cap = "Harmony pairs are shown for all household ids. The size represent how important the pair is and the colour represents if the harmonies are at all important or not. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which ones amongst them should be analyzed together." }
+elec_sig_split <- elec_harmony_all %>%
+  mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+  mutate(significant = case_when(
+    select_split == "***" ~ "highest",
+    select_split == "**" ~ "high",
+    select_split == "*" ~ "medium",
+    select_split == "" ~ "low"
+  )) %>% 
+   mutate(rank = case_when(
+    select_split == "***" ~ paste(rank, "***", sep = " "),
+    select_split == "**" ~  paste(rank, "**", sep = " "),
+    select_split == "*" ~  paste(rank, "*", sep = " "),
+    select_split == "" ~  paste(rank, "", sep = " ")
+  ))
+
+
+elec_sig_split$significant <- 
+  factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
+           
+           
+dotplot <- elec_sig_split %>% 
+  ggplot() +
+  geom_point(aes(x = x_variable,
+                 y = facet_variable, 
+                 size = wpd, 
+                 fill = significant),
+             shape=21,
+             alpha= 0.8) +
+  scale_size_continuous() +
+  theme(legend.position = "bottom") +
+  scale_fill_viridis(discrete = TRUE, direction = 1) +
+  facet_wrap(~id, nrow = 1) +
+  guides(fill = guide_legend(), 
+         size = guide_legend()) +
+  theme_gray(base_size = 12, base_family = "Times") +
+   theme(legend.position = "bottom")
+
+dotplot
+```
+
+```{r tab-rank}
+elec_rank <- elec_sig_split %>% 
+  select(-c(6,7, 9, 10)) %>% 
+  pivot_wider(
+              names_from = id,
+                values_from = rank) %>% 
+  rename("facet variable" = "facet_variable",
+         "x variable" = "x_variable",
+         "facet levels" = "x_levels",
+         "x levels" = "x_levels") %>% 
+  slice(1:4)
+
+elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
+```
+
+
+```{r rank-harmonies, eval = FALSE}
+all_harmony2 %>%
+  mutate(rank = row_number()) %>% 
+  left_join(all_harmony4 %>%  mutate(rank = row_number()), by = c("facet_variable", "x_variable")) %>% 
+  select(facet_variable, x_variable,
+          rank.x, rank.y, wpd.x, wpd.y) %>% 
+  mutate(rank.x = if_else(rank.x<=3, paste(rank.x, "***",sep = ""),as.character(rank.x))) %>% 
+   mutate(rank.y = if_else(rank.y<=3, paste(rank.y, "***",sep = ""),as.character(rank.y))) %>% 
+  mutate(wpd.x = round(wpd.x, 3),
+         wpd.y = round(wpd.y, 3)) %>% 
+  rename("rank:id2" = "rank.x",
+         "rank:id4" = "rank.y",
+         "wpd:id2" = "wpd.x",
+         "wpd:id4" = "wpd.y"
+         )  %>% 
+  kable()
+```
+
+
+```{r household2and4, eval = FALSE}
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
@@ -1188,14 +1266,56 @@ toc()
 ```
 
 
-```{r}
+```{r, eval = FALSE}
 all_harmony2 %>% kable()
 all_harmony4 %>% kable()
 ```
 
+```{r gravitas-plot, message = FALSE, warning=FALSE, fig.cap="Distribution of energy demand shown for household id: 2 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+p1 <- id2_tsibble %>%
+   prob_plot("hour_day",
+             "wknd_wday",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("a") + 
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin()))
 
 
-## Australian smart meter data set
+p2 <- id2_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("b") +
+  scale_colour_brewer(name = "", palette = "Set2")   +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) + xlab("")
+
+p3 <- id4_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = 
+               c(0.25,0.5,0.75)) +
+  ggtitle("c") +
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
+        strip.text = element_text(size = 7, margin = margin())) 
+
+p1 + p2/p3  
+
+```
+
+
 
 
 # Discussion points and future work
