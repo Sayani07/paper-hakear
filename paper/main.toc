@@ -17,8 +17,8 @@
 \contentsline {subsection}{\numberline {4.1}Choosing a threshold}{18}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Results}{19}{subsection.4.2}%
 \contentsline {section}{\numberline {5}Simulation environment}{19}{section.5}%
-\contentsline {section}{\numberline {6}Application to residential smart meter dataset}{20}{section.6}%
-\contentsline {section}{\numberline {7}Discussion}{22}{section.7}%
+\contentsline {section}{\numberline {6}Application to residential smart meter dataset}{19}{section.6}%
+\contentsline {section}{\numberline {7}Discussion}{23}{section.7}%
 \contentsline {section}{\numberline {8}Appendix}{24}{section.8}%
 \contentsline {subsection}{\numberline {8.1}Smart meter application to 8 datasets from energy competition}{24}{subsection.8.1}%
 \contentsline {subsection}{\numberline {8.2}Null distribution}{28}{subsection.8.2}%

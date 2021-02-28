@@ -744,8 +744,8 @@ qqplot <-  p + geom_qq() + geom_qq_line() + coord_fixed(ratio = 4/5) +
 hist + qqplot
 ```  
 
-```{r dist-new-same-scale-link, fig.cap="wpd_perm$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
-#
+```{r dist-new-same-scale-link, fig.cap = "$wpd_perm$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
+
 G21_permutation <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds")) %>%
   rename("wpd_permutation" = "value")
 
@@ -815,10 +815,11 @@ Thus, the $wpd_{norm}$ is defined as follows:
 \begin{equation}
 wpd_{norm} =
 \begin{cases}
-wpd_{norm}^{perm},& \text{if } J, K <=5\\
-wpd_{norm}^{glm-scaled},              & \text{otherwise}\\
+wpd_{perm},& \text{if } J, K <=5\\
+wpd_{glm-scaled},              & \text{otherwise}\\
 \end{cases}
 \end{equation}
+
 
 
 
