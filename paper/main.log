@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.23)  28 FEB 2021 11:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.23)  28 FEB 2021 12:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -607,7 +607,10 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
-<figure/calendar- <- -1.pdf, id=109, 565.11125pt x 743.77875pt>
+[1
+
+{/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<figure/calendar- <- -1.pdf, id=125, 565.11125pt x 743.77875pt>
 File: figure/calendar- <- -1.pdf Graphic file (type pdf)
 <use figure/calendar- <- -1.pdf>
 Package pdftex.def Info: figure/calendar- <- -1.pdf  used on input line 103.
@@ -615,19 +618,16 @@ Package pdftex.def Info: figure/calendar- <- -1.pdf  used on input line 103.
 
 LaTeX Warning: Float too large for page by 4.35953pt on input line 108.
 
-[1
-
-{/Users/sgup0008/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
 LaTeX Warning: Reference `fig:calendar-elec' on page 2 undefined on input line 
 110.
 
-<figure/id2-1.pdf, id=121, 568.1225pt x 333.245pt>
+<figure/id2-1.pdf, id=126, 568.1225pt x 333.245pt>
 File: figure/id2-1.pdf Graphic file (type pdf)
 <use figure/id2-1.pdf>
 Package pdftex.def Info: figure/id2-1.pdf  used on input line 114.
 (pdftex.def)             Requested size: 469.7731pt x 275.55594pt.
-<figure/id4-1.pdf, id=122, 568.1225pt x 328.22626pt>
+<figure/id4-1.pdf, id=127, 568.1225pt x 328.22626pt>
 File: figure/id4-1.pdf Graphic file (type pdf)
 <use figure/id4-1.pdf>
 Package pdftex.def Info: figure/id4-1.pdf  used on input line 123.
@@ -657,7 +657,7 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
 (/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-<figure/null4by2-1.pdf, id=176, 572.1375pt x 353.32pt>
+<figure/null4by2-1.pdf, id=181, 572.1375pt x 353.32pt>
 File: figure/null4by2-1.pdf Graphic file (type pdf)
 <use figure/null4by2-1.pdf>
 Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 162.
@@ -666,279 +666,281 @@ Package pdftex.def Info: figure/null4by2-1.pdf  used on input line 162.
 4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.174 
+l.173 
        <./figure/null4by2-1.pdf>]
-Underfull \hbox (badness 1635) in paragraph at lines 178--179
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+79.
+(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+Underfull \hbox (badness 1635) in paragraph at lines 184--185
 \T1/lmr/m/n/10 The most com-mon di-ver-gence mea-sure be-tween dis-tri-bu-tions
  is the Kullback-Leibler (KL) di-ver-
  []
 
-</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=199, 87
+[7]
+</Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png, id=216, 87
 7.2775pt x 311.1625pt>
 File: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png Graphi
 c file (type png)
 <use /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>
 Package pdftex.def Info: /Users/sgup0008/Documents/paper-hakear/paper/Figs/dist
-_explain.png  used on input line 193.
+_explain.png  used on input line 199.
 (pdftex.def)             Requested size: 469.7605pt x 166.61986pt.
 
-LaTeX Warning: Reference `sec:idea' on page 7 undefined on input line 200.
-
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 236--238
-
- []
+LaTeX Warning: Reference `sec:idea' on page 8 undefined on input line 206.
 
 [8pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.251 
-       </Users/sgup0008/Documents/paper-hakear/paper/Figs/dist_explain.png>]
-<figure/raw-1.pdf, id=222, 568.1225pt x 352.31625pt>
-File: figure/raw-1.pdf Graphic file (type pdf)
-<use figure/raw-1.pdf>
-Package pdftex.def Info: figure/raw-1.pdf  used on input line 259.
-(pdftex.def)             Requested size: 469.7731pt x 291.32571pt.
-<figure/quadratic-1.pdf, id=223, 572.1375pt x 349.305pt>
-File: figure/quadratic-1.pdf Graphic file (type pdf)
-<use figure/quadratic-1.pdf>
-Package pdftex.def Info: figure/quadratic-1.pdf  used on input line 268.
-(pdftex.def)             Requested size: 469.75816pt x 286.79971pt.
-[9pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.279 
-       <./figure/raw-1.pdf>] [10pdfTeX warning (ext4): destination with the sam
-e identifier (name{figure.7}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.289 
-       <./figure/quadratic-1.pdf>]
-
-LaTeX Warning: Reference `fig:' on page 11 undefined on input line 295.
-
-
-LaTeX Warning: Reference `tab:linear-model' on page 11 undefined on input line 
-302.
-
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-04.
-(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-327.
-(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
-File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [11]
-
-LaTeX Warning: Reference `fig:' on page 12 undefined on input line 336.
-
-<figure/unnamed-chunk-2-1.pdf, id=265, 572.1375pt x 352.31625pt>
-File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
-<use figure/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 338.
-(pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 344--345
+l.234   \(
+          \omega\) (increment in each panel design) </Users/sgup0008/Documents/
+paper-hakear/paper/Figs/dist_explain.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 242--244
 
  []
 
-<figure/wpd-glm-horizontal-1.pdf, id=266, 572.1375pt x 352.31625pt>
-File: figure/wpd-glm-horizontal-1.pdf Graphic file (type pdf)
-<use figure/wpd-glm-horizontal-1.pdf>
-Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 34
-9.
-(pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
-[12 <./figure/unnamed-chunk-2-1.pdf>]
-<figure/wpd-glm-dist-1.pdf, id=278, 568.1225pt x 351.3125pt>
-File: figure/wpd-glm-dist-1.pdf Graphic file (type pdf)
-<use figure/wpd-glm-dist-1.pdf>
-Package pdftex.def Info: figure/wpd-glm-dist-1.pdf  used on input line 357.
-(pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-[13 <./figure/wpd-glm-horizontal-1.pdf>]
-<figure/hist-qq-1.pdf, id=293, 557.08125pt x 269.005pt>
-File: figure/hist-qq-1.pdf Graphic file (type pdf)
-<use figure/hist-qq-1.pdf>
-Package pdftex.def Info: figure/hist-qq-1.pdf  used on input line 384.
-(pdftex.def)             Requested size: 469.76414pt x 226.84105pt.
-<figure/dist-new-same-scale-link-1.pdf, id=294, 568.1225pt x 346.29375pt>
-File: figure/dist-new-same-scale-link-1.pdf Graphic file (type pdf)
-<use figure/dist-new-same-scale-link-1.pdf>
-Package pdftex.def Info: figure/dist-new-same-scale-link-1.pdf  used on input l
-ine 393.
-(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
-[14pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
+<figure/raw-1.pdf, id=229, 568.1225pt x 352.31625pt>
+File: figure/raw-1.pdf Graphic file (type pdf)
+<use figure/raw-1.pdf>
+Package pdftex.def Info: figure/raw-1.pdf  used on input line 265.
+(pdftex.def)             Requested size: 469.7731pt x 291.32571pt.
+<figure/quadratic-1.pdf, id=230, 572.1375pt x 349.305pt>
+File: figure/quadratic-1.pdf Graphic file (type pdf)
+<use figure/quadratic-1.pdf>
+Package pdftex.def Info: figure/quadratic-1.pdf  used on input line 274.
+(pdftex.def)             Requested size: 469.75816pt x 286.79971pt.
+[9] [10pdfTeX warning (ext4): destination with the same identifier (name{figure
+.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.290 
+       <./figure/raw-1.pdf>]
+
+LaTeX Warning: Reference `fig:' on page 11 undefined on input line 301.
+
+[11pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.408 
-       <./figure/wpd-glm-dist-1.pdf>] [15pdfTeX warning (ext4): destination wit
+l.304 ...ling approach}\label{modelling-approach}}
+                                                   <./figure/quadratic-1.pdf>]
+
+LaTeX Warning: Reference `tab:linear-model' on page 12 undefined on input line 
+308.
+
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
+333.
+(/Users/sgup0008/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
+File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+
+LaTeX Warning: Reference `fig:' on page 12 undefined on input line 342.
+
+<figure/unnamed-chunk-2-1.pdf, id=269, 572.1375pt x 352.31625pt>
+File: figure/unnamed-chunk-2-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-2-1.pdf  used on input line 344.
+(pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 350--351
+
+ []
+
+<figure/wpd-glm-horizontal-1.pdf, id=277, 572.1375pt x 352.31625pt>
+File: figure/wpd-glm-horizontal-1.pdf Graphic file (type pdf)
+<use figure/wpd-glm-horizontal-1.pdf>
+Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 35
+5.
+(pdftex.def)             Requested size: 469.75816pt x 289.27213pt.
+[13 <./figure/unnamed-chunk-2-1.pdf>]
+<figure/wpd-glm-dist-1.pdf, id=290, 568.1225pt x 351.3125pt>
+File: figure/wpd-glm-dist-1.pdf Graphic file (type pdf)
+<use figure/wpd-glm-dist-1.pdf>
+Package pdftex.def Info: figure/wpd-glm-dist-1.pdf  used on input line 363.
+(pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
+[14 <./figure/wpd-glm-horizontal-1.pdf>]
+<figure/hist-qq-1.pdf, id=305, 557.08125pt x 269.005pt>
+File: figure/hist-qq-1.pdf Graphic file (type pdf)
+<use figure/hist-qq-1.pdf>
+Package pdftex.def Info: figure/hist-qq-1.pdf  used on input line 390.
+(pdftex.def)             Requested size: 469.76414pt x 226.84105pt.
+<figure/dist-new-same-scale-link-1.pdf, id=306, 568.1225pt x 346.29375pt>
+File: figure/dist-new-same-scale-link-1.pdf Graphic file (type pdf)
+<use figure/dist-new-same-scale-link-1.pdf>
+Package pdftex.def Info: figure/dist-new-same-scale-link-1.pdf  used on input l
+ine 399.
+(pdftex.def)             Requested size: 469.7731pt x 286.3458pt.
+[15pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
+ has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.414 
+       <./figure/wpd-glm-dist-1.pdf>] [16pdfTeX warning (ext4): destination wit
 h the same identifier (name{figure.9}) has been already used, duplicate ignored
 
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.408 
+l.414 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 10}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.408 
+l.414 
        <./figure/hist-qq-1.pdf> <./figure/dist-new-same-scale-link-1.pdf>]
-Overfull \hbox (18.98178pt too wide) in paragraph at lines 440--442
+Overfull \hbox (18.98178pt too wide) in paragraph at lines 446--448
 []\T1/lmr/m/n/10 For each per-mu-ta-tion, one $\OML/lmm/m/it/10 wpd[]$ \T1/lmr/
 m/n/10 is ob-tained. De-fine $\OML/lmm/m/it/10 wpd[] \OT1/lmr/m/n/10 = \OMS/lms
 y/m/n/10 f\OML/lmm/m/it/10 wpd[]; wpd[]; [] ; wpd[]\OMS/lmsy/m/n/10 g$\T1/lmr/m
 /n/10 . 
  []
 
-<figure/plot-all-new2-1.pdf, id=332, 558.085pt x 340.27126pt>
+<figure/plot-all-new2-1.pdf, id=343, 558.085pt x 340.27126pt>
 File: figure/plot-all-new2-1.pdf Graphic file (type pdf)
 <use figure/plot-all-new2-1.pdf>
-Package pdftex.def Info: figure/plot-all-new2-1.pdf  used on input line 452.
+Package pdftex.def Info: figure/plot-all-new2-1.pdf  used on input line 458.
 (pdftex.def)             Requested size: 469.76752pt x 286.42299pt.
-[16]
-<figure/linear-scale-1.pdf, id=352, 557.08125pt x 341.275pt>
+[17]
+<figure/linear-scale-1.pdf, id=363, 557.08125pt x 341.275pt>
 File: figure/linear-scale-1.pdf Graphic file (type pdf)
 <use figure/linear-scale-1.pdf>
-Package pdftex.def Info: figure/linear-scale-1.pdf  used on input line 461.
+Package pdftex.def Info: figure/linear-scale-1.pdf  used on input line 467.
 (pdftex.def)             Requested size: 469.76414pt x 287.78342pt.
-<figure/raw-nqt-1.pdf, id=353, 558.085pt x 341.275pt>
+<figure/raw-nqt-1.pdf, id=364, 558.085pt x 341.275pt>
 File: figure/raw-nqt-1.pdf Graphic file (type pdf)
 <use figure/raw-nqt-1.pdf>
-Package pdftex.def Info: figure/raw-nqt-1.pdf  used on input line 468.
+Package pdftex.def Info: figure/raw-nqt-1.pdf  used on input line 474.
 (pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
-[17 <./figure/plot-all-new2-1.pdf>] [18pdfTeX warning (ext4): destination with 
+[18 <./figure/plot-all-new2-1.pdf>] [19pdfTeX warning (ext4): destination with 
 the same identifier (name{figure.11}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.468 ...textwidth]{figure/raw-nqt-1} \end{center}
+l.474 ...textwidth]{figure/raw-nqt-1} \end{center}
                                                    <./figure/linear-scale-1.pdf
 >]
 
-LaTeX Warning: Reference `fig:raw-nqt' on page 19 undefined on input line 470.
+LaTeX Warning: Reference `fig:raw-nqt' on page 20 undefined on input line 476.
 
 
-LaTeX Warning: Reference `sec:normalization' on page 19 undefined on input line
- 474.
+LaTeX Warning: Reference `sec:normalization' on page 20 undefined on input line
+ 480.
 
 
-LaTeX Warning: Reference `tab:' on page 19 undefined on input line 476.
+LaTeX Warning: Reference `tab:' on page 20 undefined on input line 482.
 
 
-LaTeX Warning: Reference `fig:' on page 19 undefined on input line 477.
+LaTeX Warning: Reference `fig:' on page 20 undefined on input line 483.
 
-<figure/dotplot-1.pdf, id=384, 568.1225pt x 345.29pt>
+<figure/dotplot-1.pdf, id=396, 568.1225pt x 345.29pt>
 File: figure/dotplot-1.pdf Graphic file (type pdf)
 <use figure/dotplot-1.pdf>
-Package pdftex.def Info: figure/dotplot-1.pdf  used on input line 481.
+Package pdftex.def Info: figure/dotplot-1.pdf  used on input line 487.
 (pdftex.def)             Requested size: 469.7731pt x 285.5158pt.
-[19 <./figure/raw-nqt-1.pdf>] [20pdfTeX warning (ext4): destination with the sa
+[20 <./figure/raw-nqt-1.pdf>] [21pdfTeX warning (ext4): destination with the sa
 me identifier (name{figure.12}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.503 \end{longtable}
+l.509 \end{longtable}
                       <./figure/dotplot-1.pdf>]
-<figure/gravitas-plot-1.pdf, id=414, 558.085pt x 335.2525pt>
+<figure/gravitas-plot-1.pdf, id=426, 558.085pt x 335.2525pt>
 File: figure/gravitas-plot-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-1.pdf>
-Package pdftex.def Info: figure/gravitas-plot-1.pdf  used on input line 507.
+Package pdftex.def Info: figure/gravitas-plot-1.pdf  used on input line 513.
 (pdftex.def)             Requested size: 469.76752pt x 282.19846pt.
-[21pdfTeX warning (ext4): destination with the same identifier (name{figure.13}
+[22pdfTeX warning (ext4): destination with the same identifier (name{figure.13}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.522 \section{Appendix}\label{appendix}}
+l.528 \section{Appendix}\label{appendix}}
                                           <./figure/gravitas-plot-1.pdf>]
-<figure/linear-scale-8-1.pdf, id=429, 568.1225pt x 351.3125pt>
+<figure/linear-scale-8-1.pdf, id=440, 568.1225pt x 351.3125pt>
 File: figure/linear-scale-8-1.pdf Graphic file (type pdf)
 <use figure/linear-scale-8-1.pdf>
-Package pdftex.def Info: figure/linear-scale-8-1.pdf  used on input line 529.
+Package pdftex.def Info: figure/linear-scale-8-1.pdf  used on input line 535.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-<figure/raw-nqt-8-1.pdf, id=430, 558.085pt x 341.275pt>
+<figure/raw-nqt-8-1.pdf, id=441, 558.085pt x 341.275pt>
 File: figure/raw-nqt-8-1.pdf Graphic file (type pdf)
 <use figure/raw-nqt-8-1.pdf>
-Package pdftex.def Info: figure/raw-nqt-8-1.pdf  used on input line 536.
+Package pdftex.def Info: figure/raw-nqt-8-1.pdf  used on input line 542.
 (pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
-[22pdfTeX warning (ext4): destination with the same identifier (name{figure.14}
+[23pdfTeX warning (ext4): destination with the same identifier (name{figure.14}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.536 ...xtwidth]{figure/raw-nqt-8-1} \end{center}
+l.542 ...xtwidth]{figure/raw-nqt-8-1} \end{center}
                                                    <./figure/linear-scale-8-1.p
 df>]
-<figure/dotplot-8-1.pdf, id=445, 568.1225pt x 345.29pt>
+<figure/dotplot-8-1.pdf, id=456, 568.1225pt x 345.29pt>
 File: figure/dotplot-8-1.pdf Graphic file (type pdf)
 <use figure/dotplot-8-1.pdf>
-Package pdftex.def Info: figure/dotplot-8-1.pdf  used on input line 540.
+Package pdftex.def Info: figure/dotplot-8-1.pdf  used on input line 546.
 (pdftex.def)             Requested size: 469.7731pt x 285.5158pt.
 
-Overfull \hbox (4.74435pt too wide) in paragraph at lines 555--556
+Overfull \hbox (4.74435pt too wide) in paragraph at lines 561--562
  []\T1/lmr/m/n/10 facet_levels|
  []
 
 
-Overfull \hbox (0.46907pt too wide) in alignment at lines 547--576
+Overfull \hbox (0.46907pt too wide) in alignment at lines 553--582
  [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (4.74435pt too wide) in paragraph at lines 583--584
+Overfull \hbox (4.74435pt too wide) in paragraph at lines 589--590
  []\T1/lmr/m/n/10 facet_levels|
  []
 
 
-Overfull \hbox (0.46907pt too wide) in alignment at lines 576--604
+Overfull \hbox (0.46907pt too wide) in alignment at lines 582--610
  [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (0.46907pt too wide) in alignment at lines 604--956
+Overfull \hbox (0.46907pt too wide) in alignment at lines 610--962
  [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
-<figure/gravitas-plot-8-1.pdf, id=446, 558.085pt x 335.2525pt>
+<figure/gravitas-plot-8-1.pdf, id=457, 558.085pt x 335.2525pt>
 File: figure/gravitas-plot-8-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-8-1.pdf>
-Package pdftex.def Info: figure/gravitas-plot-8-1.pdf  used on input line 960.
+Package pdftex.def Info: figure/gravitas-plot-8-1.pdf  used on input line 966.
 (pdftex.def)             Requested size: 469.76752pt x 282.19846pt.
-<figure/scalar-approach-1.pdf, id=447, 568.1225pt x 348.30125pt>
+<figure/scalar-approach-1.pdf, id=458, 568.1225pt x 348.30125pt>
 File: figure/scalar-approach-1.pdf Graphic file (type pdf)
 <use figure/scalar-approach-1.pdf>
-Package pdftex.def Info: figure/scalar-approach-1.pdf  used on input line 973.
+Package pdftex.def Info: figure/scalar-approach-1.pdf  used on input line 979.
 (pdftex.def)             Requested size: 469.7731pt x 288.00577pt.
-<figure/scalar-approach-2.pdf, id=448, 556.0775pt x 330.23375pt>
+<figure/scalar-approach-2.pdf, id=459, 556.0775pt x 330.23375pt>
 File: figure/scalar-approach-2.pdf Graphic file (type pdf)
 <use figure/scalar-approach-2.pdf>
-Package pdftex.def Info: figure/scalar-approach-2.pdf  used on input line 973.
+Package pdftex.def Info: figure/scalar-approach-2.pdf  used on input line 979.
 (pdftex.def)             Requested size: 469.76622pt x 278.97667pt.
-[23 <./figure/raw-nqt-8-1.pdf>] [24pdfTeX warning (ext4): destination with the 
+[24 <./figure/raw-nqt-8-1.pdf>] [25pdfTeX warning (ext4): destination with the 
 same identifier (name{figure.15}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.973 ...h]{figure/scalar-approach-2} \end{center}
+l.979 ...h]{figure/scalar-approach-2} \end{center}
                                                    <./figure/dotplot-8-1.pdf>] 
-[25pdfTeX warning (ext4): destination with the same identifier (name{figure.16}
+[26pdfTeX warning (ext4): destination with the same identifier (name{figure.16}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.973 ...h]{figure/scalar-approach-2} \end{center}
+l.979 ...h]{figure/scalar-approach-2} \end{center}
                                                    <./figure/gravitas-plot-8-1.
-pdf>] [26 <./figure/scalar-approach-1.pdf> <./figure/scalar-approach-2.pdf>] [2
-7] (./main.aux)
+pdf>] [27 <./figure/scalar-approach-1.pdf> <./figure/scalar-approach-2.pdf>] [2
+8] [29] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 89F8C6533E34404CAB8285BF063CDF96;3728.
+(rerunfilecheck)             Checksum: 5E8C10D0B2C946A36595C9A40FB89211;3831.
  ) 
 Here is how much of TeX's memory you used:
- 12264 strings out of 480946
- 180811 string characters out of 5905758
- 525736 words of memory out of 5000000
- 29078 multiletter control sequences out of 15000+600000
+ 12272 strings out of 480946
+ 180907 string characters out of 5905758
+ 525775 words of memory out of 5000000
+ 29080 multiletter control sequences out of 15000+600000
  460046 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2224b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -963,10 +965,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (27 pages, 2640606 bytes).
+Output written on main.pdf (29 pages, 2644612 bytes).
 PDF statistics:
- 631 PDF objects out of 1000 (max. 8388607)
- 513 compressed objects within 6 object streams
- 129 named destinations out of 1000 (max. 500000)
- 284 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 650 PDF objects out of 1000 (max. 8388607)
+ 530 compressed objects within 6 object streams
+ 135 named destinations out of 1000 (max. 500000)
+ 292 words of extra memory for PDF output out of 10000 (max. 10000000)
 
