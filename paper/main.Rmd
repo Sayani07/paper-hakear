@@ -358,16 +358,27 @@ Furthermore, these distances are distributed as chi-squared with $m$ degrees of 
 <!-- With large $m$, chi-squared is asymptotically normal by the CLT. Thus, by CLT, ${\chi^2}_{m} \tilde{} N(m, 2m)$, which would depend on the number of discretization used to approximate the continuous distribution. Then $b_n = 1-1/n$ quantile of the normal distribution and $a_n = 1/[n*\phi(b_n)]$ where $\phi$ is the normal density function. $n$ is the number of pairwise comparisons being made. -->
 
 
-## Definition
+## Computation
 
-Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ be denoted as $d_{(jk, j'k')} = JSD(a_{j}b_{k}, a_{j'}b_{k'})$. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$.
+The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. The steps employed for computing the distance measure is summarized as follows:
 
+
+<!-- Hence, differences in distributions of the measured variable are computed between all pairs of categories $(a_{j} b_{k}, a_{j'}b_{k'}): j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$. Percentiles of $v_{jk}$ and $v_{j'k'}$ are computed and stored in $q_{jk}$ and $q_{j'k'}$ respectively. Then the pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$ be denoted as $d_{(jk, j'k')} = JSD(q_{jk}, q_{j'k'})$ is computed. Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets ($d_{w}$) when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets ($d_{b}$) when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). The pairwise distances $d_{(jk, j'k')}$ are transformed using a suitable tuning parameter ($0<\lambda<1$) depending on if they are $d_{b}$ or $d_{w}$ as follows: -->
 
 ```{r distance-explain, fig.cap = "Within and between-facet distances shown for two cyclic granularities A and B, where A is mapped to x-axis and B is mapped to facets. The dotted lines represent the distances between different categories. Panel 1) and 2) show the between-facet distances. Panel 3) and 4) are used to illustrate within-facet distances when categories are un-ordered or ordered respectively. When categories are ordered, distances should only be considered for consecutive x-axis categories. Between-facet distances are distances between different facet levels for the same x-axis category, for example, distances between {($a_1$,$b_1$) and ($a_1$, $b_2$)} or {($a_1$,$b_1$) and ($a_1$, $b_3$)}."}
 knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 ```
   
-From Section \ref{sec:idea}, the idea is to put more weights on within-facet distances than between-facet distances. Hence, for a suitable tuning parameter $0<\lambda<1$, the pairwise distances $d_{(jk, j'k')}$ are transformed based on the distance type as follows:
+
+1. Fix harmony pair $(A, B)$. 
+
+<!-- The set of pairs of categories is of the form $(a_{j} b_{k}, a_{j'}b_{k'}): j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$. -->
+
+2. Percentiles of $v_{jk}$ are computed and stored in $q_{jk}$. Repeat for all pairs of categories of the form $(a_{j} b_{k}, a_{j'}b_{k'}): j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$.
+
+3. The pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$  denoted by $d_{(jk, j'k')} = JSD(q_{jk}, q_{j'k'})$ is computed.
+
+4. The pairwise distances $d_{(jk, j'k')}$ is transformed using a suitable tuning parameter ($0<\lambda<1$) depending on if they are within-facet($d_w$) or between-facets($d_b$) as follows:
 
 \begin{equation}
 d*_{(j,k), (j'k')} =
@@ -377,9 +388,23 @@ d*_{(j,k), (j'k')} =
 \end{cases}
 \end{equation}
 
-The maximum weighted pairwise distances are defined as:
-$$wpd = max_{j, j', k, k'}(d*_{(jk), (j'k')})
-\forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$$.
+5. The wpd is then computed as $wpd = max_{j, j', k, k'}(d*_{(jk), (j'k')}) \forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$.
+
+6. Repeat for all harmony pairs in $N_C$.
+
+\noindent Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). If the measure is intended to put more importance in pointing towards distributional differences between x categories, a $\lambda>0.5$ should be chosen. 
+
+
+
+<!-- 5. Compute distribution of maximum distance ($M$) by shuffling the data $200$ times and finishing Steps1-4 in each case. Scale $M$ using the mean and sd of the distribution.
+
+5. Use Steps 1-4 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
+
+6. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
+
+
+
+<!-- All of these distances are then aggregated by taking the maximum from these distances to obtain $wpd$. -->
 
 
 <!-- _j$ maps index set to a set $\{B_\ell \mid \ell =1,\dots,L\}$. Here, $A_k$ and $B_\ell$ are the levels/categories corresponding to $C_i$ and $C_j$ respectively. Let $S_{k\ell}$ be a subset of the index set such that for all $s \in S_{k\ell}$, $C_i(s) = A_k$ and $C_j(s) = B_\ell$. There are $KL$ such data subsets, one for each combination of levels ($A_k$, $B_\ell$). Moreover, consider that in the graphical space, $C_i$ is mapped to facets and $C_j$ is mapped to x-axis. -->
