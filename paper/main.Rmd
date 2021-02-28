@@ -1,5 +1,5 @@
 ---
-title: An automatic approach to find all possible calendar effects (periodic patterns) for an univariate time series
+title: A new metric for automatic discovery of periodic patterns in time series
 authors:
 - name: Sayani Gupta
   affiliation: Department of Econometrics and Business Statistics, Monash University
@@ -201,25 +201,20 @@ In this paper, we aim to build a new measure to follow through these two main ob
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# The distance measure for quantifying patterns in harmonies
+# A distance measure for quantifying patterns in harmonies
 
-We are interested in assessing structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to evaluate structure in such a design.
+We are interested in assessing the structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to quantify the structure in such a design. The principle employed towards this goal is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with $2$ x-axis categories and $3$ facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean has been incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. For this situation, mean of only the x-axis categories are increased by $5$ units for each consecutive category. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If the displays are to be ranked in order of importance from minimum to maximum, then an obvious choice would be placing a followed by b, c and then d. It might be argued that it is not clear if b should precede or succeed c in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle in mind, display b is considered less informative as compared to display c. Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. 
 
-
-## Idea {#sec:idea}
-
-The principle employed for building a new metric is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with 2 x-axis categories and 4 facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet and different for different facet categories. Figure \ref{fig:null4by2}b exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If we are asked to rank the displays in order of importance from minimum to maximum, we might order it as a, b, c and then d. It might be argued that it is not clear if b should precede or succeed c. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle, display b could be considered less informative as compared to display c.   
-
-With reference to the graphical design in \ref{@Gupta2020-vo}, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. Thus the metric could be obtained by computing maximum pairwise distances between distributions of the continuous random variable across x-axis categories for all facets and then taking the median of those maximum pairwise distances across facets. This would help capture the average maximum difference in distribution of the measurement variable explained by the two cyclic granularities together. We call this metric wpd which stands for Median Maximum Pairwise Distances. In the next section we shall see how we go about computing this measure.
-
-
+Intuitively, while finding a structure or measuring the strength of patterns in Figure \ref{fig:null4by2}, it makes sense to look for within-group and between-group variation. Larger variation would imply stronger patterns, whereas small variation would imply the underlying structure is not changing within or between group.
+Thus, a distance measure aimed to capture this structure should ideally estimate these within-group and between-group variations. One of the potential ways to do this is to measure the distances between distributions of the continuous random variable measured within and between groups, weigh them basis if they are within or between groups and then take the maximum of those distances as an estimate of the strength of the structure. We call this metric $wpd$ which stands for Weighted Pairwise Distances. This section starts with possible ways of characterizing distributions and computing distances between them and then describe in details how
+the measure $wpd$ is defined.
 
 <!-- To elaborate further, look at the examples in Figure \ref{}, where Figure \ref{}a represents the panel design with distribution of each x categories drawn from N(5, 10) distribution. It could be observed that the graph is not particularly interesting, as there is no significant change in distribution between x-axis levels or facets. Figure \ref{}b represents the same panel design with no difference in distribution of x-axis categories within a facet, but different distribution of x-axis categories for different facets. For example, if there are 4 facet levels and 2 x-axis levels, data is generated in the way as described in Table \ref{}. Figure \ref{}b exhibits an exact opposite situation where the x-axis within facets are different but not across facets. -->
 <!-- Figure \ref{}d takes it further by varying the distribution across both facet and x-axis categories. -->
 
 
 
-```{r null4by2,fig.cap=" A graphical display with two categories mapped to x-axis and 4 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the continuous rv does not depend across x-axis or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets(b) or x-axis(a). Display d is most interesting as distribution of the rv changes across both facet and x-axis variable."}
+```{r null4by2,fig.cap = "A graphical display with two categories mapped to x-axis and 3 categories mapped to facets with the distribution of a continuous random variable plotted on the y-axis. Display a is not interesting as the distribution of the variable does not depend on x or facet categories. Display b and c are more interesting than a since there is a change in distribution either across facets (b) or x-axis (c). Display d is most interesting in terms of displaying the strongest pattern as distribution of the variable changes across both facet and x-axis variable."}
 
 sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
   dist_normal((mean + seq(0,
@@ -235,8 +230,13 @@ sim_panel_varall <- sim_panel(
 ) %>% unnest(data)
 
 p_varall <- sim_panel_varall %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle("")
+  rename("facet level" = "id_facet" ) %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
+  facet_wrap(~`facet level`,labeller = "label_both") + 
+  geom_boxplot() +
+  ggtitle("") +
+  xlab("x level") +
+  ylab("")
 
 
 sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
@@ -251,8 +251,14 @@ sim_panel_varx <- sim_panel(
 
 
 p_varx <- sim_panel_varx %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle("")
+  rename("facet level" = "id_facet" ) %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
+  facet_wrap(~`facet level`,labeller = "label_both") + 
+  ggtitle("") +
+  geom_boxplot() +
+  xlab("x level") +
+  ylab("simulated response")
+
 
 
 sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
@@ -267,8 +273,14 @@ sim_panel_varf <- sim_panel(
 
 
 p_varf <- sim_panel_varf %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle("")
+  rename("facet level" = "id_facet" ) %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) +
+  facet_wrap(~`facet level`,labeller = "label_both") + 
+  geom_boxplot() +
+  ggtitle("") +
+  xlab("x level") +
+  ylab("")
+
 
 
 sim_panel_null <- sim_panel(
@@ -281,16 +293,15 @@ sim_panel_null <- sim_panel(
 
 set.seed(9999)
 
-null <- compute_pairwise_norm(sim_panel_null, 
-                           gran_x = "id_x",
-                           gran_facet = "id_facet",
-                           response = sim_data, 
-                           nperm = 200
-)
 
 p_null <- sim_panel_null %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle("")
+  rename("facet level" = "id_facet" ) %>% 
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) +
+  facet_wrap(~`facet level`,labeller = "label_both") +
+  geom_boxplot() +
+  ggtitle("") +
+  xlab("x level") +
+  ylab("simulated response")
 
 
 ggpubr::ggarrange(p_null, p_varf,  p_varx, p_varall, nrow = 2, ncol = 2,
@@ -452,7 +463,7 @@ G21 %>%
 
 ```
 
-# Normalized distance measure
+# Normalization for the number of comparisons
 
 The distribution of wpd is different for different levels of facets and x-axis levels. This is because the statistic maximum which is used to define $wpd$ is affected by the number of categories. The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different levels of the facets and x-axis first and get a normalized measure. Henceforth we call the measure already discussed as $wpd_{raw}$ and the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also identifying only the interesting panels from a data set. We discuss two approaches for normalization, both of which are based on the simulation results.
 
@@ -739,27 +750,65 @@ Furthermore, the distribution of the measure $wpd_{norm}$ does not change for di
 
 # Ranking and selecting significant harmonies
 
-Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of 
-$wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is:
+In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
+
+
+## Choosing a threshold
+
+Typically, a randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. We will use this procedure to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows:
+
+<!-- <!-- We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. --> 
+<!-- Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
+<!-- $wpd_{norm}$ for each of these reassignments. -->
+
 
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
-## Algorithm
+- **Input:** All harmonies of the form $\{(A, B), A = \{ a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}\}$  with $A$ placed across x-axis and $B$ across facets $\forall (A, B) \in N_C$.
 
-1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
+- **Output:** Harmony pairs $(A, B)$ for which $wpd_{norm}$ is significant.
 
-2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
+1. Fix harmony pair $(A, B)$.
 
-3. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
+2. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
 
-4.  Steps (2) and (3) are repeated a large number
+3. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
+
+4. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
+
+5.  Steps (3) and (4) are repeated a large number
 of times M (M = 200).
 
-5. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
+6. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
 
-6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$.
+7. Repeat Steps (1-6) for all harmony pairs.
 
-7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs.
+8. $95^{th}$ percentile of $wpd_{sample}$ obtained for all harmony pairs is computed and stored in $wpd_{threshold}$.
+
+7. If $wpd_{obs_{A, B}}> wpd_{threshold}$, harmony pair $(A, B)$ is selected, otherwise rejected. 
+
+
+<!-- Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
+<!-- $wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is: -->
+
+<!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
+
+
+
+<!-- 1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$. -->
+
+<!-- 2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$. -->
+
+<!-- 3. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$. -->
+
+<!-- 4.  Steps (2) and (3) are repeated a large number -->
+<!-- of times M (M = 200). -->
+
+<!-- 5. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$. -->
+
+<!-- 6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$. -->
+
+<!-- 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs. -->
 
 
 ## Results
@@ -1136,7 +1185,7 @@ p1 + p2/p3
 ```
 
 
-# Discussion points and future work
+# Discussion
 
 Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. This work refines the selection of appropriate pairs of granularities by identifying those for which the differences between the displayed distributions is greatest, and rating these selected harmony pairs in order of importance for exploration.
 
@@ -1145,6 +1194,7 @@ A future direction of work could be to look at more individuals/subjects and gro
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
 
 # Appendix
+
 
 ## Smart meter application to 8 datasets from energy competition
 
@@ -1391,6 +1441,149 @@ p1 + p2/p3
 ```
 
 
+```{r mds}
+set.seed(7777)
+library(gravitas)
+library(tsibble)
+library(lubridate)
+library(readr)
+
+all_data <- read_rds(here("paper/sim_table/all_data.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds")) %>% 
+  as_tsibble(index = reading_datetime,
+             key = customer_id)
+
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+
+#sm_30 <- sample(sm_unique_cust$customer_id, 30)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(year(reading_datetime) == 2012)  %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+                    x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+```
+
+
+```{r clustering}
+# K-means clustering
+clust <- kmeans(mds, 3)$cluster %>%
+  as.factor()
+mds <- mds %>%
+  mutate(groups = clust)
+
+
+# Plot and color by groups
+q1 <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = rownames(mds),
+          color = "groups",
+          palette = "jco",
+          size = 1, 
+          ellipse = TRUE,
+          ellipse.type = "convex",
+          repel = TRUE)
+
+```
+
+- check transformation and scalar approaches are same
+
+
+
+```{r scalar-approach}
+set.seed(7777)
+all_data <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds"))
+set.seed(7777)
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  #filter(year(reading_datetime) == 2012) %>% #for demo just show one column
+  as_tsibble(index = reading_datetime,
+             key = customer_id) %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+         x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+
+ggpubr::ggscatter(mds,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  size = 1,
+                  repel = TRUE) 
+
+# clustering as well
+
+d = one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist()
+
+hc = stats::hclust(d,method="complete")
+#plot(hc)
+groups<-cutree(hc, k=3)
+
+all_data_cluster <- cbind(one_harmony_data, groups) %>% 
+  left_join(mds, by = "customer_id") %>% 
+  mutate(groups = as.factor(groups))
+
+
+
+q2 <- ggpubr::ggscatter(all_data_cluster,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  color = "groups",
+                  size = 1,
+                  repel = TRUE) 
+
+
+q1 + q2
+```
 
 
 
