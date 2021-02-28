@@ -69,9 +69,16 @@ Since, multiple tests are done, the probability of type-1 error needs to be adju
 
 
 ```{r, eval = FALSE, echo = FALSE}
-set.seed(12345)
-
+sample_seed = seq(1000, 2999, by = 10)
+nperm = 200
+simtable<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
 # simulate one big data which will have all categories generated on the #fly
+
+
+
+all_seed <- lapply(seq_len(sample_seed), function(x){
+  
+  set.seed(sample_seed[x])
 
 library(distributional)
 sim_dist <- distributional::dist_normal(0,1)
@@ -79,30 +86,25 @@ sim_orig <-  distributional::generate(sim_dist, 50000)
 sim_orig <- sim_orig[[1]]
 lensim <- length(sim_orig)
 
-
-simtable<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
-
-lapply(1:2, 
+# for each row of the sim table
+each_seed <- lapply(nrow(simtable), 
                            function(scen){
 
 simj<-simtable[scen,] 
 nfacetj<-simj$nfacet
 nxj<-simj$nx
-nperm = 20
 
 id_x <- rep_len(seq_len(nxj), length.out = lensim) 
-id_facet <- rep_len(seq_len(nfacetj), length.out = lensim) 
+id_facet <- rep_len(rep(seq_len(nfacetj), each = nxj), length.out = lensim) 
 
 sim_panel_orig <- bind_cols(id_x = id_x, id_facet = id_facet, sim_data = sim_orig)
 
-wpd_orig = compute_pairwise_max(sim_panel_data, 
+wpd_orig = compute_pairwise_norm_scalar(sim_panel_orig, 
                                 gran_x = "id_x",
                                 gran_facet = "id_facet",
                                 response = sim_data)
 
-
 wpd_sample <- lapply(seq_len(nperm), function(x){
-  
   
   sample_data <- sample(sim_orig, size =  lensim)
   
@@ -110,7 +112,7 @@ wpd_sample <- lapply(seq_len(nperm), function(x){
                                 id_facet = id_facet, 
                                 sim_data = sample_data)
   
-  wpd =  compute_pairwise_max(sim_panel_sample, 
+  wpd =  compute_pairwise_norm_scalar(sim_panel_sample, 
                               gran_x = "id_x",
                               gran_facet = "id_facet",
                               response = sim_data) %>% 
@@ -120,21 +122,31 @@ wpd_sample <- lapply(seq_len(nperm), function(x){
 
 wpd_all <- wpd_orig %>% as_tibble() %>% 
   mutate(perm_id = 0) %>% 
-  bind_rows(wpd_sample)
+  bind_rows(wpd_sample) %>% 
+  bind_cols(nx = nxj, nfacet = nfacetj)
 
-saveRDS(wpd_all,
-        paste0('simulations/supplementary/test/wpd_N01/data-ind/',
-               nxj,'-',
-               #"nfacetj-",
-               nfacetj,"-",
-               '-wpd-test.rds'))
-})
+wpd_all
+}) %>% bind_rows()
+
+# find threshold
+
+threshold <- each_seed %>% mutate(
+  threshold = quantile(each_seed$value, probs = 0.95))
+
+# conduct test
+
+threshold %>% 
+  dplyr::filter(perm_id == 0) %>% 
+  mutate(select = if_else(value>threshold, "yes", "no"))
+
+}) %>% bind_rows(.id = "seed_id")
+
+saveRDS(all_seed,
+        paste0('simulations/supplementary/test/wpd_N01/null_all_seed_threshold.rds')
+
 ```
 
 
-The p-value of the design $D_{null}$ is size.
-The p-value of other designs is power.
-Confidence interval of the 
 
   
 

@@ -207,10 +207,10 @@
     },
     "broom": {
       "Package": "broom",
-      "Version": "0.7.2",
+      "Version": "0.7.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b00000a87b8a4a1e8a8fc413c1dbad03"
+      "Hash": "d5ab8846336cfb2e3c17e5a806eb3045"
     },
     "bslib": {
       "Package": "bslib",
@@ -620,8 +620,8 @@
       "RemoteRepo": "hakear",
       "RemoteUsername": "Sayani07",
       "RemoteRef": "HEAD",
-      "RemoteSha": "443d8cac3594dc8660701304cc083697d227894c",
-      "Hash": "cc5842aeabcbb6290516bd5e2b8af818"
+      "RemoteSha": "e5082bb30588ac48fac47135b312a05b6e5916df",
+      "Hash": "8a595738ae16877d357daeaf2edacd45"
     },
     "haven": {
       "Package": "haven",
