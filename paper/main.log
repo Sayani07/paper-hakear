@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.23)  1 MAR 2021 09:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.2.23)  1 MAR 2021 12:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -840,50 +840,55 @@ LaTeX Warning: Reference `tab:' on page 21 undefined on input line 524.
 
 LaTeX Warning: Reference `fig:' on page 21 undefined on input line 525.
 
-<figure/dotplot-1.pdf, id=428, 568.1225pt x 345.29pt>
+<figure/dotplot-1.pdf, id=425, 568.1225pt x 228.855pt>
 File: figure/dotplot-1.pdf Graphic file (type pdf)
 <use figure/dotplot-1.pdf>
 Package pdftex.def Info: figure/dotplot-1.pdf  used on input line 529.
-(pdftex.def)             Requested size: 469.7731pt x 285.5158pt.
-[21 <./figure/raw-nqt-1.pdf>] [22pdfTeX warning (ext4): destination with the sa
-me identifier (name{figure.14}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.551 \end{longtable}
-                      <./figure/dotplot-1.pdf>]
-<figure/gravitas-plot-1.pdf, id=457, 558.085pt x 335.2525pt>
+(pdftex.def)             Requested size: 469.7731pt x 189.23721pt.
+[21 <./figure/raw-nqt-1.pdf>]
+<figure/gravitas-plot-1.pdf, id=438, 558.085pt x 335.2525pt>
 File: figure/gravitas-plot-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-1.pdf>
 Package pdftex.def Info: figure/gravitas-plot-1.pdf  used on input line 555.
 (pdftex.def)             Requested size: 469.76752pt x 282.19846pt.
-[23pdfTeX warning (ext4): destination with the same identifier (name{figure.15}
+
+Overfull \vbox (248.54675pt too high) has occurred while \output is active []
+
+[22pdfTeX warning (ext4): destination with the same identifier (name{figure.14}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.570 \section{Appendix}\label{appendix}}
-                                          <./figure/gravitas-plot-1.pdf>]
-<figure/linear-scale-8-1.pdf, id=471, 568.1225pt x 351.3125pt>
+                                         pdfTeX warning (ext4): destination wit
+h the same identifier (name{figure.15}) has been already used, duplicate ignore
+d
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.570 \section{Appendix}\label{appendix}}
+                                          <./figure/dotplot-1.pdf> <./figure/gr
+avitas-plot-1.pdf>]
+<figure/linear-scale-8-1.pdf, id=460, 558.085pt x 340.27126pt>
 File: figure/linear-scale-8-1.pdf Graphic file (type pdf)
 <use figure/linear-scale-8-1.pdf>
 Package pdftex.def Info: figure/linear-scale-8-1.pdf  used on input line 577.
-(pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-<figure/raw-nqt-8-1.pdf, id=472, 558.085pt x 341.275pt>
+(pdftex.def)             Requested size: 469.76752pt x 286.42299pt.
+<figure/raw-nqt-8-1.pdf, id=461, 558.085pt x 341.275pt>
 File: figure/raw-nqt-8-1.pdf Graphic file (type pdf)
 <use figure/raw-nqt-8-1.pdf>
 Package pdftex.def Info: figure/raw-nqt-8-1.pdf  used on input line 584.
 (pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
-[24pdfTeX warning (ext4): destination with the same identifier (name{figure.16}
+[23pdfTeX warning (ext4): destination with the same identifier (name{figure.16}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.584 ...xtwidth]{figure/raw-nqt-8-1} \end{center}
                                                    <./figure/linear-scale-8-1.p
 df>]
-<figure/dotplot-8-1.pdf, id=487, 568.1225pt x 345.29pt>
+<figure/dotplot-8-1.pdf, id=479, 499.8675pt x 345.29pt>
 File: figure/dotplot-8-1.pdf Graphic file (type pdf)
 <use figure/dotplot-8-1.pdf>
 Package pdftex.def Info: figure/dotplot-8-1.pdf  used on input line 588.
-(pdftex.def)             Requested size: 469.7731pt x 285.5158pt.
+(pdftex.def)             Requested size: 469.76872pt x 324.49887pt.
 
 Overfull \hbox (4.74435pt too wide) in paragraph at lines 603--604
  []\T1/lmr/m/n/10 facet_levels|
@@ -909,38 +914,38 @@ Overfull \hbox (0.46907pt too wide) in alignment at lines 652--1004
  [] [] [] [] [] [] [] [] [] [] [] [] 
  []
 
-<figure/gravitas-plot-8-1.pdf, id=488, 558.085pt x 335.2525pt>
+<figure/gravitas-plot-8-1.pdf, id=480, 558.085pt x 335.2525pt>
 File: figure/gravitas-plot-8-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-8-1.pdf>
 Package pdftex.def Info: figure/gravitas-plot-8-1.pdf  used on input line 1008.
 
 (pdftex.def)             Requested size: 469.76752pt x 282.19846pt.
-<figure/scalar-approach-1.pdf, id=489, 568.1225pt x 348.30125pt>
+<figure/scalar-approach-1.pdf, id=481, 568.1225pt x 348.30125pt>
 File: figure/scalar-approach-1.pdf Graphic file (type pdf)
 <use figure/scalar-approach-1.pdf>
 Package pdftex.def Info: figure/scalar-approach-1.pdf  used on input line 1021.
 
 (pdftex.def)             Requested size: 469.7731pt x 288.00577pt.
-<figure/scalar-approach-2.pdf, id=490, 556.0775pt x 330.23375pt>
+<figure/scalar-approach-2.pdf, id=482, 556.0775pt x 330.23375pt>
 File: figure/scalar-approach-2.pdf Graphic file (type pdf)
 <use figure/scalar-approach-2.pdf>
 Package pdftex.def Info: figure/scalar-approach-2.pdf  used on input line 1021.
 
 (pdftex.def)             Requested size: 469.76622pt x 278.97667pt.
-[25 <./figure/raw-nqt-8-1.pdf>] [26pdfTeX warning (ext4): destination with the 
+[24 <./figure/raw-nqt-8-1.pdf>] [25pdfTeX warning (ext4): destination with the 
 same identifier (name{figure.17}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.1021 ...]{figure/scalar-approach-2} \end{center}
                                                    <./figure/dotplot-8-1.pdf>] 
-[27pdfTeX warning (ext4): destination with the same identifier (name{figure.18}
+[26pdfTeX warning (ext4): destination with the same identifier (name{figure.18}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.1021 ...]{figure/scalar-approach-2} \end{center}
                                                    <./figure/gravitas-plot-8-1.
-pdf>] [28 <./figure/scalar-approach-1.pdf> <./figure/scalar-approach-2.pdf>] [2
-9] [30] (./main.aux)
+pdf>] [27 <./figure/scalar-approach-1.pdf> <./figure/scalar-approach-2.pdf>] [2
+8] [29] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -948,13 +953,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 1676CD6CB73BDB047BF4E31B32DEE8D6;3822.
  ) 
 Here is how much of TeX's memory you used:
- 12263 strings out of 480946
- 180535 string characters out of 5905758
+ 12262 strings out of 480946
+ 180528 string characters out of 5905758
  526602 words of memory out of 5000000
  29056 multiletter control sequences out of 15000+600000
  459741 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 71i,10n,74p,2224b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 71i,10n,74p,2224b,437s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Us
 ers/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/User
 s/sgup0008/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/
@@ -976,10 +981,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (30 pages, 2889272 bytes).
+Output written on main.pdf (29 pages, 2781320 bytes).
 PDF statistics:
- 687 PDF objects out of 1000 (max. 8388607)
- 563 compressed objects within 6 object streams
- 153 named destinations out of 1000 (max. 500000)
+ 675 PDF objects out of 1000 (max. 8388607)
+ 552 compressed objects within 6 object streams
+ 152 named destinations out of 1000 (max. 500000)
  297 words of extra memory for PDF output out of 10000 (max. 10000000)
 

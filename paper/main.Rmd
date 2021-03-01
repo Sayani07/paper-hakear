@@ -1020,11 +1020,9 @@ library(scales)
 library(tidyquant)
 library(gghighlight)
 
-elec$date_time <- as.Date(elec$date_time)
-
 elec_linear <- elec %>% 
   ggplot() +
-  geom_line(aes(x = date_time, y = kwh, group = time)) +
+  geom_line(aes(x = date_time, y = kwh)) +
   facet_wrap(~id, nrow = 4, labeller = "label_both",
              strip.position =  "right",
              scales = "free_y") +
@@ -1033,13 +1031,12 @@ elec_linear <- elec %>%
  # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
 
 
-elec_zoom <-  elec %>% 
+elec_zoom <-  elec %>%
   filter(date >as.Date("2018-02-01") & date < (as.Date("2018-02-28"))) %>% 
   ggplot(aes(x=date_time, y = kwh)) +
+  geom_line(alpha = 0.5, size = 0.1) +
   facet_wrap(~id, scales = "free_y", ncol = 1, strip.position =  "right") +
-  geom_smooth() +
-  geom_point(alpha = 0.5, size = 0.1) +
-  gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")))
+  gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")), unhighlighted_params = list(colour = "blue"))
               
   # geom_rect(xmin = as.Date("2018-02-02"), xmax = as.Date("2018-02-04"), ymin = -Inf, ymax = Inf, fill = "pink", colour = pink) 
 
@@ -1145,6 +1142,7 @@ harmonies <- data_id %>%
 
 
 
+
 ```{r elec_select_harmony}
 elec_harmony_all <- elec_select_harmony %>% 
   bind_rows(.id = "id") %>% 
@@ -1207,7 +1205,25 @@ dotplot <- elec_sig_split %>%
   theme_gray(base_size = 12, base_family = "Times") +
    theme(legend.position = "bottom")
 
-dotplot
+
+#myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+
+heatplot <- elec_sig_split %>% 
+  ggplot() +
+  geom_tile(aes(x = x_variable,
+                 y = facet_variable, 
+                 fill = wpd)) + 
+  scale_fill_gradient2() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~id, nrow = 1) +
+  coord_fixed() + 
+  guides(fill = guide_legend()) +
+  theme_void() +
+  theme_gray(base_size = 12, base_family = "Times") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(angle = 60, hjust=1)
+        , legend.position = "bottom")
+  heatplot
 ```
 
 ```{r tab-rank}
@@ -1293,31 +1309,29 @@ elec <- read_rds(here("paper/data/elec_all-8.rds")) %>%
   dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
   select(-meter_id) %>% 
   rename("id" = "household_id",
-         "date_time" = "reading_datetime")
+         "date_time" = "reading_datetime") %>% 
+  mutate(date = date(date_time))
 
 
 elec_linear <- elec %>% 
   ggplot() +
-  geom_line(aes(x = date_time, y = kwh)) +
+  geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
   facet_wrap(~id, nrow = 8, labeller = "label_both",
              strip.position =  "right",
              scales = "free_y") 
-elec_linear
-#+
- # geom_rect(aes(xmin = as.Date("2018-02-01"), xmax = as.Date("2018-02-28"), ymin = -Inf, ymax = Inf),colour="white", size=0.5, alpha=0.02)
 
+elec_zoom <-  elec %>%
+  as_tibble() %>% 
+  filter(date >as.Date("2019-09-01") & date < (as.Date("2019-09-30"))) %>% 
+  ggplot(aes(x=date_time, y = kwh)) +
+  geom_line(size = 0.1, colour = "blue") +
+  facet_wrap(~id, 
+             scales = "free_y",
+             ncol = 1,
+             strip.position =  "right") +
+  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black"))
 
-  # geom_rect(xmin = as.Date("2018-02-02"), xmax = as.Date("2018-02-04"), ymin = -Inf, ymax = Inf, fill = "pink", colour = pink) 
-
-
-# elec_zoom <- elec_linear + 
-#   coord_x_date(xlim = c("2018-02-01", "2018-02-28")) +
-#   gghighlight(date >as.Date("2018-02-05") & date < (as.Date("2018-02-12")),
-#               unhighlighted_params = list(colour = "grey")) + geom_line(aes(x = date_time, y = kwh, group = time))
-                      
-
-
-# elec %>% dplyr::filter(date> as.Date("2018-02-01") & date<as.Date("2018-02-28"))
+elec_linear + elec_zoom
 
 ```
 
@@ -1445,26 +1459,39 @@ elec_sig_split <- elec_harmony_all %>%
 
 elec_sig_split$significant <- 
   factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
-           
-           
-dotplot <- elec_sig_split %>% 
-  ggplot() +
-  geom_point(aes(x = x_variable,
-                 y = facet_variable, 
-                 size = wpd, 
-                 fill = significant),
-             shape=21,
-             alpha= 0.8) +
-  scale_size_continuous() +
-  theme(legend.position = "bottom") +
-  scale_fill_viridis(discrete = TRUE, direction = 1) +
-  facet_wrap(~id, nrow = 2) +
-  guides(fill = guide_legend(), 
-         size = guide_legend()) +
-  theme_gray(base_size = 12, base_family = "Times") +
-   theme(legend.position = "bottom")
 
-dotplot
+heatplot <- elec_sig_split %>% 
+  ggplot() +
+  geom_tile(aes(x = x_variable,
+                 y = facet_variable, 
+                 fill = wpd)) + 
+  scale_fill_gradient2() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~id, nrow = 2) +
+  coord_fixed() + 
+  guides(fill = guide_legend()) +
+  theme_void() +
+  theme_gray(base_size = 12, base_family = "Times") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom")
+  heatplot
+#            
+# dotplot <- elec_sig_split %>% 
+#   ggplot() +
+#   geom_point(aes(x = x_variable,
+#                  y = facet_variable, 
+#                  size = wpd, 
+#                  fill = significant),
+#              shape=21,
+#              alpha= 0.8) +
+#   scale_size_continuous() +
+#   theme(legend.position = "bottom") +
+#   scale_fill_viridis(discrete = TRUE, direction = 1) +
+#   facet_wrap(~id, nrow = 2) +
+#   guides(fill = guide_legend(), 
+#          size = guide_legend()) +
+#   theme_gray(base_size = 12, base_family = "Times") +
+#    theme(legend.position = "bottom")
 ```
 
 ```{r tab-rank-8}
