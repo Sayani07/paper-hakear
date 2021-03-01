@@ -1012,6 +1012,442 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 # Application to residential smart meter dataset {#sec:application}
 
+The smart meter data set for eight households in Melbourne has been utilized to see the use of the $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in \autoref{fig:linear-scale-8}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of \autoref{fig:linear-scale} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is reflected when we zoom into the the linear representation of the time series.
+We start by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
+
+<!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
+
+```{r linear-scale-8, fig.cap = "Electricity demand for four households are shown in different facets from Jan-18 to Jun-18 in Fig a and it has been zoomed in for Feb-18 in Fig b, where a week in Feb-18 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
+library(scales)
+library(tidyquant)
+library(gghighlight)
+library(lubridate)
+
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime") %>% 
+  mutate(date = date(date_time))
+
+
+elec_linear <- elec %>% 
+  ggplot() +
+  geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
+  facet_wrap(~id, nrow = 8, labeller = "label_both",
+             strip.position =  "right",
+             scales = "free_y") 
+
+elec_zoom <-  elec %>%
+  as_tibble() %>% 
+  filter(date >as.Date("2019-09-01") & date < (as.Date("2019-09-30"))) %>% 
+  ggplot(aes(x=date_time, y = kwh)) +
+  geom_line(size = 0.1, colour = "blue") +
+  facet_wrap(~id, 
+             scales = "free_y",
+             ncol = 1,
+             strip.position =  "right") +
+  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black"))
+
+elec_linear + elec_zoom
+
+```
+
+_Choosing cyclic granularities of interest and removing clashes_
+
+Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of this data is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analysed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo].
+
+ <!-- The paper also shows how the number of harmonies could be identified among  by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies. -->
+
+
+_Choosing and Ranking harmonies for all households_ 
+
+_Validating ranks of one household_
+
+_Comparing households_
+
+_Validating patterns from linear display_ 
+
+
+This is expected to have an assymmetrical distribution as could be seen in \ref{fig:raw-nqt} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$.
+
+
+Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets.
+Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd_{raw}$. It is further normalized using the approach described in Section \ref{sec:normalization}. This entire process is repeated for all harmony pairs $(A, B) \in H_{N_C}$ and for each households $i \in i = \{1, 2, 3, 4\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively.  
+
+Table \ref{tab:} shows the rank of the harmonies for different households
+\autoref{fig:} shows the bubble chart for the four households with size as the value of wpd and color indicating how significant they are. This is a quick summary of which harmonies are significant and also which cyclic granularities are important for the context. 
+
+
+
+```{r raw-nqt-8}
+elec_raw <- elec %>% 
+  ggplot() +
+  geom_density(aes(x = kwh)) +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("demand (in kwh)")
+
+elec_nqt <- elec %>% 
+  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+  ggplot() +
+  geom_density(aes(x = kwh_transformed))+
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("NQT demand (in kwh)")
+
+# hour_day_raw <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#     ggplot() + 
+#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
+#   
+# hour_day_trans <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
+
+elec_raw + elec_nqt
+
+```
+
+
+
+```{r rank-household-mclapply-8}
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+
+
+library(tictoc)
+#tic()
+elec_split = elec %>% group_split(id)
+
+elec_select_harmony = parallel::mclapply(1:8, function(x){
+  
+  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
+    as_tsibble(index = date_time)
+  
+harmonies <- data_id %>%
+  harmony(
+    ugran = "month",
+    filter_in = "wknd_wday",
+    filter_out = c("hhour", "fortnight")
+  )
+
+ hakear::select_harmonies(data_id,
+   harmony_tbl = harmonies,
+   response = kwh,
+   nperm = 200,
+   nsamp = 200
+ )
+
+}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
+#toc()
+```
+
+
+
+
+```{r elec_select_harmony-8}
+elec_harmony_all <- elec_select_harmony %>% 
+  bind_rows(.id = "id") %>% 
+  mutate(facet_variable = case_when(
+    facet_variable == "hour_day" ~ "hod" ,
+    facet_variable == "day_month" ~ "dom" ,
+    facet_variable == "day_week" ~ "dow" ,
+    facet_variable == "week_month" ~ "wom" ,
+    facet_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(x_variable = case_when(
+    x_variable == "hour_day" ~ "hod" ,
+    x_variable == "day_month" ~ "dom" ,
+    x_variable == "day_week" ~ "dow" ,
+    x_variable == "week_month" ~ "wom" ,
+    x_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(id = paste("id", id, sep = " ")) %>% 
+  group_by(id) %>% 
+  mutate(rank = row_number())
+  
+```
+
+
+```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The size represent how important the pair is and the colour represents if the harmonies are at all important or not. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which ones amongst them should be analyzed together." }
+elec_sig_split <- elec_harmony_all %>%
+  mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+  mutate(significant = case_when(
+    select_split == "***" ~ "highest",
+    select_split == "**" ~ "high",
+    select_split == "*" ~ "medium",
+    select_split == "" ~ "low"
+  )) %>% 
+   mutate(rank = case_when(
+    select_split == "***" ~ paste(rank, "***", sep = " "),
+    select_split == "**" ~  paste(rank, "**", sep = " "),
+    select_split == "*" ~  paste(rank, "*", sep = " "),
+    select_split == "" ~  paste(rank, "", sep = " ")
+  ))
+
+
+elec_sig_split$significant <- 
+  factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
+
+heatplot <- elec_sig_split %>% 
+  ggplot() +
+  geom_tile(aes(x = x_variable,
+                 y = facet_variable, 
+                 fill = wpd)) + 
+  scale_fill_gradient2() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~id, nrow = 2) +
+  coord_fixed() + 
+  guides(fill = guide_legend()) +
+  theme_void() +
+  theme_gray(base_size = 12, base_family = "Times") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom")
+  heatplot
+#            
+# dotplot <- elec_sig_split %>% 
+#   ggplot() +
+#   geom_point(aes(x = x_variable,
+#                  y = facet_variable, 
+#                  size = wpd, 
+#                  fill = significant),
+#              shape=21,
+#              alpha= 0.8) +
+#   scale_size_continuous() +
+#   theme(legend.position = "bottom") +
+#   scale_fill_viridis(discrete = TRUE, direction = 1) +
+#   facet_wrap(~id, nrow = 2) +
+#   guides(fill = guide_legend(), 
+#          size = guide_legend()) +
+#   theme_gray(base_size = 12, base_family = "Times") +
+#    theme(legend.position = "bottom")
+```
+
+```{r tab-rank-8}
+elec_rank <- elec_sig_split %>% 
+  select(-c(6,7, 9, 10)) %>% 
+  pivot_wider(
+              names_from = id,
+                values_from = rank) %>% 
+  rename("facet variable" = "facet_variable",
+         "x variable" = "x_variable",
+         "facet levels" = "x_levels",
+         "x levels" = "x_levels")
+
+elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
+```
+
+```{r gravitas-plot-8, message = FALSE, warning=FALSE, fig.cap="Distribution of energy demand shown for household id: 2 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+p1 <- id2_tsibble %>%
+   prob_plot("hour_day",
+             "wknd_wday",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("a") + 
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin()))
+
+
+p2 <- id2_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = c(0.25,0.5,0.75)) +
+  ggtitle("b") +
+  scale_colour_brewer(name = "", palette = "Set2")   +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) + xlab("")
+
+p3 <- id4_tsibble %>%
+   prob_plot("wknd_wday",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = 
+               c(0.25,0.5,0.75)) +
+  ggtitle("c") +
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
+        strip.text = element_text(size = 7, margin = margin())) 
+
+p1 + p2/p3  
+
+```
+
+
+
+# Discussion
+
+Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. This work refines the selection of appropriate pairs of granularities by identifying those for which the differences between the displayed distributions is greatest, and rating these selected harmony pairs in order of importance for exploration.
+
+A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different cyclic granularities would be different for different subjects and one way to find groups would be to actually locate clusters who have similar periodic behavior.
+
+<!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
+
+# Appendix
+
+
+
+
+```{r mds}
+set.seed(7777)
+library(gravitas)
+library(tsibble)
+library(lubridate)
+library(readr)
+
+all_data <- read_rds(here("paper/sim_table/all_data.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds")) %>% 
+  as_tsibble(index = reading_datetime,
+             key = customer_id)
+
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+
+#sm_30 <- sample(sm_unique_cust$customer_id, 30)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(year(reading_datetime) == 2012)  %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+                    x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+```
+
+
+```{r clustering}
+# K-means clustering
+clust <- kmeans(mds, 3)$cluster %>%
+  as.factor()
+mds <- mds %>%
+  mutate(groups = clust)
+
+
+# Plot and color by groups
+q1 <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = rownames(mds),
+          color = "groups",
+          palette = "jco",
+          size = 1, 
+          ellipse = TRUE,
+          ellipse.type = "convex",
+          repel = TRUE)
+
+```
+
+- check transformation and scalar approaches are same
+
+
+
+```{r scalar-approach}
+set.seed(7777)
+all_data <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
+sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds"))
+set.seed(7777)
+sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
+sm_cust_samp <- sm_cust_data %>% 
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  #filter(year(reading_datetime) == 2012) %>% #for demo just show one column
+  as_tsibble(index = reading_datetime,
+             key = customer_id) %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day")
+
+#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
+
+facet_variable = "day_week"
+x_variable = "hour_day"
+
+one_harmony_data <- all_data %>%
+  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
+  filter(facet_variable == "day_week",
+         x_variable == "hour_day") %>% 
+  mutate(customer_id = as.character(customer_id))
+
+mds<- one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+
+colnames(mds) <- c("Dim.1", "Dim.2")
+rownames(mds) <- unique(one_harmony_data$customer_id)
+mds <- mds %>%
+  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
+  select((customer_id)
+         , Dim.1, Dim.2)
+
+ggpubr::ggscatter(mds,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  size = 1,
+                  repel = TRUE) 
+
+# clustering as well
+
+d = one_harmony_data %>%
+  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
+  dist()
+
+hc = stats::hclust(d,method="complete")
+#plot(hc)
+groups<-cutree(hc, k=3)
+
+all_data_cluster <- cbind(one_harmony_data, groups) %>% 
+  left_join(mds, by = "customer_id") %>% 
+  mutate(groups = as.factor(groups))
+
+
+
+q2 <- ggpubr::ggscatter(all_data_cluster,
+                  x = "Dim.1",
+                  y = "Dim.2", 
+                  label = rownames(mds),
+                  color = "groups",
+                  size = 1,
+                  repel = TRUE) 
+
+
+q1 + q2
+```
+
+# application to 4 households
 
 The smart meter data set from four households in Melbourne referred in @wang2020calendar has been utilized to see the use of the distance measure proposed in the paper. The data is a tsibble  containing half-hourly electricity consumption from Jan-2018 to Jun-2018 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in \autoref{fig:linear-scale}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of \autoref{fig:linear-scale} (a), the linear representation of the entire time period is shown, whereas in panel B (right) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is evident from the linear representation of the time series. We pick household id 2 and 4 for our analysis to see which periodic patterns are important in their behavior, if they are same or different and if it makes sense using our distance metric to select and rank the important harmonies.
 
@@ -1284,419 +1720,6 @@ p3 <- id4_tsibble %>%
 p1 + p2/p3  
 
 ```
-
-
-# Discussion
-
-Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. This work refines the selection of appropriate pairs of granularities by identifying those for which the differences between the displayed distributions is greatest, and rating these selected harmony pairs in order of importance for exploration.
-
-A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different cyclic granularities would be different for different subjects and one way to find groups would be to actually locate clusters who have similar periodic behavior.
-
-<!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
-
-# Appendix
-
-
-## Smart meter application to 8 datasets from energy competition
-
-```{r linear-scale-8, fig.cap = "Electricity demand for four households are shown in different facets from Jan-18 to Jun-18 in Fig a and it has been zoomed in for Feb-18 in Fig b, where a week in Feb-18 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
-library(scales)
-library(tidyquant)
-library(gghighlight)
-library(lubridate)
-
-elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
-  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
-  select(-meter_id) %>% 
-  rename("id" = "household_id",
-         "date_time" = "reading_datetime") %>% 
-  mutate(date = date(date_time))
-
-
-elec_linear <- elec %>% 
-  ggplot() +
-  geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
-  facet_wrap(~id, nrow = 8, labeller = "label_both",
-             strip.position =  "right",
-             scales = "free_y") 
-
-elec_zoom <-  elec %>%
-  as_tibble() %>% 
-  filter(date >as.Date("2019-09-01") & date < (as.Date("2019-09-30"))) %>% 
-  ggplot(aes(x=date_time, y = kwh)) +
-  geom_line(size = 0.1, colour = "blue") +
-  facet_wrap(~id, 
-             scales = "free_y",
-             ncol = 1,
-             strip.position =  "right") +
-  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black"))
-
-elec_linear + elec_zoom
-
-```
-
-
-<!-- **Normal-quantile-transform**  -->
-
-<!-- **Characterizing empirical distributions through quantiles** ( write in the methodology maybe) -->
-
-
-<!-- **Computing JS distances between harmonies for each categories of the cyclic granularity involved** -->
-
-
-```{r raw-nqt-8}
-elec_raw <- elec %>% 
-  ggplot() +
-  geom_density(aes(x = kwh)) +
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("demand (in kwh)")
-
-elec_nqt <- elec %>% 
-  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-  ggplot() +
-  geom_density(aes(x = kwh_transformed))+
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("NQT demand (in kwh)")
-
-# hour_day_raw <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#     ggplot() + 
-#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
-#   
-# hour_day_trans <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-#   ggplot() +
-#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
-
-elec_raw + elec_nqt
-
-```
-
-
-
-```{r rank-household-mclapply-8}
-elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
-  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
-  select(-meter_id) %>% 
-  rename("id" = "household_id",
-         "date_time" = "reading_datetime")
-
-
-
-library(tictoc)
-#tic()
-elec_split = elec %>% group_split(id)
-
-elec_select_harmony = parallel::mclapply(1:8, function(x){
-  
-  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
-    as_tsibble(index = date_time)
-  
-harmonies <- data_id %>%
-  harmony(
-    ugran = "month",
-    filter_in = "wknd_wday",
-    filter_out = c("hhour", "fortnight")
-  )
-
- hakear::select_harmonies(data_id,
-   harmony_tbl = harmonies,
-   response = kwh,
-   nperm = 200,
-   nsamp = 200
- )
-
-}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
-#toc()
-```
-
-
-
-
-```{r elec_select_harmony-8}
-elec_harmony_all <- elec_select_harmony %>% 
-  bind_rows(.id = "id") %>% 
-  mutate(facet_variable = case_when(
-    facet_variable == "hour_day" ~ "hod" ,
-    facet_variable == "day_month" ~ "dom" ,
-    facet_variable == "day_week" ~ "dow" ,
-    facet_variable == "week_month" ~ "wom" ,
-    facet_variable == "wknd_wday" ~ "wdwnd"
-  )) %>% 
-  mutate(x_variable = case_when(
-    x_variable == "hour_day" ~ "hod" ,
-    x_variable == "day_month" ~ "dom" ,
-    x_variable == "day_week" ~ "dow" ,
-    x_variable == "week_month" ~ "wom" ,
-    x_variable == "wknd_wday" ~ "wdwnd"
-  )) %>% 
-  mutate(id = paste("id", id, sep = " ")) %>% 
-  group_by(id) %>% 
-  mutate(rank = row_number())
-  
-```
-
-
-```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The size represent how important the pair is and the colour represents if the harmonies are at all important or not. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which ones amongst them should be analyzed together." }
-elec_sig_split <- elec_harmony_all %>%
-  mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
-  mutate(significant = case_when(
-    select_split == "***" ~ "highest",
-    select_split == "**" ~ "high",
-    select_split == "*" ~ "medium",
-    select_split == "" ~ "low"
-  )) %>% 
-   mutate(rank = case_when(
-    select_split == "***" ~ paste(rank, "***", sep = " "),
-    select_split == "**" ~  paste(rank, "**", sep = " "),
-    select_split == "*" ~  paste(rank, "*", sep = " "),
-    select_split == "" ~  paste(rank, "", sep = " ")
-  ))
-
-
-elec_sig_split$significant <- 
-  factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
-
-heatplot <- elec_sig_split %>% 
-  ggplot() +
-  geom_tile(aes(x = x_variable,
-                 y = facet_variable, 
-                 fill = wpd)) + 
-  scale_fill_gradient2() +
-  theme(legend.position = "bottom") +
-  facet_wrap(~id, nrow = 2) +
-  coord_fixed() + 
-  guides(fill = guide_legend()) +
-  theme_void() +
-  theme_gray(base_size = 12, base_family = "Times") +
-  theme(panel.grid = element_blank(),
-        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom")
-  heatplot
-#            
-# dotplot <- elec_sig_split %>% 
-#   ggplot() +
-#   geom_point(aes(x = x_variable,
-#                  y = facet_variable, 
-#                  size = wpd, 
-#                  fill = significant),
-#              shape=21,
-#              alpha= 0.8) +
-#   scale_size_continuous() +
-#   theme(legend.position = "bottom") +
-#   scale_fill_viridis(discrete = TRUE, direction = 1) +
-#   facet_wrap(~id, nrow = 2) +
-#   guides(fill = guide_legend(), 
-#          size = guide_legend()) +
-#   theme_gray(base_size = 12, base_family = "Times") +
-#    theme(legend.position = "bottom")
-```
-
-```{r tab-rank-8}
-elec_rank <- elec_sig_split %>% 
-  select(-c(6,7, 9, 10)) %>% 
-  pivot_wider(
-              names_from = id,
-                values_from = rank) %>% 
-  rename("facet variable" = "facet_variable",
-         "x variable" = "x_variable",
-         "facet levels" = "x_levels",
-         "x levels" = "x_levels")
-
-elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
-```
-
-```{r gravitas-plot-8, message = FALSE, warning=FALSE, fig.cap="Distribution of energy demand shown for household id: 2 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
-p1 <- id2_tsibble %>%
-   prob_plot("hour_day",
-             "wknd_wday",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = c(0.25,0.5,0.75)) +
-  ggtitle("a") + 
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin()))
-
-
-p2 <- id2_tsibble %>%
-   prob_plot("wknd_wday",
-             "hour_day",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = c(0.25,0.5,0.75)) +
-  ggtitle("b") +
-  scale_colour_brewer(name = "", palette = "Set2")   +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin())) + xlab("")
-
-p3 <- id4_tsibble %>%
-   prob_plot("wknd_wday",
-             "hour_day",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = 
-               c(0.25,0.5,0.75)) +
-  ggtitle("c") +
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
-        strip.text = element_text(size = 7, margin = margin())) 
-
-p1 + p2/p3  
-
-```
-
-
-```{r mds}
-set.seed(7777)
-library(gravitas)
-library(tsibble)
-library(lubridate)
-library(readr)
-
-all_data <- read_rds(here("paper/sim_table/all_data.rds"))
-sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds")) %>% 
-  as_tsibble(index = reading_datetime,
-             key = customer_id)
-
-sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
-
-#sm_30 <- sample(sm_unique_cust$customer_id, 30)
-sm_cust_samp <- sm_cust_data %>% 
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(year(reading_datetime) == 2012)  %>% 
-  create_gran("day_week") %>% 
-  create_gran("hour_day")
-
-#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
-
-facet_variable = "day_week"
-x_variable = "hour_day"
-
-one_harmony_data <- all_data %>%
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(facet_variable == "day_week",
-                    x_variable == "hour_day") %>% 
-  mutate(customer_id = as.character(customer_id))
-
-mds<- one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist() %>%          
-  cmdscale() %>%
-  as_tibble()
-
-colnames(mds) <- c("Dim.1", "Dim.2")
-rownames(mds) <- unique(one_harmony_data$customer_id)
-mds <- mds %>%
-  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
-  select((customer_id)
-         , Dim.1, Dim.2)
-```
-
-
-```{r clustering}
-# K-means clustering
-clust <- kmeans(mds, 3)$cluster %>%
-  as.factor()
-mds <- mds %>%
-  mutate(groups = clust)
-
-
-# Plot and color by groups
-q1 <- ggpubr::ggscatter(mds, x = "Dim.1", y = "Dim.2", 
-          label = rownames(mds),
-          color = "groups",
-          palette = "jco",
-          size = 1, 
-          ellipse = TRUE,
-          ellipse.type = "convex",
-          repel = TRUE)
-
-```
-
-- check transformation and scalar approaches are same
-
-
-
-```{r scalar-approach}
-set.seed(7777)
-all_data <- read_rds(here("paper/sim_table/all_data_scalar.rds"))
-sm_cust_data <- read_rds(here("paper/data/sm_cust_data.rds"))
-set.seed(7777)
-sm_unique_cust <- sm_cust_data %>% distinct(customer_id)
-sm_cust_samp <- sm_cust_data %>% 
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  #filter(year(reading_datetime) == 2012) %>% #for demo just show one column
-  as_tsibble(index = reading_datetime,
-             key = customer_id) %>% 
-  create_gran("day_week") %>% 
-  create_gran("hour_day")
-
-#all_data <- write_rds(all_data, "paper/sim_table/all_data.rds")
-
-facet_variable = "day_week"
-x_variable = "hour_day"
-
-one_harmony_data <- all_data %>%
-  #filter(customer_id %in% sm_30) %>% # for demo show 30 customers
-  filter(facet_variable == "day_week",
-         x_variable == "hour_day") %>% 
-  mutate(customer_id = as.character(customer_id))
-
-mds<- one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist() %>%          
-  cmdscale() %>%
-  as_tibble()
-
-colnames(mds) <- c("Dim.1", "Dim.2")
-rownames(mds) <- unique(one_harmony_data$customer_id)
-mds <- mds %>%
-  mutate(customer_id = as.character(unique(one_harmony_data$customer_id))) %>%
-  select((customer_id)
-         , Dim.1, Dim.2)
-
-ggpubr::ggscatter(mds,
-                  x = "Dim.1",
-                  y = "Dim.2", 
-                  label = rownames(mds),
-                  size = 1,
-                  repel = TRUE) 
-
-# clustering as well
-
-d = one_harmony_data %>%
-  select(customer_id, facet_variable, x_variable, wpd_norm) %>% 
-  dist()
-
-hc = stats::hclust(d,method="complete")
-#plot(hc)
-groups<-cutree(hc, k=3)
-
-all_data_cluster <- cbind(one_harmony_data, groups) %>% 
-  left_join(mds, by = "customer_id") %>% 
-  mutate(groups = as.factor(groups))
-
-
-
-q2 <- ggpubr::ggscatter(all_data_cluster,
-                  x = "Dim.1",
-                  y = "Dim.2", 
-                  label = rownames(mds),
-                  color = "groups",
-                  size = 1,
-                  repel = TRUE) 
-
-
-q1 + q2
-```
-
 
 
 ## Null distribution

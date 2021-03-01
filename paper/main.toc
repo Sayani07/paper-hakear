@@ -18,16 +18,16 @@
 \contentsline {subsection}{\numberline {4.2}Results}{19}{subsection.4.2}%
 \contentsline {section}{\numberline {5}Simulation environment}{19}{section.5}%
 \contentsline {section}{\numberline {6}Application to residential smart meter dataset}{19}{section.6}%
-\contentsline {section}{\numberline {7}Discussion}{22}{section.7}%
-\contentsline {section}{\numberline {8}Appendix}{23}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Smart meter application to 8 datasets from energy competition}{23}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Null distribution}{27}{subsection.8.2}%
-\contentsline {subsubsection}{\numberline {8.2.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{28}{subsubsection.8.2.1}%
-\contentsline {subsubsection}{\numberline {8.2.2}Normalised maximum distances follow standard Gumbel distribution}{28}{subsubsection.8.2.2}%
-\contentsline {subsubsection}{\numberline {8.2.3}Limiting distribution of median of normalised maximum distances is normal}{28}{subsubsection.8.2.3}%
-\contentsline {subsection}{\numberline {8.3}Power}{28}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Confidence interval}{28}{subsection.8.4}%
-\contentsline {subsubsection}{\numberline {8.4.1}Varying distribution across facet}{28}{subsubsection.8.4.1}%
-\contentsline {subsubsection}{\numberline {8.4.2}Varying distribution across x-axis}{28}{subsubsection.8.4.2}%
-\contentsline {subsubsection}{\numberline {8.4.3}Varying distribution across both facets and x-axis}{28}{subsubsection.8.4.3}%
-\contentsline {subsubsection}{\numberline {8.4.4}Repeat all with varying facet and x-axis levels}{28}{subsubsection.8.4.4}%
+\contentsline {section}{\numberline {7}Discussion}{24}{section.7}%
+\contentsline {section}{\numberline {8}Appendix}{24}{section.8}%
+\contentsline {section}{\numberline {9}application to 4 households}{25}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Null distribution}{28}{subsection.9.1}%
+\contentsline {subsubsection}{\numberline {9.1.1}Size: Simulated same distribution for all combinations of categories for all harmony pairs.}{28}{subsubsection.9.1.1}%
+\contentsline {subsubsection}{\numberline {9.1.2}Normalised maximum distances follow standard Gumbel distribution}{28}{subsubsection.9.1.2}%
+\contentsline {subsubsection}{\numberline {9.1.3}Limiting distribution of median of normalised maximum distances is normal}{29}{subsubsection.9.1.3}%
+\contentsline {subsection}{\numberline {9.2}Power}{29}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Confidence interval}{29}{subsection.9.3}%
+\contentsline {subsubsection}{\numberline {9.3.1}Varying distribution across facet}{29}{subsubsection.9.3.1}%
+\contentsline {subsubsection}{\numberline {9.3.2}Varying distribution across x-axis}{29}{subsubsection.9.3.2}%
+\contentsline {subsubsection}{\numberline {9.3.3}Varying distribution across both facets and x-axis}{29}{subsubsection.9.3.3}%
+\contentsline {subsubsection}{\numberline {9.3.4}Repeat all with varying facet and x-axis levels}{29}{subsubsection.9.3.4}%
