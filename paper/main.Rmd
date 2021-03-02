@@ -104,7 +104,9 @@ p_cal_elec <- elec %>%
 prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
 ```
 
-\noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. 
+\noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Possible areas where it is useful are monitoring heart rates which could record number of heartbeats every minute or analyze web search data for which data is available for a temporal scale as fine as second.
+
+<!-- context when it could be useful is monitoring heart rates. There are devices that can detect each heartbeat and transfer the data to a receiver such as a watch or phone. These data could be available for a temporal scale as fine as a minute and it could be of interest to see regular patterns across any deconstruction of time coarser than a minute. -->
 
 ```{r intro_all}
 
@@ -175,7 +177,8 @@ ggpubr::ggarrange(p1, p2, ncol = 2)
 ggpubr::ggarrange(p3, p4, ncol = 2)
 ```
 
-Additionally, even when it is known which all interactions to look at, all of them would not be interesting and that too will vary across different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure \ref{fig:id2}a and b respectively across month-of-year on facets and hour-of-day on x-axis. For the first household, the 75th and 90th percentile for January and February are very close, implying that energy usage for these months are generally on a much higher side, possibly due to the usage of air conditioners (January and February are peak summer in Australia), however for other months (Autumn and winter), the difference between the percentiles are not high, implying this household do not use so much heater as compared to air conditioner. Also, a lot of households in Victoria use gas heating and hence the usage of heaters might not be reflected here. The energy consumption for household 2 is also higher in summer months relative to autumn or winter, but the 75th and 90th percentile are far apart in all months, implying that the second household resorts to air conditioners much less regularly than the first one. Moreover, the 75th percentile distribution does not follow the same pattern as 90th percentile for all months for the first household, whereas, the pattern looks pretty similar for all months for the second household. Difference in the energy consumption could vary both across month-of-year (facets) and hour-of-day (x-axis). For the first household, both these cyclic granularities would deem important. Although, it seems like energy consumption across hours of the day are not that different across different months for the second household or atleast differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative given a household. 
+Even when it is known which all interactions to look at, all of them would not be interesting and that too will vary across different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure \ref{fig:id2}a and \ref{fig:id2}b respectively across month-of-year on facets and hour-of-day on x-axis. For the first household, the 75th and 90th percentile for January and February are very close, implying that energy usage for these months are generally on a much higher side, possibly due to the usage of air conditioners (January and February are peak summer in Australia), however for other months (Autumn and winter), the difference between the percentiles are not high, implying this household do not use so much heater as compared to air conditioner. Also, a lot of households in Victoria use gas heating and hence the usage of heaters might not be reflected here. The energy consumption for household 2 is also higher in summer months relative to autumn or winter, but the 75th and 90th percentile are far apart in all months, implying that the second household resorts to air conditioners much less regularly than the first one. Moreover, the 75th percentile distribution does not follow the same pattern as 90th percentile for all months for the first household, whereas, the pattern looks pretty similar for all months for the second household. Difference in the energy consumption could vary both across month-of-year (facets) and hour-of-day (x-axis). For the first household, both these cyclic granularities would deem important. Although, it seems like energy consumption across hours of the day are not that different across different months for the second household or atleast differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative.
+
 
 <!-- Again, look at \ref{fig:} c and d, where energy consumption for these two households are plotted against (weekend/weekday, week-of-month). Here, for both households, the pattern of energy consumption vary  across different weeks of the month irrespective of the fact it is a weekday or weekend. In that respect, the harmony pair (month-of-year, hour-of-day) seems to be more informative than (weekend/weekday, week-of-month) for the first household.  -->
 
@@ -184,26 +187,36 @@ Additionally, even when it is known which all interactions to look at, all of th
 
 <!-- When we need to understand the interplay of different periodicities in a high frequency temporal datasets, we have many choices to consider. In [@wang2019tsibble] and [@wang2020calendar], periodicities are explored across hour of the day and day of the week or months. But calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions. -->
 
-<!-- what is the dimension of the problem -->
-The paper @Gupta2020-vo describes how we can compute all possible combinations of cyclic time granularities. If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying periodic and aperiodic linear granularities. The mapping of the graphical elements chosen in the paper implies that, for a numeric response variable, the graphics display distributions across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.
 
-<!-- Scagnostics literature -->
-This is similar to Scagnostics (Scatterplot Diagnostics) by @tukey1988computer, which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore
-for even small $v$, the number of scatterplots can be
-large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. @Dang2014-tw and @wilkinson2005graph provides potential solutions to this, where few characterizations help us to locate anomalies for defining several measures aimed to detect anomalies in density, shape, trend, and
-other features in the 2D point scatters.
+<!-- If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed.  -->
+
+<!-- what is the dimension of the problem -->
+The paper @Gupta2020-vo describes how we can compute all possible combinations of cyclic time granularities. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying linear granularities. The graphical mapping is such that distributions of a numeric response variable is displayed across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.<!-- Scagnostics literature --> This problem is similar to Scagnostics (Scatterplot Diagnostics) by @tukey1988computer, which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore, even for small $v$, the number of scatterplots can be large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. @Dang2014-tw and @wilkinson2005graph provides potential solutions to this, where few characterizations help us to locate anomalies in density, shape, trend, and other features in the 2D point scatters. 
+
+
+
 
 <!-- harmonies and why it is not enough -->
-The paper (@Gupta2020-vo) narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful.  
+This work is a natural extension of our work (@Gupta2020-vo), which narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. @inference and @Majumder2013-hb present some methods to quantify the strength of pattern and noise through visual inference, similar to numerical testing. But this is an evolving field as human cognition (which act as the statistical tests in visual inference) might vary across humans even for the same plots. In this paper, we build a new distance measure which could be used to detect automatically detect significant periodic patterns.
 
-In this paper, we aim to build a new measure to follow through these two main objectives:
 
-- To choose harmonies for which distributions of categories are significantly different 
-- To rank the selected harmonies from highest to lowest variation in the distribution of their categories.
+Our contributions in this paper are:
+
+ * We introduce a new distance measure for detecting periodic interactions. This induces data reduction which allows for identification of patterns, if any, in the time series data.
+
+ * We show that the distance metric could be used to rank the periodic patterns based on how well they capture the variation in the measured variable as they have been normalized for different number of comparisons.
+
+ * We device a framework for choosing a threshold, which will result in detection of only significantly interesting periodic patterns in the time series data.
+
+
+The article is organized as follows. Section \ref{sec:computation-wpd} introduces a new distance measure, discusses the reasoning behind choosing such a measure and presents some results to study the behavior of the measure. Section \ref{sec:norm-wpd} describes a methodology to normalize the distance measure so that it can qualify as a measure that can be compared across different comparisons and datasets. Section \ref{sec:rank-wpd} discusses how to choose a threshold to select only significant harmonies. Section \ref{sec:application-wpd} presents an application to a residential smart meter data in Melbourne to show how this distance measure acts as a way to automatically detect periodic patterns in time series.
+
+
+<!-- Also, ranking the remaining harmony pairs based on how well they capture the variation in the measured variable could be potentially useful.   -->
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# A distance measure for quantifying patterns in harmonies
+# A distance measure for quantifying patterns in harmonies {#sec:computation-wpd}
 
 We are interested in assessing the structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to quantify the structure in such a design. The principle employed towards this goal is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with $2$ x-axis categories and $3$ facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean has been incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. For this situation, mean of only the x-axis categories are increased by $5$ units for each consecutive category. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If the displays are to be ranked in order of importance from minimum to maximum, then an obvious choice would be placing a followed by b, c and then d. It might be argued that it is not clear if b should precede or succeed c in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle in mind, display b is considered less informative as compared to display c. Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. 
 
@@ -508,7 +521,7 @@ G21 %>%
 
 ```
 
-# Normalization for the number of comparisons
+# Normalization for the number of comparisons {#sec:norm-wpd}
 
 The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are based on the simulation results.
 
@@ -832,7 +845,7 @@ This section reports the results of a simulation study that was carried out to e
 The tabulated values and graphical representations of the simulation results are provided in the Supplementary paper. The learning from the simulations are as follows: The values of $wpd_{norm}$ is least for $D_{null}$, followed by
 $D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{norm}$ was designed such that this relationship holds. Furthermore, the distribution of the measure $wpd_{norm}$ does not change for different facet and x categories. The distribution of $wpd_{norm}$ looks similar with at least the mean and standard of the distributions being uniform across panels. This means $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the initial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{norm}$ could be found in the Supplementary paper.
 
-# Ranking and selecting significant harmonies
+# Ranking and selecting significant harmonies {#sec:rank-wpd}
 
 In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
 
@@ -895,7 +908,21 @@ of times M (M = 200).
 <!-- 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs. -->
 
 
-## Results
+## Simulation design
+
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null.
+
+nx = (3, 7, 14)
+nfacet = (2, 9, 10)
+
+(3, 2), (7,9), (14, 10) being null sets and others under some other design. Generate 200 repitions of different data sets with the same design for all the pairs and compute size and power.
+
+
+### Results
+
+Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $nx$ and $nfacet$ categories. Since under $D_{null}$, there is no difference in distributions across different categories, we expect the distance measure $wpd$ to reflect that as well and have the same null distribution across categories. But Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. Figure \ref{fig:quadratic} shows how the median of $wpd$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. 
+
+
 
 ```{r varall-new}
 
@@ -1008,27 +1035,13 @@ library(patchwork)
 (p_null + p_varf)/(p_varx + p_varall)
 ```
 
-### Simulation design
-
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null.
-
-nx = (3, 7, 14)
-nfacet = (2, 9, 10)
-
-(3, 2), (7,9), (14, 10) being null sets and others under some other design. Generate 200 repitions of different data sets with the same design for all the pairs and compute size and power.
-
-
-
-### Results
-
-Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $nx$ and $nfacet$ categories. Since under $D_{null}$, there is no difference in distributions across different categories, we expect the distance measure $wpd$ to reflect that as well and have the same null distribution across categories. But Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. Figure \ref{fig:quadratic} shows how the median of $wpd$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. 
-
-
-# Simulation environment
+## Simulation environment
 
 Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community.
 
-# Application to residential smart meter dataset {#sec:application}
+
+
+# Application to residential smart meter dataset {#sec:application-wpd}
 
 The smart meter data set for eight households in Melbourne has been utilized to see the use of the $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is reflected when we zoom into the the linear representation of the time series. We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
 
@@ -1360,7 +1373,7 @@ Exploratory data analysis involve many iterations of finding and summarizing pat
 
 A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different cyclic granularities would be different for different subjects and one way to find groups would be to actually locate clusters who have similar periodic behavior.
 
-A context when it could be useful is monitoring heart rates. There are devices that can detect each heartbeat and transfer the data to a receiver such as a watch or phone. These data could be available for a temporal scale as fine as a minute and it could be of interest to see regular patterns across any deconstruction of time coarser than a minute.
+ A common remedy would be to zoom into “interesting” segments, but how do we identify “interesting” segments?
 
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
 
