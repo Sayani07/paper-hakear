@@ -26,8 +26,6 @@ sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
   ) * w), sd)
 }
 
-
-
 library(tidyverse)
 # nperm and nsim can run parallelly
 sim_table <- expand.grid(nx = c(3, 7, 14),
