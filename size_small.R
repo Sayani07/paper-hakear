@@ -4,35 +4,97 @@ library(hakear)
 library(distributional)
 library(gravitas)
 library(here)
+library(tidyr)
 sample_seed = seq(1000,2999, by = 10)
 nperm = 200
-simtable<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
+simtable <- read_csv(here::here('simulations/sim_table/sim_table.csv'))
 
-# simulate one big data which will have all categories generated on the #fly
+sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
+  rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
+}
+
+sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
+  rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
+}
 
 
-all_seed <- lapply(sample_seed, function(x){
+sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
+  dist_normal((mean + seq(0,
+                          (nx *
+                             nfacet - 1),
+                          by = 1
+  ) * w), sd)
+}
+
+
+
+library(tidyverse)
+# nperm and nsim can run parallelly
+sim_table <- expand.grid(nx = c(3, 7, 14),
+                         nfacet = c(2, 9, 10)
+                         ) %>%
+  tibble()
+
+simtable <- sim_table %>% bind_cols(design = c("null", "var_f", "var_x","var_all", "null", "var_f", "var_x","var_all", "null"))
+
+all_seed <- lapply(sample_seed, function(i){
   
-  set.seed(x)
+  set.seed(i)
+
+
+sim_orig <- lapply(seq_len(nrow(simtable)), function(x){
+
+  simx <- simtable[x, ]
   
-  library(distributional)
-  sim_dist <- distributional::dist_normal(0,1)
-  sim_orig <-  distributional::generate(sim_dist, 50000)
-  sim_orig <- sim_orig[[1]]
-  lensim <- length(sim_orig)
+
+if(simx$design =="null")
+{
+  data <- sim_panel(
+    nx = simx$nx,
+    nfacet = simx$nfacet,
+    ntimes = 500,
+    sim_dist = distributional
+    ::dist_normal(0, 1)
+  ) %>% unnest(c(data))
+}
+
+else if (simx$design=="var_f")
+{
+  data <-  sim_panel(
+    nx = simx$nx, 
+    nfacet = simx$nfacet,
+    ntimes = 500,
+    sim_dist = sim_varf_normal(simx$nx,
+                               simx$nfacet, 0, 1, 10)
+  ) %>% unnest(data)
+}
+
+else if (simx$design=="var_x")
+{
+  data <- sim_panel(
+    nx = simx$nx, 
+    nfacet = simx$nfacet,
+    ntimes = 500,
+    sim_dist = sim_varx_normal(simx$nx, 
+                               simx$nfacet, 0, 1, 10)
+  ) %>% unnest(data)
   
-  # for each row of the sim table
-  each_seed <- lapply(seq_len(nrow(simtable)), 
-                      function(scen){
-                        
-                        simj<-simtable[scen,] 
-                        nfacetj<-simj$nfacet
-                        nxj<-simj$nx
-                        
-                        id_x <- rep_len(seq_len(nxj), length.out = lensim) 
-                        id_facet <- rep_len(rep(seq_len(nfacetj), each = nxj), length.out = lensim) 
-                        
-                        sim_panel_orig <- bind_cols(id_x = id_x, id_facet = id_facet, sim_data = sim_orig)
+}
+
+else(simx$design=="var_all")
+{
+  data <- sim_panel(
+    nx = simx$nx, nfacet = simx$nfacet,
+    ntimes = 500,
+    sim_dist = sim_varall_normal(simx$nx,
+                                 simx$nfacet,
+                                 0, 1, 10)
+  ) %>% unnest(data)
+}
+}) %>%
+  bind_rows(.id = "harmony_id") 
+
+lensim <- length(sim_orig)
                         
                         wpd_orig = compute_pairwise_norm_scalar(sim_panel_orig, 
                                                                 gran_x = "id_x",
@@ -76,8 +138,8 @@ all_seed <- lapply(sample_seed, function(x){
   threshold %>% 
     dplyr::filter(perm_id == 0) %>% 
     mutate(select99 = if_else(value>threshold99, "yes", "no"),
-    select95 = if_else(value>threshold95, "yes", "no"),
-    select90 = if_else(value>threshold90, "yes", "no"))
+           select95 = if_else(value>threshold95, "yes", "no"),
+           select90 = if_else(value>threshold90, "yes", "no"))
   
 }) %>% bind_rows(.id = "seed_id")
 
