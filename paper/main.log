@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.3)  3 MAR 2021 21:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2021.3.3)  3 MAR 2021 21:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -695,10 +695,6 @@ File: figure/norm-1.pdf Graphic file (type pdf)
 Package pdftex.def Info: figure/norm-1.pdf  used on input line 326.
 (pdftex.def)             Requested size: 469.7731pt x 291.32571pt.
 
-LaTeX Warning: Reference `sec:sim-study' on page 12 undefined on input line 338
-.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 360--361
 
  []
@@ -714,7 +710,7 @@ l.361
                                                   
 l.361 
        <./figure/norm-1.pdf>]
-<figure/resi-linear-1.pdf, id=282, 572.1375pt x 352.31625pt>
+<figure/resi-linear-1.pdf, id=284, 572.1375pt x 352.31625pt>
 File: figure/resi-linear-1.pdf Graphic file (type pdf)
 <use figure/resi-linear-1.pdf>
 Package pdftex.def Info: figure/resi-linear-1.pdf  used on input line 364.
@@ -724,7 +720,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 375--376
 
  []
 
-<figure/wpd-glm-horizontal-1.pdf, id=283, 572.1375pt x 352.31625pt>
+<figure/wpd-glm-horizontal-1.pdf, id=285, 572.1375pt x 352.31625pt>
 File: figure/wpd-glm-horizontal-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-horizontal-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 37
@@ -737,17 +733,17 @@ Package pdftex.def Info: figure/wpd-glm-horizontal-1.pdf  used on input line 37
 l.379 ...figure/wpd-glm-horizontal-1} \end{center}
                                                    <./figure/resi-linear-1.pdf>
 ]
-<figure/wpd-glm-dist-1.pdf, id=297, 568.1225pt x 351.3125pt>
+<figure/wpd-glm-dist-1.pdf, id=302, 568.1225pt x 351.3125pt>
 File: figure/wpd-glm-dist-1.pdf Graphic file (type pdf)
 <use figure/wpd-glm-dist-1.pdf>
 Package pdftex.def Info: figure/wpd-glm-dist-1.pdf  used on input line 398.
 (pdftex.def)             Requested size: 469.7731pt x 290.49573pt.
-<figure/hist-qq-1.pdf, id=299, 557.08125pt x 284.06125pt>
+<figure/hist-qq-1.pdf, id=304, 557.08125pt x 284.06125pt>
 File: figure/hist-qq-1.pdf Graphic file (type pdf)
 <use figure/hist-qq-1.pdf>
 Package pdftex.def Info: figure/hist-qq-1.pdf  used on input line 414.
 (pdftex.def)             Requested size: 469.76414pt x 239.53737pt.
-<figure/dist-new-same-scale-link-1.pdf, id=300, 568.1225pt x 346.29375pt>
+<figure/dist-new-same-scale-link-1.pdf, id=305, 568.1225pt x 346.29375pt>
 File: figure/dist-new-same-scale-link-1.pdf Graphic file (type pdf)
 <use figure/dist-new-same-scale-link-1.pdf>
 Package pdftex.def Info: figure/dist-new-same-scale-link-1.pdf  used on input l
@@ -783,13 +779,13 @@ y/m/n/10 f\OML/lmm/m/it/10 wpd[]; wpd[]; [] ; wpd[]\OMS/lmsy/m/n/10 g$\T1/lmr/m
 /n/10 . 
  []
 
-<figure/plot-all-new2-1.pdf, id=360, 558.085pt x 340.27126pt>
+<figure/plot-all-new2-1.pdf, id=365, 558.085pt x 340.27126pt>
 File: figure/plot-all-new2-1.pdf Graphic file (type pdf)
 <use figure/plot-all-new2-1.pdf>
 Package pdftex.def Info: figure/plot-all-new2-1.pdf  used on input line 503.
 (pdftex.def)             Requested size: 469.76752pt x 286.42299pt.
 [19]
-<figure/linear-scale-8-1.pdf, id=380, 558.085pt x 340.27126pt>
+<figure/linear-scale-8-1.pdf, id=385, 558.085pt x 340.27126pt>
 File: figure/linear-scale-8-1.pdf Graphic file (type pdf)
 <use figure/linear-scale-8-1.pdf>
 Package pdftex.def Info: figure/linear-scale-8-1.pdf  used on input line 517.
@@ -804,23 +800,23 @@ l.527
 LaTeX Warning: Reference `sec:normalization' on page 22 undefined on input line
  530.
 
-<figure/gravitas-plot-8-1.pdf, id=417, 558.085pt x 335.2525pt>
+<figure/gravitas-plot-8-1.pdf, id=422, 558.085pt x 335.2525pt>
 File: figure/gravitas-plot-8-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-8-1.pdf>
 Package pdftex.def Info: figure/gravitas-plot-8-1.pdf  used on input line 542.
 (pdftex.def)             Requested size: 469.76752pt x 282.19846pt.
-<figure/gravitas-plot-8-id5-1.pdf, id=419, 558.085pt x 341.275pt>
+<figure/gravitas-plot-8-id5-1.pdf, id=424, 558.085pt x 341.275pt>
 File: figure/gravitas-plot-8-id5-1.pdf Graphic file (type pdf)
 <use figure/gravitas-plot-8-id5-1.pdf>
 Package pdftex.def Info: figure/gravitas-plot-8-id5-1.pdf  used on input line 5
 55.
 (pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
-<figure/raw-nqt-8-1.pdf, id=420, 558.085pt x 341.275pt>
+<figure/raw-nqt-8-1.pdf, id=425, 558.085pt x 341.275pt>
 File: figure/raw-nqt-8-1.pdf Graphic file (type pdf)
 <use figure/raw-nqt-8-1.pdf>
 Package pdftex.def Info: figure/raw-nqt-8-1.pdf  used on input line 566.
 (pdftex.def)             Requested size: 469.76752pt x 287.26788pt.
-<figure/dotplot-8-1.pdf, id=421, 499.8675pt x 345.29pt>
+<figure/dotplot-8-1.pdf, id=426, 499.8675pt x 345.29pt>
 File: figure/dotplot-8-1.pdf Graphic file (type pdf)
 <use figure/dotplot-8-1.pdf>
 Package pdftex.def Info: figure/dotplot-8-1.pdf  used on input line 575.
@@ -884,10 +880,10 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 7D89D649036787219CF24933AAD0240A;3033.
  ) 
 Here is how much of TeX's memory you used:
- 12176 strings out of 480946
- 177979 string characters out of 5905759
- 535207 words of memory out of 5000000
- 28999 multiletter control sequences out of 15000+600000
+ 12175 strings out of 480946
+ 177952 string characters out of 5905759
+ 535193 words of memory out of 5000000
+ 28998 multiletter control sequences out of 15000+600000
  459741 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  71i,10n,74p,2195b,441s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -912,10 +908,10 @@ ype1/public/lm/lmsy10.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmsy5.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmsy7.pfb></Users/sgup0008/Library/TinyTeX/texmf-dist/fonts/type1/pub
 lic/lm/lmtt10.pfb>
-Output written on main.pdf (27 pages, 3176522 bytes).
+Output written on main.pdf (27 pages, 3173727 bytes).
 PDF statistics:
- 589 PDF objects out of 1000 (max. 8388607)
- 487 compressed objects within 5 object streams
+ 594 PDF objects out of 1000 (max. 8388607)
+ 492 compressed objects within 5 object streams
  129 named destinations out of 1000 (max. 500000)
  227 words of extra memory for PDF output out of 10000 (max. 10000000)
 

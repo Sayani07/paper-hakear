@@ -512,7 +512,7 @@ Simulations were carried out to explore the behavior of $wpd$ under the followin
 <!-- - $nsim$ (number of simulations) -->
 <!-- - $nperm$ (number of permutations of data)   -->
 
-### Simulation design
+### Simulation design{#sec:sim-study}
 
 Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values
 of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
@@ -553,7 +553,7 @@ The distribution of $wpd$ is different for different levels of facets and x-axis
 
 ## Methodology
 
-The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ is denoted by $wpd_{norm}$. Two approaches have been employed - the first one involves a permutation method to make the distribution of the transformed $wpd$ similar for different comparisons and the second one fits a model to represent the relationship between the two variables and defines ${wpd_norm}$ as the residual of the model.
+The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ is denoted by $wpd_{norm}$. Two approaches have been employed - the first one involves a permutation method to make the distribution of the transformed $wpd$ similar for different comparisons and the second one fits a model to represent the relationship between the two variables and defines $wpd_{norm}$ as the residual of the model.
 
 <!-- ### Notations -->
 
@@ -578,7 +578,7 @@ This method is somewhat similar in spirit to bootstrap (reference) or permutatio
 Standardizing  $wpd$ in the permutation approach ensures that the distribution of $wpd_{perm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the similar accuracy when compared to the permutation approach.
 
 
-```{r norm, fig.cap = "Distribution of $wpd^{perm}_{norm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
+```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
 G21_norm <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds"))
 
 G21_norm %>% 
@@ -596,7 +596,7 @@ G21_norm %>%
 
 _Linear model_  
 
-A linear model is fitted to model the relationship between $wpd$ and $nx*nfacet$. The model is of the form $$y_l = a+b*log(z_l) + e_l$$, where, $y_l = median_m(x_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors, with parameters $a$ and $b$ being estimated from the data generated through the simulation study described in Section \ref{sec:sim-study}. The estimates and other model summary is given in \ref{tab:linear-model}.
+A linear model is fitted to model the relationship between $wpd$ and $nx*nfacet$. The model is of the form $$y_l = a+b*log(z_l) + e_l$$, where, $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors, with parameters $a$ and $b$ being estimated from the data generated through the simulation study described in Section \ref{sec:sim-study}. The estimates and other model summary is given in Table \ref{tab:linear-model}.
 
 ```{r linear-model, message=FALSE}
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
@@ -621,10 +621,10 @@ broom::tidy(fit_lm2) %>% kable(caption = "Results of linear model to capture the
 
 The idea is to find a transformation on $wpd$ which would remove the effect of $nx*nfacet$ on $wpd$ and thus is defined as the residuals:
 $y^* =  y - \hat a -  \hat b*log(z)$, where 
-$y^*$ is the $wpd_{norm}^{linear}$, 
+$y^*$ is the $wpd_{linear}$, 
 $\hat a$ and $\hat b$ are the estimated values of the parameter $a$ and $b$ and $z = nx*nfacet$.
 
-Defining $wpd_{norm}^{linear}$ in this way forces the mean to be zero and variability to be uniform across the median $wpd$ values as could be seen in Figure \ref{fig:resi-linear}.  
+Defining $wpd_{linear}$ in this way forces the mean to be zero and variability to be uniform across the median $wpd$ values as could be seen in Figure \ref{fig:resi-linear}.  
 <!-- But, the original distribution will still have some dissimilarities in shape and location specially for small values of $nx$ and $nfacet$ as could be seen in \ref{fig:} -->
 
 ```{r resi-linear, fig.cap = "$wpd_{norm}^{linear}$ which are defined as the residuals of the linear model have mean zero and are homogenous. Further, by design they are independent of the $nx*nfacet$ and hence could be a potential candidate for $wpd_norm$."}
@@ -634,10 +634,8 @@ slope <- fit_lm2$coefficients[2]
 
 G21 %>% 
   ggplot(aes(x=log(nx*nfacet), y = (value - slope*log(nx*nfacet)))) +
-  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  geom_point(alpha = 0.5, size = 0.5) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
   ylab("wpd normalised using linear modelling approach")
-
-
 ```
 
 
@@ -649,10 +647,10 @@ G21 %>%
 
 _Generalized linear model_  
 
-In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$, Jensen-Shannon Distance (JSD) lies between 0 and 1. Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$.
+In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$ is a  Jensen-Shannon Distance (JSD) and lies between 0 and 1 (reference). Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$.
 
 We fit a Gamma generalized linear model with the inverse link which is of the form:  
-$$y_l = a+b*log(z_l) + e_l$$, where $y_l = median_m(x_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus,  $wpd_{norm}^{glm}$ is chosen as the residuals from this model and is defined as:
+$$y_l = a+b*log(z_l) + e_l$$, where $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
 $wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$.
 
 <!-- Please note: -->
@@ -660,7 +658,7 @@ $wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$.
 <!-- - subtracting the intercept brings the location of the transformed variable to 0 for either case -->
 <!-- - heterogeneity is higher for this case after normalization as compared to the earlier one. -->
 
-```{r wpd-glm-horizontal, echo = FALSE, message=FALSE, fig.caption = "$wpd_{glm}$ is plotted against log(nx*nfacet) and this transformation leads to the median of $wpd_{glm}$ to have no relationship with log(nx*nfacet)"}
+```{r wpd-glm-horizontal, echo = FALSE, message=FALSE, fig.caption = "$wpd_{glm}$ is plotted against log(nx*nfacet) and this transformation causes the median of $wpd_{glm}$ to have no relationship with log(nx*nfacet)"}
 
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 
@@ -747,7 +745,7 @@ G21_glm %>%
 
 ## Combining normalizing approaches
 
-We see that the transformation through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than 7) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. However, it is  difficult to compare the transformed measure from both of these approaches, since each of the variables is measured on a different scale (although each of them have location 0). The transformed variables from the two approaches could be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, we can stick to modeling approach. 
+We see that the transformation through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than $5$) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. It is difficult to compare and use the transformed measure from both of these approaches alternatively without bringing them to the same scale. The transformed variables from the two approaches have to be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, modeling approach is used. 
 
 <!-- These could be done through the following: -->
 
@@ -757,10 +755,9 @@ We see that the transformation through the modeling approach leads to very simil
 
 <!-- - Make the location and scale of both the approaches similar so that they could be compared. Please note that the range of values could be different in this case, however location and scale are brought to same levels.) -->
 
+The measure $wpd_{glm}$ has a $\hat \mu_{glm} = 0$ and $\hat sd_{glm} = 0.003$ whereas the measure $wpd_{perm}$ which is a z-score, has an expected normal distribution with  $\hat \mu_{perm} = 0$ and $\hat sd_{perm} = 1$. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*\frac{\hat sd_{perm}}{\hat sd_{glm}}$, which changes the scale of $wpd_{glm}$ without changing the location. The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{perm}$ is also normally distributed. Further, they are brought to similar scale and location and hence could be compared or used interchangeably for different comparisons based on their performance.
 
-The measure $wpd_{glm}$ has an estimated location of 0 and standard deviation ~ $0.003$, whereas the measure $wpd_{perm}$ which is a z-score, has a normal distribution with location 0 and standard deviation 1. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*320$, which brings the standard deviation of $wpd_{glm-scaled}$ to almost 1, without changing the location. The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{perm}$ is also normally distributed. Further, they are brought to the similar scale and location and hence could be compared.
-
-```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}^{norm}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
 hist <- ggplot(G21_glm) +
   geom_histogram(aes(x = wpd_glm_scaled)) +
   ggtitle("a") + xlab("transformed wpd using glm approach")
@@ -854,19 +851,16 @@ Thus, the $wpd_{norm}$ is defined as follows:
 wpd_{norm} =
 \begin{cases}
 wpd_{perm},& \text{if } J, K <=5\\
-wpd_{glm-scaled},              & \text{otherwise}\\
+wpd_{glm-scaled}             & \text{otherwise}\\
 \end{cases}
 \end{equation}
-
-
-
 
 ## Properties
 
 This section reports the results of a simulation study that was carried out to evaluate the behavior of $wpd_{norm}$ under different designs and other potential factors. The behavior of $wpd_{norm}$ is explored in designs where there is in fact difference in distribution between facet categories ($D_{var_f}$) or across x-categories ($D_{var_x}$) or both ($D_{var_{all}}$). Using $\omega =  \{1, 2, \dots, 10\}$ and $\lambda = seq(from  = 0.1, to = 0.9, by = 0.05)$, observations are drawn from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet =  \{2, 3, 5, 7, 14, 20, 31, 50\}$. $ntimes = 500$ is assumed for this setup as well. Furthermore, to generate different distributions across different combination of facet and x levels, the following method is deployed - suppose the distribution of the combination of first levels of $x$ and $facet$ category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). 
 
 The tabulated values and graphical representations of the simulation results are provided in the Supplementary paper. The learning from the simulations are as follows: The values of $wpd_{norm}$ is least for $D_{null}$, followed by
-$D_{var_f}$, $D_{var_x}$) and $D_{var_{all}}$). This is a desirable result since the measure $wpd_{norm}$ was designed such that this relationship holds. Furthermore, the distribution of the measure $wpd_{norm}$ does not change for different facet and x categories. The distribution of $wpd_{norm}$ looks similar with at least the mean and standard of the distributions being uniform across panels. This means $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the initial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{norm}$ could be found in the Supplementary paper.
+$D_{var_f}$, $D_{var_x}$ and $D_{var_{all}}$. This is a desirable result since the measure $wpd_{norm}$ was designed such that this relationship holds. Furthermore, the distribution of the measure $wpd_{norm}$ does not change for different facet and x categories. The distribution of $wpd_{norm}$ looks similar with at least the mean and standard of the distributions being uniform across panels. This means $wpd_{norm}$ could be used to measure differences in distribution across panels. Also, note that since the data is processed using normal-quantile-transform, this measure is independent of the initial distribution of the underlying data and hence is also comparable across different data sets. This is valid for the case when sample size $ntimes$ for each combination of categories is at least 30 and  $nperm$ used for computing $wpd_{norm}$ is at least 100. More detailed results about the properties of $wpd_{norm}$ could be found in the Supplementary paper.
 
 # Ranking and selecting significant harmonies {#sec:rank-wpd}
 
@@ -901,9 +895,9 @@ of times M (M = 200).
 
 6. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
 
-7. Repeat Steps (1-6) for all harmony pairs.
+7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and store it in $wpd^{all}_{sample}$.
 
-8. $95^{th}$ percentile of $wpd_{sample}$ obtained for all harmony pairs is computed and stored in $wpd_{threshold}$.
+8. $95^{th}$ percentile of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold}$.
 
 7. If $wpd_{obs_{A, B}}> wpd_{threshold}$, harmony pair $(A, B)$ is selected, otherwise rejected. 
 
