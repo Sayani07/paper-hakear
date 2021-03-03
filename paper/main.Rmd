@@ -711,7 +711,7 @@ G21 %>%
              )
   )
   ) +
-  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
+  geom_point(alpha = 0.5, size = 0.5) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
   ylab("wpd_glm = wpd - 1/(a  + b*log(nx*nfacet))")
 ```
 
@@ -930,14 +930,10 @@ Similarly, a harmony pair $(A, B)$ is selected with a 95% and 90% level of signi
 
 ## Simulation design
 
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx =  \{3, 7, 14}$ and $nfacet = (2, 9, 10)$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would consitute to be the estimated size and power of the test.
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test.
 
 <!-- 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null. -->
 
-<!-- nx = (3, 7, 14) -->
-<!-- nfacet = (2, 9, 10) -->
-
-<!-- (3, 2), (7,9), (14, 10) being null sets and others under some other design.  -->
 
 ### Results
 
@@ -1050,7 +1046,7 @@ p_null <- sim_panel_null %>%
     ggtitle(paste("a", round(null, 2)))
 ```
 
-```{r plot-all-new2, fig.cap="$wpd_{norm} values for the four illustrative designs are presented here. As expected, the value of wpd_{norm} under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
+```{r plot-all-new2, fig.cap = "$wpd_{norm}$ values for the four illustrative designs are presented here. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
 library(patchwork)
 (p_null + p_varf)/(p_varx + p_varall)
 ```
@@ -1058,7 +1054,6 @@ library(patchwork)
 ## Simulation environment
 
 Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community.
-
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
@@ -1085,7 +1080,7 @@ elec_linear <- elec %>%
   geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
   facet_wrap(~id, nrow = 8, labeller = "label_both",
              strip.position =  "right",
-             scales = "free_y") 
+             scales = "free_y") + ggtitle("a")
 
 elec_zoom <-  elec %>%
   as_tibble() %>% 
@@ -1096,7 +1091,7 @@ elec_zoom <-  elec %>%
              scales = "free_y",
              ncol = 1,
              strip.position =  "right") +
-  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black"))
+  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black")) + ggtitle("b")
 
 elec_linear + elec_zoom
 
@@ -1111,7 +1106,7 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 
 _Choosing and Ranking harmonies for all households_ 
 
-$v{i, t}$ has a asymmetrical distribution as could be seen in \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:normalization}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households
+$v_{i, t}$ has a asymmetrical distribution as could be seen in \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:norm-wpd}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households
 \ref{fig:dotplot-8} shows the heatmap for the eight households
 with the value of $wpd_{norm}$ filled as colors.
 
