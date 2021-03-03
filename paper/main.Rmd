@@ -71,6 +71,7 @@ here::here()
 ```
 
 
+
 ```{r}
 set.seed(321)
 ```
@@ -81,9 +82,11 @@ set.seed(321)
 <!-- <introducing the problem> -->
 <!-- background of the problem -->
 
-Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allow the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore.
+Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allow the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore. 
+\noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Possible areas where it is useful are monitoring heart rates which could record number of heartbeats every minute or analyze web search data for which data is available for a temporal scale as fine as second.
 
-```{r calendar-elec, fig.height = 10.5, fig.cap="Calendar display."}
+
+```{r calendar-elec, fig.height = 8, fig.cap = "Calendar displays faceted by two households are shown. The calendar displays are rich in information and has several components. For example, it can be observed easily that the level of energy consumption by household 2 is higher than household 4. Also, it gives an overview on when these households are away for holidays and which months consumptions are highest (Jan, Feb). However,when it comes to discerning periodic patterns, analyzing all possible periodic patterns through this display is overwhelming due to combination of linear and cyclic representation of time. For example, there is more going on in terms of peaks and troughs in id 2 compared to id 4, but it is not clear which all periodic patterns are dominant and if it differs between households."}
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
@@ -104,7 +107,6 @@ p_cal_elec <- elec %>%
 prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
 ```
 
-\noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Possible areas where it is useful are monitoring heart rates which could record number of heartbeats every minute or analyze web search data for which data is available for a temporal scale as fine as second.
 
 <!-- context when it could be useful is monitoring heart rates. There are devices that can detect each heartbeat and transfer the data to a receiver such as a watch or phone. These data could be available for a temporal scale as fine as a minute and it could be of interest to see regular patterns across any deconstruction of time coarser than a minute. -->
 
@@ -137,7 +139,7 @@ p2 <- id4_tsibble %>%
              plot_type = "quantile",
              symmetric = TRUE,
              quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) + 
-  ggtitle("") + theme(
+  ggtitle("a") + theme(
         strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
 
@@ -163,13 +165,13 @@ p4 <- id4_tsibble %>%
              plot_type = "quantile",
              symmetric = FALSE,
              quantile_prob = c(0.25,0.5,0.75)) +
-  ggtitle("") +  #+ scale_x_discrete(breaks = seq(0, 23, 4)) + 
+  ggtitle("b") +  #+ scale_x_discrete(breaks = seq(0, 23, 4)) + 
 theme(
         strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
 ```
 
-```{r id2, fig.cap = "something"}
+```{r id2, fig.cap = "Distribution of energy consumption displayed through area quantile plots across two cyclic granularities month-of-year and hour-of-day for id2 (a) and id4 (b). The black line is the median, whereas the purple band covers the 25th to 75th percentile, the orange band covers the 10th to 90th percentile, and the green band covers the 1st to 99th percentile. Difference between 90th and 75th quantiles less for (Jan, Feb) in a) suggesting that it is a more frequent user of air conditioner than b). Energy consumption in a) changes across both granularities, whereas for b) daily pattern stays same irrespective of the months."}
 ggpubr::ggarrange(p1, p2, ncol = 2)
 ```
 
@@ -330,6 +332,31 @@ ggpubr::ggarrange(p_null, p_varf,  p_varx, p_varall, nrow = 2, ncol = 2,
 ## Notations
 
 Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous variable observed across $T$ time points. Let the four elementary designs as described in Figure \ref{fig:null4by2} be $D_{null}$ where there is no difference in distribution of $v$ for $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across A. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$.
+
+
+```{r}
+d1 <- tibble (variable = c("nx", "nfacet", "$N_C$", "$H_{N_C}$", "$lambda$", "$omega$", "$wpd$","$nperm$", "$nsim$"),  description = c("number of x categories", "number of facet categories","number of cyclic granularities", "set of harmonies", "tuning parameter", "mean increment", "raw distance measure", "number of permutations for threshold/normalization", "number of simulations"))
+        
+        
+d2 <- tibble(variable =  c("$wpd_{norm}$", 
+                           "$wpd_{threshold}$",
+                           "$D_{null}$",
+                           "$D_{var_f}$", 
+                           "$D_{var_x}$",
+                           "$D_{var_{all}}$"), 
+             description = c("normalized distance measure",
+                             "threshold for significance",
+                             "null design",
+                             "design with varying facets only", 
+                             "design with varying x only", 
+                             "design with varying both facets and x"))
+
+
+d <- bind_rows(d1, d2)
+knitr::kable(d, format = "markdown", escape = FALSE, caption = "Nomenclature table")
+
+```
+
 
 ## Characterising distributions
 
