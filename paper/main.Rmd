@@ -220,10 +220,10 @@ The article is organized as follows. Section \ref{sec:computation-wpd} introduce
 
 # A distance measure for quantifying patterns in harmonies {#sec:computation-wpd}
 
-We are interested in assessing the structure in probability distributions of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to quantify the structure in such a design. The principle employed towards this goal is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with $2$ x-axis categories and $3$ facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean has been incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. For this situation, mean of only the x-axis categories are increased by $5$ units for each consecutive category. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If the displays are to be ranked in order of importance from minimum to maximum, then an obvious choice would be placing a followed by b, c and then d. It might be argued that it is not clear if b should precede or succeed c in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle in mind, display b is considered less informative as compared to display c. Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. 
+We are interested in assessing the structure of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to quantify the structure in such a design. The principle employed towards this goal is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with $2$ x-axis categories and $3$ facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean has been incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. For this situation, mean of only the x-axis categories are increased by $5$ units for each consecutive category. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If the displays are to be ranked in order of importance from minimum to maximum, then an obvious choice would be placing a followed by b, c and then d. It might be argued that it is not clear if b should precede or succeed c in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle in mind, display b is considered less informative as compared to display c. Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. 
 
-Intuitively, while finding a structure or measuring the strength of patterns in Figure \ref{fig:null4by2}, it makes sense to look for within-group and between-group variation. Larger variation would imply stronger patterns, whereas small variation would imply the underlying structure is not changing within or between group.
-Thus, a distance measure aimed to capture this structure should ideally estimate these within-group and between-group variations. One of the potential ways to do this is to measure the distances between distributions of the continuous random variable measured within and between groups, weigh them basis if they are within or between groups and then take the maximum of those distances as an estimate of the strength of the structure. We call this metric $wpd$ which stands for Weighted Pairwise Distances. This section starts with possible ways of characterizing distributions and computing distances between them and then describe in details how the measure $wpd$ is defined. This is similar to @ieee-irish where the authors compute the Jensen Shannon distance between two density estimates by computing percentiles and stresses the advantages to working with percentiles rather than the data directly in case of missing observations or even unsynchronized time series.
+Intuitively, while finding a structure or measuring the strength of patterns in Figure \ref{fig:null4by2}, it makes sense to look for within-group and between-group variations. Larger variation would imply stronger patterns, whereas small variation would imply the underlying structure is not changing within or between group.
+Thus, a distance measure aimed to capture this structure should ideally estimate these within-group and between-group variations. One of the potential ways to do this is to measure the distances between distributions of the continuous random variable measured within and between groups, weigh them basis if they are within or between groups and then take the maximum of those distances as an estimate of the maximum variation in the structure. This section starts with possible ways of characterizing distributions and computing distances between them and then describe in details how the measure $wpd$ is defined. This is similar to @ieee-irish where the authors compute the Jensen Shannon distance between two density estimates by computing percentiles and stresses the advantages to working with percentiles rather than the raw data directly in case of missing observations. Working with quantiles also ensure that unsynchronized time series could be handled.
 
 <!-- To elaborate further, look at the examples in Figure \ref{}, where Figure \ref{}a represents the panel design with distribution of each x categories drawn from N(5, 10) distribution. It could be observed that the graph is not particularly interesting, as there is no significant change in distribution between x-axis levels or facets. Figure \ref{}b represents the same panel design with no difference in distribution of x-axis categories within a facet, but different distribution of x-axis categories for different facets. For example, if there are 4 facet levels and 2 x-axis levels, data is generated in the way as described in Table \ref{}. Figure \ref{}b exhibits an exact opposite situation where the x-axis within facets are different but not across facets. -->
 <!-- Figure \ref{}d takes it further by varying the distribution across both facet and x-axis categories. -->
@@ -360,10 +360,10 @@ knitr::kable(d, format = "markdown", escape = FALSE, caption = "Nomenclature tab
 
 ## Characterising distributions
 
-Multiple observations of $v$ correspond to the subset  $v_{jk} = \{s: A(s) = j, B(s) = k\}$. The number of observations and the structure might vary widely across subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. Each $v_{jk} : j\in \{1, 2, \dots, J\}, k\in \{1, 2, \dots, K\}\}$ is assumed to be drawn from a continuous probability distribution and have certain characteristics. Often shape, central tendency, and variability are the common characteristics used to describe the distribution. Mean, median or mode are generally used to describe the center of the distribution, while range, standard deviation, quantiles, standard errors and confidence intervals are often used to describe variability in the distribution. Quantiles are chosen as a way to characterize distributions in this paper.
+Multiple observations of $v$ correspond to the subset  $v_{jk} = \{s: A(s) = j, B(s) = k\}$. The number of observations and the structure might vary widely across subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. Each $v_{jk}$'s $\forall j\in \{1, 2, \dots, J\}, k\in \{1, 2, \dots, K\}\}$ are assumed to be drawn from a continuous probability distribution and have certain characteristics. Often shape, central tendency, and variability are the common characteristics used to describe a distribution. Mean, median or mode are generally used to describe the center of the distribution, while range, standard deviation, quantiles, standard errors and confidence intervals are used to describe variability. Quantiles are chosen as a way to characterize distributions in this paper.
 
 
-The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p) = inf\{x: F(x) >p\}$, $0<p< 1$ where $F(x)$ is the distribution function. There are two broad approaches to quantile estimation, viz, parametric and non-parametric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data. Sample quantiles could be used for estimation in a non-parametric setup. @Hyndman1996-ty describes the difficulty in defining sample quantiles and recommends the use of median-unbiased estimator because of _*"desirable properties of a quantile estimator and can be defined independently of the underlying distribution."*_. The `stats::quantile()` function in @R-language could be used for practical implementation where type = 8 refers to the algorithm corresponding to the median-unbiased estimator. The default quantile chosen in this paper is percentiles computed for $p = {0.01, 0.02, \dots, 0.99}$, where for example, the $99^{th}$ percentile would be the value corresponding to $p=0.99$ and hence 99% of the observations would lie below that.
+The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p) = inf\{x: F(x) >p\}$, $0<p< 1$ where $F(x)$ is the distribution function. There are two broad approaches to quantile estimation, viz, parametric and non-parametric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data. Sample quantiles could be used for estimating population quantiles in a non-parametric setup. @Hyndman1996-ty describes the many ways of defining sample quantiles and recommends the use of median-unbiased estimator because of _desirable properties of a quantile estimator and can be defined independently of the underlying distribution._. The `stats::quantile()` function in @R-language could be used for practical implementation where type = 8 refers to the algorithm corresponding to the median-unbiased estimator. The default quantile chosen in this paper is percentiles computed for $p = {0.01, 0.02, \dots, 0.99}$, where for example, the $99^{th}$ percentile would be the value corresponding to $p=0.99$ and hence 99% of the observations would lie below that.
 
 
 ## Distance between distributions
@@ -374,13 +374,13 @@ The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p
   
 The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence [@Kullback1951-jy] introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence denoted by $D(q_1||q_2)$ is a non-symmetric measure of the difference between two probability distributions $q_1$ and $q_2$ and is interpreted as the amount of information lost when $q_2$ is used to approximate $q_1$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance between distributions are Hellinger distance, total variation distance and Fisher information metric. 
 
-In this paper, the pairwise distances between the distributions of the measured variable are computed through Jensen-Shannon distance (JSD), defined by,
+In this paper, we propose to use the pairwise distances between the distributions of the measured variable through Jensen-Shannon distance (JSD), defined by,
 
 $$JSD(q_1||q_2) = \frac{1}{2}D(q_1||M) + \frac{1}{2}D(q_2||M)$$
 where $M = \frac{q_1+q_2}{2}$ and 
 $D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(\frac{q_1(x)}{q_2(x)})$ is the KL divergence between distributions $q_1$ and $q_2$. 
 
-Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (Menendez1997-in), where the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
+Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (Menendez1997-in), if the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
 
 
 
@@ -402,8 +402,7 @@ Furthermore, these distances are distributed as chi-squared with $m$ degrees of 
 
 ## Computation
 
-The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step,the raw data is normal quantile transformed so that the quantile of the transformed data follows a standard normal distribution. The steps employed for computing the distance measure is summarized as follows:
-
+The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step,the raw data is normal quantile transformed (reference) so that the quantiles of the transformed data follows a standard normal distribution. The steps employed for computing the distance measure is summarized as follows:
 
 
 <!-- The values of $wpd$ indeed depend upon the underlying distribution. This is also not desirable as the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. The steps employed for computing the distance measure is summarized as follows: -->
@@ -421,7 +420,7 @@ knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 
 <!-- The set of pairs of categories is of the form $(a_{j} b_{k}, a_{j'}b_{k'}): j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$. -->
 
-3. Percentiles of $v^*_{jk}$ are computed and stored in $q_{jk}$. Repeat for all pairs of categories of the form $(a_{j} b_{k}, a_{j'}b_{k'}): j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$.
+3. Percentiles of $v^*_{jk}$ are computed and stored in $q_{jk}$. Repeat for all pairs of categories of the form $(a_{j} b_{k}, a_{j'}b_{k'}): \{a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}$.
 
 4. The pairwise distances between pairs $(a_{j} b_{k}, a_{j'}b_{k'})$  denoted by $d_{(jk, j'k')} = JSD(q_{jk}, q_{j'k'})$ is computed.
 
@@ -437,7 +436,7 @@ d*_{(j,k), (j'k')} =
 
 5. The wpd is then computed as $wpd = max_{j, j', k, k'}(d*_{(jk), (j'k')}) \forall j, j' \in \{1, 2, \dots, J\}, k, k' \in \{1, 2, \dots, K\}$.
 
-6. Repeat Steps 2-5 for all harmony pairs in $N_C$.
+6. Repeat Steps 2-5 for all harmony pairs in $H_{N_C}$.
 
 \noindent Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). If the measure is intended to put more importance in pointing towards distributional differences between x categories, a $\lambda>0.5$ should be chosen. 
 
@@ -500,35 +499,33 @@ d*_{(j,k), (j'k')} =
 
 ## Properties
 
-Simulations were carried out to explore the behavior of $wpd$ under the following factors that could potentially impact the values of $wpd$:
+Simulations were carried out to explore the behavior of $wpd$ under the following factors that could potentially impact the values of $wpd$: $nx$, $nfacet$, $\lambda$, $\omega$, $dist$ (normal/non-normal distributions with different location and scale), $ntimes$, and $designs$ and results are presented in two parts. The dependence of $wpd$ on $nx$ and $nfacet$ under $D_{null}$ is presented here, which lays the foundation for the next section. The rest of the results that discuss the relationship of the $wpd$ with other factors is presented in details in the Supplementary section of the paper. They show that the designs $D_{var_f}$ and $D_{var_x}$ intersect at $\lambda = 0.5$ and hence for up-weighing designs of the form $D_{var_x}$, $\lambda = 0.67$ has been considered for computation of $wpd$ in the rest of the paper. 
 
-- $nx$ (number of levels of x-axis)
-- $nfacet$ (number of levels of facets)
-- $\lambda$ (tuning parameter)
-- $\omega$ (increment in each panel design)
-- $dist$ (normal/non-normal distributions with different location and scale)
-- $n$ (sample size for each combination of categories)
-- $designs$ ($D_{null}$, $D_{var_f}$, $D_{var_x}$ and $D_{var_{all}}$)
+<!-- - $nx$ (number of levels of x-axis) -->
+<!-- - $nfacet$ (number of levels of facets) -->
+<!-- - $\lambda$ (tuning parameter) -->
+<!-- - $\omega$ (increment in each panel design) -->
+<!-- - $dist$ (normal/non-normal distributions with different location and scale) -->
+<!-- - $n$ (sample size for each combination of categories) -->
+<!-- - $designs$ ($D_{null}$, $D_{var_f}$, $D_{var_x}$ and $D_{var_{all}}$) -->
 
 <!-- - $nsim$ (number of simulations) -->
 <!-- - $nperm$ (number of permutations of data)   -->
 
-Results are presented in two parts. The dependence of $wpd$ on $nx$ and $nfacet$ under $D_{null}$ is presented here, which lays the foundation for the next section. The rest of the results that discusses the relationship of the $wpd$ with other factors is presented in details in the Supplementary section of the paper. They show that the designs $D_{var_f}$ and $D_{var_x}$ intersect at $\lambda = 0.5$ and hence for up-weighing designs of the form $D_{var_x}$, $\lambda = 0.67$ has been considered for computation of $wpd$ in the rest of the paper. 
-
 ### Simulation design
 
-Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel  $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values
+Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values
 of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
 
 
 ### Results
 
-Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $nx$ and $nfacet$ categories. Since under $D_{null}$, there is no difference in distributions across different categories, we expect the distance measure $wpd$ to reflect that as well and have the same null distribution across categories. But Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. Figure \ref{fig:quadratic} shows how the median of $wpd$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. 
+Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $nx$ and $nfacet$ categories. Since under $D_{null}$, there is no difference in distributions across different categories, we expect the distance measure $wpd$ to reflect that as well and have the same distribution across categories. But Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. Figure \ref{fig:quadratic} shows how the median of $wpd$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. 
 
 <!-- Furthermore, simulation results also show that the values of $wpd$ indeed depend upon the underlying distribution. This is also not desirable as the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. -->
 
 
-```{r raw, fig.cap = "Distribution of $wpd$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distribution changes for different nx and nfacet categories."}
+```{r raw, fig.cap = "Distribution of $wpd$ is plotted across different $nx$ and $nfacet$ categories under $D_{null}$. Both shape and scale of the distribution changes for different comparisons. This is not desirable since under null design, the distribution of the distance measure is not expected to capture any differences."}
 G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
 
 G21 %>% 
@@ -540,24 +537,23 @@ G21 %>%
   xlab("wpd")
 ```
 
-
-```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$ levels. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$."}
+```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$."}
 G21 %>% 
   ggplot(aes(x=nx*nfacet, y = value)) +
-  geom_point() + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("wpd")
+  geom_point(alpha = 0.5, size = 0.5) + stat_summary(fun=median, geom="line", aes(group=1), color = "blue") + xlab("nx*nfacet") + ylab("wpd")
 
 ```
 
 # Normalization for the number of comparisons {#sec:norm-wpd}
 
-The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are based on the simulation results.
+The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations.
 
 <!-- The nodes and the storage used are as follows: -->
 
 
 ## Methodology
 
-We need a transformation on ${wpd}$ which will make it independent of the values of $nx*nfacet$. Two approaches have been employed for that purpose, the first one involves fitting a model and the latter involves a permutation method to make the distribution of the transformed $wpd$ similar for different comparisons.
+The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ is denoted by $wpd_{norm}$. Two approaches have been employed - the first one involves a permutation method to make the distribution of the transformed $wpd$ similar for different comparisons and the second one fits a model to represent the relationship between the two variables and defines ${wpd_norm}$ as the residual of the model.
 
 <!-- ### Notations -->
 
@@ -566,20 +562,20 @@ We need a transformation on ${wpd}$ which will make it independent of the values
 
 ### Permutation approach
 
-This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the location and scale of different groups (panels) same under $D_{null}$. The steps are as follows:
+This method is somewhat similar in spirit to bootstrap (reference) or permutation (reference) tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the location and scale of different groups (panels) same under $D_{null}$. The steps are as follows:
 
-1. Compute $wpd$ for a harmony pair (A, B) for the original measured variable $v_t$ and store it in $wpd^{orig}$.
+1. Compute $wpd$ for a harmony pair (A, B) for the original measured variable $v_t$ and store it in $wpd_{orig}$.
 
-2. Consider a permutation of the original measured variable $v_t^{perm_1}$ and again compute $wpd$ for the permuted data. Store it in $wpd^{perm_1}$.
+2. Consider a permutation of the original measured variable $v_{perm_1}$ and again compute $wpd$ for the permuted data. Store it in $wpd_{perm_1}$.
 
-3. Repeat Step 2 for a large number ($nperm = 200$) of random permutations of the data yielding $nperm$ values : $wpd^{perm_1}, wpd^{perm_2}, \dots, wpd^{perm_{nperm}}$. Store the vector in $wpd^{perm}$.
+3. Repeat Step 2 for a large number ($nperm = 200$) of random permutations of the data yielding $nperm$ values : $wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_{nperm}}$. Store the vector in $wpd_{perm}$.
 
-4. Define $wpd^{perm}_{norm} = \frac{(wpd^{orig} - \bar{wpd^{perm}})}{sd(wpd^{perm})}$, where $\bar{wpd^{perm}}$ and $sd(wpd^{perm})$ are the mean and standard deviation of $wpd^{perm}$ respectively.
+4. Define $wpd_{perm} = \frac{(wpd_{orig} - \bar{wpd_{perm}})}{sd(wpd_{perm})}$, where $\bar{wpd_{perm}}$ and $sd(wpd_{perm})$ are the mean and standard deviation of $wpd_{perm}$ respectively.
 
 <!-- Let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd$.combinations of $nx_i$ and $nfacet_j$. The normalized distances through permutation is computed as follows: $x^{perm}_{k} =  (x_{k} - mean_l(x_{k,l}))/sd_l(x_{k, l})$,  $x^{perm}_{k}$ is the value of the $wpd_{perm}$ for the $k^{th}$ panel-->
 
 
-Standardizing the variable $wpd$ in the permutation approach ensures that the distribution of $wpd^{perm}_{norm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the same accuracy when compared to the permutation approach.
+Standardizing  $wpd$ in the permutation approach ensures that the distribution of $wpd_{perm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the similar accuracy when compared to the permutation approach.
 
 
 ```{r norm, fig.cap = "Distribution of $wpd^{perm}_{norm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}

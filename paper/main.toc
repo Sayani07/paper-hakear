@@ -7,16 +7,16 @@
 \contentsline {subsection}{\numberline {2.5}Properties}{9}{subsection.2.5}%
 \contentsline {subsubsection}{\numberline {2.5.1}Simulation design}{9}{subsubsection.2.5.1}%
 \contentsline {subsubsection}{\numberline {2.5.2}Results}{9}{subsubsection.2.5.2}%
-\contentsline {section}{\numberline {3}Normalization for the number of comparisons}{10}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Methodology}{10}{subsection.3.1}%
+\contentsline {section}{\numberline {3}Normalization for the number of comparisons}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Methodology}{12}{subsection.3.1}%
 \contentsline {subsubsection}{\numberline {3.1.1}Permutation approach}{12}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Modelling approach}{13}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2}Modelling approach}{12}{subsubsection.3.1.2}%
 \contentsline {subsection}{\numberline {3.2}Combining normalizing approaches}{15}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Properties}{17}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Ranking and selecting significant harmonies}{17}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Choosing a threshold}{17}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Simulation design}{18}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Results}{18}{subsubsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.3}Simulation environment}{19}{subsection.4.3}%
-\contentsline {section}{\numberline {5}Application to residential smart meter dataset}{19}{section.5}%
-\contentsline {section}{\numberline {6}Discussion}{23}{section.6}%
+\contentsline {subsection}{\numberline {3.3}Properties}{18}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Ranking and selecting significant harmonies}{18}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Choosing a threshold}{18}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Simulation design}{19}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Results}{19}{subsubsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.3}Simulation environment}{20}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Application to residential smart meter dataset}{20}{section.5}%
+\contentsline {section}{\numberline {6}Discussion}{24}{section.6}%
