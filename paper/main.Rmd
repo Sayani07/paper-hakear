@@ -864,12 +864,14 @@ $D_{var_f}$, $D_{var_x}$ and $D_{var_{all}}$. This is a desirable result since t
 
 # Ranking and selecting significant harmonies {#sec:rank-wpd}
 
-In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant across x or facet categories through randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
+In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant by employing randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
 
 
 ## Choosing a threshold
 
-Typically, a randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. We will use this procedure to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows:
+A randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. But we will use this procedure to obtain a threshold such that harmony pairs with a $wpd_{norm}$ value higher than this threshold will only be considered significant. The process of choosing a threshold is described as follows:
+
+<!-- to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows: -->
 
 <!-- <!-- We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. --> 
 <!-- Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
@@ -891,16 +893,17 @@ Typically, a randomization test involves calculating a test statistic, randomly 
 4. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
 
 5.  Steps (3) and (4) are repeated a large number
-of times M (M = 200).
+of times $M$ (M = 200).
 
 6. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
 
 7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and store it in $wpd^{all}_{sample}$.
 
-8. $95^{th}$ percentile of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold}$.
+8. $99^{th}$ percentiles of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold99}$
 
-7. If $wpd_{obs_{A, B}}> wpd_{threshold}$, harmony pair $(A, B)$ is selected, otherwise rejected. 
+7. If $wpd_{obs_{A, B}} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected with a 99% level of significance and otherwise rejected.
 
+Similarly, a harmony pair $(A, B)$ is selected with a 95% and 90% level of significance if $wpd_{obs_{A, B}} > wpd_{threshold95}$ and $wpd_{obs_{A, B}} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively.
 
 <!-- Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
 <!-- $wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is: -->
@@ -927,18 +930,18 @@ of times M (M = 200).
 
 ## Simulation design
 
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null.
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx =  \{3, 7, 14}$ and $nfacet = (2, 9, 10)$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would consitute to be the estimated size and power of the test.
 
-nx = (3, 7, 14)
-nfacet = (2, 9, 10)
+<!-- 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null. -->
 
-(3, 2), (7,9), (14, 10) being null sets and others under some other design. Generate 200 repetitions of different data sets with the same design for all the pairs and compute size and power.
+<!-- nx = (3, 7, 14) -->
+<!-- nfacet = (2, 9, 10) -->
 
+<!-- (3, 2), (7,9), (14, 10) being null sets and others under some other design.  -->
 
 ### Results
 
-Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $nx$ and $nfacet$ categories. Since under $D_{null}$, there is no difference in distributions across different categories, we expect the distance measure $wpd$ to reflect that as well and have the same null distribution across categories. But Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. Figure \ref{fig:quadratic} shows how the median of $wpd$ varies with the total number of distances $nx*nfacet$ for each panel. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. 
-
+The results for this section is WIP and to be included in details in the Supplementary paper. Also, Figure \ref{fig:plot-all-new2} presents the results of $wpd_{norm}$ from the illustrative designs in Section \ref{sec:computation-wpd}. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, note the the relative difference in $wpd_{norm}$ values as we move from  a to d, which aligns with the idea of $wpd_{norm}$, since the differences between x categories are up-weighed by design.
 
 
 ```{r varall-new}
@@ -1047,7 +1050,7 @@ p_null <- sim_panel_null %>%
     ggtitle(paste("a", round(null, 2)))
 ```
 
-```{r plot-all-new2}
+```{r plot-all-new2, fig.cap="$wpd_{norm} values for the four illustrative designs are presented here. As expected, the value of wpd_{norm} under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
 library(patchwork)
 (p_null + p_varf)/(p_varx + p_varall)
 ```
