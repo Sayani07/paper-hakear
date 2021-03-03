@@ -1,9 +1,20 @@
 ---
 title: A new metric for automatic discovery of periodic patterns in time series
+
+# to produce blinded version set to 1
+blinded: 0
+
 authors:
 - name: Sayani Gupta
-  affiliation: Department of Econometrics and Business Statistics, Monash University
-  email: Sayani.Gupta@monash.edu
+  thanks: "Email: Sayani.Gupta@monash.edu"
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
+- name: Rob J Hyndman
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
+- name: Dianne Cook
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
 
 bibliography: bibliography.bib
 preamble: >
@@ -1057,7 +1068,23 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
-The smart meter data set for eight households in Melbourne has been utilized to see the use of the $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is reflected when we zoom into the the linear representation of the time series. We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
+The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is reflected when we zoom into the the linear representation of the time series. We have some additional demographics data in terms of the number of members in the household and presence of kids/elderly parents and their profession.
+
+
+```{r}
+demography <- tibble(id = c(1, 2, 3, 4, 5,6, 7, 8), 
+       profession = c("academia", "mixed", "industry", "industry", "mixed", "mixed", "academia", "industry"),
+       total_members = c(2, 3, 5, 5, 2, 2, 2, 6),
+       kids = c("no", "no", "yes", "yes", "no", "no", "no", "yes"),
+       old_parents = c("no", "yes", "yes", "yes", "no", "no", "no", "yes"),
+       PhD_student = c("no", "yes", "no", "no", "yes", "yes", "yes", "no"))
+
+demography %>% kable(format  = "markdown", caption = "Demographics of the eight households chosen for study")
+```
+
+
+
+We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
 
 <!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
 
@@ -1097,6 +1124,42 @@ elec_linear + elec_zoom
 
 ```
 
+
+
+```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households in Panel a. Panel b shows the normal-score-transform half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand."}
+elec_raw <- elec %>% 
+  ggplot() +
+  geom_density(aes(x = kwh)) +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("demand (in kwh)") + ggtitle("a") +
+  theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+
+elec_nqt <- elec %>% 
+  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+  ggplot() +
+  geom_density(aes(x = kwh_transformed))+
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("NQT demand (in kwh)") + ggtitle("b") + theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+
+# hour_day_raw <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#     ggplot() + 
+#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
+#   
+# hour_day_trans <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
+
+elec_raw + elec_nqt
+
+```
+
 _Choosing cyclic granularities of interest and removing clashes_
 
 Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of this data is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analyzed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo]. Table \ref{tab:tab-rank-8}  shows $14$ harmony pairs that belong to $H_{N_C}$.
@@ -1104,7 +1167,7 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
  <!-- The paper also shows how the number of harmonies could be identified among  by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies. -->
 
 
-_Choosing and Ranking harmonies for all households_ 
+_Selecting and Ranking harmonies for all households_ 
 
 $v_{i, t}$ has a asymmetrical distribution as could be seen in \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:norm-wpd}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households
 \ref{fig:dotplot-8} shows the heatmap for the eight households
@@ -1116,8 +1179,7 @@ From table \ref{tab:tab-rank-8}, it could be seen that
 for household id:1, (hod, wdwnd) has been ranked higher than (wdwnd, hod), both of these being significant. Further, we see that (wom, wdwnd) has been ranked $5^{th}$ and tagged as an insignificant pair. Figure \ref{fig:gravitas-plot-8} is used to show
 if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However,the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the range of the demand is low in this case and hence the differences are not large enough to cross the threshold for significance.
 
-
-```{r gravitas-plot-8, message = FALSE, warning=FALSE, fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
 
 id1_tsibble <- elec %>%
   filter(id== 1)
@@ -1165,13 +1227,14 @@ p1 + p2/p3
 
 ```
 
-From Figure \ref{fig:gravitas-plot-8-id5}, it could further be observed that id5 has only one significant harmony $(hod, dow)$. Apparently, $(hod, wnd/wday)$ which is an important harmony for most households is not important for this one.
+<!-- From Figure \ref{fig:gravitas-plot-8-id5}, it could further be observed that id5 has only one significant harmony $(hod, dow)$. Apparently, $(hod, wnd/wday)$ which is an important harmony for most households is not important for this one. -->
 
-_Comparing similar households and spotting anomalous ones_
+_Comparing households and validating patterns from linear display_ 
 
 
+Figure \ref{fig:dotplot-8} helps to compare between households through the heatmap (b) and validate the results of the heatmap through linear display in (a) . The top panel contains the raw data for a month (Sep-2019). The darker the color of a cell in the heatmap, the more significant a harmony pair it is. Also, the ones with red borders are significant at 95% significance. This plot suggests that there is no significant periodic patterns for id 5, even when the demographics of id 5 is very similar to id 6 and 7. Household id 6 and 7 differ in the sense that for id 6, difference in patterns only during weekday/weekends (two members are in mixed profession), whereas for id 7, all or few other days of the week are also important (members are in academia and hence more flexible routines). The periodic pattern is very similar to id 8, which has a very different demographic property. Both from the linear representation and heatmap, it is clear that id 2 and 3 are similar, both in term of periodic pattern as well as demographics.
 
-```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something"}
+```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something", eval = FALSE}
 
 id5_tsibble <- elec %>%
   filter(id== 5)
@@ -1204,43 +1267,6 @@ p2 <- id5_tsibble %>%
 
 
 p1 + p2
-```
-
-
-_Validating patterns from linear display_ 
-
-
-
-
-```{r raw-nqt-8, fig.cap="The raw density of the half-hourly demand for the eight households in Panel a. Panel b shows the normal-score-transform half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand."}
-elec_raw <- elec %>% 
-  ggplot() +
-  geom_density(aes(x = kwh)) +
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("demand (in kwh)")
-
-elec_nqt <- elec %>% 
-  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-  ggplot() +
-  geom_density(aes(x = kwh_transformed))+
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("NQT demand (in kwh)")
-
-# hour_day_raw <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#     ggplot() + 
-#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
-#   
-# hour_day_trans <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-#   ggplot() +
-#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
-
-elec_raw + elec_nqt
-
 ```
 
 
@@ -1282,8 +1308,6 @@ harmonies <- data_id %>%
 ```
 
 
-
-
 ```{r elec_select_harmony-8}
 elec_harmony_all <- elec_select_harmony %>% 
   bind_rows(.id = "id") %>% 
@@ -1308,7 +1332,7 @@ elec_harmony_all <- elec_select_harmony %>%
 ```
 
 
-```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The darker the colour, the higher the importance of the harmony. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which ones amongst them should be analyzed together." }
+```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The darker the colour, the higher the importance of the harmony. Also, the ones bordered red are selected with 90 percent significance level. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which households should be analyzed together." }
 elec_sig_split <- elec_harmony_all %>%
   mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
   mutate(significant = case_when(
@@ -1329,21 +1353,44 @@ elec_sig_split$significant <-
   factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
 
 heatplot <- elec_sig_split %>% 
+  mutate(significance_95 = if_else(significant %in% c("high", "highest"), "yes", "no")) %>% 
   ggplot() +
   geom_tile(aes(x = x_variable,
                  y = facet_variable, 
-                 fill = wpd,
-                size = significant)) + 
-  scale_fill_continuous(type = "gradient") +
+                 fill = wpd, color = significance_95), size = 1) + 
+  #scale_fill_gradient(low = "white",high = "steelblue") +
+  scale_fill_gradient2() +
+  scale_colour_manual(values = c("white","red")) + 
   theme(legend.position = "bottom") +
-  facet_wrap(~id, nrow = 2) +
+  facet_wrap(~id, nrow = 1, strip.position = "bottom") +
   coord_fixed() + 
   guides(fill = guide_legend()) +
   theme_void() +
   theme_gray(base_size = 12, base_family = "Times") +
   theme(panel.grid = element_blank(),
-        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom")
-  heatplot
+        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom") + ggtitle("b")
+  
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+elec_zoom <-  elec %>%
+  as_tibble() %>% 
+  dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30"))) %>%
+  ggplot(aes(x=date_time, y = kwh)) +
+  #geom_point(size = 0.1, colour = "black", alpha = 0.3) +
+  geom_line(size = 0.1, colour = "blue", alpha = 0.2) +
+  facet_wrap(~id, 
+             scales = "free_y",
+             nrow = 1,
+             strip.position =  "top") + xlab("") + 
+  theme_void() + theme(strip.text.x = element_blank()) +
+  ylab("energy demand in September (kwh)") + ggtitle("a")
+
+elec_zoom/heatplot
+  
 #            
 # dotplot <- elec_sig_split %>% 
 #   ggplot() +
@@ -1375,19 +1422,21 @@ elec_rank <- elec_sig_split %>%
          "facet levels" = "x_levels",
          "x levels" = "x_levels")
 
-elec_rank %>% kable(format = "markdown", caption = "Ranking of the harmonies for the four households are shown. The first four harmonies are unanimously important for all households, after which there is differences in the rankings for most households.")
+elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance levels.")
 ```
-
-
 
 
 # Discussion
 
-Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at ever finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. This work refines the selection of appropriate pairs of granularities by identifying those for which the differences between the displayed distributions is greatest, and rating these selected harmony pairs in order of importance for exploration.
+Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at more and more finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. A common solution would be to zoom into “interesting” segments, but there is no way to know the “interesting” segments a priori. This work refines the search of periodic patterns by identifying those for which the differences between the displayed distributions is greatest, and rating them in order of importance for exploration.
 
-A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different cyclic granularities would be different for different subjects and one way to find groups would be to actually locate clusters who have similar periodic behavior.
-
- A common remedy would be to zoom into “interesting” segments, but how do we identify “interesting” segments?
+A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different harmonies would be varying for subjects and it would be hard to track the behavior when the number of individuals rise. One way to find groups would be to actually locate clusters who have similar periodic behavior.
 
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
+
+# Bibliography
+
+```{r write-bib, eval = FALSE}
+write_bib(c("rmarkdown", "bookdown", "rticles", "knitr", "ggplot2", "dplyr", "tsibble", "gravitas", "ggpubr", "kableExtra", "magrittr", "readr", "lubridate", "renv", "archive", "hakear", "patchwork", "ggpubr"), file = "rpkgs.bib")
+```
 
