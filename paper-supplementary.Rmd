@@ -1,0 +1,100 @@
+---
+title: "<small> Supplementary materials for the main submission entitled - <br><br> A new metric for automatic discovery of periodic patterns in time series"
+authors:
+- name: Sayani Gupta
+  thanks: "Email: Sayani.Gupta@monash.edu"
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
+- name: Rob J Hyndman
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
+- name: Dianne Cook
+  affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
+
+
+
+bibliography: [bibliography.bib]
+preamble: >
+  \usepackage{mathtools,amssymb,booktabs,amsthm,todonotes,colortbl}
+  \def\mod{~\text{mod}~}
+  \newtheorem{definition}{Definition}
+  \usepackage{mathptmx}
+  \usepackage{caption}
+  \DeclareCaptionStyle{italic}{labelfont={bf},textfont={it},labelsep=colon}
+  \captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
+  \captionsetup[table]{style=italic,format=hang,singlelinecheck=true}
+  \def\novspacing{\setlength{\aboverulesep}{0pt}\setlength{\belowrulesep}{0pt}}
+  \def\vspacing{\setlength{\aboverulesep}{0.4ex}\setlength{\belowrulesep}{0.65ex}}
+output:
+  bookdown::pdf_book:
+    #base_format: rticles::asa_article
+    fig_height: 5
+    fig_width: 8
+    fig_caption: yes
+    dev: "pdf"
+    keep_tex: yes
+---
+
+
+
+Appendix A recalls the necessary notations and 
+
+# Necessary notations
+
+# Behavior of raw weighted distance measure
+
+## NQT works
+
+
+### without NQT
+```{r gamma-diff-wotrans, fig.cap="Ridge plots of raw wpd is shown for Gamma(0.5,1), Gamma(2,1) distribution. The densities change across different facet and x levels and also looks different for the two distributions, which implies wpd value is affected by the change in the shape paramter of the gamma distribution."}
+knitr::include_graphics(here::here("simulations/raw/null_design_scale/figs/gamma_ridge_nxbynfacet.png"))
+```
+
+### with NQT
+
+```{r gamma-diff-quantrans, fig.cap="Ridge plots of raw wpd is shown for Gamma(0.5,1), Gamma(2,1) distribution. The densities change across different facet and x levels but look same for the two distributions, which implies wpd value is unaffected by the change in the shape paramter of the gamma distribution"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_gamma.png"))
+```
+
+## By distribution
+
+```{r normal-diff-quantrans, fig.cap = "Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for each panel, which implies wpd value is unaffected by the change in mean and standard deviation of the normal distribution"}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
+```
+
+## By category levels
+
+```{r nxbyfacet-ridge-N05, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
+knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_ridge_wpd_N05.png"))
+```
+
+```{r dist-across-x, fig.cap = "Distribution of $MMPD_{raw}$ for different x levels are shown. The scale of the distribution becomes less and less implying that as the number of x levels increase, it is more likely that a higher value of $MMPD_{raw}$ will be obtained as the spread of the distribution decreases. ", eval = FALSE}
+knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_raw.png"))
+```
+
+## Tuning parameter
+
+```{r tuning-oneomega, fig.caption = "WPD from two designs are plotted for different values of lambda for different x and facet categories. For omega = 1, the designs intersect for 0.6<lamba<=0.75, whereas for higher omega, design intersects at lambda = 0.5"}
+knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.png"))
+```
+
+
+```{r tuning-parameter-inter, fig.cap ="For most panels it is observed that the most common value of the tuning paramter for which the designs interact is 0.5, which implies any value greater than 0.5 could be chosen to up-weigh the within-facet distances and down-weigh the between-facet distances for most sitatuions."}
+knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
+```
+
+
+
+## Increment
+
+# Behavior of normalised distance measure
+
+## sample size
+
+## number of permutations
+
+## designs
+
+# Ranking and selecting harmonies
+

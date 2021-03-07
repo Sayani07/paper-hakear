@@ -120,8 +120,7 @@ knitr::kable(format = "latex",
 
 ## Null design
 
-This section explores the behavior of wpd in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Since the measure wpd is essentially set up to detect differences in distributions irrespective of underlying distribution, it would be ideal if it has minimal dependency on the type, location and scale of the initial distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type. The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more
-treatable and normal-like.
+This section explores the behavior of wpd in designs where there is no difference in distribution between x and facet categories. We have considered different initial distributions to study the impact of initial distribution under the null setup. Since the measure wpd is essentially set up to detect differences in distributions irrespective of underlying distribution, it would be ideal if it has minimal dependency on the type, location and scale of the initial distribution. To that end, some pre-processing of the data is preferred to bring it to the same scale, location and type. The Normal Score Transform or NQT has been applied in various fields of geo-statistics in order to make most asymmetrical distributed real world measured variables more treatable and normal-like.
 
 Following the work of Krzysztofowicz (1997) the empirical NQT involves the following steps:
 1. Sort the sample of measured variable $X$ from the smallest to the largest observation $x_{(1)},\dots, x_{(i)}, .., x_{(n)}$.
@@ -164,6 +163,11 @@ Figure \ref{fig:normal-diff-quantrans} and \ref{fig:gamma-diff-quantrans} show d
 
 ```{r normal-diff-quantrans, fig.cap = "Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for each panel, which implies wpd value is unaffected by the change in mean and standard deviation of the normal distribution"}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
+```
+
+
+```{r gamma-diff-wotrans, fig.cap="Ridge plots of raw wpd is shown for Gamma(0.5,1), Gamma(2,1) distribution. The densities change across different facet and x levels and also looks different for the two distributions, which implies wpd value is affected by the change in the shape paramter of the gamma distribution."}
+knitr::include_graphics(here::here("simulations/raw/null_design_scale/figs/gamma_ridge_nxbynfacet.png"))
 ```
 
 
