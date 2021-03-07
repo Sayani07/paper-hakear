@@ -1,7 +1,7 @@
 Package: renv
 Type: Package
 Title: Project Environments
-Version: 0.12.2
+Version: 0.13.0
 Authors@R: c(
     person("Kevin", "Ushey", role = c("aut", "cre"), email = "kevin@rstudio.com"),
     person("RStudio", role = c("cph"))
@@ -14,17 +14,18 @@ License: MIT + file LICENSE
 URL: https://rstudio.github.io/renv/
 BugReports: https://github.com/rstudio/renv/issues
 Imports: utils
-Suggests: R6, cli, covr, devtools, knitr, packrat, remotes, reticulate,
-        rmarkdown, rstudioapi, testthat, uuid, yaml
+Suggests: R6, BiocManager, cli, covr, devtools, knitr, packrat,
+        remotes, reticulate, rmarkdown, rstudioapi, testthat, uuid,
+        yaml
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-11-04 17:18:11 UTC; kevinushey
+Packaged: 2021-02-24 18:57:24 UTC; kevin
 Author: Kevin Ushey [aut, cre],
   RStudio [cph]
 Maintainer: Kevin Ushey <kevin@rstudio.com>
 Repository: CRAN
-Date/Publication: 2020-11-04 23:00:02 UTC
-Built: R 4.0.2; ; 2020-11-05 11:23:25 UTC; unix
+Date/Publication: 2021-02-24 20:00:03 UTC
+Built: R 4.0.2; ; 2021-02-25 11:23:47 UTC; unix

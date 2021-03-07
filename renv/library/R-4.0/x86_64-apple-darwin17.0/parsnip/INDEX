@@ -1,4 +1,5 @@
 add_rowindex            Add a column of row numbers to a data frame
+augment.model_fit       Augment data with predictions
 boost_tree              General Interface for Boosted Trees
 contr_one_hot           Contrast function for one-hot encodings
 control_parsnip         Control the fit function
@@ -16,6 +17,7 @@ maybe_matrix            Fuzzy conversions
 min_cols                Execution-time data dimension checks
 mlp                     General Interface for Single Layer Neural
                         Network
+model_db                parsnip model specification database
 model_fit               Model Fit Object Information
 model_spec              Model Specification Information
 multi_predict           Model predictions across many sub-models
@@ -24,6 +26,8 @@ multinom_reg            General Interface for Multinomial Regression
 nearest_neighbor        General Interface for K-Nearest Neighbor Models
 null_model              General Interface for null models
 nullmodel               Fit a simple, non-informative model
+parsnip_addin           Start an RStudio Addin that can write model
+                        specifications
 rand_forest             General Interface for Random Forest Models
 repair_call             Repair a model call object
 req_pkgs                Determine required packages for a model

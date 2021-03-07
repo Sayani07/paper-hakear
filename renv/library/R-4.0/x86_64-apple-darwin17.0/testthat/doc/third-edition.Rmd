@@ -83,7 +83,7 @@ Most of these functions have not been recommended for a number of years, but bef
 
 -   `expect_equivalent()` has been deprecated since it is now equivalent (HA HA) to `expect_equal(ignore_attr = TRUE)`.
 
--   `setup()` an `teardown()` are deprecated in favour of test fixtures.
+-   `setup()` and `teardown()` are deprecated in favour of test fixtures.
     See `vignette("test-fixtures")` for details.
 
 -   `expect_known_output()`, `expect_known_value()`, `expect_known_hash()`, and `expect_equal_to_reference()` are all deprecated in favour of `expect_snapshot_output()` and `expect_snapshot_value()`.
@@ -100,7 +100,7 @@ You'll have to explicit ignore them with `supressMesssages()`, or if they're imp
 
 ### waldo
 
-Probably the the biggest day-to-day difference (and the biggest reason to upgrade!) is the use of [`waldo::compare()`](https://waldo.r-lib.org/reference/compare.html) inside of `expect_equal()` and `expect_identical()`.
+Probably the biggest day-to-day difference (and the biggest reason to upgrade!) is the use of [`waldo::compare()`](https://waldo.r-lib.org/reference/compare.html) inside of `expect_equal()` and `expect_identical()`.
 The goal of waldo is to find and concisely describe the difference between a pair of R objects, and it's designed specifically to help you figure out what's gone wrong in your unit tests.
 
 ```{r, error = TRUE}

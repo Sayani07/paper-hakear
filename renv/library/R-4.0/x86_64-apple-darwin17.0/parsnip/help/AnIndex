@@ -8,6 +8,8 @@
 .x	descriptors
 .y	descriptors
 add_rowindex	add_rowindex
+augment	reexports
+augment.model_fit	augment.model_fit
 boost_tree	boost_tree
 C5.0_train	C5.0_train
 check_empty_ellipse	check_empty_ellipse
@@ -47,6 +49,7 @@ maybe_matrix	maybe_matrix
 min_cols	min_cols
 min_rows	min_cols
 mlp	mlp
+model_db	model_db
 model_fit	model_fit
 model_printer	model_printer
 model_spec	model_spec
@@ -70,6 +73,7 @@ nullmodel	nullmodel
 nullmodel.default	nullmodel
 null_model	null_model
 null_value	add_on_exports
+parsnip_addin	parsnip_addin
 predict.model_fit	predict.model_fit
 predict.nullmodel	nullmodel
 predict_class.model_fit	other_predict
@@ -107,6 +111,7 @@ show_call	show_call
 show_engines	show_engines
 show_fit	add_on_exports
 show_model_info	set_new_model
+stan_conf_int	stan_conf_int
 surv_reg	surv_reg
 svm_poly	svm_poly
 svm_rbf	svm_rbf

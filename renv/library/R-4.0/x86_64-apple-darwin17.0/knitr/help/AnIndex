@@ -81,6 +81,8 @@ opts_hooks	opts_hooks
 opts_knit	opts_knit
 opts_template	opts_template
 pandoc	pandoc
+pandoc_from	output_type
+pandoc_to	output_type
 pat_asciidoc	pat_fun
 pat_brew	pat_fun
 pat_html	pat_fun

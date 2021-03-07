@@ -4,11 +4,15 @@ as.cluster.list	as.cluster
 as.cluster.SOCK0node	as.cluster
 as.cluster.SOCKnode	as.cluster
 autoStopCluster	autoStopCluster
+availableConnections	availableConnections
 availableCores	availableCores
 availableWorkers	availableWorkers
 c.cluster	as.cluster
 connectionId	isConnectionValid
+cpuLoad	cpuLoad
 find_rshcmd	find_rshcmd
+freeConnections	availableConnections
+freeCores	freeCores
 future.availableCores.custom	parallelly.options
 future.availableCores.fallback	parallelly.options
 future.availableCores.methods	parallelly.options

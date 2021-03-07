@@ -39,4 +39,5 @@ snapshot	snapshot
 status	status
 update	update
 upgrade	upgrade
+use	use
 use_python	use_python

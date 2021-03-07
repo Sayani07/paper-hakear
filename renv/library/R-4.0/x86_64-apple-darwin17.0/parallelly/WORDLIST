@@ -108,3 +108,11 @@ stdout
 md
 UUID
 getOptionOrEnvVar
+useXDR
+USEXDR
+cgroups
+nproc
+cpuLoad
+freeCores
+availableConnections
+freeConnections

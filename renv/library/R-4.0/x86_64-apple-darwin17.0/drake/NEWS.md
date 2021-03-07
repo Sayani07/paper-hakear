@@ -1,3 +1,22 @@
+# Version 7.13.1.9000
+
+
+
+# Version 7.13.1
+
+* Add files `NOTICE` and `inst/NOTICE` to more explicitly credit code included from other open source projects. (Previously `drake` just had comments in the source with links to the various projects.)
+
+# Version 7.13.0
+
+## Bug fixes
+
+* Avoid checking printed output in test of testing infrastructure.
+* Use `dsl_sym()` instead of `as.symbol()` when constructing commands for `combine()` (#1340, @vkehayas).
+
+## New features
+
+* Add a new `level_separation` argument to `vis_drake_graph()` and `render_drake_graph()` to control the aspect ratio of `visNetwork` graphs (#1303, @matthewstrasiotto, @matthiasgomolka, @robitalec).
+
 # Version 7.12.7
 
 ## Enhancements

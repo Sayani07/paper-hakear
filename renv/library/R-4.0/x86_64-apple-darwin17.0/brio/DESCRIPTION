@@ -1,6 +1,6 @@
 Package: brio
 Title: Basic R Input Output
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: 
     c(person(given = "Jim",
              family = "Hester",
@@ -20,11 +20,11 @@ Suggests: testthat (>= 2.1.0), covr
 URL: https://github.com/r-lib/brio
 BugReports: https://github.com/r-lib/brio/issues
 NeedsCompilation: yes
-Packaged: 2020-08-28 18:14:14 UTC; jhester
+Packaged: 2021-01-20 18:12:29 UTC; jhester
 Author: Jim Hester [aut, cre] (<https://orcid.org/0000-0002-2739-7082>),
   RStudio [cph, fnd]
 Maintainer: Jim Hester <jim.hester@rstudio.com>
 Repository: CRAN
-Date/Publication: 2020-08-31 07:20:02 UTC
-Built: R 4.0.2; x86_64-apple-darwin17.0; 2020-09-01 10:24:08 UTC; unix
+Date/Publication: 2021-01-20 18:40:02 UTC
+Built: R 4.0.2; x86_64-apple-darwin17.0; 2021-01-21 11:22:13 UTC; unix
 Archs: brio.so.dSYM

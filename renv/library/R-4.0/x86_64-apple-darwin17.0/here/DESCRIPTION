@@ -1,7 +1,7 @@
 Package: here
 Title: A Simpler Way to Find Your Files
-Version: 1.0.0
-Date: 2020-11-15
+Version: 1.0.1
+Date: 2020-12-13
 Authors@R: 
     c(person(given = "Kirill",
              family = "M\u00fcller",
@@ -20,19 +20,19 @@ Description: Constructs paths to your project's files.
 License: MIT + file LICENSE
 URL: https://here.r-lib.org/, https://github.com/r-lib/here
 BugReports: https://github.com/r-lib/here/issues
-Imports: rprojroot (>= 2.0.1)
+Imports: rprojroot (>= 2.0.2)
 Suggests: conflicted, covr, fs, knitr, palmerpenguins, plyr, readr,
-        rmarkdown, testthat, uuid, withr
+        rlang, rmarkdown, testthat, uuid, withr
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1.9000
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2020-11-15 14:39:44 UTC; kirill
+Packaged: 2020-12-13 06:59:33 UTC; kirill
 Author: Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),
   Jennifer Bryan [ctb] (<https://orcid.org/0000-0002-6983-2759>)
 Maintainer: Kirill Müller <krlmlr+r@mailbox.org>
 Repository: CRAN
-Date/Publication: 2020-11-15 17:10:02 UTC
-Built: R 4.0.2; ; 2020-11-16 11:27:00 UTC; unix
+Date/Publication: 2020-12-13 07:30:02 UTC
+Built: R 4.0.2; ; 2020-12-14 11:23:17 UTC; unix

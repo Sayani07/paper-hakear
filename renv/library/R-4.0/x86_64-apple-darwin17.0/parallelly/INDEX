@@ -1,6 +1,7 @@
 as.cluster              Coerce an Object to a Cluster Object
 autoStopCluster         Automatically Stop a Cluster when Garbage
                         Collected
+availableConnections    Number of Available and Free Connections
 availableCores          Get Number of Available Cores on The Current
                         Machine
 availableWorkers        Get Set of Available Workers

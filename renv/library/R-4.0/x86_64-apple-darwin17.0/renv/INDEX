@@ -38,4 +38,5 @@ snapshot                Snapshot a Project
 status                  Status
 update                  Update Packages
 upgrade                 Upgrade renv
+use                     Use a set of Packages
 use_python              Use Python

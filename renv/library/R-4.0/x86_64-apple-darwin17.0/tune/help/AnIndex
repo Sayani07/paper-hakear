@@ -1,3 +1,5 @@
+.get_fingerprint	reexports
+.get_fingerprint.tune_results	tune_accessor
 .get_tune_metrics	tune_accessor
 .get_tune_metric_names	tune_accessor
 .get_tune_outcome_names	tune_accessor
@@ -22,6 +24,8 @@ collect_metrics	collect_predictions
 collect_metrics.tune_race	collect_predictions
 collect_metrics.tune_results	collect_predictions
 collect_predictions	collect_predictions
+collect_predictions.default	collect_predictions
+collect_predictions.tune_results	collect_predictions
 conf_bound	prob_improve
 conf_mat_resampled	conf_mat_resampled
 control_bayes	control_bayes
@@ -99,6 +103,7 @@ tunable.mars	tunable
 tunable.model_spec	tunable
 tunable.multinomial_reg	tunable
 tunable.rand_forest	tunable
+tunable.svm_poly	tunable
 tunable.workflow	tunable
 tune	tune
 tune_args	tune_args

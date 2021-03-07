@@ -2,9 +2,66 @@
 
 **Benchmarks are regularly updated: [here](https://h2oai.github.io/db-benchmark/)**
 
-# data.table [v1.13.2](https://github.com/Rdatatable/data.table/milestone/19?closed=1)
+# data.table [v1.14.0](https://github.com/Rdatatable/data.table/milestone/23?closed=1)
 
-## NEW FEATURES
+## POTENTIALLY BREAKING CHANGES
+
+1. In v1.13.0 (July 2020) native parsing of datetime was added to `fread` by Michael Chirico which dramatically improved performance. Before then datetime was read as type character by default which was slow. Since v1.13.0, UTC-marked datetime (e.g. `2020-07-24T10:11:12.134Z` where the final `Z` is present) has been read automatically as POSIXct and quickly. We provided the migration option `datatable.old.fread.datetime.character` to revert to the previous slow character behavior. We also added the `tz=` argument to control unmarked datetime; i.e. where the `Z` (or equivalent UTC postfix) is missing in the data. The default `tz=""` reads unmarked datetime as character as before, slowly. We gave you the ability to set `tz="UTC"` to turn on the new behavior and read unmarked datetime as UTC, quickly. R sessions that are running in UTC by setting the TZ environment variable, as is good practice and common in production, have also been reading unmarked datetime as UTC since v1.13.0, much faster. Note 1 of v1.13.0 (below in this file) ended `In addition to convenience, fread is now significantly faster in the presence of dates, UTC-marked datetimes, and unmarked datetime when tz="UTC" is provided.`.
+
+    At `rstudio::global(2021)`, Neal Richardson, Director of Engineering at Ursa Labs, compared Arrow CSV performance to `data.table` CSV performance, [Bigger Data With Ease Using Apache Arrow](https://rstudio.com/resources/rstudioglobal-2021/bigger-data-with-ease-using-apache-arrow/). He opened by comparing to `data.table` as his main point. Arrow was presented as 3 times faster than `data.table`. He talked at length about this result. However, no reproducible code was provided and we were not contacted in advance in case we had any comments. He mentioned New York Taxi data in his talk which is a dataset known to us as containing unmarked datetime. [Rebuttal](https://twitter.com/MattDowle/status/1360073970498875394).
+
+    `tz=`'s default is now changed from `""` to `"UTC"`. If you have been using `tz=` explicitly then there should be no change. The change to read UTC-marked datetime as POSIXct rather than character already happened in v1.13.0. The change now is that unmarked datetimes are now read as UTC too by default without needing to set `tz="UTC"`. None of the 1,017 CRAN packages directly using `data.table` are affected. As before, the migration option `datatable.old.fread.datetime.character` can still be set to TRUE to revert to the old character behavior. This migration option is temporary and will be removed in the near future.
+
+    The community was consulted in [this tweet](https://twitter.com/MattDowle/status/1358011599336931328) before release.
+
+## BUG FIXES
+
+1. If `fread()` discards a single line footer, the warning message which includes the discarded text now displays any non-ASCII characters correctly on Windows, [#4747](https://github.com/Rdatatable/data.table/issues/4747). Thanks to @shrektan for reporting and the PR.
+
+2. `fintersect()` now retains the order of the first argument as reasonably expected, rather than retaining the order of the second argument, [#4716](https://github.com/Rdatatable/data.table/issues/4716). Thanks to Michel Lang for reporting, and Ben Schwen for the PR.
+
+## NOTES
+
+1. Compiling from source no longer requires `zlib` header files to be available, [#4844](https://github.com/Rdatatable/data.table/pull/4844). The output suggests installing `zlib` headers, and how (e.g. `zlib1g-dev` on Ubuntu) as before, but now proceeds with `gzip` compression disabled in `fwrite`. Upon calling `fwrite(DT, "file.csv.gz")` at runtime, an error message suggests to reinstall `data.table` with `zlib` headers available. This does not apply to users on Windows or Mac who install the pre-compiled binary package from CRAN.
+
+2. `r-datatable.com` continues to be the short, canonical and long-standing URL which forwards to the current homepage. The homepage domain has changed a few times over the years but those using `r-datatable.com` did not need to change their links. For example, we use `r-datatable.com` in messages (and translated messages) in preference to the word 'homepage' to save users time in searching for the current homepage. The web forwarding was provided by Domain Monster but they do not support `https://r-datatable.com`, only `http://r-datatable.com`, despite the homepage being forwarded to being `https:` for many years. Meanwhile, CRAN submission checks now require all URLs to be `https:`, rejecting `http:`. Therefore we have moved to [gandi.net](https://www.gandi.net) who do support `https:` web forwarding and so [https://r-datatable.com](https://r-datatable.com) now forwards correctly. Thanks to Dirk Eddelbuettel for suggesting Gandi. Further, Gandi allows the web-forward to be marked 301 (permanent) or 302 (temporary). Since the very point of `https://r-datatable.com` is to be a forward, 302 is appropriate in this case. This enables us to link to it in DESCRIPTION, README, and this NEWS item. Otherwise, CRAN submission checks would require the 301 forward to be followed; i.e. the forward replaced with where it points to and the package resubmitted. Thanks to Uwe Ligges for explaining this distinction.
+
+
+# data.table [v1.13.6](https://github.com/Rdatatable/data.table/milestone/22?closed=1)  (30 Dec 2020)
+
+## BUG FIXES
+
+1. Grouping could throw an error `Failed to allocate counts or TMP` with more than 1e9 rows even with sufficient RAM due to an integer overflow, [#4295](https://github.com/Rdatatable/data.table/issues/4295) [#4818](https://github.com/Rdatatable/data.table/issues/4818). Thanks to @renkun-ken and @jangorecki for reporting, and @shrektan for fixing.
+
+2. `fwrite()`'s mutithreaded `gzip` compression failed on Solaris with Z_STREAM_ERROR, [#4099](https://github.com/Rdatatable/data.table/issues/4099). Since this feature was released in Oct 2019 (see item 3 in v1.12.4 below in this news file) there have been no known problems with it on Linux, Windows or Mac. For Solaris, we have been successively adding more and more detailed tracing to the output in each release, culminating in tracing `zlib` internals at byte level by reading `zlib`'s source. The problem did not manifest itself on [R-hub](https://builder.r-hub.io/)'s Solaris instances, so we had to work via CRAN output. If `zlib`'s `z_stream` structure is declared inside a parallel region but before a parallel for, it appears that the particular OpenMP implementation used by CRAN's Solaris moves the structure to a new address on entering the parallel for. Ordinarily this memory move would not matter, however, `zlib` internals have a self reference pointer to the parent, and check that the pointers match. This mismatch caused the -2 (Z_STREAM_ERROR). Allocating an array of structures, one for each thread, before the parallel region avoids the memory move with no cost.
+
+    It should be carefully noted that we cannot be sure it really is a problem unique to CRAN's Solaris. Even if it seems that way after one year of observations. For example, it could be compiler flags, or particular memory circumstances, either of which could occur on other operating systems too. However, we are unaware of why it would make sense for the OpenMP implementation to move the structure at that point. Any optimizations such as aligning the set of structures to cache line boundaries could be performed at the start of the parallel region, not after the parallel for. If anyone reading this knows more, please let us know. 
+
+## NOTES
+
+1. The last release took place at the same time as several breaking changes were made to R-devel. The CRAN submissions process runs against latest daily R-devel so we had to keep up with those latest changes by making several resubmissions. Then each resubmission reruns against the new latest R-devel again. Overall it took 7 days. For example, we added the new `environments=FALSE` to our `all.equal` call. Then about 4 hours after 1.13.4 was accepted, the `s` was dropped and we now need to resubmit with `environment=FALSE`. In any case, we have suggested that the default should be FALSE first to give packages some notice, as opposed to generating errors in the CRAN submissions process within hours. Then the default for `environment=` could be TRUE in 6 months time after packages have had some time to update in advance of the default change. Readers of this NEWS file will be familiar with `data.table`'s approach to change control and know that we do this ourselves.
+
+
+# data.table [v1.13.4](https://github.com/Rdatatable/data.table/milestone/21?closed=1)  (08 Dec 2020)
+
+## BUG FIXES
+
+1. `as.matrix(<empty DT>)` now retains the column type for the empty matrix result, [#4762](https://github.com/Rdatatable/data.table/issues/4762). Thus, for example, `min(DT[0])` where DT's columns are numeric, is now consistent with non-empty all-NA input and returns `Inf` with R's warning `no non-missing arguments to min; returning Inf` rather than R's error `only defined on a data frame with all numeric[-alike] variables`. Thanks to @mb706 for reporting.
+
+2. `fsort()` could crash when compiled using `clang-11` (Oct 2020), [#4786](https://github.com/Rdatatable/data.table/issues/4786). Multithreaded debugging revealed that threads are no longer assigned iterations monotonically by the dynamic schedule. Although never guaranteed by the OpenMP standard, in practice monotonicity could be relied on as far as we knew, until now. We rely on monotonicity in the `fsort` implementation. Happily, a schedule modifier `monotonic:dynamic` was added in OpenMP 4.5 (Nov 2015) which we now use if available (e.g. gcc 6+, clang 3.9+). If you have an old compiler which does not support OpenMP 4.5, it's probably the case that the unmodified dynamic schedule is monotonic anyway, so `fsort` now checks that threads are receiving iterations monotonically and emits a graceful error if not. It may be that `clang` prior to version 11, and `gcc` too, exhibit the same crash. It was just that `clang-11` was the first report. To know which version of OpenMP `data.table` is using, `getDTthreads(verbose=TRUE)` now reports the `YYYYMM` value `_OPENMP`; e.g. 201511 corresponds to v4.5, and 201811 corresponds to v5.0. Oddly, the `x.y` version number is not provided by the OpenMP API. OpenMP 4.5 may be enabled in some compilers using `-fopenmp-version=45`. Otherwise, if you need to upgrade compiler, https://www.openmp.org/resources/openmp-compilers-tools/ may be helpful.
+
+3. Columns containing functions that don't inherit the class `'function'` would fail to group, [#4814](https://github.com/Rdatatable/data.table/issues/4814). Thanks @mb706 for reporting, @ecoRoland2 for helping investigate, and @Coorsaa for a follow-up example involving environments.
+
+## NOTES
+
+1. Continuous daily testing by CRAN using latest daily R-devel revealed, within one day of the change to R-devel, that a future version of R would break one of our tests, [#4769](https://github.com/Rdatatable/data.table/issues/4769). The characters "-alike" were added into one of R's error messages, so our too-strict test which expected the error `only defined on a data frame with all numeric variables` will fail when it sees the new error message `only defined on a data frame with all numeric-alike variables`. We have relaxed the pattern the test looks for to `data.*frame.*numeric` well in advance of the future version of R being released. Readers are reminded that CRAN is not just a host for packages. It is also a giant test suite for R-devel. For more information, [behind the scenes of cran, 2016](https://www.h2o.ai/blog/behind-the-scenes-of-cran/).
+
+2. `as.Date.IDate` is no longer exported as a function to solve a new error in R-devel `S3 method lookup found 'as.Date.IDate' on search path`, [#4777](https://github.com/Rdatatable/data.table/issues/4777). The S3 method is still exported; i.e. `as.Date(x)` will still invoke the `as.Date.IDate` method when `x` is class `IDate`. The function had been exported, in addition to exporting the method, to solve a compatibility issue with `zoo` (and `xts` which uses `zoo`) because `zoo` exports `as.Date` which masks `base::as.Date`. Happily, since zoo 1.8-1 (Jan 2018) made a change to its `as.IDate`, the workaround is no longer needed.
+
+3. Thanks to @fredguinog for testing `fcase` in development before 1.13.0 was released and finding a segfault, [#4378](https://github.com/Rdatatable/data.table/issues/4378). It was found separately by the `rchk` tool (which uses static code analysis) in release procedures and fixed before `fcase` was released, but the reproducible example has now been added to the test suite for completeness. Thanks also to @shrektan for investigating, proposing a very similar fix at C level, and a different reproducible example which has also been added to the test suite.
+
+
+# data.table [v1.13.2](https://github.com/Rdatatable/data.table/milestone/19?closed=1)  (19 Oct 2020)
 
 ## BUG FIXES
 
@@ -843,7 +900,7 @@ has a better chance of working on Mac.
 
 12. `DT[..., .SDcols=integer()]` failed with `.SDcols is numeric but has both +ve and -ve indices`, [#1789](https://github.com/Rdatatable/data.table/issues/1789) and [#3185](https://github.com/Rdatatable/data.table/issues/3185). It now functions as `.SDcols=character()` has done and creates an empty `.SD`. Thanks to Gabor Grothendieck and Hugh Parsonage for reporting. A related issue with empty `.SDcols` was fixed in development before release thanks to Kun Ren's testing, [#3211](https://github.com/Rdatatable/data.table/issues/3211).
 
-13. Multithreaded stability should be much improved with R 3.5+. Many thanks to Luke Tierney for pinpointing a memory issue with package `constellation` caused by `data.table` and his advice, [#3165](https://github.com/Rdatatable/data.table/issues/3165). Luke also added an extra check to R-devel when compiled with `--enable-strict-barrier`. The test suite is run through latest daily R-devel after every commit as usual, but now with `--enable-strict-barrier` on too via GitLab Pipelines ("Extra" badge at the top of the data.table [homepage](http://r-datatable.com)) thanks to Jan Gorecki.
+13. Multithreaded stability should be much improved with R 3.5+. Many thanks to Luke Tierney for pinpointing a memory issue with package `constellation` caused by `data.table` and his advice, [#3165](https://github.com/Rdatatable/data.table/issues/3165). Luke also added an extra check to R-devel when compiled with `--enable-strict-barrier`. The test suite is run through latest daily R-devel after every commit as usual, but now with `--enable-strict-barrier` on too via GitLab CI ("Extra" badge on the `data.table` homepage) thanks to Jan Gorecki.
 
 14. Fixed an edge-case bug of platform-dependent output of `strtoi("", base = 2L)` on which `groupingsets` had relied, [#3267](https://github.com/Rdatatable/data.table/issues/3267).
 
@@ -942,7 +999,7 @@ has a better chance of working on Mac.
 
 ## NOTES
 
-1. The type coercion warning message has been improved, [#2989](https://github.com/Rdatatable/data.table/pull/2989). Thanks to @sarahbeeysian on [Twitter](https://twitter.com/sarahbeeysian/status/1021359529789775872) for highlighting. For example, given the follow statements:
+1. The type coercion warning message has been improved, [#2989](https://github.com/Rdatatable/data.table/pull/2989). Thanks to @sarahbeeysian on Twitter for highlighting. For example, given the follow statements:
 
     ```R
     DT = data.table(id=1:3)
@@ -1396,7 +1453,7 @@ When `j` is a symbol (as in the quanteda and xgboost examples above) it will con
 
 2. Just to state explicitly: data.table does not now depend on or require OpenMP. If you don't have it (as on CRAN's Mac it appears but not in general on Mac) then data.table should build, run and pass all tests just fine.
 
-3. There are now 5,910 raw tests as reported by `test.data.table()`. Tests cover 91% of the 4k lines of R and 89% of the 7k lines of C. These stats are now known thanks to Jim Hester's [Covr](https://CRAN.R-project.org/package=covr) package and [Codecov.io](https://codecov.io/). If anyone is looking for something to help with, creating tests to hit the missed lines shown by clicking the `R` and `src` folders at the bottom [here](https://codecov.io/github/Rdatatable/data.table?branch=master) would be very much appreciated.
+3. There are now 5,910 raw tests as reported by `test.data.table()`. Tests cover 91% of the 4k lines of R and 89% of the 7k lines of C. These stats are now known thanks to Jim Hester's [Covr](https://CRAN.R-project.org/package=covr) package and [Codecov.io](https://about.codecov.io/). If anyone is looking for something to help with, creating tests to hit the missed lines shown by clicking the `R` and `src` folders at the bottom [here](https://codecov.io/github/Rdatatable/data.table?branch=master) would be very much appreciated.
 
 4. The FAQ vignette has been revised given the changes in v1.9.8. In particular, the very first FAQ.
 

@@ -27,45 +27,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
-<style type="text/css">
-a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
-a.anchor-section::before {content: '#';}
-.hasAnchor:hover a.anchor-section {visibility: visible;}
-</style>
-<script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
-document.addEventListener('DOMContentLoaded', function() {
-  // Do nothing if AnchorJS is used
-  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
-    return;
-  }
-
-  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  // Do nothing if sections are already anchored
-  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
-    return null;
-  }
-
-  // Use section id when pandoc runs with --section-divs
-  const section_id = function(x) {
-    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
-            ? x.id : '');
-  };
-
-  // Add anchors
-  h.forEach(function(x) {
-    const id = x.id || section_id(x.parentElement);
-    if (id === '') {
-      return null;
-    }
-    let anchor = document.createElement('a');
-    anchor.href = '#' + id;
-    anchor.classList = ['anchor-section'];
-    x.classList.add('hasAnchor');
-    x.appendChild(anchor);
-  });
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -164,6 +125,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -371,9 +333,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </ul>
 <div id="basic-functionality" class="section level2">
 <h2>Basic functionality</h2>
-<p>For demonstration, this article uses a data analysis project that lives in <code>/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</code> on my machine. This is the <em>project root</em>. The path will most likely be different on your machine, the here package helps deal with this situation.</p>
+<p>For demonstration, this article uses a data analysis project that lives in <code>/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</code> on my machine. This is the <em>project root</em>. The path will most likely be different on your machine, the here package helps deal with this situation.</p>
 <p>The project has the following structure:</p>
-<pre><code>#&gt; /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project
+<pre><code>#&gt; /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project
 #&gt; ├── analysis
 #&gt; │   └── report.Rmd
 #&gt; ├── data
@@ -382,11 +344,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 #&gt; └── prepare
 #&gt;     └── penguins.R</code></pre>
 <p>You can review the project on <a href="https://github.com/r-lib/here/tree/master/inst/demo-project">GitHub</a> and also download a copy.</p>
-<p>To start working on this project in RStudio, open the <code>demo-project.Rproj</code> file. This ensures that the <a href="https://en.wikipedia.org/wiki/Working_directory">working directory</a> is set to <code>/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</code>, the project root. Opening only the <code>.R</code> or the <code>.Rmd</code> file may be insufficient!</p>
+<p>To start working on this project in RStudio, open the <code>demo-project.Rproj</code> file. This ensures that the <a href="https://en.wikipedia.org/wiki/Working_directory">working directory</a> is set to <code>/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</code>, the project root. Opening only the <code>.R</code> or the <code>.Rmd</code> file may be insufficient!</p>
 <p>Other development environments may have a different notion of a project. Either way, it is important that the working directory is set to the project root or a subdirectory of that path. You can check with:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(project_path)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span></code></pre></div>
 <p>(See <code>vignette(&quot;rmarkdown&quot;)</code> for an example where the working directory is set to a subdirectory on start.)</p>
 <div id="declare-the-location-of-the-current-script" class="section level3">
 <h3>Declare the location of the current script</h3>
@@ -398,19 +360,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </ul>
 <p>The first argument to <code>here::i_am()</code> should be the path to the current file, relative to the project root. The <code>penguins.R</code> script uses:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">i_am</span>(<span class="st">&quot;prepare/penguins.R&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</span></span></code></pre></div>
 <p><code>here::i_am()</code> displays the top-level directory of the current project. Because the project has a <code>prepare/</code> directory in its root that contains <code>penguins.R</code>, it is correctly inferred as the project root.</p>
 <p>After <code>here::i_am()</code>, insert <code>library(here)</code> to make the <code>here()</code> function available:<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code></pre></div>
 <p>The top-level directory is also returned from the <code>here()</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span></code></pre></div>
 <p>One important distinction from the working directory is that this remains stable even if the working directory is changed:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;analysis&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project/analysis&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project/analysis&quot;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;..&quot;</span>)</span></code></pre></div>
 <p>(I suggest to steer clear from ever changing the working directory. This may not always be feasible, in particular if the working directory is changed by code that you do not control.)</p>
 </div>
@@ -418,36 +380,42 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h3>Use project-relative paths</h3>
 <p>You can build a path relative to the top-level directory in order to build the full path to a file:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;penguins.csv&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project/data/penguins.csv&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project/data/penguins.csv&quot;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;penguins.csv&quot;</span>),</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">list</span>(<span class="at">.default =</span> readr<span class="sc">::</span><span class="fu">col_guess</span>()),</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_max =</span> <span class="dv">3</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;print(tibble::tibble())&gt;</span></span></code></pre></div>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 8</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g sex  </span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;           &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Adelie  Torge…           39.1          18.7              181        3750 male </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Adelie  Torge…           39.5          17.4              186        3800 fema…</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Adelie  Torge…           40.3          18                195        3250 fema…</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 1 more variable: year &lt;dbl&gt;</span></span></code></pre></div>
 <p>This works regardless of where the associated source file lives inside your project. With <code>here()</code>, the path will always be relative to the top-level project directory.</p>
 <p><code>here()</code> works very similarly to <code>file.path()</code> or <code>fs::path()</code>, you can pass path components or entire subpaths:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">&quot;data/penguins.csv&quot;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project/data/penguins.csv&quot;</span></span></code></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project/data/penguins.csv&quot;</span></span></code></pre></div>
 <p>As seen above, <code>here()</code> returns absolute paths (starting with <code>/</code>, <code>&lt;drive letter&gt;:\</code> or <code>\\</code>). This makes it safe to pass these paths to other functions, even if the working directory is changed along the way.</p>
 <p>As of version 1.0.0, absolute paths passed to <code>here()</code> are returned unchanged. This means that you can safely use both absolute and project-relative paths in <code>here()</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">&quot;data&quot;</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(data_path)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project/data&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project/data&quot;</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(data_path, <span class="st">&quot;penguins.csv&quot;</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project/data/penguins.csv&quot;</span></span></code></pre></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project/data/penguins.csv&quot;</span></span></code></pre></div>
 </div>
 <div id="situation-report" class="section level3">
 <h3>Situation report</h3>
 <p>The <code>dr_here()</code> function explains the reasoning behind choosing the project root:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dr_here</span>()</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project.</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - This directory contains a file &quot;prepare/penguins.R&quot;</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Initial working directory: /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</span></span></code></pre></div>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Initial working directory: /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</span></span></code></pre></div>
 <p>The <code>show_reason</code> argument can be set to <code>FALSE</code> to reduce the output to one line:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dr_here</span>(<span class="at">show_reason =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</span></span></code></pre></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</span></span></code></pre></div>
 </div>
 <div id="what-if-the-working-directory-is-wrong" class="section level3">
 <h3>What if the working directory is wrong?</h3>
@@ -456,10 +424,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">getwd</span>())</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">i_am</span>(<span class="st">&quot;prepare/penguins.R&quot;</span>)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmptSh6bR&quot;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpHuFWzz&quot;</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error: Could not find associated project in working directory or any parent directory.</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Path in project: prepare/penguins.R</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/RtmptSh6bR</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/RtmpHuFWzz</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Please open the project associated with this file and try again.</span></span></code></pre></div>
 <p>This can also happen when a file has been renamed or moved without updating the <code>here::i_am()</code> call. In the future, a helper function will assist with installing and updating suitably formatted <code>here::i_am()</code> calls in your scripts and reports.</p>
 </div>
@@ -479,7 +447,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in here(): argument &quot;f&quot; is missing, with no default</span></span></code></pre></div>
 <p>One way to work around this problem is to use <code>here::here()</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>()</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span></code></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span></code></pre></div>
 <p>The conflicted package offers an alternative: it detects that <code>here()</code> is exported from more than one package and allows you to use neither until you indicate a preference.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span>
@@ -494,7 +462,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>conflicted<span class="sc">::</span><span class="fu">conflict_prefer</span>(<span class="st">&quot;here&quot;</span>, <span class="st">&quot;here&quot;</span>)</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [conflicted] Will prefer here::here over any other package</span></span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span></code></pre></div>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span></code></pre></div>
 </div>
 <div id="specify-a-unique-identifier" class="section level3">
 <h3>Specify a unique identifier</h3>
@@ -508,7 +476,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </ul>
 <p>Use <code>uuid::UUIDgenerate()</code> to create universally unique identifiers:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>uuid<span class="sc">::</span><span class="fu">UUIDgenerate</span>()</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;848e02d7-3a59-44f2-9f50-a8dd13012db9&quot;</span></span></code></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;36f421ac-2d53-46d4-bfad-a0ac96491443&quot;</span></span></code></pre></div>
 <p>Ensure that the <code>uuid</code> arguments are actually unique across your files! In the future, a helper function will assist with installing and updating suitably formatted <code>here::i_am()</code> calls in your scripts and reports.</p>
 </div>
 </div>
@@ -531,7 +499,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  script_path</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_tree</span>(temp_project_path)</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; /tmp/RtmptSh6bR/file27796442b44a</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; /tmp/RtmpHuFWzz/file30547d5e00ca</span></span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └── scripts</span></span>
 <span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     └── script.R</span></span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">readLines</span>(script_path))</span>
@@ -543,14 +511,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &gt; here::i_am(&quot;scripts/script.R&quot;)</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error: Could not find associated project in working directory or any parent directory.</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Path in project: scripts/script.R</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Current working directory: /tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Please open the project associated with this file and try again.</span></span></code></pre></div>
 <p>To reset the project root mid-session, change the working directory with <code>setwd()</code>. Now, the subsequent call to <code>here::i_am()</code> from within <code>script.R</code> works:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(temp_project_path)</span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(script_path, <span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &gt; here::i_am(&quot;scripts/script.R&quot;)</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/RtmptSh6bR/file27796442b44a</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; here() starts at /tmp/RtmpHuFWzz/file30547d5e00ca</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &gt; print(&quot;Hello, world!&quot;)</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Hello, world!&quot;</span></span></code></pre></div>
@@ -562,7 +530,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>The following example shows how to find an RStudio project starting from a directory:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rprojroot)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">find_root</span>(is_rstudio_project, <span class="fu">file.path</span>(project_path, <span class="st">&quot;analysis&quot;</span>))</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/Rtmp8yAAAq/Rinst273b3f16bc52/here/demo-project&quot;</span></span></code></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;/tmp/RtmpnoXhd8/Rinst301434451937/here/demo-project&quot;</span></span></code></pre></div>
 <p>Arbitrary criteria can be defined. See <code>vignette(&quot;rprojroot&quot;, package = &quot;rprojroot&quot;)</code> for an introduction.</p>
 </div>
 </div>

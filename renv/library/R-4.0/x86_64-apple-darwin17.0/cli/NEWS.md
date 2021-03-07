@@ -1,4 +1,31 @@
 
+# cli 2.3.1
+
+* ANSI color support detection works correctly now in older RStudio,
+  and also on older R versions.
+
+* `cli_h1()`, `cli_h2()` and `cli_h3()` now work with multiple glue
+  substitutions (#218).
+
+# cli 2.3.0
+
+* `boxx()` now correctly calculates the width of the box for non-ASCII
+  characters.
+
+* New `ansi_trimws()` and `ansi_strwrap()` functions, they are similar
+  to `trimws()` and `strwrap()` but work on ANSI strings.
+
+* New `ansi_columns()` function to format ANSI strings in multiple columns.
+
+* `ansi_substr()`, `ansi_substring()`, `ansi_strsplit()`, `ansi_align()`
+  now always return `ansi_string` objects.
+
+* `ansi_nchar()`, `ansi_align()`, `ansi_strtrim()` and the new
+  `ansi_strwrap()` as well handle wide Unicode correctly, according to
+  their display width.
+
+* `boxx()` can now add headers and footers to boxes.
+
 # cli 2.2.0
 
 * New `style_hyperlink()` function to add hyperlinks, on terminals that
