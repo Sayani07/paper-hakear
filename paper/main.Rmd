@@ -447,7 +447,7 @@ knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 
 5. The pairwise distances $d_{(jk, j'k')}$ is transformed using a suitable tuning parameter ($0<\lambda<1$) depending on if they are within-facet($d_w$) or between-facets($d_b$) as follows:
 
-\begin{equation}
+\begin{equation}\label{def:raw-wpd}
 d*_{(j,k), (j'k')} =
 \begin{cases}
 \lambda d_{(jk), (j'k')},& \text{if } d = d_w\\
@@ -1172,22 +1172,21 @@ elec_raw + elec_nqt
 
 _Choosing cyclic granularities of interest and removing clashes_
 
-Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of this data is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analyzed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo]. Table \ref{tab:tab-rank-8}  shows $14$ harmony pairs that belong to $H_{N_C}$.
+Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of the tsibble is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analyzed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo]. Table \ref{tab:tab-rank-8}  shows $14$ harmony pairs that belong to $H_{N_C}$.
 
  <!-- The paper also shows how the number of harmonies could be identified among  by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies. -->
 
 
 _Selecting and Ranking harmonies for all households_ 
 
-$v_{i, t}$ has a asymmetrical distribution as could be seen in \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered to upweigh the within-facet distances and down-weigh the between facet distances and the maximum of them are obtained to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:norm-wpd}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households
-\ref{fig:dotplot-8} shows the heatmap for the eight households
+$v_{i, t}$ has a asymmetrical distribution as could be seen in Figure \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain the relevant within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered in Equation \ref{def:raw-wpd} to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:norm-wpd}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. Figure \ref{fig:dotplot-8} shows the heatmap for the eight households
 with the value of $wpd_{norm}$ filled as colors.
 
 _Validating rank of household id:1_
 
 From table \ref{tab:tab-rank-8}, it could be seen that 
 for household id:1, (hod, wdwnd) has been ranked higher than (wdwnd, hod), both of these being significant. Further, we see that (wom, wdwnd) has been ranked $5^{th}$ and tagged as an insignificant pair. Figure \ref{fig:gravitas-plot-8} is used to show
-if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However,the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the range of the demand is low in this case and hence the differences are not large enough to cross the threshold for significance.
+if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
 
 ```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
 
@@ -1342,9 +1341,14 @@ elec_harmony_all <- elec_select_harmony %>%
 ```
 
 
-```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The darker the colour, the higher the importance of the harmony. Also, the ones bordered red are selected with 90 percent significance level. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which households should be analyzed together." }
-elec_sig_split <- elec_harmony_all %>%
-  mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The darker the colour, the higher the importance of the harmony. Also, the ones bordered red are selected with 90 percent significance level. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which households should be analyzed together.", fig.height = 8}
+# elec_sig_split <- elec_harmony_all %>%
+#   mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+#   
+  select_split <- str_split(elec_harmony_all$select_harmony, " ", simplify = TRUE)[,2]
+  
+  elec_sig_split <- elec_harmony_all %>% 
+    bind_cols(select_split = select_split) %>% 
   mutate(significant = case_when(
     select_split == "***" ~ "highest",
     select_split == "**" ~ "high",
@@ -1363,22 +1367,26 @@ elec_sig_split$significant <-
   factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
 
 heatplot <- elec_sig_split %>% 
-  mutate(significance_95 = if_else(significant %in% c("high", "highest"), "yes", "no")) %>% 
-  ggplot() +
-  geom_tile(aes(x = x_variable,
-                 y = facet_variable, 
-                 fill = wpd, color = significance_95), size = 1) + 
-  #scale_fill_gradient(low = "white",high = "steelblue") +
-  scale_fill_gradient2() +
-  scale_colour_manual(values = c("white","red")) + 
+  mutate(significance_95 = if_else(significant %in% c("high", "highest"), "*", "")) %>% 
+  ggplot(aes(x = x_variable,
+                 y = facet_variable)) +
+  geom_tile(aes(fill = wpd)) + 
+                #color = as.factor(significance_95)),
+            #size = 0.3) +
+  geom_text(aes(label = significance_95), color = "#42275a") +
+  scale_fill_gradient(low = "white",high = "#ba5370") +
+  #scale_fill_manual(palette = "Dark2") +
+  #scale_colour_manual(values = c("white","red")) + 
   theme(legend.position = "bottom") +
-  facet_wrap(~id, nrow = 1, strip.position = "bottom") +
   coord_fixed() + 
   guides(fill = guide_legend()) +
   theme_void() +
   theme_gray(base_size = 12, base_family = "Times") +
   theme(panel.grid = element_blank(),
-        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom") + ggtitle("b")
+        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom") + ggtitle("a") +
+  theme(
+    strip.background = element_blank(),
+    strip.text.y  = element_blank(), plot.margin = unit(c(0, -2, 0, 0), "cm"))
   
 elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
   dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
@@ -1391,16 +1399,20 @@ elec_zoom <-  elec %>%
   dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30"))) %>%
   ggplot(aes(x=date_time, y = kwh)) +
   #geom_point(size = 0.1, colour = "black", alpha = 0.3) +
-  geom_line(size = 0.1, colour = "blue", alpha = 0.2) +
+  geom_line(size = 0.1, colour = "blue", alpha = 0.6) +
   facet_wrap(~id, 
              scales = "free_y",
-             nrow = 1,
-             strip.position =  "top") + xlab("") + 
-  theme_void() + theme(strip.text.x = element_blank()) +
-  ylab("energy demand in September (kwh)") + ggtitle("a")
+             ncol = 1,
+             strip.position =  "right",labeller = "label_both") + xlab("Time [30m]") + 
+  theme_minimal() + 
+  ylab("linear energy demand (kwh) for September") + ggtitle("b")
 
-elec_zoom/heatplot
-  
+heatplot +  facet_grid(id~.) + elec_zoom +
+  theme(
+    strip.background = element_blank(),
+    strip.text.y  = element_blank(), plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  plot_layout(widths = c(1, 2)) 
+
 #            
 # dotplot <- elec_sig_split %>% 
 #   ggplot() +
