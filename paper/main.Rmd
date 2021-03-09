@@ -1403,14 +1403,14 @@ elec_zoom <-  elec %>%
   facet_wrap(~id, 
              scales = "free_y",
              ncol = 1,
-             strip.position =  "right",labeller = "label_both") + xlab("Time [30m]") + 
-  theme_minimal() + 
+             strip.position =  "right",
+             labeller = "label_both") + 
+  xlab("Time [30m]") + 
+  theme_grey() + 
   ylab("linear energy demand (kwh) for September") + ggtitle("b")
 
 heatplot +  facet_grid(id~.) + elec_zoom +
-  theme(
-    strip.background = element_blank(),
-    strip.text.y  = element_blank(), plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  theme( plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   plot_layout(widths = c(1, 2)) 
 
 #            
@@ -1440,9 +1440,8 @@ elec_rank <- elec_sig_split %>%
               names_from = id,
                 values_from = rank) %>% 
   rename("facet variable" = "facet_variable",
-         "x variable" = "x_variable",
-         "facet levels" = "x_levels",
-         "x levels" = "x_levels")
+         "x variable" = "x_variable") %>% 
+  select(-facet_levels, -x_levels)
 
 elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance levels.")
 ```

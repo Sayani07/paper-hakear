@@ -1,0 +1,83 @@
+\begin{thebibliography}{xx}
+
+\harvarditem[Buja et~al.]{Buja, Cook, Hofmann, Lawrence, Lee, Swayne
+  \harvardand\ Wickham}{2009}{inference}
+Buja, A., Cook, D., Hofmann, H., Lawrence, M., Lee, E.-K., Swayne, D.~F.
+  \harvardand\ Wickham, H.  \harvardyearleft 2009\harvardyearright ,
+  `Statistical inference for exploratory data analysis and model diagnostics',
+  {\em Royal Society Philosophical Transactions A} {\bf
+  367}(1906),~4361–4383.
+
+\harvarditem{Dang \harvardand\ Wilkinson}{2014}{Dang2014-tw}
+Dang, T.~N. \harvardand\ Wilkinson, L.  \harvardyearleft 2014\harvardyearright
+  , {ScagExplorer}: Exploring scatterplots by their scagnostics, {\em in} `2014
+  {IEEE} Pacific Visualization Symposium', pp.~73--80.
+
+\harvarditem[Gupta et~al.]{Gupta, Hyndman, Cook \harvardand\
+  Unwin}{2020}{Gupta2020-vo}
+Gupta, S., Hyndman, R.~J., Cook, D. \harvardand\ Unwin, A.  \harvardyearleft
+  2020\harvardyearright , `Visualizing probability distributions across
+  bivariate cyclic temporal granularities'.
+
+\harvarditem{Hyndman \harvardand\ Fan}{1996}{Hyndman1996-ty}
+Hyndman, R.~J. \harvardand\ Fan, Y.  \harvardyearleft 1996\harvardyearright ,
+  `Sample quantiles in statistical packages', {\em Am. Stat.} {\bf
+  50}(4),~361--365.
+
+\harvarditem[{Hyndman} et~al.]{{Hyndman}, {Liu} \harvardand\
+  {Pinson}}{2018}{ieee-irish}
+{Hyndman}, R.~J., {Liu}, X. \harvardand\ {Pinson}, P.  \harvardyearleft
+  2018\harvardyearright , `Visualizing big energy data: Solutions for this
+  crucial component of data analysis', {\em IEEE Power and Energy Magazine}
+  {\bf 16}(3),~18--25.
+
+\harvarditem{Kullback \harvardand\ Leibler}{1951}{Kullback1951-jy}
+Kullback, S. \harvardand\ Leibler, R.~A.  \harvardyearleft
+  1951\harvardyearright , `On information and sufficiency', {\em Ann. Math.
+  Stat.} {\bf 22}(1),~79--86.
+
+\harvarditem[Majumder et~al.]{Majumder, Hofmann \harvardand\
+  Cook}{2013}{Majumder2013-hb}
+Majumder, M., Hofmann, H. \harvardand\ Cook, D.  \harvardyearleft
+  2013\harvardyearright , `Validation of visual statistical inference, applied
+  to linear models', {\em J. Am. Stat. Assoc.} {\bf 108}(503),~942--956.
+
+\harvarditem[Men{\'e}ndez et~al.]{Men{\'e}ndez, Pardo, Pardo \harvardand\
+  Pardo}{1997}{Menendez1997-in}
+Men{\'e}ndez, M.~L., Pardo, J.~A., Pardo, L. \harvardand\ Pardo, M.~C.
+  \harvardyearleft 1997\harvardyearright , `The {Jensen-Shannon} divergence',
+  {\em J. Franklin Inst.} {\bf 334}(2),~307--318.
+
+\harvarditem{{R Core Team}}{2019}{R-language}
+{R Core Team}  \harvardyearleft 2019\harvardyearright , {\em R: A Language and
+  Environment for Statistical Computing}, R Foundation for Statistical
+  Computing, Vienna, Austria.
+\newline\harvardurl{https://www.R-project.org/}
+
+\harvarditem{Tukey \harvardand\ Tukey}{1988}{tukey1988computer}
+Tukey, J.~W. \harvardand\ Tukey, P.~A.  \harvardyearleft 1988\harvardyearright
+  , `Computer graphics and exploratory data analysis: An introduction', {\em
+  The Collected Works of John W. Tukey: Graphics: 1965-1985} {\bf 5},~419.
+
+\harvarditem[Wang et~al.]{Wang, Cook \harvardand\ Hyndman}{2020{\em
+  a}}{wang2020calendar}
+Wang, E., Cook, D. \harvardand\ Hyndman, R.~J.  \harvardyearleft 2020{\em
+  a}\harvardyearright , `Calendar-based graphics for visualizing people’s
+  daily schedules', {\em Journal of Computational and Graphical Statistics} .
+\newblock to appear.
+
+\harvarditem[Wang et~al.]{Wang, Cook \harvardand\ Hyndman}{2020{\em
+  b}}{wang2019tsibble}
+Wang, E., Cook, D. \harvardand\ Hyndman, R.~J.  \harvardyearleft 2020{\em
+  b}\harvardyearright , `A new tidy data structure to support exploration and
+  modeling of temporal data', {\em Journal of Computational and Graphical
+  Statistics} .
+\newblock to appear.
+
+\harvarditem[Wilkinson et~al.]{Wilkinson, Anand \harvardand\
+  Grossman}{2005}{wilkinson2005graph}
+Wilkinson, L., Anand, A. \harvardand\ Grossman, R.  \harvardyearleft
+  2005\harvardyearright , Graph-theoretic scagnostics, {\em in} `IEEE Symposium
+  on Information Visualization, 2005. INFOVIS 2005.', IEEE, pp.~157--164.
+
+\end{thebibliography}
