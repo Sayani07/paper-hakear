@@ -1,5 +1,12 @@
 \begin{thebibliography}{xx}
 
+\harvarditem[Bogner et~al.]{Bogner, Pappenberger \harvardand\
+  Cloke}{2012}{Bogner2012-az}
+Bogner, K., Pappenberger, F. \harvardand\ Cloke, H.~L.  \harvardyearleft
+  2012\harvardyearright , `Technical note: The normal quantile transformation
+  and its application in a flood forecasting system', {\em Hydrol. Earth Syst.
+  Sci.} {\bf 16}(4),~1085--1094.
+
 \harvarditem[Buja et~al.]{Buja, Cook, Hofmann, Lawrence, Lee, Swayne
   \harvardand\ Wickham}{2009}{inference}
 Buja, A., Cook, D., Hofmann, H., Lawrence, M., Lee, E.-K., Swayne, D.~F.
@@ -35,6 +42,11 @@ Hyndman, R.~J. \harvardand\ Fan, Y.  \harvardyearleft 1996\harvardyearright ,
 Kullback, S. \harvardand\ Leibler, R.~A.  \harvardyearleft
   1951\harvardyearright , `On information and sufficiency', {\em Ann. Math.
   Stat.} {\bf 22}(1),~79--86.
+
+\harvarditem{{Lin}}{1991}{JSD}
+{Lin}, J.  \harvardyearleft 1991\harvardyearright , `Divergence measures based
+  on the shannon entropy', {\em IEEE Transactions on Information Theory} {\bf
+  37}(1),~145--151.
 
 \harvarditem[Majumder et~al.]{Majumder, Hofmann \harvardand\
   Cook}{2013}{Majumder2013-hb}

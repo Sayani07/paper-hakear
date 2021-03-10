@@ -29,6 +29,7 @@ abstract: |
 
 bibliography: [bibliography.bib]
 preamble: >
+  \setlength {\marginparwidth }{2cm}
   \usepackage{mathtools,amssymb,booktabs,amsthm,todonotes,colortbl}
   \def\mod{~\text{mod}~}
   \newtheorem{definition}{Definition}
@@ -107,7 +108,7 @@ Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many
 \noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Possible areas where it is useful are monitoring heart rates which could record number of heartbeats every minute or analyze web search data for which data is available for a temporal scale as fine as second.
 
 
-```{r calendar-elec, fig.height = 8, fig.cap = "Calendar displays faceted by two households are shown. The calendar displays are rich in information and has several components. For example, it can be observed easily that the level of energy consumption by household 2 is higher than household 4. Also, it gives an overview on when these households are away for holidays and which months consumptions are highest (Jan, Feb). However,when it comes to discerning periodic patterns, analyzing all possible periodic patterns through this display is overwhelming due to combination of linear and cyclic representation of time. For example, there is more going on in terms of peaks and troughs in id 2 compared to id 4, but it is not clear which all periodic patterns are dominant and if it differs between households."}
+```{r calendar-elec, fig.height = 8, fig.cap = "Calendar displays faceted by two households are shown. The calendar displays are rich in information and has several components. For example, it can be observed easily that the level of energy consumption by household 2 is higher than household 4. Also, it gives an overview on when these households are away for holidays and which months consumptions are highest (Jan, Feb). However, when it comes to discerning periodic patterns, analyzing all possible periodic patterns through this display is overwhelming due to combination of linear and cyclic representation of time. For example, there is more going on in terms of peaks and troughs in id 2 compared to id 4, but it is not clear which all periodic patterns are dominant and if it differs between households."}
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
 rdbl <- c("Weekday" = "#d7191c", "Weekend" = "#2c7bb6")
@@ -192,7 +193,7 @@ theme(
 
 ```
 
-```{r id2, fig.cap = "Distribution of energy consumption displayed through area quantile plots across two cyclic granularities month-of-year and hour-of-day for id2 (a) and id4 (b). The black line is the median, whereas the purple band covers the 25th to 75th percentile, the orange band covers the 10th to 90th percentile, and the green band covers the 1st to 99th percentile. Difference between 90th and 75th quantiles less for (Jan, Feb) in a) suggesting that it is a more frequent user of air conditioner than b). Energy consumption in a) changes across both granularities, whereas for b) daily pattern stays same irrespective of the months."}
+```{r id2, fig.cap = "Distribution of energy consumption displayed through area quantile plots across two cyclic granularities month-of-year and hour-of-day for id2 (left) and id4 (right). The black line is the median, whereas the orange band covers the 25th to 75th percentile and the green band covers the 10th to 90th percentile. Difference between the 90th and 75th quantiles is less for (Jan, Feb) in id2 suggesting that it is a more frequent user of air conditioner than id4. Energy consumption for id2 changes across both granularities, whereas for id4 daily pattern stays same irrespective of the months."}
 ggpubr::ggarrange(p1, p2, ncol = 2)
 ```
 
@@ -225,12 +226,19 @@ This work is a natural extension of our work (@Gupta2020-vo), which narrows down
 
 Our contributions in this paper are:
 
- * We introduce a new distance measure for detecting periodic interactions. This induces data reduction which allows for identification of patterns, if any, in the time series data.
+ <!-- * We introduce a new distance measure for detecting periodic interactions. This induces data reduction which allows for identification of patterns, if any, in the time series data. -->
 
- * We show that the distance metric could be used to rank the periodic patterns based on how well they capture the variation in the measured variable as they have been normalized for different number of comparisons.
+ <!-- * We show that the distance metric could be used to rank the periodic patterns based on how well they capture the variation in the measured variable as they have been normalized for different number of comparisons. -->
 
- * We device a framework for choosing a threshold, which will result in detection of only significantly interesting periodic patterns in the time series data.
+ <!-- * We device a framework for choosing a threshold, which will result in detection of only significantly interesting periodic patterns in the time series data. -->
 
+ * introduce a new distance measure for quantifying periodic interactions, which allows for identification
+of patterns in the time series data;
+ * device a framework for choosing a threshold, which results in detection of only significantly interesting
+periodic patterns;
+ * show that the proposed distance metric could be used to rank the periodic patterns based on
+how well they capture the variation in the measured variable since they have been normalized for
+relevant parameters.
 
 The article is organized as follows. Section \ref{sec:computation-wpd} introduces a new distance measure, discusses the reasoning behind choosing such a measure and presents some results to study the behavior of the measure. Section \ref{sec:norm-wpd} describes a methodology to normalize the distance measure so that it can qualify as a measure that can be compared across different comparisons and datasets. Section \ref{sec:rank-wpd} discusses how to choose a threshold to select only significant harmonies. Section \ref{sec:application-wpd} presents an application to a residential smart meter data in Melbourne to show how this distance measure acts as a way to automatically detect periodic patterns in time series.
 
@@ -401,7 +409,7 @@ $$JSD(q_1||q_2) = \frac{1}{2}D(q_1||M) + \frac{1}{2}D(q_2||M)$$
 where $M = \frac{q_1+q_2}{2}$ and 
 $D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(\frac{q_1(x)}{q_2(x)})$ is the KL divergence between distributions $q_1$ and $q_2$. 
 
-Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (Menendez1997-in), if the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
+Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (@Menendez1997-in), if the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
 
 
 
@@ -423,7 +431,7 @@ Furthermore, these distances are distributed as chi-squared with $m$ degrees of 
 
 ## Computation
 
-The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step,the raw data is normal quantile transformed (reference) so that the quantiles of the transformed data follows a standard normal distribution. The steps employed for computing the distance measure is summarized as follows:
+The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step,the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. The steps employed for computing the distance measure is summarized as follows:
 
 
 <!-- The values of $wpd$ indeed depend upon the underlying distribution. This is also not desirable as the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. The steps employed for computing the distance measure is summarized as follows: -->
@@ -567,7 +575,7 @@ G21 %>%
 
 # Normalization for the number of comparisons {#sec:norm-wpd}
 
-The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there is a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations.
+The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there are a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations.
 
 <!-- The nodes and the storage used are as follows: -->
 
@@ -583,7 +591,7 @@ The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ 
 
 ### Permutation approach
 
-This method is somewhat similar in spirit to bootstrap (reference) or permutation (reference) tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the location and scale of different groups (panels) same under $D_{null}$. The steps are as follows:
+This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the location and scale of different groups (panels) same under $D_{null}$. The steps are as follows:
 
 1. Compute $wpd$ for a harmony pair (A, B) for the original measured variable $v_t$ and store it in $wpd_{orig}$.
 
@@ -668,7 +676,7 @@ G21 %>%
 
 _Generalized linear model_  
 
-In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$ is a  Jensen-Shannon Distance (JSD) and lies between 0 and 1 (reference). Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$.
+In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$ is a Jensen-Shannon Distance (JSD) and lies between 0 and 1 (@JSD). Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$.
 
 We fit a Gamma generalized linear model with the inverse link which is of the form:  
 $$y_l = a+b*log(z_l) + e_l$$, where $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
@@ -916,7 +924,7 @@ A randomization test involves calculating a test statistic, randomly shuffling t
 5.  Steps (3) and (4) are repeated a large number
 of times $M$ (M = 200).
 
-6. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
+6. For each permutation, one $wpd_{perm_i}$ is obtained.   Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
 
 7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and store it in $wpd^{all}_{sample}$.
 
@@ -958,7 +966,7 @@ Observations are generated from a N(0,1) distribution for each combination of $n
 
 ### Results
 
-The results for this section is WIP and to be included in details in the Supplementary paper. Also, Figure \ref{fig:plot-all-new2} presents the results of $wpd_{norm}$ from the illustrative designs in Section \ref{sec:computation-wpd}. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, note the the relative difference in $wpd_{norm}$ values as we move from  a to d, which aligns with the idea of $wpd_{norm}$, since the differences between x categories are up-weighed by design.
+The results for this section is WIP and to be included in details in the Supplementary paper. Also, Figure \ref{fig:plot-all-new3} presents the results of $wpd_{norm}$ from the illustrative designs in Section \ref{sec:computation-wpd}. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, note the relative difference in $wpd_{norm}$ values as we move from  a to d, which aligns with the idea of $wpd_{norm}$, since the differences between x categories are up-weighed by design.
 
 
 ```{r varall-new}
@@ -987,7 +995,7 @@ varall <- compute_pairwise_norm(sim_panel_varall,
 # plot
 p_varall <- sim_panel_varall %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("d", round(varall, 2)))
+  ggtitle(paste("d", round(varall, 2))) + xlab("x level")
 ```
 
 
@@ -1015,7 +1023,7 @@ varx <- compute_pairwise_norm(sim_panel_varx,
 # plot
 p_varx <- sim_panel_varx %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("c", round(varx, 2)))
+    ggtitle(paste("c", round(varx, 2))) + xlab("x level")
 ```
 
 
@@ -1040,7 +1048,7 @@ varf <- compute_pairwise_norm(sim_panel_varf,
 
 p_varf <- sim_panel_varf %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("b", round(varf, 2)))
+    ggtitle(paste("b", round(varf, 2))) + xlab("x level")
 ```
 
 
@@ -1064,10 +1072,10 @@ null <- compute_pairwise_norm(sim_panel_null,
 
 p_null <- sim_panel_null %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-    ggtitle(paste("a", round(null, 2)))
+    ggtitle(paste("a", round(null, 2))) + xlab("x level") 
 ```
 
-```{r plot-all-new2, fig.cap = "$wpd_{norm}$ values for the four illustrative designs are presented here. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
+```{r plot-all-new3, fig.cap = "$wpd_{norm}$ values for the four illustrative designs are presented here. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
 library(patchwork)
 (p_null + p_varf)/(p_varx + p_varall)
 ```
@@ -1078,10 +1086,14 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
-The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. It is evident from the range of the demand data that these households vary in consumption levels as well as in their temporal patterns. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted to inspect if there is any daily or weekly periodic patterns in their behavior that is reflected when we zoom into the the linear representation of the time series. We have some additional demographics data in terms of the number of members in the household and presence of kids/elderly parents and their profession.
+The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. We also have some additional demographics data in terms of the number of members in the household and the presence of kids/elderly parents and their profession.
+
+Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted.
+It is evident from the range of the demand data in  Figure \ref{fig:linear-scale-8} (a), that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. When we zoom into the linear representation of this series in Figure \ref{fig:linear-scale-8} (b), some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
+Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
 
 
-```{r}
+```{r tab-demography}
 demography <- tibble(id = c(1, 2, 3, 4, 5,6, 7, 8), 
        profession = c("academia", "mixed", "industry", "industry", "mixed", "mixed", "academia", "industry"),
        total_members = c(2, 3, 5, 5, 2, 2, 2, 6),
@@ -1093,12 +1105,9 @@ demography %>% kable(format  = "markdown", caption = "Demographics of the eight 
 ```
 
 
-
-We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
-
 <!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
 
-```{r linear-scale-8, fig.cap = "Electricity demand for eight households are shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that they have different level of consumption but all of them have some periodic behavior in terms of regular peaks and troughs. It is not clear which all periodic patterns exist. In fig b, periodic pattern is zoomed in for a month and we can see weekly patterns for the entire period and daily pattern for the highlighted week."}
+```{r linear-scale-8, fig.cap = "Electricity demand for eight households is shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. In fig b, we can see some weekly patterns for the entire period and daily patterns for the highlighted week and there could be some other patterns visible in terms of peaks and troughs, but it is not clear if they are regular or significant.", fig.height=8}
 library(scales)
 library(tidyquant)
 library(gghighlight)
@@ -1135,8 +1144,7 @@ elec_linear + elec_zoom
 ```
 
 
-
-```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households in Panel a. Panel b shows the normal-score-transform half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand."}
+```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households is shown in Fig a. Fig b shows the normal-score-transformed half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand."}
 elec_raw <- elec %>% 
   ggplot() +
   geom_density(aes(x = kwh)) +
@@ -1186,7 +1194,7 @@ _Validating rank of household id:1_
 
 From table \ref{tab:tab-rank-8}, it could be seen that 
 for household id:1, (hod, wdwnd) has been ranked higher than (wdwnd, hod), both of these being significant. Further, we see that (wom, wdwnd) has been ranked $5^{th}$ and tagged as an insignificant pair. Figure \ref{fig:gravitas-plot-8} is used to show
-if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
+if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences for $\lambda>0.5$, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
 
 ```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
 
@@ -1241,7 +1249,7 @@ p1 + p2/p3
 _Comparing households and validating patterns from linear display_ 
 
 
-Figure \ref{fig:dotplot-8} helps to compare between households through the heatmap (b) and validate the results of the heatmap through linear display in (a) . The top panel contains the raw data for a month (Sep-2019). The darker the color of a cell in the heatmap, the more significant a harmony pair it is. Also, the ones with red borders are significant at 95% significance. This plot suggests that there is no significant periodic patterns for id 5, even when the demographics of id 5 is very similar to id 6 and 7. Household id 6 and 7 differ in the sense that for id 6, difference in patterns only during weekday/weekends (two members are in mixed profession), whereas for id 7, all or few other days of the week are also important (members are in academia and hence more flexible routines). The periodic pattern is very similar to id 8, which has a very different demographic property. Both from the linear representation and heatmap, it is clear that id 2 and 3 are similar, both in term of periodic pattern as well as demographics.
+Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and validate the results of the heatmap through linear display in (b). The top panel contains the raw data for a month (Sep-2019). The darker the color of a cell in the heatmap, the more significant a harmony pair it is. Also, the ones with `*` are significant at 95% level This plot suggests that there are no significant periodic patterns for id 5, even when the demographics of id 5 are very similar to id 6 and 7. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends (two members are in the mixed profession), whereas for id 7, all or few other days of the week are also important (members are in academia and hence might have more flexible routines). The periodic pattern is very similar to id 8, which has a very different demographic property. Households id 2 and 3 are similar, in terms of linear display, periodic patterns as well as demographics. Different periodic behavior could be observed in households with very similar demographics (id 5 compared to 6 and 7 - only the variable `profession` is different) and similar periodic behavior can stem from households with very different demographics (id 7 and 8 - differs in all variables in \ref{tab:tab-demography}). This could also be verified from the corresponding linear representation in \ref{fig:dotplot-8}(b).
 
 ```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something", eval = FALSE}
 
@@ -1445,7 +1453,6 @@ elec_rank <- elec_sig_split %>%
 
 elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance levels.")
 ```
-
 
 # Discussion
 
