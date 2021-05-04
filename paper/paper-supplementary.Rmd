@@ -77,7 +77,7 @@ here::here()
 # loadd()
 ```
 
-Appendix A recalls the necessary notations and 
+<!-- Appendix A recalls the necessary notations and  -->
 
 # Recalling notations
 
@@ -133,9 +133,6 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/d
 ```
 ## Different number of comparisons
 
-
-# Location and scale
-
 Next, we study the distribution of $wpd$ for different $nx$ and $nfacet$ in various ways.
 
 ```{r nxbyfacet-ridge-N05, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
@@ -155,10 +152,7 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 <!-- Firstly, we show that NQT works to make the distribution within each panel same. . -->
 
-
-## Increment
-
-# Behavior of normalised distance measure
+# Normalised distance measure
 
 ## sample size
 
@@ -168,3 +162,8 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 # Ranking and selecting harmonies
 
+## Simulation design
+
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test.
+
+## Results
