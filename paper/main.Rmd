@@ -25,7 +25,7 @@ keywords:
 - R
 
 abstract: |
- Periodic patterns or associations in large univariate time series data could be discerned by analysing the behaviour across cyclic temporal granularities, which are temporal deconstructions accounting for repetitive behaviour. The temporal granularities form ordered categorical variables and display of distributions of the univariate response variable across two or more combinations of these categorical variable can help explore periodicities, patterns and anomalies. A  pair of granularities that can be meaningfully examined together are called “harmonies” and the ones which cannot be are called “clashes”. Even after excluding clashes, the list of harmonies that could potentially be displayed is huge and hence overwhelming for human consumption. This work provides a methodology to screen the most informative graphics from the plethora of choices by introducing a distance measure that could be compared across harmonies with varied levels and data sets. Moreover, this distance measure could also be used to rank the selected harmonies basis how well they capture the variation in the measured variable. All the methods are implemented in the open source R package `hakear`. 
+ Periodic patterns or associations in large univariate time series data could be discerned by analysing the behaviour across cyclic temporal granularities, which are temporal deconstructions accounting for repetitive behaviour. The temporal granularities form ordered categorical variables and display of distributions of the univariate response variable across two or more combinations of these categorical variable can help explore periodicities, patterns and anomalies. A  pair of granularities that can be meaningfully examined together are called “harmonies” and the ones which cannot be are called “clashes”. Even after excluding clashes, the list of harmonies that could potentially be displayed is huge and hence overwhelming for human consumption. This work provides a methodology to screen the most informative graphics from the plethora of choices by introducing a distance measure that could be compared across harmonies with varied levels and data sets. Moreover, this distance measure could also be used to rank the s = ted harmonies basis how well they capture the variation in the measured variable. All the methods are implemented in the open source R package `hakear`. 
 
 bibliography: [bibliography.bib]
 preamble: >
@@ -58,7 +58,7 @@ library(knitr)
 library(tidyverse)
 library(lubridate)
 library(lvplot)
-library(ggridges)
+#library(ggridges)
 library(viridis)
 library(tsibble)
 library(gravitas)
@@ -130,6 +130,9 @@ prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
 ```
 
 
+
+
+
 <!-- context when it could be useful is monitoring heart rates. There are devices that can detect each heartbeat and transfer the data to a receiver such as a watch or phone. These data could be available for a temporal scale as fine as a minute and it could be of interest to see regular patterns across any deconstruction of time coarser than a minute. -->
 
 ```{r intro_all}
@@ -192,6 +195,26 @@ theme(
         strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
 ```
+
+
+```{r}
+id2_tsibble %>%
+  create_gran("month_year") %>% 
+  ggplot() +
+  geom_lv(aes(x = month_year, y = kwh)) 
+  
+   prob_plot("month_year",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) +
+  ggtitle("") + theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + 
+  scale_colour_brewer(name = "", palette = "PiYG")
+```
+
+
 
 ```{r id2, fig.cap = "Distribution of energy consumption displayed through area quantile plots across two cyclic granularities month-of-year and hour-of-day for id2 (left) and id4 (right). The black line is the median, whereas the orange band covers the 25th to 75th percentile and the green band covers the 10th to 90th percentile. Difference between the 90th and 75th quantiles is less for (Jan, Feb) in id2 suggesting that it is a more frequent user of air conditioner than id4. Energy consumption for id2 changes across both granularities, whereas for id4 daily pattern stays same irrespective of the months."}
 ggpubr::ggarrange(p1, p2, ncol = 2)
@@ -1101,7 +1124,9 @@ demography <- tibble(id = c(1, 2, 3, 4, 5,6, 7, 8),
        old_parents = c("no", "yes", "yes", "yes", "no", "no", "no", "yes"),
        PhD_student = c("no", "yes", "no", "no", "yes", "yes", "yes", "no"))
 
-demography %>% kable(format  = "markdown", caption = "Demographics of the eight households chosen for study")
+demography <- demography %>% kable(format  = "markdown", caption = "Demographics of the eight households chosen for study")
+
+demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 ```
 
 
@@ -1229,6 +1254,21 @@ p2 <- id1_tsibble %>%
 p3 <- id1_tsibble %>%
    prob_plot("week_month",
              "wknd_wday",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = FALSE,
+             quantile_prob = 
+               c(0.25,0.5,0.75)) +
+  scale_colour_brewer(name = "", palette = "Set2") +
+  theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
+        strip.text = element_text(size = 7, margin = margin())) +
+  ggtitle("c) wom vs wdwnd (insignificant)")
+
+
+p4 <- id1_tsibble %>%
+   prob_plot("day_month",
+             "hour_day",
              response = "kwh",
              plot_type = "quantile",
              symmetric = FALSE,
@@ -1420,24 +1460,6 @@ elec_zoom <-  elec %>%
 heatplot +  facet_grid(id~.) + elec_zoom +
   theme( plot.margin = unit(c(0, 0, 0, 0), "cm")) +
   plot_layout(widths = c(1, 2)) 
-
-#            
-# dotplot <- elec_sig_split %>% 
-#   ggplot() +
-#   geom_point(aes(x = x_variable,
-#                  y = facet_variable, 
-#                  size = wpd, 
-#                  fill = significant),
-#              shape=21,
-#              alpha= 0.8) +
-#   scale_size_continuous() +
-#   theme(legend.position = "bottom") +
-#   scale_fill_viridis(discrete = TRUE, direction = 1) +
-#   facet_wrap(~id, nrow = 2) +
-#   guides(fill = guide_legend(), 
-#          size = guide_legend()) +
-#   theme_gray(base_size = 12, base_family = "Times") +
-#    theme(legend.position = "bottom")
 ```
 
 
