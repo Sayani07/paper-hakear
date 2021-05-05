@@ -167,7 +167,7 @@ knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_p
 Observations are generated from Gamma(2,1), G(0.5, 1), N(0,1), N(0, 5) and N(5, 1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values
 of $wpd$ is obtained for each of the panels. The measurement variable for each combination of categories in a panel are drawn from the same distribution and hence the design corresponds to $D_{null}$ . Furthermore, this entire method is repeated for each panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed.
 
-## Different underlying distributions   
+## Underlying distributions   
 
 Since the measure $wpd$ is essentially set up to detect "differences" in distributions irrespective of underlying distribution, it would be ideal if it has minimal dependency on the type, location and scale of the initial distribution. To that end, some data pre-processing through the Normal Score Transform (NQT) has been applied in order to make most asymmetrical distributed measured variables more normal-like. Figure \ref{fig:gamma-diff-wotrans} shows ridge plots of raw $wpd$ for a Gamma(0.5,1), Gamma(2,1) before NQT. It is observed that for the underlying distribution Gamma(2,1), location and scale of the distribution of wpd changes from top-left panel to bottom-right panel. Moreover, the location and scale of the distribution of $wpd$ for different underlying distribution Gamma(0.5,1), Gamma(2,1). Figure \ref{fig:gamma-diff-quantrans} shows the the distributions of $wpd$ under same underlying distributions but after performing NQT. It is observed that within each panel, the distributions of the $wpd$ looks same, however, the distributions change from extreme top-left panel to bottom-right panels. Similar observations could be made in Figure \ref{fig:normal-diff-quantrans} for different underlying normal distributions  N(0,1), N(5,1) and N(0,5). This implies, NQT has atleast been able to bridge the gap in distribution of $wpd$ for different non-normal underlying distributions. 
 
@@ -182,7 +182,7 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/d
 ```{r normal-diff-quantrans, fig.cap = "Ridge plots of raw wpd is shown for N(0,1), N(5,1) and N(0,5) distribution. The densities change across different facet and x levels but look same for each panel, which implies wpd value is unaffected by the change in mean and standard deviation of the normal distribution", eval = FALSE}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/diff_mean3_normal.png"))
 ```
-## Different number of comparisons
+## Number of comparisons
 
 Next, we study the distribution of $wpd$ for different $nx$ and $nfacet$ in various ways.
 
@@ -203,7 +203,6 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 
 <!-- Firstly, we show that NQT works to make the distribution within each panel same. . -->
 
-# Normalised distance measure
 
 ## sample size
 
