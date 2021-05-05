@@ -81,18 +81,65 @@ here::here()
 
 # Recalling notations
 
-Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous measured variable observed across $T$ time points. Let the four elementary designs be $D_{null}$ where there is no difference in distribution of $v$ for $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across $A$. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$.
+Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous measured variable observed across $T$ time points. The pairwise distances between pairs ($a_jb_k,a_j'b_k'$) could be within-facets or within-facets a seen in Figure 4 of the main paper. Let the four elementary designs be $D_{null}$ where there is no pairwise difference in distribution of $v$ across $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across $A$. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$. The following method is deployed for generating different distributions across different combinations for non-null designs - suppose the distribution of the combination of first levels of x and facet category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$). Table \ref{tab:explain-design} shows an example of how initial distributions are assigned in a panel with $nfacet = 3$ and $nx = 2$ for different designs using $\omega = 1$.
+
+```{r explain-design}
+sim_varx_normal = function(nx, nfacet, mean, sd, w)
+{
+  rep(dist_normal((mean + seq(0, nx-1, by  = 1)*w), sd), nfacet)
+}
+
+sim_varf_normal = function(nx, nfacet, mean, sd, w)
+{
+  rep(dist_normal((mean + seq(0, nfacet-1, by  = 1)*w), sd), each = nx)
+}
+  sim_varall_normal = function(nx, nfacet, mean, sd, w)
+  {
+    dist_normal((mean + seq(0, (nx*nfacet - 1), by  = 1)*w), sd)
+  }
+  
+mean = 0
+sd = 1
+w = 1
+nx = 2
+nfacet = 3
+
+
+raw_levels = expand.grid(facet = c("$b_1$", "$b_2$", "$b_3$"),
+                         x = c("$a_1$", "$a_2$"))
+
+facet = rep(c("$b_1$", "$b_2$", "$b_3$"), each = nx)
+x =  rep(c("$a_1$", "$a_2$"), nfacet)
+
+vary_f <-  sim_varf_normal(nx, nfacet, mean, sd, w) %>% tibble()
+vary_x <-  sim_varx_normal(nx, nfacet, mean, sd, w) %>% tibble()
+vary_all <-  sim_varall_normal(nx, nfacet, mean, sd, w) %>% tibble()
+
+raw_table <- bind_cols(x = x, 
+                       facet = facet, 
+                       vary_f = vary_f, 
+                       vary_x = vary_x, 
+                       vary_all = vary_all) %>% 
+  tibble() 
+names(raw_table) = c("x", "facet", "$D_{var_f}$", "$D_{var_x}$", "$D_{var_{all}}$" )
+raw_table %>% 
+  kable(format = "latex",
+    booktabs = TRUE, 
+    escape = FALSE,
+    caption = "Simulation setup for a panel with 3 facet levels and 2 x-axis levels for different designs starting from an initial distribution N(0, 1) for the combination $(a_1, b_1)$.") %>% kable_styling()
+```
 
 # Behavior of raw weighted distance measure
 
 ## Tuning parameter
 
-How does the tuning parameter affects the value of $wpd$ under different designs? The tuning parameter is used to put relative weight-age to the difference in distributions within and between facets. So it is interesting to see how the value of $wpd$ changes for these two designs.
+How does the tuning parameter affects the value of $wpd$ under different designs? The tuning parameter is used to put relative weight-age to the difference in distributions within and between facets. So it is interesting to see how the value of $wpd$ changes for these two designs. But the tuning parameter might have a different impact depending on the value of $\omega$ and different levels of x and facets.
+Hence, a simulation study is conducted to see the impact of $\omega$, $nx$, $nfacet$ and $\lambda$ together on the values of $nx$ and $nfacet$.
 
 ### Simulation design
 
 Observations are generated from Normal(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20\}$. 
-Let $\omega = \{1, 2, \dots, 10\}$ denotes the variable denoting the increment in mean of the distribution. The values of lambda ranges from ${0.1, 0.2, \dots, 0.9}$. Two designs are considered $D_{var_x}$ and $D_{var_f}$ and the values of $wpd$ is being computed for all these different values of the considered variable.
+Let $\omega = \{1, 2, \dots, 10\}$ denotes the variable denoting the increment in mean of the distribution. The values of lambda ranges from ${0.1, 0.2, \dots, 0.9}$. Two designs are considered $D_{var_x}$ and $D_{var_f}$ and the values of $wpd$ is being computed for all these different values of the considered variable. 
 
 ### Results 
 
@@ -107,6 +154,10 @@ knitr::include_graphics(here::here("simulations/tuning_param/figs/fixed_omega.pn
 ```{r tuning-parameter-inter, fig.cap ="For most panels it is observed that the most common value of the tuning paramter for which the designs interact is 0.5, which implies any value greater than 0.5 could be chosen to up-weigh the within-facet distances and down-weigh the between-facet distances for most sitatuions."}
 knitr::include_graphics(here::here("simulations/tuning_param/figs/intersection_plot.png"))
 ```
+
+## Number of comparison
+
+
 
 # Normalization
 
