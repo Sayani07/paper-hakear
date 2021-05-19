@@ -469,7 +469,7 @@ $wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$.
 <!-- - heterogeneity is higher for this case after normalization as compared to the earlier one. -->
 
 
-```{r glm-tab}
+```{r glm-tab,eval=FALSE}
 broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
 ```
 
