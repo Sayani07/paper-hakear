@@ -31,13 +31,6 @@ Hyndman, R.~J. \harvardand\ Fan, Y.  \harvardyearleft 1996\harvardyearright ,
   `Sample quantiles in statistical packages', {\em Am. Stat.} {\bf
   50}(4),~361--365.
 
-\harvarditem[{Hyndman} et~al.]{{Hyndman}, {Liu} \harvardand\
-  {Pinson}}{2018}{ieee-irish}
-{Hyndman}, R.~J., {Liu}, X. \harvardand\ {Pinson}, P.  \harvardyearleft
-  2018\harvardyearright , `Visualizing big energy data: Solutions for this
-  crucial component of data analysis', {\em IEEE Power and Energy Magazine}
-  {\bf 16}(3),~18--25.
-
 \harvarditem{Kullback \harvardand\ Leibler}{1951}{Kullback1951-jy}
 Kullback, S. \harvardand\ Leibler, R.~A.  \harvardyearleft
   1951\harvardyearright , `On information and sufficiency', {\em Ann. Math.
@@ -59,12 +52,6 @@ Majumder, M., Hofmann, H. \harvardand\ Cook, D.  \harvardyearleft
 Men{\'e}ndez, M.~L., Pardo, J.~A., Pardo, L. \harvardand\ Pardo, M.~C.
   \harvardyearleft 1997\harvardyearright , `The {Jensen-Shannon} divergence',
   {\em J. Franklin Inst.} {\bf 334}(2),~307--318.
-
-\harvarditem{{R Core Team}}{2019}{R-language}
-{R Core Team}  \harvardyearleft 2019\harvardyearright , {\em R: A Language and
-  Environment for Statistical Computing}, R Foundation for Statistical
-  Computing, Vienna, Austria.
-\newline\harvardurl{https://www.R-project.org/}
 
 \harvarditem{Tukey \harvardand\ Tukey}{1988}{tukey1988computer}
 Tukey, J.~W. \harvardand\ Tukey, P.~A.  \harvardyearleft 1988\harvardyearright

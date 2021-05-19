@@ -1,5 +1,5 @@
 ---
-title: Detecting distributional differences between temporal granularities for exploratory time series analysis 
+title: A new metric for automatic data visualization for distributional difference in time series
 
 # to produce blinded version set to 1
 blinded: 0
@@ -17,6 +17,7 @@ authors:
 keywords:
 - data visualization
 - periodicities
+- time granularities
 - cyclic granularities
 - permutation tests
 - Jensen-Shannon distances
@@ -31,9 +32,9 @@ preamble: >
   \setlength {\marginparwidth }{2cm}
   \usepackage{mathtools,amssymb,booktabs,amsthm,todonotes,colortbl}
   \def\mod{~\text{mod}~}
+  \newtheorem{definition}{Definition}
   \usepackage{mathptmx}
   \usepackage{caption}
-  \usepackage{longtable}
   \DeclareCaptionStyle{italic}{labelfont={bf},textfont={it},labelsep=colon}
   \captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
   \captionsetup[table]{style=italic,format=hang,singlelinecheck=true}
@@ -91,43 +92,15 @@ set.seed(321)
 <!-- <introducing the problem> -->
 <!-- background of the problem -->
 
-Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allow the data to be informative. With temporal data available at finer scales, exploring time series data can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo], which are temporal deconstructions that represent cyclic repetitions in time, e.g. hour-of-day, day-of-month, or any public holidays. These granularities form ordered (for eg. day-of-week where Tue is always followed by Wed, which again is followed by Thu and so on) or unordered categorical variables. Therefore, exploring univariate time series data amounts to exploring the distribution of the measured variable across different categories of the cyclic granularities. \noindent Take the example of the electricity smart meter data used in @wang2020calendar for four households in Melbourne, Australia. Figure \ref{fig:onegran} shows the distribution of energy usage of one household (id 2) across cyclic granularity a) hour-of-day and b) month-of-year. Potentially many such displays could be drawn across day-of-week, day-of-month, weekday/weekend, or any other chosen cyclic granularities of interest. However, all of them would not be interesting to discern important patterns in the energy usage. Only those displays, which have "significant" distributional differences between categories of the cyclic granularity would be informative and consequently, the corresponding cyclic granularity can be tagged as a "significant" one. 
+Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many iterations of finding structures and patterns that allow the data to be informative. With temporal data available at finer scales, exploring periodicity and their relationships can become overwhelming with so many possible cyclic temporal granularities [@Gupta2020-vo] to explore. 
+\noindent Take the example of the calendar display of electricity smart meter data in Figure (\ref{fig:calendar-elec}) used in @wang2020calendar for four households in Melbourne, Australia. The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-the-day, day-of-the-week, week-of-the-month, and month-of-the-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the periodicities in energy behavior and how the periodicities interact in greater detail, it is not easy to comprehend the interactions of some periodicities' from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, _"calendar effects are not restricted to conventional day-of-week or month-of-year deconstructions"_ (@Gupta2020-vo) and could include other cyclic granularities like hour-of-week or day-of-fortnight, which could potentially become useful depending on the context. Possible areas where it is useful are monitoring heart rates which could record number of heartbeats every minute or analyze web search data for which data is available for a temporal scale as fine as second.
+
 
 ```{r calendar-elec, fig.height = 8, fig.cap = "Calendar displays faceted by two households are shown. The calendar displays are rich in information and has several components. For example, it can be observed easily that the level of energy consumption by household 2 is higher than household 4. Also, it gives an overview on when these households are away for holidays and which months consumptions are highest (Jan, Feb). However, when it comes to discerning periodic patterns, analyzing all possible periodic patterns through this display is overwhelming due to combination of linear and cyclic representation of time. For example, there is more going on in terms of peaks and troughs in id 2 compared to id 4, but it is not clear which all periodic patterns are dominant and if it differs between households."}
 
 ```
 
 
-```{r onegran}
-```
-
-
-<!-- comparing one and two grans for one households -->
-\noindent Exploring the distribution of the measured variable across two cyclic granularities tend to provide more detailed information on its structure. \ref{fig:twogran}(a) shows that energy consumption is higher during the morning hours (5-8) when members in the household wake up and then again in the evening hours (17-20) possibly when members get back from work with maximum variation (large inter-quartile range) in behavior in the afternoon hours (12-16). \ref{fig:twogran}(b) shows the distribution of energy consumption across months January to June. The median and quartile deviation of energy usage in Jan and Feb are generally on a much higher side, possibly due to the usage of air conditioners (Jan, Feb are peak summer in Australia), however for other months (Mar-Jun, autumn and winter), the smaller median and quartile deviation indicate a more regular behavior. It also implies this household do not use as much heater as compared to air conditioner. A lot of households in Victoria use gas heating and hence the usage of heaters might not be reflected here. Figure \ref{fig:id2}a slice it down further by showing the usage distribution across hour-of-day conditional on month-of-year. It shows the hourly usage over a day do not remain across months. Unlike other months, the 75th and 90th percentile for all hours of the day in January are high, pretty close and are not characterized by a morning and evening peak. This implies usage of air conditioners is pretty common for this household. The household in Figure \ref{fig:id2}a has 90th percentile consumption higher in summer months relative to autumn or winter, but the 75th and 90th percentile are far apart in all months, implying that the second household resorts to air conditioning much less regularly than the first one. The differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis) for this households, whereas they are prominent for both cyclic granularities for the first household. It could be immensely useful to make the transition from all potential displays to the ones that are informative across atleast one cyclic granularity.
-
-<!-- Moreover, the volatility in consumption are almost equal and high for all hours in Jan, whereas variability is most in the evening hours for other months. The distribution of consumption across different hours of the day look similar for Apr, May and Jun, characterized by a distinct morning, afternoon and evening peaks and higher variability in evening hours -->
-
-
-
-<!-- months Jan and Feb not only have a high median consumption, but also more variability, possibly due to the usage of air conditioning. The other months shows more consistent behavior with the energy consumption rising in May and June. -->
-
-<!-- what is the dimension of the problem -->
-\noindent The dimension of this problem, however, increases when considering two cyclic granularities. Let $N_C$ be the total number of cyclic granularities of interest. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, with one of the two cyclic granularities acting as the conditioning variable. This is large and overwhelming for human consumption.<!-- Scagnostics literature --> This problem is similar to Scagnostics (Scatterplot Diagnostics) by @tukey1988computer, which is used to identify meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore, even for small $v$, the number of scatterplots can be large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. @Dang2014-tw and @wilkinson2005graph provides potential solutions to this, where few characterizations can be used to locate anomalies in density, shape, trend, and other features in the 2D point scatters. 
-
-
-<!-- \ref{fig:twogran} shows the distribution of energy consumption across hour-of-day conditional on month-of-year. \ref{fig:twogran}(a) shows that energy consumption is higher during the morning hours when members in the household wake up and then again higher in the evening hours possibly when members are back from work with them showing maximum variable behavior in the afternoon hours. \ref{fig:twogran}(b) shows the months Jan and Feb not only have a high median consumption, but also more variability, possibly due to the usage of air conditioning. The other months shows more consistent behavior with the energy consumption rising in May and June. \ref{fig:twogran} adds to this information, by showing that hours in Jan do not necessarily follow the same pattern across the day (due to Holidays, people visiting). Moreover, the volatility in consumption are almost equal and high for all hours in Jan, whereas variability is most in the evening hours for other months. The distribution of consumption across different hours of the day look similar for Apr, May and Jun, characterized by a distinct morning, afternoon and evening peaks and higher variability in evening hours. -->
-
-
-<!-- # interaction for two households, importance could be across one --> 
-
-
-<!-- Even when it is known which all interactions to look at, all of them would not be interesting and that too will vary across different households.  -->
-
-
-
-
-<!-- calendar plots -->
-<!-- The authors show how hour-of-the-day interact with weekdays and weekends and then move on to use calendar display to show daily schedules. The calendar display has several components in it, which helps us to look at energy consumption across hour-of-day, day-of-week, week-of-month, and month-of-year at once. Some interaction of these cyclic granularities, for example, how  day-of-week relates to month-of-year, could also be interpreted from this display. This is a great way for having an overview of energy consumption. However, if one wants to understand the repetitiveness in energy behavior and how they interact in greater detail, it is not easy to comprehend the interactions of all cyclic granularities from this display, due to the combination of linear and cyclic representation of time. For example, this display might not be the best to understand how hour-of-the-day or month-of-year varies across week-of-the-month as well as with each other. Furthermore, it is not clear what all interactions of cyclic granularities should be read from this display as there could be many combinations that one can look at. Moreover, there could be non-conventional cyclic granularities, which could potentially become useful depending on the context.  -->
 
 
 
@@ -135,6 +108,21 @@ Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many
 
 ```{r intro_all}
 
+```
+
+
+```{r}
+id2_tsibble %>%
+  create_gran("month_year") %>%
+   prob_plot("month_year",
+             "hour_day",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) +
+  ggtitle("") + theme(
+        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + 
+  scale_colour_brewer(name = "", palette = "PiYG")
 ```
 
 
@@ -146,6 +134,7 @@ Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many
 
 ```
 
+Even when it is known which all interactions to look at, all of them would not be interesting and that too will vary across different households. For example, area distribution quantiles are plotted for household 2 and 4 in Figure \ref{fig:id2}a and \ref{fig:id2}b respectively across month-of-year on facets and hour-of-day on x-axis. For the first household, the 75th and 90th percentile for January and February are very close, implying that energy usage for these months are generally on a much higher side, possibly due to the usage of air conditioners (January and February are peak summer in Australia), however for other months (Autumn and winter), the difference between the percentiles are not high, implying this household do not use so much heater as compared to air conditioner. Also, a lot of households in Victoria use gas heating and hence the usage of heaters might not be reflected here. The energy consumption for household 2 is also higher in summer months relative to autumn or winter, but the 75th and 90th percentile are far apart in all months, implying that the second household resorts to air conditioners much less regularly than the first one. Moreover, the 75th percentile distribution does not follow the same pattern as 90th percentile for all months for the first household, whereas, the pattern looks pretty similar for all months for the second household. Difference in the energy consumption could vary both across month-of-year (facets) and hour-of-day (x-axis). For the first household, both these cyclic granularities would deem important. Although, it seems like energy consumption across hours of the day are not that different across different months for the second household or atleast differences seem to be more prominent across month-of-year (facets) than hour-of-day (x-axis). It could be immensely useful to make the transition from all possible ways to only ways that could potentially be informative.
 
 
 <!-- Again, look at \ref{fig:} c and d, where energy consumption for these two households are plotted against (weekend/weekday, week-of-month). Here, for both households, the pattern of energy consumption vary  across different weeks of the month irrespective of the fact it is a weekday or weekend. In that respect, the harmony pair (month-of-year, hour-of-day) seems to be more informative than (weekend/weekday, week-of-month) for the first household.  -->
@@ -158,10 +147,12 @@ Exploratory data analysis, as coined by John W. Tukey (Tukey 1965) involves many
 
 <!-- If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed.  -->
 
+<!-- what is the dimension of the problem -->
+The paper @Gupta2020-vo describes how we can compute all possible combinations of cyclic time granularities. Let $N_C$ be the total number of contextual circular, quasi-circular and aperiodic cyclic granularities that can originate from the underlying linear granularities. The graphical mapping is such that distributions of a numeric response variable is displayed across combinations of cyclic granularities, one placed at x-axis and the other on the facet. That essentially implies there are $^{N_C}P_2$ possible pairwise plots exhaustively, where each plot would display a pair of cyclic granularities. This is large and overwhelming for human consumption.<!-- Scagnostics literature --> This problem is similar to Scagnostics (Scatterplot Diagnostics) by @tukey1988computer, which is used to discern meaningful patterns in large collections of scatterplots. Given a set of $v$ variables, there are $v(v-1)/2$ pairs of variables, and thus the same number of possible pairwise scatterplots. Therefore, even for small $v$, the number of scatterplots can be large, and scatterplot matrices (SPLOMs) could easily run out of pixels when presenting high-dimensional data. @Dang2014-tw and @wilkinson2005graph provides potential solutions to this, where few characterizations help us to locate anomalies in density, shape, trend, and other features in the 2D point scatters. 
 
 
 <!-- harmonies and why it is not enough -->
-\noindent This work is a natural extension of our work that narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. @inference and @Majumder2013-hb present methods for statistical significance testing of visual findings using human cognition as the statistical tests. <!-- present some methods to quantify the strength of pattern and noise through visual inference, similar to numerical testing. But this is an evolving field as human cognition (which act as the statistical tests in visual inference) might vary across humans even for the same plots.  --> In this paper, a new distance measure is introduced to enable visual findings that detect significant distributional differences between harmonies.
+This work is a natural extension of our work (@Gupta2020-vo), which narrows down the search from $^{N_C}P_2$ plots by identifying pairs of granularities that can be meaningfully examined together (a "harmony"), or when they cannot (a "clash"). However, even after excluding clashes, the list of harmonies left could be enormous for exhaustive exploration. Hence, there is a need to reduce the search even further by including only those harmonies which are informative enough. @inference and @Majumder2013-hb present some methods to quantify the strength of pattern and noise through visual inference, similar to numerical testing. But this is an evolving field as human cognition (which act as the statistical tests in visual inference) might vary across humans even for the same plots. In this paper, we build a new distance measure which could be used to detect automatically detect significant periodic patterns.
 
 
 Our contributions in this paper are:
@@ -172,12 +163,13 @@ Our contributions in this paper are:
 
  <!-- * We device a framework for choosing a threshold, which will result in detection of only significantly interesting periodic patterns in the time series data. -->
 
- * introduce a distance measure for detecting distributional difference in temporal granularities, which enables identification
+ * introduce a new distance measure for quantifying periodic interactions, which allows for identification
 of patterns in the time series data;
-
- * devise a framework for choosing a threshold, which results in detection of only significantly interesting patterns;
- 
- * show that the proposed distance metric could be used to rank the interesting patterns based on how well they capture the variation in the measured variable since they have been normalized for relevant parameters.
+ * device a framework for choosing a threshold, which results in detection of only significantly interesting
+periodic patterns;
+ * show that the proposed distance metric could be used to rank the periodic patterns based on
+how well they capture the variation in the measured variable since they have been normalized for
+relevant parameters.
 
 The article is organized as follows. Section \ref{sec:computation-wpd} introduces a new distance measure, discusses the reasoning behind choosing such a measure and presents some results to study the behavior of the measure. Section \ref{sec:norm-wpd} describes a methodology to normalize the distance measure so that it can qualify as a measure that can be compared across different comparisons and datasets. Section \ref{sec:rank-wpd} discusses how to choose a threshold to select only significant harmonies. Section \ref{sec:application-wpd} presents an application to a residential smart meter data in Melbourne to show how this distance measure acts as a way to automatically detect periodic patterns in time series.
 
@@ -186,38 +178,12 @@ The article is organized as follows. Section \ref{sec:computation-wpd} introduce
 
 <!-- Talk about Scagnostics: Tukey -->
 
-# A distance measure for distributional differences in harmonies {#sec:computation-wpd}
+# A distance measure for quantifying patterns in harmonies {#sec:computation-wpd}
 
-We propose a measure called Weighted Pairwise Distances ($wpd$) to assess structure in the measured variable across two cyclic granularities. 
+We are interested in assessing the structure of the measured variable across bivariate cyclic granularities. We propose a measure called Weighted Maximum Pairwise Distances (wpd) to quantify the structure in such a design. The principle employed towards this goal is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures have the same panel design with $2$ x-axis categories and $3$ facet levels. Figure \ref{fig:null4by2}a has all x categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean has been incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets. For this situation, mean of only the x-axis categories are increased by $5$ units for each consecutive category. Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories. If the displays are to be ranked in order of importance from minimum to maximum, then an obvious choice would be placing a followed by b, c and then d. It might be argued that it is not clear if b should precede or succeed c in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. Hence, displays that capture more variation within different categories in the same group would be important to bring out different patterns of the data. With this principle in mind, display b is considered less informative as compared to display c. Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables. 
 
-
-## Principle 
-
-The principle behind the construction of $wpd$ is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures describes a panel with $2$ x-axis categories and $3$ facet levels, but with different designs. Figure \ref{fig:null4by2}a has all categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean and sd incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets (mean by +5, sd by -2 for consecutive x categories). Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories (mean by +5 and sd by -1.5 for consecutive categories). If the panels are to be ranked in order of capturing maximum variation in the measured variable from minimum to maximum, then an obvious choice would be placing (a) followed by (b), (c) and then (d). It might be argued that it is not clear if (b) should precede or succeed (c) in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. With this principle in mind, display (b) is considered less informative as compared to display (c) in emphasizing the distributional differences. The proposed measure $wpd$ is constructed in a way so that it could be used to rank panels of different designs as well as test if a design is interesting. This measure is an estimate of the maximum variation in the measured variable explained by the panel. A higher value of  $wpd$ would indicate that the panel is interesting to look at, whereas a lower value would indicate otherwise.
-
-
-
-
-<!-- To compute the maximum variation of the measured variable within each panel, the distributional differences need to be measured for both within-group and between-group categories. Moreover, a tuning parameter specifying the weightage given to within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}b and c. The maximum of all these weighted differences serves as an estimate of the maximum variation in the panel and is taken as the value of $wpd$. -->
-
-
-<!-- Larger differences imply stronger patterns, whereas small difference would imply that the underlying structure is not changing within or between group. -->
-
-
-<!-- A distance measure aimed to capture the structure of the measured variable in designs like \ref{fig:null4by2}, should ideally estimate these within-group and between-group variations. -->
-
-<!-- \noindent Intuitively, while finding a structure or measuring the strength of patterns in Figure \ref{fig:null4by2}, it makes sense to look for within-group and between-group variations. Larger variation would imply stronger patterns, whereas small variation would imply the underlying structure is not changing within or between group. -->
-<!-- Thus, a distance measure aimed to capture this structure should ideally estimate these within-group and between-group variations. One of the potential ways to do this is to measure the distances between distributions of the continuous random variable measured within and between groups, weigh them basis if they are within or between groups and then take the maximum of those distances as an estimate of the maximum variation in the structure. This section starts with possible ways of characterizing distributions and computing distances between them and then describe in details how the measure $wpd$ is defined. -->
-
-
-
-<!-- This is similar to @ieee-irish where the authors compute the Jensen Shannon distance between two density estimates by computing percentiles and stresses the advantages to working with percentiles rather than the raw data directly in case of missing observations. Working with quantiles also ensure that unsynchronized time series could be handled. -->
-
-
-
-<!-- Hence, with reference to the graphical design in @Gupta2020-vo, therefore the idea would be to rate a harmony pair higher if the variation between different levels of the x-axis variable is higher on an average across all levels of the facet variables.  -->
-
-
+Intuitively, while finding a structure or measuring the strength of patterns in Figure \ref{fig:null4by2}, it makes sense to look for within-group and between-group variations. Larger variation would imply stronger patterns, whereas small variation would imply the underlying structure is not changing within or between group.
+Thus, a distance measure aimed to capture this structure should ideally estimate these within-group and between-group variations. One of the potential ways to do this is to measure the distances between distributions of the continuous random variable measured within and between groups, weigh them basis if they are within or between groups and then take the maximum of those distances as an estimate of the maximum variation in the structure. This section starts with possible ways of characterizing distributions and computing distances between them and then describe in details how the measure $wpd$ is defined. This is similar to @ieee-irish where the authors compute the Jensen Shannon distance between two density estimates by computing percentiles and stresses the advantages to working with percentiles rather than the raw data directly in case of missing observations. Working with quantiles also ensure that unsynchronized time series could be handled.
 
 <!-- To elaborate further, look at the examples in Figure \ref{}, where Figure \ref{}a represents the panel design with distribution of each x categories drawn from N(5, 10) distribution. It could be observed that the graph is not particularly interesting, as there is no significant change in distribution between x-axis levels or facets. Figure \ref{}b represents the same panel design with no difference in distribution of x-axis categories within a facet, but different distribution of x-axis categories for different facets. For example, if there are 4 facet levels and 2 x-axis levels, data is generated in the way as described in Table \ref{}. Figure \ref{}b exhibits an exact opposite situation where the x-axis within facets are different but not across facets. -->
 <!-- Figure \ref{}d takes it further by varying the distribution across both facet and x-axis categories. -->
@@ -228,7 +194,6 @@ The principle behind the construction of $wpd$ is explained through a simple exa
 
 ```
 
-<!-- A "significant" cyclic granularity have at least two categories which are significantly different from each other. It does not tell you which categories are statistically significantly different from each other -->
 
 <!-- in the same group would be important to bring out different patterns of the data. -->
 
@@ -240,6 +205,31 @@ Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, 
 ```{r notations}
 
 ```
+
+
+## Characterising distributions
+
+Multiple observations of $v$ correspond to the subset  $v_{jk} = \{s: A(s) = j, B(s) = k\}$. The number of observations and the structure might vary widely across subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. Each $v_{jk}$'s $\forall j\in \{1, 2, \dots, J\}, k\in \{1, 2, \dots, K\}\}$ are assumed to be drawn from a continuous probability distribution and have certain characteristics. Often shape, central tendency, and variability are the common characteristics used to describe a distribution. Mean, median or mode are generally used to describe the center of the distribution, while range, standard deviation, quantiles, standard errors and confidence intervals are used to describe variability. Quantiles are chosen as a way to characterize distributions in this paper.
+
+
+The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p) = inf\{x: F(x) >p\}$, $0<p< 1$ where $F(x)$ is the distribution function. There are two broad approaches to quantile estimation, viz, parametric and non-parametric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data. Sample quantiles could be used for estimating population quantiles in a non-parametric setup. @Hyndman1996-ty describes the many ways of defining sample quantiles and recommends the use of median-unbiased estimator because of _desirable properties of a quantile estimator and can be defined independently of the underlying distribution._. The `stats::quantile()` function in @R-language could be used for practical implementation where type = 8 refers to the algorithm corresponding to the median-unbiased estimator. The default quantile chosen in this paper is percentiles computed for $p = {0.01, 0.02, \dots, 0.99}$, where for example, the $99^{th}$ percentile would be the value corresponding to $p=0.99$ and hence 99% of the observations would lie below that.
+
+
+## Distance between distributions
+
+<!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
+<!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
+<!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
+  
+The most common divergence measure between distributions is the Kullback-Leibler (KL) divergence [@Kullback1951-jy] introduced by Solomon Kullback and Richard Leibler in 1951. The KL divergence denoted by $D(q_1||q_2)$ is a non-symmetric measure of the difference between two probability distributions $q_1$ and $q_2$ and is interpreted as the amount of information lost when $q_2$ is used to approximate $q_1$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance between distributions are Hellinger distance, total variation distance and Fisher information metric. 
+
+In this paper, we propose to use the pairwise distances between the distributions of the measured variable through Jensen-Shannon distance (JSD), defined by,
+
+$$JSD(q_1||q_2) = \frac{1}{2}D(q_1||M) + \frac{1}{2}D(q_2||M)$$
+where $M = \frac{q_1+q_2}{2}$ and 
+$D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(\frac{q_1(x)}{q_2(x)})$ is the KL divergence between distributions $q_1$ and $q_2$. 
+
+Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (@Menendez1997-in), if the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
 
 
 
@@ -261,63 +251,8 @@ Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, 
 
 ## Computation
 
-The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture structure and patterns by estimating the maximum variation of the measured variable within a panel. The computation of $wpd$
-involves characterizing distributions, computing distances between distributions, choosing a tuning parameter to specify the weightage given to within-facet or between-facet distances. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated.  Hence, as a pre-processing step, the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. 
+The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step,the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. The steps employed for computing the distance measure is summarized as follows:
 
-<!-- the distributional differences need to be measured for both within-group and between-group categories. Moreover, a tuning parameter specifying the weightage given to within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}b and c. The maximum of all these weighted differences serves as an estimate of the maximum variation in the panel and is taken as the value of $wpd$.  -->
-
-
-
-### Characterising distributions
-
-Multiple observations of $v$ correspond to the subset  $v_{jk} = \{s: A(s) = j, B(s) = k\}$. The number of observations might vary widely across subsets due to the structure of the calendar, missing observations or uneven locations of events in the time domain. Quantiles of $v_{jk}$'s are chosen as a way to characterize distributions for the category $(a_j, b_k)$ in the paper $\forall j\in \{1, 2, \dots, J\}, k\in \{1, 2, \dots, K\}\}$. The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p) = inf\{x: F(x) >p\}$, $0<p< 1$ where $F(x)$ is the distribution function. There are two broad approaches to quantile estimation, viz, parametric and non-parametric. Sample quantiles (@Hyndman1996-ty) are used for estimating population quantiles in a non-parametric setup, which is desirable because of less rigid assumptions made about the nature of the underlying distribution of the data. The default quantile chosen in this paper is percentiles computed for $p = {0.01, 0.02, \dots, 0.99}$, where for example, the $99^{th}$ percentile would be the value corresponding to $p=0.99$ and hence 99% of the observations would lie below that.
-
-<!-- The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data. Sample quantiles could be used for estimating population quantiles in a non-parametric setup. describes the many ways of defining sample quantiles and recommends the use of median-unbiased estimator because of _desirable properties of a quantile estimator and can be defined independently of the underlying distribution._.  -->
-
-
-<!-- in this paper. -->
-
-<!-- Each $v_{jk}$'s $\forall j\in \{1, 2, \dots, J\}, k\in \{1, 2, \dots, K\}\}$ are assumed to be drawn from a continuous probability distribution and have certain characteristics. Shape, central tendency, and variability are the common characteristics used to describe a distribution. -->
-
-<!-- Mean, median or mode are generally used to describe the center of the distribution, while range, standard deviation, quantiles, standard errors and confidence intervals are used to describe variability. -->
-
-<!-- The quantile of a distribution with probability $p$ is defined as $Q(p)=F^{-1}(p) = inf\{x: F(x) >p\}$, $0<p< 1$ where $F(x)$ is the distribution function. There are two broad approaches to quantile estimation, viz, parametric and non-parametric. The benefit of using a non-parametric estimator is that there are less rigid assumptions made about the nature of the underlying distribution of the data. Sample quantiles could be used for estimating population quantiles in a non-parametric setup. @Hyndman1996-ty describes the many ways of defining sample quantiles and recommends the use of median-unbiased estimator because of _desirable properties of a quantile estimator and can be defined independently of the underlying distribution._. The `stats::quantile()` function in @R-language could be used for practical implementation where type = 8 refers to the algorithm corresponding to the median-unbiased estimator. The default quantile chosen in this paper is percentiles computed for $p = {0.01, 0.02, \dots, 0.99}$, where for example, the $99^{th}$ percentile would be the value corresponding to $p=0.99$ and hence 99% of the observations would lie below that. -->
-
-
-### Distance between distributions
-
-<!-- One of the most important class of divergence is the f-divergence and includes measures like Kullback-Leibler divergence, Hellinger distance etc. The continuous version of f -divergence is given by -->
-<!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
-<!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
-  
-Most common way to measure divergence between distributions is the Kullback-Leibler (KL) divergence [@Kullback1951-jy]. The KL divergence denoted by $D(q_1||q_2)$ is a non-symmetric measure of the difference between two probability distributions $q_1$ and $q_2$ and is interpreted as the amount of information lost when $q_2$ is used to approximate $q_1$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance between distributions are Hellinger distance, total variation distance and Fisher information metric. In this paper, the pairwise distances between the distributions of the measured variable are obtained through Jensen-Shannon distance (JSD), defined by,
-
-$$JSD(q_1||q_2) = \frac{1}{2}D(q_1||M) + \frac{1}{2}D(q_2||M)$$
-where $M = \frac{q_1+q_2}{2}$ and 
-$D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(\frac{q_1(x)}{q_2(x)})$ is the KL divergence between distributions $q_1$ and $q_2$. 
-
-Furthermore, these distances are distributed as chi-squared with $m$ degrees of freedom (@Menendez1997-in), if the continuous distribution is being discretized with $m$ discrete values. Taking sample percentiles to approximate the integral would mean taking $m = 99$. As the degrees of freedom $m$ get larger, the chi-square distribution approaches the normal distribution.
-
-
-### Within-facet and between-facet distances
-
-\noindent Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). 
-
-### Tuning parameter
-
-A tuning parameter specifying the weightage given to the within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}(b) and (c). Following the principle of Gestalt theory, the
-relative importance of within-facet and between-facet distances are taken to be $2:1$ and hence $\lambda = \frac{2}{3} = 0.67$. No human experiment is conducted to justify this ratio, however, typically a tuning parameter $\lambda>0.5$ would tend to upweigh the within-facet distances and that with $<0.5$ would upweigh the between-facet distances (refer to the Supplementary section of the paper for more details).
-
-### Normal Quantile transform
-
-The intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step, the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. 
-
-### Algorithm
-
-<!-- The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore,  -->
-
-
-The steps employed for computing $wpd$ is summarized as follows:
 
 <!-- The values of $wpd$ indeed depend upon the underlying distribution. This is also not desirable as the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. The steps employed for computing the distance measure is summarized as follows: -->
 
@@ -352,6 +287,7 @@ d*_{(j,k), (j'k')} =
 
 6. Repeat Steps 2-5 for all harmony pairs in $H_{N_C}$.
 
+\noindent Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how the within-facet or between-facet distances are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). If the measure is intended to put more importance in pointing towards distributional differences between x categories, a $\lambda>0.5$ should be chosen. 
 
 
 
@@ -486,30 +422,38 @@ Standardizing  $wpd$ in the permutation approach ensures that the distribution o
 
 ### Modelling approach
 
-<!-- CONTENT DELETE: linear model -->
-<!-- _Linear model_   -->
+_Linear model_  
 
-<!-- A linear model is fitted to model the relationship between $wpd$ and $nx*nfacet$. The model is of the form $$y_l = a+b*log(z_l) + e_l$$, where, $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors, with parameters $a$ and $b$ being estimated from the data generated through the simulation study described in Section \ref{sec:sim-study}. The estimates and other model summary is given in Table \ref{tab:linear-model}. -->
+A linear model is fitted to model the relationship between $wpd$ and $nx*nfacet$. The model is of the form $$y_l = a+b*log(z_l) + e_l$$, where, $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors, with parameters $a$ and $b$ being estimated from the data generated through the simulation study described in Section \ref{sec:sim-study}. The estimates and other model summary is given in Table \ref{tab:linear-model}.
 
-<!-- ```{r linear-model, message=FALSE} -->
+```{r linear-model, message=FALSE}
 
-<!-- ``` -->
-
+```
 
 
+<!-- # ```{r} -->
+<!-- # results3 <- broom::tidy(fit_lm2) -->
+<!-- # library(ggfortify) -->
+<!-- # autoplot(fit_lm2, which = 1:6) + theme_minimal() -->
+<!-- # ``` -->
 
-<!-- The idea is to find a transformation on $wpd$ which would remove the effect of $nx*nfacet$ on $wpd$ and thus is defined as the residuals: -->
-<!-- $y^* =  y - \hat a -  \hat b*log(z)$, where  -->
-<!-- $y^*$ is the $wpd_{linear}$,  -->
-<!-- $\hat a$ and $\hat b$ are the estimated values of the parameter $a$ and $b$ and $z = nx*nfacet$. -->
+The idea is to find a transformation on $wpd$ which would remove the effect of $nx*nfacet$ on $wpd$ and thus is defined as the residuals:
+$y^* =  y - \hat a -  \hat b*log(z)$, where 
+$y^*$ is the $wpd_{linear}$, 
+$\hat a$ and $\hat b$ are the estimated values of the parameter $a$ and $b$ and $z = nx*nfacet$.
 
-<!-- Defining $wpd_{linear}$ in this way forces the mean to be zero and variability to be uniform across the median $wpd$ values as could be seen in Figure \ref{fig:resi-linear}.   -->
+Defining $wpd_{linear}$ in this way forces the mean to be zero and variability to be uniform across the median $wpd$ values as could be seen in Figure \ref{fig:resi-linear}.  
+<!-- But, the original distribution will still have some dissimilarities in shape and location specially for small values of $nx$ and $nfacet$ as could be seen in \ref{fig:} -->
+
+```{r resi-linear, fig.cap = "$wpd_{norm}^{linear}$ which are defined as the residuals of the linear model have mean zero and are homogenous. Further, by design they are independent of the $nx*nfacet$ and hence could be a potential candidate for $wpd_norm$."}
+```
 
 
-<!-- ```{r resi-linear, fig.cap = "$wpd_{norm}^{linear}$ which are defined as the residuals of the linear model have mean zero and are homogeneous. Further, by design they are independent of the $nx*nfacet$ and hence could be a potential candidate for $wpd_norm$."} -->
-<!-- ``` -->
+<!-- Let ${x_p, p = 1, 2, \dots, npanel}$ denote the total number of distances $nx*nfacet$ obtained in each panel. So for each $nx*nfacet$, we have $nsim = 200$ values of ${y_i}$. -->
 
 
+
+<!-- from $nx_{i}$ x-categories and $nfacet_{j}$ facet-categories is $nx_{i}*nfacet_{j}$ and  -->
 
 _Generalized linear model_  
 
@@ -525,7 +469,7 @@ $wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$.
 <!-- - heterogeneity is higher for this case after normalization as compared to the earlier one. -->
 
 
-```{r glm-tab}
+```{r glm-tab,eval=FALSE}
 broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
 ```
 
@@ -549,7 +493,7 @@ We see that the transformation through the modeling approach leads to very simil
 
 The measure $wpd_{glm}$ has a $\hat \mu_{glm} = 0$ and $\hat sd_{glm} = 0.003$ whereas the measure $wpd_{perm}$ which is a z-score, has an expected normal distribution with  $\hat \mu_{perm} = 0$ and $\hat sd_{perm} = 1$. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*\frac{\hat sd_{perm}}{\hat sd_{glm}}$, which changes the scale of $wpd_{glm}$ without changing the location. The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{perm}$ is also normally distributed. Further, they are brought to similar scale and location and hence could be compared or used interchangeably for different comparisons based on their performance.
 
-```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+```{r hist-qq, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
 
 ```  
 
@@ -1014,31 +958,6 @@ elec <- read_rds(here("paper/data/elec_all-8.rds")) %>%
   select(-meter_id) %>% 
   rename("id" = "household_id",
          "date_time" = "reading_datetime")
-
-# 
-# elec %>% 
-#   filter(id == "1") %>% 
-#   prob_plot("hour_day", 
-#             "day_week",
-#             response = "kwh",
-#             plot_type = "violin", fill = "blue")
-#   
-elec1 <- elec %>% 
-  filter(id == "1") %>% 
-  create_gran("day_week") %>% 
-  create_gran("hour_day") %>% 
-  mutate(day_week = as.numeric(day_week),
-         hour_day = as.numeric(hour_day),
-         id = as.numeric(id))
-
-# temp.gly <- glyphs(elec1, "day_week", "hour_day", "id","kwh", height = 2.5)
-# 
-# ggplot(temp.gly, ggplot2::aes(gx, gy, group = gid)) +
-#   add_ref_lines(temp.gly, color = "grey90") +
-#   add_ref_boxes(temp.gly, color = "grey90") +
-#   geom_path() +
-#   theme_bw() +
-#   labs(x = "", y = "")
 
 elec_zoom <-  elec %>%
   as_tibble() %>% 
