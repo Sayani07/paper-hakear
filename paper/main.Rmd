@@ -413,7 +413,7 @@ d*_{(j,k), (j'k')} =
 
 <!-- A stronger measure "max" is chosen for aggregating x-axis categories compared to "median" for aggregating facet categories as the measure is intended to put more importance in pointing towards distributional differences between x-axis categories than for facet categories. -->
 
-## Properties
+## Properties of $wpd$
 
 Simulations were carried out to explore the behavior of $wpd$ under the following factors that could potentially impact the values of $wpd$: $nx$, $nfacet$, $\lambda$, $\omega$, $dist$ (normal/non-normal distributions with different location and scale), $ntimes$, and $designs$ and results are presented in two parts. The dependence of $wpd$ on $nx$ and $nfacet$ under $D_{null}$ is presented here, which lays the foundation for the next section. The rest of the results that discuss the relationship of the $wpd$ with other factors is presented in details in the Supplementary section of the paper. They show that the designs $D_{var_f}$ and $D_{var_x}$ intersect at $\lambda = 0.5$ and hence for up-weighing designs of the form $D_{var_x}$, $\lambda = 0.67$ has been considered for computation of $wpd$ in the rest of the paper. 
 
@@ -448,7 +448,7 @@ Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $n
 ```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$."}
 ```
 
-# Normalization for the number of comparisons {#sec:norm-wpd}
+# Adjusting for the number of comparisons {#sec:norm-wpd}
 
 The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there are a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations.
 
@@ -692,7 +692,7 @@ It is evident from the range of the demand data in  Figure \ref{fig:linear-scale
 Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
 
 
-```{r tab-demography}
+```{r tab-demography, eval = FALSE}
 demography <- tibble(id = c(1, 2, 3, 4, 5,6, 7, 8), 
        profession = c("academia", "mixed", "industry", "industry", "mixed", "mixed", "academia", "industry"),
        total_members = c(2, 3, 5, 5, 2, 2, 2, 6),
@@ -708,7 +708,7 @@ demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 
 <!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
 
-```{r linear-scale-8, fig.cap = "Electricity demand for eight households is shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. In fig b, we can see some weekly patterns for the entire period and daily patterns for the highlighted week and there could be some other patterns visible in terms of peaks and troughs, but it is not clear if they are regular or significant.", fig.height=8}
+```{r linear-scale-8, fig.cap = "Electricity demand for eight households is shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. In fig b, we can see some weekly patterns for the entire period and daily patterns for the highlighted week and there could be some other patterns visible in terms of peaks and troughs, but it is not clear if they are regular or significant.", fig.height=8, eval = FALSE}
 library(scales)
 library(tidyquant)
 library(gghighlight)
@@ -745,7 +745,7 @@ elec_linear + elec_zoom
 ```
 
 
-```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households is shown in Fig a. Fig b shows the normal-score-transformed half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand."}
+```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households is shown in Fig a. Fig b shows the normal-score-transformed half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand.", eval = FALSE}
 elec_raw <- elec %>% 
   ggplot() +
   geom_density(aes(x = kwh)) +
