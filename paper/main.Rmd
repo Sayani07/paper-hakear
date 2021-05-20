@@ -308,9 +308,12 @@ Furthermore, these distances are distributed as chi-squared with $m$ degrees of 
 A tuning parameter specifying the weightage given to the within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}(b) and (c). Following the principle of Gestalt theory, the
 relative importance of within-facet and between-facet distances are taken to be $2:1$ and hence $\lambda = \frac{2}{3} = 0.67$. No human experiment is conducted to justify this ratio, however, typically a tuning parameter $\lambda>0.5$ would tend to upweigh the within-facet distances and that with $<0.5$ would upweigh the between-facet distances (refer to the Supplementary section of the paper for more details).
 
-### Normal Quantile transform
+### Data transformation
 
-The intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step, the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. 
+The intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. Hence, as a pre-processing step, the raw data is normal-quantile transformed (NQT) (@Krzysztofowicz1997-bv), so that the quantiles of the transformed data follows a standard normal distribution. This sort of transformation is common in the fields of geo-statistics to make most asymmetrical distributed real world measured variables more treatable and normal-like (@Bogner2012-az).The empirical NQT involves the following steps:  
+ 1. The sample of measured variable $v$ is sorted from the smallest to the largest observation $v_{(1)},\dots, v_{(i)}, .., v_{(n)}$.  
+ 2. The cumulative probabilities $p_{(1)},\dots, p_{(i)}, .., p_{(n)}$ are estimated using a plotting position like $i/(n + 1)$ such that $p_{(i)} = P(v \leq v_{(i)})$.  
+ 3. Each observation $v_{(i)}$ of $v$ is transformed into observation $v^*(i) = Q^{-1}(p(i))$ of the standard normal variate $v^*$, with $Q$ denoting the standard normal distribution and $Q^{-1}$ its inverse.  
 
 ### Algorithm
 
