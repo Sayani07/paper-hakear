@@ -475,7 +475,7 @@ sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
 sim_panel_varall <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varall_normal(2, 3, 0, 1, 10)
+  sim_dist = sim_varall_normal(2, 3, 0, 1, 2)
 ) %>% unnest(data)
 
 set.seed(9999)
@@ -499,7 +499,7 @@ sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
 sim_panel_varx <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varx_normal(2, 3, 0, 1, 10)
+  sim_dist = sim_varx_normal(2, 3, 0, 1, 2)
 ) %>% unnest(data)
 
 
@@ -523,7 +523,7 @@ sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
 sim_panel_varf <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varf_normal(2, 3, 0, 1, 10)
+  sim_dist = sim_varf_normal(2, 3, 0, 1, 2)
 ) %>% unnest(data)
 
 

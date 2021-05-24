@@ -1056,7 +1056,8 @@ elec_zoom <-  elec %>%
              labeller = "label_both") + 
   xlab("Time [30m]") + 
   theme_grey() + 
-  ylab("linear energy demand (kwh) for September") + ggtitle("b")
+  ylab("linear energy demand (kwh) for September") + ggtitle("b") +
+  theme(panel.grid.major.x = element_blank()) 
 
 heatplot +  facet_grid(id~.) + elec_zoom +
   theme( plot.margin = unit(c(0, 0, 0, 0), "cm")) +
