@@ -315,6 +315,39 @@ The intended aim of $wpd$ is to capture differences in categories irrespective o
  2. The cumulative probabilities $p_{(1)},\dots, p_{(i)}, .., p_{(n)}$ are estimated using a plotting position like $i/(n + 1)$ such that $p_{(i)} = P(v \leq v_{(i)})$.  
  3. Each observation $v_{(i)}$ of $v$ is transformed into observation $v^*(i) = Q^{-1}(p(i))$ of the standard normal variate $v^*$, with $Q$ denoting the standard normal distribution and $Q^{-1}$ its inverse.  
 
+
+### Adjusting for the number of comparisons {#sec:norm-wpd}
+
+The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). For example, for a $(2, 3)$ panel denoting 2 facet levels and 3 x-axis levels, there are $2*3=6$ possible subsets of obervations corresponding to the combinations $(a_1, b_1), (a_1, b_2), (a_1, b_3), (a_2 ,b_1), (a_2 ,b_2), (a_2, b_3)$, whereas for a $(2, 2)$ panel, $2*2 = 4$ possible subsets are $(a_1, b_1), (a_1, b_2), (a_2 ,b_1), (a_2 ,b_2)$. Consequently the number of pairwise distances that could be considered for these subsets are also varying. Hence, the measure would have higher values if $A$ or $B$ has higher levels since maximum is taken over higher number of pairwise distances. However, ideally it is desired that $wpd$ takes a higher value only if there are a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different levels of facet and x-axis levels, the impact of different number of comparisons need to be eliminated through some adjustment. Henceforth, we call the adjusted measure as $wpd_{norm}$. 
+\noindent Two approaches for normalizing for the number of comparions are discussed, both of which are substantiated using simulations. The first one, denoted as $wpd_{perm}$, involves a permutation method to make the distribution of the adjusted distance measure similar for different comparisons. The second one ($wpd_{glm-scaled}$) fits a model to represent the relationship between $wpd_{raw}$ and number of comparisons and defines the adjusted measure as the residual from the model. 
+
+
+\noindent _Simulation design_  
+
+ Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values
+of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
+
+- _Permutation approach:_ This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the distribution of the different groups (panels in our case) same under $D_{null}$. $wpd_{perm} = \frac{(wpd_{raw} - \bar{wpd_{perm-data}})}{sd(wpd_{perm-data})}$, where $\bar{wpd_{perm-data}}$ and $sd(wpd_{perm-data})$ are the mean and standard deviation of $wpd_{perm-data}$ respectively and $wpd_{perm-data}$ are the values of $wpd_{raw}$ computed on the many permuted data sets. Standardizing  $wpd$ in the permutation approach ensures that the distribution of $wpd_{perm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, another approach to adjustment, with potentially less computational time, is proposed.
+
+- _Modelling approach:_  $wpd_{raw}$ being a Jensen-Shannon distance, follows a Chi-square distribution (@JSD), which is a special case of Gamma distribution. Hence, a Gamma generalized linear model (GLM) for $wpd_{raw}$ is fitted with number of comparisons as the explanatory variable, which is of the following form:
+
+$$y_l = a+b*log(z_l) + e_l , \quad l = (1, 2, \dots, L)$$, 
+
+\noindent where $y_l = median_s(wpd_{l, s})$, $wpd_{l, s}$ denotes the value of $wpd_{raw}$ obtained for the $l^{th}$ panel and $s^{th}$ simulation, $z_l$ is the number of groups $(nx*nfacet)$ in the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
+$wpd_{glm} = wpd_{raw} - 1/(\hat a + \hat b*log(nx*nfacet))$.
+
+- _Combination approach:_ The simulation results show that adjustment through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than $5$) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. The adjusted variables from the two approaches have to be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, modeling approach is used. The adjusted measure from the combination approach, denoted by $wpd_{norm}$ is defined as follows:
+
+\begin{equation}
+wpd_{norm} =
+\begin{cases}
+wpd_{perm},& \text{if } J, K <=5\\
+wpd_{glm-scaled}             & \text{otherwise}\\
+\end{cases}
+\end{equation},
+
+where $wpd_{glm-scaled}$ is the transformed wpd_{glm} with a similar scale as $wpd_{perm}.
+
 ### Algorithm
 
 <!-- The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture the strength of the structure by estimating the maximum within-group and between-group variations. Furthermore,  -->
@@ -355,16 +388,11 @@ d*_{(j,k), (j'k')} =
 
 6. Repeat Steps 2-5 for all harmony pairs in $H_{N_C}$.
 
-
-
-
 <!-- 5. Compute distribution of maximum distance ($M$) by shuffling the data $200$ times and finishing Steps1-4 in each case. Scale $M$ using the mean and sd of the distribution.
 
 5. Use Steps 1-4 to compute maximum distance for $\forall k \in  \{1, 2, \ldots, K\}$.
 
 6. Compute the distance measure MMPD_raw = median $(M_1, M_2, \dots, M_K)$.
-
-
 
 <!-- All of these distances are then aggregated by taking the maximum from these distances to obtain $wpd$. -->
 
@@ -448,12 +476,30 @@ Figure \ref{fig:raw} shows the distribution of $wpd$ plotted across different $n
 ```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$."}
 ```
 
-# Adjusting for the number of comparisons {#sec:norm-wpd}
 
-The distribution of $wpd$ is different for different levels of facets and x-axis levels. This is because the statistics maximum which is used to define $wpd$ is affected by the number of comparisons (resulting pairwise distances). The measure would have higher values if $A$ or $B$ has higher levels. However, we would ideally want a higher value of the measure only if there are a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across different combinations of facet and x-axis levels, we need to eliminate the impact of different number of comparisons and get a normalized measure. Henceforth, we call the normalized measure as $wpd_{norm}$. The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations.
+<!-- last writeup -->
+<!-- In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$ is a Jensen-Shannon Distance (JSD) and lies between 0 and 1 (@JSD). Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$. -->
 
-<!-- The nodes and the storage used are as follows: -->
+<!-- We fit a Gamma generalized linear model with the inverse link which is of the form:   -->
+<!-- $$y_l = a+b*log(z_l) + e_l$$, where $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as: -->
+<!-- $wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$. -->
 
+
+
+
+
+
+<!-- which is more approximate than exact but still has the similar accuracy when compared to the permutation approach. -->
+
+
+
+
+
+
+
+
+<!-- use later -->
+<!-- The measure $wpd_{norm}$ could potentially lead to comparison of the measure across different panels and also help distinguishing the interesting panels from a data set. We discuss two approaches for normalization, both of which are substantiated using simulations. -->
 
 ## Methodology
 
@@ -464,22 +510,6 @@ The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ 
 <!-- Let $\{nx_{i}, i = 1, 2, \dots, nx\}$, $\{nfacet_{j}, j = 1, 2, \dots, nfacet\}$ be the set of x-axis and facet categories respectively. Each combination of $nx_{i}$ and $nfacet_{j}$is being referred to as a _panel_. Then the total number of panel is $nx*nfacet$. Let the total number of pairwise distances that could result in each panel be $\{z_k, k = 1, 2 , \dots, nx*nfacet\}$. Here, $\{z_1 = nx_1*nfacet_1\}$, $\{z_2 = nx_2*nfacet_2\}$ and $\{z_k = nx*nfacet\}$. Now, let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd_{raw}$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd_{raw}$. -->
 
 
-### Permutation approach
-
-This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the location and scale of different groups (panels) same under $D_{null}$. The steps are as follows:
-
-1. Compute $wpd$ for a harmony pair (A, B) for the original measured variable $v_t$ and store it in $wpd_{orig}$.
-
-2. Consider a permutation of the original measured variable $v_{perm_1}$ and again compute $wpd$ for the permuted data. Store it in $wpd_{perm_1}$.
-
-3. Repeat Step 2 for a large number ($nperm = 200$) of random permutations of the data yielding $nperm$ values : $wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_{nperm}}$. Store the vector in $wpd_{perm}$.
-
-4. Define $wpd_{perm} = \frac{(wpd_{orig} - \bar{wpd_{perm}})}{sd(wpd_{perm})}$, where $\bar{wpd_{perm}}$ and $sd(wpd_{perm})$ are the mean and standard deviation of $wpd_{perm}$ respectively.
-
-<!-- Let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd$.combinations of $nx_i$ and $nfacet_j$. The normalized distances through permutation is computed as follows: $x^{perm}_{k} =  (x_{k} - mean_l(x_{k,l}))/sd_l(x_{k, l})$,  $x^{perm}_{k}$ is the value of the $wpd_{perm}$ for the $k^{th}$ panel-->
-
-
-Standardizing  $wpd$ in the permutation approach ensures that the distribution of $wpd_{perm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, we propose another approach to normalization which is more approximate than exact but still has the similar accuracy when compared to the permutation approach.
 
 
 ```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
@@ -552,7 +582,7 @@ We see that the transformation through the modeling approach leads to very simil
 
 The measure $wpd_{glm}$ has a $\hat \mu_{glm} = 0$ and $\hat sd_{glm} = 0.003$ whereas the measure $wpd_{perm}$ which is a z-score, has an expected normal distribution with  $\hat \mu_{perm} = 0$ and $\hat sd_{perm} = 1$. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*\frac{\hat sd_{perm}}{\hat sd_{glm}}$, which changes the scale of $wpd_{glm}$ without changing the location. The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{perm}$ is also normally distributed. Further, they are brought to similar scale and location and hence could be compared or used interchangeably for different comparisons based on their performance.
 
-```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails."}
+```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
 
 ```  
 
