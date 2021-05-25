@@ -193,8 +193,8 @@ We propose a measure called Weighted Pairwise Distances ($wpd$) to assess struct
 
 ## Principle 
 
-The principle behind the construction of $wpd$ is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures describes a panel with $2$ x-axis categories and $3$ facet levels, but with different designs. Figure \ref{fig:null4by2}a has all categories drawn from N(5, 10) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution within a facet but the mean and sd incremented by $5$ units for every consecutive facets. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories within each facet is different but they are same across facets (mean by +5, sd by -2 for consecutive x categories). Figure \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories (mean by +5 and sd by -1.5 for consecutive categories). If the panels are to be ranked in order of capturing maximum variation in the measured variable from minimum to maximum, then an obvious choice would be placing (a) followed by (b), (c) and then (d). It might be argued that it is not clear if (b) should precede or succeed (c) in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. With this principle in mind, display (b) is considered less informative as compared to display (c) in emphasizing the distributional differences. The proposed measure $wpd$ is constructed in a way so that it could be used to rank panels of different designs as well as test if a design is interesting. This measure is an estimate of the maximum variation in the measured variable explained by the panel. A higher value of  $wpd$ would indicate that the panel is interesting to look at, whereas a lower value would indicate otherwise.
-
+The principle behind the construction of $wpd$ is explained through a simple example explained in Figure \ref{fig:null4by2}. Each of these figures describes a panel with $2$ x-axis categories and $3$ facet levels, but with different designs. Figure \ref{fig:null4by2}a has all categories drawn from N(0, 1) distribution for each facet. It is not an interesting display particularly, as distributions do not vary across x-axis or facet categories. Figure \ref{fig:null4by2}b has x categories drawn from the same distribution, but across facets the distributions are $3$ standard deviations apart. Figure \ref{fig:null4by2}c exhibits an exact opposite situation where distribution between the x-axis categories
+are $3$ standard deviations apart, but they do not change across facets. \ref{fig:null4by2}d takes a step further by varying the distribution across both facet and x-axis categories by  $3$ standard deviations. If the panels are to be ranked in order of capturing maximum variation in the measured variable from minimum to maximum, then an obvious choice would be placing (a) followed by (b), (c) and then (d). It might be argued that it is not clear if (b) should precede or succeed (c) in the ranking. Gestalt theory suggests that when items are placed in close proximity, people assume that they are in the same group because they are close to one another and apart from other groups. With this principle in mind, display (b) is considered less informative as compared to display (c) in emphasizing the distributional differences. The proposed measure $wpd$ is constructed in a way so that it could be used to rank panels of different designs as well as test if a design is interesting. This measure is an estimate of the maximum variation in the measured variable explained by the panel. A higher value of  $wpd$ would indicate that the panel is interesting to look at, whereas a lower value would indicate otherwise.
 
 
 
@@ -262,8 +262,12 @@ Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, 
 
 ## Computation
 
-The distance measure $wpd$ between two cyclic granularities $A$ and $B$ is aimed to capture structure and patterns by estimating the maximum variation of the measured variable within a panel. The computation of $wpd$
-involves characterizing distributions, computing distances between distributions, choosing a tuning parameter to specify the weightage given to within-facet or between-facet distances. Furthermore, the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated.  Hence, as a pre-processing step, the raw data is normal quantile transformed (@Bogner2012-az) so that the quantiles of the transformed data follows a standard normal distribution. 
+The computation of the distance measure $wpd$ for a panel involves characterizing distributions, computing distances between distributions, choosing a tuning parameter to specify the weightage for different group of distances. Furthermore, the data needs to be appropriately transformed to ensure that the value of $wpd$ emphasizes distributional differences across categories and not across different data generating processes.
+
+<!-- irrespective of the distribution from which the data is generated. -->
+
+
+<!-- is aimed to capture structure and patterns by estimating the maximum variation of the measured variable within a panel.  $wpd$ -->
 
 <!-- the distributional differences need to be measured for both within-group and between-group categories. Moreover, a tuning parameter specifying the weightage given to within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}b and c. The maximum of all these weighted differences serves as an estimate of the maximum variation in the panel and is taken as the value of $wpd$.  -->
 
@@ -644,11 +648,10 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
-The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. We also have some additional demographics data in terms of the number of members in the household and the presence of kids/elderly parents and their profession.
-
-Demand data for these households are shown in a linear time scale in Figure \ref{fig:linear-scale-8}. In the left panel of Figure \ref{fig:linear-scale-8} (a), the linear representation of the entire time period is shown, whereas in the right panel (b) a particular month is shown and furthermore a week has been highlighted.
-It is evident from the range of the demand data in  Figure \ref{fig:linear-scale-8} (a), that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. When we zoom into the linear representation of this series in Figure \ref{fig:linear-scale-8} (b), some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
-Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by asking if the ranking of the harmonies make sense for the households, then compare households to get more insights of what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, we see if the display of the significant harmonies could be validated by zooming in the linear representation of the time series.
+The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd_{norm}$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. The line display of 
+energy usage will have too many measurements squeezed in a linear representation.
+No behavioral pattern is likely to be discerned from this view. When we zoom into the linear representation of this series in Figure \ref{fig:linear-scale-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
+Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each for these households, compare households to get more insights into\ what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, the ranking and selection of significant harmonies could be validated by analyzing the distribution of the energy usage across significant harmonies.
 
 
 ```{r tab-demography, eval = FALSE}
@@ -747,84 +750,12 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 
 _Selecting and Ranking harmonies for all households_ 
 
-$v_{i, t}$ has a asymmetrical distribution as could be seen in Figure \ref{fig:raw-nqt-8} and the Normal score transform has been applied to make it more symmetric. Let $v*_{i, t}$ denote the normal-quantile transformed electricity demand for $i^{th}$ household for time period $t$. Suppose $(A, B) \in H_{N_C}$ be a harmony pair where  $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Suppose $q^{i, p}_{A, j}$ denote the quantiles with probability $p$ for the of the $i^{th}$ household for $j^{th}$ category of the cyclic granularity $A$. Similarly, $q^{i, p}_{B, k}$ denotes the same for the $k^{th}$ category of the cyclic granularity $B$. Sample quantiles were computed at $p = 0.01, 0.02, \dots, 0.99$. Jensen-Shannon distances are computed between $q^{i, p}_{A, j}$ and $q^{i, p}_{B, k}$ for each ${j \in J, k \in K}$ to obtain the relevant within-facet and between-facet distances. A tuning parameter of $\lambda = 0.67$ has been considered in Equation \ref{def:raw-wpd} to compute $wpd$. It is further normalized using the approach described in Section \ref{sec:norm-wpd}. This entire process is repeated for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. Figure \ref{fig:dotplot-8} shows the heatmap for the eight households
-with the value of $wpd_{norm}$ filled as colors.
-
-_Validating rank of household id:1_
-
-From table \ref{tab:tab-rank-8}, it could be seen that 
-for household id:1, (hod, wdwnd) has been ranked higher than (wdwnd, hod), both of these being significant. Further, we see that (wom, wdwnd) has been ranked $5^{th}$ and tagged as an insignificant pair. Figure \ref{fig:gravitas-plot-8} is used to show
-if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences for $\lambda>0.5$, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
-
-```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
-
-id1_tsibble <- elec %>%
-  filter(id== 1)
-
-p1 <- id1_tsibble %>% 
-   prob_plot("hour_day",
-             "wknd_wday",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = c(0.25, 0.5, 0.75)) +
-  ggtitle("a) hod vs wdwnd (Rank 1)") + 
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin()),)
-
-
-p2 <- id1_tsibble %>%
-   prob_plot("wknd_wday",
-             "hour_day",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = c(0.25,0.5,0.75)) +
-  ggtitle("b) wdwnd vs hod (Rank 3)") +
-  scale_colour_brewer(name = "", palette = "Set2")   +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin())) 
-
-p3 <- id1_tsibble %>%
-   prob_plot("week_month",
-             "wknd_wday",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = 
-               c(0.25,0.5,0.75)) +
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
-        strip.text = element_text(size = 7, margin = margin())) +
-  ggtitle("c) wom vs wdwnd (insignificant)")
-
-
-p4 <- id1_tsibble %>%
-   prob_plot("day_month",
-             "hour_day",
-             response = "kwh",
-             plot_type = "quantile",
-             symmetric = FALSE,
-             quantile_prob = 
-               c(0.25,0.5,0.75)) +
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + theme(legend.position = "bottom",
-        strip.text = element_text(size = 7, margin = margin())) +
-  ggtitle("c) wom vs wdwnd (insignificant)")
-
-p1 + p2/p3  
-
-```
-
-<!-- From Figure \ref{fig:gravitas-plot-8-id5}, it could further be observed that id5 has only one significant harmony $(hod, dow)$. Apparently, $(hod, wnd/wday)$ which is an important harmony for most households is not important for this one. -->
+ $wpd_{norm}$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in number of potential harmonies to explore closely, starting from $42$.
 
 _Comparing households and validating patterns from linear display_ 
 
 
-Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and validate the results of the heatmap through linear display in (b). The top panel contains the raw data for a month (Sep-2019). The darker the color of a cell in the heatmap, the more significant a harmony pair it is. Also, the ones with `*` are significant at 95% level This plot suggests that there are no significant periodic patterns for id 5, even when the demographics of id 5 are very similar to id 6 and 7. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends (two members are in the mixed profession), whereas for id 7, all or few other days of the week are also important (members are in academia and hence might have more flexible routines). The periodic pattern is very similar to id 8, which has a very different demographic property. Households id 2 and 3 are similar, in terms of linear display, periodic patterns as well as demographics. Different periodic behavior could be observed in households with very similar demographics (id 5 compared to 6 and 7 - only the variable `profession` is different) and similar periodic behavior can stem from households with very different demographics (id 7 and 8 - differs in all variables in \ref{tab:tab-demography}). This could also be verified from the corresponding linear representation in \ref{fig:dotplot-8}(b).
+ Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and validate the results of the heatmap through linear display in (b). (b) contains the raw data for a month (Sep-2019). In (a), the value of $wpd_{norm}$ filled as colors, implying darker cells correspond to more significant a harmony pair. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. The periodic pattern is very similar to id 8, which has a very different total energy usage. Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics.
 
 ```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something", eval = FALSE}
 
@@ -1036,6 +967,62 @@ elec_rank <- elec_sig_split %>%
 
 elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance levels.")
 ```
+
+
+_Validating rank of household id:4 and 5_
+
+From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair (dow, hod) is significant for household id 4, but for 5 it has been tagged as an insignificant pair. The distribution of energy demand with dow as the x-axis and hod as the facets for both of these households can help justify the selection. 
+Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumption changes across both dow and hod for id 4, but it is not so different for id 5, as apparent from the scale of the usage.  Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
+
+
+
+<!-- Figure \ref{fig:gravitas-plot-8} is used to show -->
+<!-- if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd_{norm}$ is designed to put more weightage on within-facet differences for $\lambda>0.5$, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
+
+
+
+```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+
+id4_tsibble <- elec %>%
+  filter(id== 4)
+
+id5_tsibble <- elec %>%
+  filter(id== 5)
+
+p1 <- id4_tsibble %>% 
+   prob_plot("hour_day",
+             "day_week",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+  ggtitle("a) hod vs dow (id:4)") + 
+  #scale_colour_brewer(name = "", palette = "Set2") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin()),)
+
+
+p2 <- id5_tsibble %>%
+   prob_plot("hour_day",
+             "day_week",
+             response = "kwh",
+             plot_type = "quantile",
+             symmetric = TRUE,
+             quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+  ggtitle("a) hod vs dow (id:5)") +
+  #scale_colour_brewer(name = "", palette = "Set2")   +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) 
+
+
+p1 + p2 
+
+```
+
+
+
+<!-- From Figure \ref{fig:gravitas-plot-8-id5}, it could further be observed that id5 has only one significant harmony $(hod, dow)$. Apparently, $(hod, wnd/wday)$ which is an important harmony for most households is not important for this one. -->
+
 
 # Discussion
 

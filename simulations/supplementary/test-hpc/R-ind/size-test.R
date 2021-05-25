@@ -4,10 +4,10 @@ library(hakear)
 library(distributional)
 library(gravitas)
 library(here)
-sample_seed = seq(1000,2999, by = 10)
-nperm = 200
+sample_seed = seq(1000,2999, by = 1000)
+nperm = 2
 
-scen <-as.numeric(commandArgs()[[6]])
+#scen <-as.numeric(commandArgs()[[6]])
 sample_seedj <- sample_seed[scen]
 #sample_seedj = 1000
 

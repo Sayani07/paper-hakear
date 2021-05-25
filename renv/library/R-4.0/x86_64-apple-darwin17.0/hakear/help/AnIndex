@@ -14,3 +14,4 @@ reexports	reexports
 select_harmonies	select_harmonies
 sim_panel	sim_panel
 wpd	wpd
+wpd_threshold	wpd_threshold
