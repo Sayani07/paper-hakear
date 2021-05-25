@@ -516,48 +516,6 @@ The transformed ${wpd}$ which is normalized for the values of $nx$ and $nfacet$ 
 ```
 
 
-
-### Modelling approach
-
-<!-- CONTENT DELETE: linear model -->
-<!-- _Linear model_   -->
-
-<!-- A linear model is fitted to model the relationship between $wpd$ and $nx*nfacet$. The model is of the form $$y_l = a+b*log(z_l) + e_l$$, where, $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors, with parameters $a$ and $b$ being estimated from the data generated through the simulation study described in Section \ref{sec:sim-study}. The estimates and other model summary is given in Table \ref{tab:linear-model}. -->
-
-<!-- ```{r linear-model, message=FALSE} -->
-
-<!-- ``` -->
-
-
-
-
-<!-- The idea is to find a transformation on $wpd$ which would remove the effect of $nx*nfacet$ on $wpd$ and thus is defined as the residuals: -->
-<!-- $y^* =  y - \hat a -  \hat b*log(z)$, where  -->
-<!-- $y^*$ is the $wpd_{linear}$,  -->
-<!-- $\hat a$ and $\hat b$ are the estimated values of the parameter $a$ and $b$ and $z = nx*nfacet$. -->
-
-<!-- Defining $wpd_{linear}$ in this way forces the mean to be zero and variability to be uniform across the median $wpd$ values as could be seen in Figure \ref{fig:resi-linear}.   -->
-
-
-<!-- ```{r resi-linear, fig.cap = "$wpd_{norm}^{linear}$ which are defined as the residuals of the linear model have mean zero and are homogeneous. Further, by design they are independent of the $nx*nfacet$ and hence could be a potential candidate for $wpd_norm$."} -->
-<!-- ``` -->
-
-
-
-_Generalized linear model_  
-
-In the linear model approach, $wpd\in R$ was assumed, whereas, $wpd$ is a Jensen-Shannon Distance (JSD) and lies between 0 and 1 (@JSD). Furthermore, JSD follows a Chi-square distribution, which is a special case of Gamma distribution. Therefore, a generalized linear model could be fitted instead of a linear model to allow for the response variable to follow a Gamma distribution. The inverse link is used when we know that the mean response is bounded, which is applicable in our case since $0 \leq wpd\leq 1$.
-
-We fit a Gamma generalized linear model with the inverse link which is of the form:  
-$$y_l = a+b*log(z_l) + e_l$$, where $y_l = median_m(wpd_{l, m})$, $z_l$ is the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
-$wpd_{glm} = wpd - 1/(\hat a + \hat b*log(nx*nfacet))$.
-
-<!-- Please note: -->
-
-<!-- - subtracting the intercept brings the location of the transformed variable to 0 for either case -->
-<!-- - heterogeneity is higher for this case after normalization as compared to the earlier one. -->
-
-
 ```{r glm-tab}
 broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
 ```
