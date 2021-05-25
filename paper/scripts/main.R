@@ -147,39 +147,41 @@ sim_varall_normal <- function(nx, nfacet, mean, sd, w1, w2) {
 sim_panel_varall <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varall_normal(2, 3, 5, 10, 5, -1.5)
+  #sim_dist = sim_varall_normal(2, 3, 5, 10, 5, -1.5)
+  sim_dist = sim_varall_normal(2, 3, 0, 1, 3, 0)
 ) %>% unnest(data)
 
-p_varall <- sim_panel_varall %>%
-  rename("facet level" = "id_facet" ) %>% 
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
-  facet_wrap(~`facet level`,labeller = "label_both") + 
-  geom_boxplot() +
-  ggtitle("") +
-  xlab("x level") +
-  ylab("")
+# p_varall <- sim_panel_varall %>%
+#   rename("facet level" = "id_facet" ) %>% 
+#   ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
+#   facet_wrap(~`facet level`,labeller = "label_both") + 
+#   geom_boxplot() +
+#   ggtitle("") +
+#   xlab("x level") +
+#   ylab("")
 
 
 sim_varx_normal <- function(nx, nfacet, mean, sd, w1, w2) {
-  rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w1), (mean + seq(0, nx - 1, by = 1) * w2)), nfacet)
+  rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w1), (sd + seq(0, nx - 1, by = 1) * w2)), nfacet)
 }
 
 sim_panel_varx <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varx_normal(2, 3, 5, 10, 5, -1.5)
+  # sim_dist = sim_varx_normal(2, 3, 5, 10, 5, -1.5)
+  sim_dist = sim_varx_normal(2, 3, 0, 1, 3, 0)
 ) %>% unnest(data)
 
 
-p_varx <- sim_panel_varx %>%
-  rename("facet level" = "id_facet" ) %>% 
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
-  facet_wrap(~`facet level`,labeller = "label_both") + 
-  ggtitle("") +
-  geom_boxplot() +
-  xlab("x level") +
-  ylab("simulated response")
-
+# p_varx <- sim_panel_varx %>%
+#   rename("facet level" = "id_facet" ) %>% 
+#   ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
+#   facet_wrap(~`facet level`,labeller = "label_both") + 
+#   ggtitle("") +
+#   geom_boxplot() +
+#   xlab("x level") +
+#   ylab("simulated response")
+# 
 
 
 sim_varf_normal <- function(nx, nfacet, mean, sd, w1, w2) {
@@ -189,18 +191,19 @@ sim_varf_normal <- function(nx, nfacet, mean, sd, w1, w2) {
 sim_panel_varf <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
-  sim_dist = sim_varf_normal(2, 3, 5, 10, 5, 5)
+  # sim_dist = sim_varf_normal(2, 3, 5, 10, 5, 5)
+  sim_dist = sim_varf_normal(2, 3, 0, 1, 3, 0)
 ) %>% unnest(data)
 
-
-p_varf <- sim_panel_varf %>%
-  rename("facet level" = "id_facet" ) %>% 
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) +
-  facet_wrap(~`facet level`,labeller = "label_both") + 
-  geom_boxplot() +
-  ggtitle("") +
-  xlab("x level") +
-  ylab("")
+# 
+# p_varf <- sim_panel_varf %>%
+#   rename("facet level" = "id_facet" ) %>% 
+#   ggplot(aes(x = as.factor(id_x), y = sim_data)) +
+#   facet_wrap(~`facet level`,labeller = "label_both") + 
+#   geom_boxplot() +
+#   ggtitle("") +
+#   xlab("x level") +
+#   ylab("")
 
 
 
@@ -209,25 +212,90 @@ sim_panel_null <- sim_panel(
   nfacet = 3,
   ntimes = 500,
   sim_dist = distributional
-  ::dist_normal(5, 10)
+  ::dist_normal(0,1)
 ) %>% unnest(c(data))
 
 set.seed(9999)
 
 
+# p_null <- sim_panel_null %>%
+#   rename("facet level" = "id_facet" ) %>% 
+#   ggplot(aes(x = as.factor(id_x), y = sim_data)) +
+#   facet_wrap(~`facet level`,labeller = "label_both") +
+#   geom_boxplot() +
+#   ggtitle("") +
+#   xlab("x level") +
+#   ylab("simulated response")
+
+
+
+set.seed(99999)
+varall <- compute_pairwise_norm(sim_panel_varall, 
+                                gran_x = "id_x",
+                                gran_facet = "id_facet",
+                                response = sim_data, 
+                                nperm = 200
+)
+
+# plot
+p_varall <- sim_panel_varall %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("d", round(varall, 2))) + xlab("x level")
+
+
+set.seed(99999)
+
+null <- compute_pairwise_norm(sim_panel_null, 
+                              gran_x = "id_x",
+                              gran_facet = "id_facet",
+                              response = sim_data, 
+                              nperm = 200
+)
+
 p_null <- sim_panel_null %>%
-  rename("facet level" = "id_facet" ) %>% 
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) +
-  facet_wrap(~`facet level`,labeller = "label_both") +
-  geom_boxplot() +
-  ggtitle("") +
-  xlab("x level") +
-  ylab("simulated response")
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("a", round(null, 2))) + xlab("x level") 
 
 
-ggpubr::ggarrange(p_null, p_varf,  p_varx, p_varall, nrow = 2, ncol = 2,
-                  common.legend = TRUE,
-                  labels = c("a", "b", "c", "d"))
+
+
+set.seed(99999)
+varf <- compute_pairwise_norm(sim_panel_varf, 
+                              gran_x = "id_x",
+                              gran_facet = "id_facet",
+                              response = sim_data, 
+                              nperm = 200
+)
+
+p_varf <- sim_panel_varf %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("b", round(varf, 2))) + xlab("x level")
+
+
+set.seed(99999)
+varx <- compute_pairwise_norm(sim_panel_varx, 
+                              gran_x = "id_x",
+                              gran_facet = "id_facet",
+                              response = sim_data, 
+                              nperm = 200
+)
+
+# plot
+p_varx <- sim_panel_varx %>%
+  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
+  ggtitle(paste("c", round(varx, 2))) + xlab("x level")
+
+
+
+(p_null + p_varf)/(p_varx + p_varall)
+
+# 
+# ggpubr::ggarrange(p_null, p_varf,  p_varx, p_varall, nrow = 2, ncol = 2,
+#                   common.legend = TRUE,
+#                   labels = c("a", "b", "c", "d"))
+
+
+
 
 
 ## ---- notations
@@ -465,101 +533,60 @@ G21_all_data %>%
 
 
 ## ---- varall-new
-sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
-  dist_normal((mean + seq(0,
-                          (nx *
-                             nfacet - 1),
-                          by = 1
-  ) * w), sd)
-}
-sim_panel_varall <- sim_panel(
-  nx = 2, nfacet = 3,
-  ntimes = 500,
-  sim_dist = sim_varall_normal(2, 3, 0, 1, 2)
-) %>% unnest(data)
 
-set.seed(9999)
-varall <- compute_pairwise_norm(sim_panel_varall, 
-                                gran_x = "id_x",
-                                gran_facet = "id_facet",
-                                response = sim_data, 
-                                nperm = 200
-)
+# sim_varall_normal <- function(nx, nfacet, mean, sd, w) {
+#   dist_normal((mean + seq(0,
+#                           (nx *
+#                              nfacet - 1),
+#                           by = 1
+#   ) * w), sd)
+# }
+# sim_panel_varall <- sim_panel(
+#   nx = 2, nfacet = 3,
+#   ntimes = 500,
+#   sim_dist = sim_varall_normal(2, 3, 0, 1, 2)
+# ) %>% unnest(data)
 
-# plot
-p_varall <- sim_panel_varall %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("d", round(varall, 2))) + xlab("x level")
+
 
 ## ---- varx-new
-sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
-  rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
-}
 
-sim_panel_varx <- sim_panel(
-  nx = 2, nfacet = 3,
-  ntimes = 500,
-  sim_dist = sim_varx_normal(2, 3, 0, 1, 2)
-) %>% unnest(data)
+# sim_varx_normal <- function(nx, nfacet, mean, sd, w) {
+#   rep(dist_normal((mean + seq(0, nx - 1, by = 1) * w), sd), nfacet)
+# }
+# 
+# sim_panel_varx <- sim_panel(
+#   nx = 2, nfacet = 3,
+#   ntimes = 500,
+#   sim_dist = sim_varx_normal(2, 3, 0, 1, 2)
+# ) %>% unnest(data)
 
 
-set.seed(9999)
-varx <- compute_pairwise_norm(sim_panel_varx, 
-                              gran_x = "id_x",
-                              gran_facet = "id_facet",
-                              response = sim_data, 
-                              nperm = 200
-)
-
-# plot
-p_varx <- sim_panel_varx %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("c", round(varx, 2))) + xlab("x level")
 
 ##----varf-new
-sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
-  rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
-}
-sim_panel_varf <- sim_panel(
-  nx = 2, nfacet = 3,
-  ntimes = 500,
-  sim_dist = sim_varf_normal(2, 3, 0, 1, 2)
-) %>% unnest(data)
+
+# sim_varf_normal <- function(nx, nfacet, mean, sd, w) {
+#   rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w), sd), each = nx)
+# }
+# sim_panel_varf <- sim_panel(
+#   nx = 2, nfacet = 3,
+#   ntimes = 500,
+#   sim_dist = sim_varf_normal(2, 3, 0, 1, 2)
+# ) %>% unnest(data)
 
 
-set.seed(9999)
-varf <- compute_pairwise_norm(sim_panel_varf, 
-                              gran_x = "id_x",
-                              gran_facet = "id_facet",
-                              response = sim_data, 
-                              nperm = 200
-)
-
-p_varf <- sim_panel_varf %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("b", round(varf, 2))) + xlab("x level")
 
 ##----null-new
-sim_panel_null <- sim_panel(
-  nx = 2,
-  nfacet = 3,
-  ntimes = 500,
-  sim_dist = distributional
-  ::dist_normal(0, 1)
-) %>% unnest(c(data))
 
-set.seed(9999)
+# sim_panel_null <- sim_panel(
+#   nx = 2,
+#   nfacet = 3,
+#   ntimes = 500,
+#   sim_dist = distributional
+#   ::dist_normal(0, 1)
+# ) %>% unnest(c(data))
 
-null <- compute_pairwise_norm(sim_panel_null, 
-                              gran_x = "id_x",
-                              gran_facet = "id_facet",
-                              response = sim_data, 
-                              nperm = 200
-)
 
-p_null <- sim_panel_null %>%
-  ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("a", round(null, 2))) + xlab("x level") 
 
 ## ---- plot-all-new3
-(p_null + p_varf)/(p_varx + p_varall)
+

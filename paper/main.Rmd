@@ -633,7 +633,7 @@ The results for this section is WIP and to be included in details in the Supplem
 
 ```
 
-```{r plot-all-new3, fig.cap = "$wpd_{norm}$ values for the four illustrative designs are presented here. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design."}
+```{r plot-all-new3, fig.cap = "$wpd_{norm}$ values for the four illustrative designs are presented here. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design.", dependson= "null4by2"}
 
 ```
 
