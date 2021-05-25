@@ -526,19 +526,6 @@ broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to
 ```
 
 
-## Combining normalizing approaches
-
-We see that the transformation through the modeling approach leads to very similar distribution across high $nx$ and $nfacet$ (higher than $5$) and not so much for lower $nx$ and $nfacet$. Hence, the computational load of permutation approach could be alleviated by using the modeling approach for the higher $nx$ and $nfacet$, however, it is important that we use the permutation approach for lower $nx$ and $nfacet$. It is difficult to compare and use the transformed measure from both of these approaches alternatively without bringing them to the same scale. The transformed variables from the two approaches have to be brought to the same scale so that for smaller categories, permutation approach is used and for larger categories, modeling approach is used. 
-
-<!-- These could be done through the following: -->
-
-<!--  - Making the range of both the variables same by using min-max scaling method. In practice, however, we would only have one value of $wpd$ which we need to transform using the modeling approach. Hence, min-max scaling approach could not be used here. -->
-
-<!--  - Standardizing the variables and expressing scores at standard deviation units. Again in practice, however, we would only have one value of $wpd_{raw}$ which we need to transform using the modeling approach. Hence, standardizing scores could not be used here as we do not have the mean and standard deviation of a series while using transformation using modeling. -->
-
-<!-- - Make the location and scale of both the approaches similar so that they could be compared. Please note that the range of values could be different in this case, however location and scale are brought to same levels.) -->
-
-The measure $wpd_{glm}$ has a $\hat \mu_{glm} = 0$ and $\hat sd_{glm} = 0.003$ whereas the measure $wpd_{perm}$ which is a z-score, has an expected normal distribution with  $\hat \mu_{perm} = 0$ and $\hat sd_{perm} = 1$. To bring them to the same scale, we have defined $wpd_{glm-scaled} = wpd_{glm}*\frac{\hat sd_{perm}}{\hat sd_{glm}}$, which changes the scale of $wpd_{glm}$ without changing the location. The measure $wpd_{glm-scaled}$ seems to roughly follow a normal distribution except in the tails as could be seen in Figure \ref{fig:hist-qq} and the very method of permutation approach ensures that $wpd_{perm}$ is also normally distributed. Further, they are brought to similar scale and location and hence could be compared or used interchangeably for different comparisons based on their performance.
 
 ```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
 
@@ -548,16 +535,6 @@ The measure $wpd_{glm}$ has a $\hat \mu_{glm} = 0$ and $\hat sd_{glm} = 0.003$ w
 
 
 ```
-
-Thus, the $wpd_{norm}$ is defined as follows:
-
-\begin{equation}
-wpd_{norm} =
-\begin{cases}
-wpd_{perm},& \text{if } J, K <=5\\
-wpd_{glm-scaled}             & \text{otherwise}\\
-\end{cases}
-\end{equation}
 
 ## Properties
 
