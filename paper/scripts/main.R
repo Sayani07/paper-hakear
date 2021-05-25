@@ -240,7 +240,7 @@ varall <- compute_pairwise_norm(sim_panel_varall,
 # plot
 p_varall <- sim_panel_varall %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("d", round(varall, 2))) + xlab("x level")
+  ggtitle(paste("(d)", round(varall, 2))) + xlab("x level")
 
 
 set.seed(99999)
@@ -254,7 +254,7 @@ null <- compute_pairwise_norm(sim_panel_null,
 
 p_null <- sim_panel_null %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("a", round(null, 2))) + xlab("x level") 
+  ggtitle(paste("(a)", round(null, 2))) + xlab("x level") 
 
 
 
@@ -269,7 +269,7 @@ varf <- compute_pairwise_norm(sim_panel_varf,
 
 p_varf <- sim_panel_varf %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("b", round(varf, 2))) + xlab("x level")
+  ggtitle(paste("(b)", round(varf, 2))) + xlab("x level")
 
 
 set.seed(99999)
@@ -283,7 +283,7 @@ varx <- compute_pairwise_norm(sim_panel_varx,
 # plot
 p_varx <- sim_panel_varx %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("c", round(varx, 2))) + xlab("x level")
+  ggtitle(paste("(c)", round(varx, 2))) + xlab("x level")
 
 
 
