@@ -344,7 +344,7 @@ $wpd_{perm}$ is computed as follows:
 $$wpd_{perm} = \frac{(wpd_{raw} - \bar{wpd_{perm-data}})}{sd(wpd_{perm-data})}$$
 where $\bar{wpd_{perm-data}}$ and $sd(wpd_{perm-data})$ are the mean and standard deviation of $wpd_{perm-data}$ respectively. Standardizing  $wpd$ in the permutation approach ensures that the distribution of $wpd_{perm}$ has the same $mean = 0$ and $sd = 1$ across all comparisons under $D_{null}$. While this works successfully to make the location and scale similar across different $nx$ and $nfacet$ (as seen in Figure \ref{fig:norm}), it is computationally heavy and time consuming, and hence less user friendly when being actually used in practice. Hence, another approach to adjustment, with potentially less computational time, is proposed.
 
-- _Modelling approach:_  $wpd_{raw}$ being a Jensen-Shannon distance, follows a Chi-square distribution (@JSD), which is a special case of Gamma distribution. Hence, a Gamma generalized linear model (GLM) for $wpd_{raw}$ is fitted with number of comparisons as the explanatory variable, which is of the following form:
+- _Modeling approach:_  $wpd_{raw}$ being a Jensen-Shannon distance, follows a Chi-square distribution (@JSD), which is a special case of Gamma distribution. Hence, a Gamma generalized linear model (GLM) for $wpd_{raw}$ is fitted with number of comparisons as the explanatory variable, which is of the following form:
 
 $$y_l = a+b*log(z_l) + e_l , \quad l = (1, 2, \dots, L)$$, 
 
