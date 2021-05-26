@@ -757,10 +757,12 @@ _Selecting and Ranking harmonies for all households_
 
  $wpd_{norm}$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in number of potential harmonies to explore closely, starting from $42$.
 
-_Comparing households and validating patterns from linear display_ 
+_Detecting patterns for households not apparent from linear display_ 
+
+\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and emphasizes patterns not discernible through linear display in (b). (b) contains the raw data for a month (Sep-2019), where the major and minor x-axis corresponds to weeks and days respectively. In (a), the value of $wpd_{norm}$ filled as colors, implying darker cells correspond to more significant a harmony pair. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have same significant harmonies inspite of having very different total energy usage. Note that the $wpd_{norm}$ values are computed over the entire range, but the linear display is zoomed into September, which might throw some light on repetitive patterns in the households.
 
 
- Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and validate the results of the heatmap through linear display in (b). (b) contains the raw data for a month (Sep-2019). In (a), the value of $wpd_{norm}$ filled as colors, implying darker cells correspond to more significant a harmony pair. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. The periodic pattern is very similar to id 8, which has a very different total energy usage. Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics.
+<!-- Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics. -->
 
 ```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something", eval = FALSE}
 
@@ -860,7 +862,7 @@ elec_harmony_all <- elec_select_harmony %>%
 ```
 
 
-```{r dotplot-8, fig.cap = "Harmony pairs are shown for all household ids. The darker the colour, the higher the importance of the harmony. Also, the ones bordered red are selected with 90 percent significance level. Visualizing the pairs in this way helps us to see the important cyclic granularities along the x-axis and facet along with the information that which households should be analyzed together.", fig.height = 8}
+```{r dotplot-8, fig.cap = " A heatmap across harmonies (a) and line plot (b) showing energy usage for all household ids. The darker the colour in (a), the higher the harmony is ranked. Visualizing the harmony pairs in this way helps us to see the important cyclic granularities along the x-axis, facet or both. It further shows which households have significant patterns across similar temporal granularities. For eg, id 7 and 8 have significant patterns across (hod, dow) and (dow, hod), which was not apparent in (a).", fig.height = 8}
 # elec_sig_split <- elec_harmony_all %>%
 #   mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
 #   
@@ -983,8 +985,9 @@ elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the
 _Validating rank of household id:4 and 5_
 
 From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair (dow, hod) is significant for household id 4, but for 5 it has been tagged as an insignificant pair. The distribution of energy demand with dow as the x-axis and hod as the facets for both of these households can help justify the selection. 
-Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumption changes across both dow and hod for id 4, but it is not so different for id 5, as apparent from the scale of the usage.  Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance.
+Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 for as many hours. 
 
+<!-- Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
 
 
 <!-- Figure \ref{fig:gravitas-plot-8} is used to show -->
