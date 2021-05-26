@@ -262,7 +262,9 @@ Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, 
 
 ## Computation
 
-The computation of the distance measure $wpd$ for a panel involves characterizing distributions, computing distances between distributions, choosing a tuning parameter to specify the weightage for different group of distances. Furthermore, the data needs to be appropriately transformed to ensure that the value of $wpd$ emphasizes distributional differences across categories and not across different data generating processes.
+The computation of the distance measure $wpd$ for a panel involves characterizing distributions, computing distances between distributions, choosing a tuning parameter to specify the weightage for different group of distances. Furthermore, the data needs to be appropriately transformed to ensure that the value of $wpd$ detect distributional differences across categories and not across different data generating processes.
+
+<!-- but not when underlying distributions are different -->
 
 <!-- irrespective of the distribution from which the data is generated. -->
 
@@ -302,7 +304,7 @@ Multiple observations of $v$ correspond to the subset  $v_{jk} = \{s: A(s) = j, 
 <!-- $$D_f(P||Q) := \int q(x)f(\frac{p(x)}{q(x)})$$, where -->
 <!-- $f : [0,\infty) \rightarrow R \cup \{\infty\}$ is a continuous convex function, and $f(1) = 0$.  -->
   
-Most common way to measure divergence between distributions is the Kullback-Leibler (KL) divergence [@Kullback1951-jy]. The KL divergence denoted by $D(q_1||q_2)$ is a non-symmetric measure of the difference between two probability distributions $q_1$ and $q_2$ and is interpreted as the amount of information lost when $q_2$ is used to approximate $q_1$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance between distributions are Hellinger distance, total variation distance and Fisher information metric. In this paper, the pairwise distances between the distributions of the measured variable are obtained through Jensen-Shannon distance (JSD), defined by,
+One of the most common ways to measure divergence between distributions is the Kullback-Leibler (KL) divergence [@Kullback1951-jy]. The KL divergence denoted by $D(q_1||q_2)$ is a non-symmetric measure of the difference between two probability distributions $q_1$ and $q_2$ and is interpreted as the amount of information lost when $q_2$ is used to approximate $q_1$. Although the KL divergence measures the “distance” between two distributions, it is not a distance measure since it is not symmetric and does not satisfy the triangle inequality. The Jensen-Shannon divergence [@Menendez1997-in] based on the Kullback-Leibler divergence is symmetric and it always has a finite value. The square root of the Jensen-Shannon divergence is a metric, often referred to as Jensen-Shannon distance. Other common measures of distance between distributions are Hellinger distance, total variation distance and Fisher information metric. In this paper, the pairwise distances between the distributions of the measured variable are obtained through Jensen-Shannon distance (JSD), defined by,
 
 $$JSD(q_1||q_2) = \frac{1}{2}D(q_1||M) + \frac{1}{2}D(q_2||M)$$
 where $M = \frac{q_1+q_2}{2}$ and 
@@ -543,12 +545,57 @@ broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to
 
 # Ranking and selecting significant harmonies {#sec:rank-wpd}
 
-In this section, we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant by employing randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. 
+A harmony is referred to as "significant" if there is a significant distributional difference of the measured variable between different categories of the harmony. In this section, a selection criterion to choose significant harmonies is provided, thereby eliminating all harmonies that exhibit complete randomness in the measured variable. The distance measure $wpd_{norm}$ is used as a test statistic to test the null hypothesis that any given harmony is not significant. We select only those harmonies for which the test fails. The significant harmonies are then ranked basis how well they capture variation in the measured variable. 
 
+<!-- . Randomization tests (permutation tests) generates a random distribution by re-ordering the observed data and allows us to test if the observed data is significantly different from any random distribution.  -->
+<!-- the harmonies are not significant under null hypothesis and then test if our hypotheses are true: -->
 
-## Choosing a threshold
+<!--   $H_0$: harmonies are not significant -->
+<!--   $H_1$: at least one harmony is significant -->
 
-A randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. But we will use this procedure to obtain a threshold such that harmony pairs with a $wpd_{norm}$ value higher than this threshold will only be considered significant. The process of choosing a threshold is described as follows:
+<!-- we provide a method to select important harmonies by eliminating all harmonies for which patterns are not significant by employing randomization test. Randomization tests (permutation tests) generates a random distribution by re-ordering our observed data and allow to test if the observed data is significantly different from any random distribution. Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities.  -->
+
+## Choosing a threshold and selection criterion
+
+<!-- Under the null hypothesis, the harmonies are not significant. -->
+
+A threshold and consequently a selection criterion is chosen using the notion of Randomization tests. The data is permuted several times and $wpd_{norm}$ is computed for each of the permuted data sets to obtain the sampling distribution of $wpd_{norm}$ under the null hypothesis. If the null hypothesis is true, then $wpd_{norm}$ obtained from the original data set would be a likely value in the sampling distribution. But in case the null hypothesis is not true, then it is less probable that $wpd_{norm}$ obtained for the original data will be from the same distribution. This idea is utilized to come up with a threshold for selection, denoted by $wpd_{threshold}$, defined as the $99^{th}$ percentile of the sampling distribution. A harmony is selected if the value of $wpd_{norm}$ for that harmony is greater than the chosen threshold. The detailed algorithm for choosing a threshold and selection procedure is listed as follows:
+
+<!-- The selection criterion is stated as follows: for $(i \in {1, 2, \dots, H_{N_C}})$, select $H_i$ if $wpd_i > wpd_{threshold}$, else reject. -->
+
+- **Input:** All harmonies of the form $\{(A, B), A = \{ a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}\}$, $\forall (A, B) \in H_{N_C}$.
+
+- **Output:** Harmony pairs $(A, B)$ for which $wpd_{norm}$ is significant.
+
+1. Fix harmony pair $(A, B)$.
+
+2. Given the measured variable; $\{v_t: t=0, 1, 2, \dots, T-1\}$, $wpd_{norm}$ is computed and is represented by $wpd^{A, B}_{obs}$.
+
+3. From the original sequence a random permutation is obtained: $\{v_t^{1}: t=0, 1, 2, \dots, T-1\}$.
+
+4. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd^{A, B}_{1}$.
+
+5.  Steps (3) and (4) are repeated a large number of times $M$ ($M = 200$).
+
+6. For each permutation, one $wpd^{A, B}_{i}$ is obtained. Define $wpd_{sample} = \{wpd^{A, B}_{1} wpd^{A, B}_{2}, \dots, wpd^{A, B}_{M}\}$.
+
+7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and stored $wpd^{all}_{sample}$.
+
+8. $99^{th}$ percentiles of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold99}$
+
+7. If $wpd^{A, B}_{obs} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected with a 1% level of significance, otherwise rejected.
+
+Similarly, a harmony pair $(A, B)$ is selected with a 5% and 10% level of significance if $wpd^{A, B}_{obs} > wpd_{threshold95}$ and $wpd^{A, B}_{obs} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively. A harmony significant at 1%, 5% and 10% levels are tagged as \*\*\*, \*\*, \* respectively.
+
+## Ranking
+
+The distribution of $wpd_{norm}$ is expected to be similar for all harmonies under the null hypothesis, since they have been adjusted for different number of categories for the harmonies or underlying distribution of the measured variable.
+Hence, the values of $wpd_{norm}$ for different harmonies are comparable and can be used to rank the significant harmonies. A higher value of $wpd_{norm}$ for a harmony indicates that higher maximum variation in the measured variable is captured through that harmony. Figure \ref{fig:null4by2} presents the results of $wpd_{norm}$ from the illustrative designs in Section \ref{sec:computation-wpd}. The value of $wpd_{norm}$ under null design (a) is the least, followed by (b), (c) and (d). This aligns with the principle of $wpd_{norm}$, which is expected to have lowest value for null designs and highest for designs of the form $D_{var_{all}}$ (d). Moreover, note the relative differences in $wpd_{norm}$  values between (b) and (c). The value of the tuning parameter $\lambda$ is set to $0.67$, which has resulted in giving more emphasis to differences in x-axis categories. 
+ 
+
+<!-- ## Choosing a threshold -->
+
+<!-- A randomization test involves calculating a test statistic, randomly shuffling the data and calculating the test statistic several times to obtain a distribution of the test statistic. But we will use this procedure to obtain a threshold such that harmony pairs with a $wpd_{norm}$ value higher than this threshold will only be considered significant. The process of choosing a threshold is described as follows: -->
 
 <!-- to test if there is any interesting pattern captured by the harmonies, which essentially implies if $wpd_{norm}$ is significantly different from zero. The percentages of times the $wpd_{norm}$ obtained from the permuted data is greater than or equal to the observed $wpd_{norm}$ is the p-value. The randomization test is described as follows: -->
 
@@ -559,64 +606,22 @@ A randomization test involves calculating a test statistic, randomly shuffling t
 
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
-- **Input:** All harmonies of the form $\{(A, B), A = \{ a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}\}$  with $A$ placed across x-axis and $B$ across facets $\forall (A, B) \in N_C$.
-
-- **Output:** Harmony pairs $(A, B)$ for which $wpd_{norm}$ is significant.
-
-1. Fix harmony pair $(A, B)$.
-
-2. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$.
-
-3. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$.
-
-4. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$.
-
-5.  Steps (3) and (4) are repeated a large number
-of times $M$ (M = 200).
-
-6. For each permutation, one $wpd_{perm_i}$ is obtained.   Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$.
-
-7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and store it in $wpd^{all}_{sample}$.
-
-8. $99^{th}$ percentiles of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold99}$
-
-7. If $wpd_{obs_{A, B}} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected with a 99% level of significance and otherwise rejected.
-
-Similarly, a harmony pair $(A, B)$ is selected with a 95% and 90% level of significance if $wpd_{obs_{A, B}} > wpd_{threshold95}$ and $wpd_{obs_{A, B}} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively.
-
 <!-- Complete randomness in the measured variable indicates that the process follows a homogeneous underlying distribution over the whole time series, which essentially implies there is no interesting distinction across any different categories of the cyclic granularities. We can remove the harmonies for which no interesting patterns are observed through a randomization permutation method. Essentially, the assumption is that under the null hypothesis, there is no difference in categories between the pair of cyclic granularities in the chosen harmony. This method is based on the generation of randomly chosen reassignments (permutations) of the data across different cyclic granularities and the computation of  -->
 <!-- $wpd_{norm}$ for each of these reassignments. The percentages of times the theoretical distribution greater than or equal to the respective observed $wpd_{norm}$ values are calculated and are used to obtain the P value. The procedure for the permutation test is: -->
 
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
 
+## Simulations
 
-<!-- 1. Given the data; $\{v_t: t=0, 1, 2, \dots, T-1\}$, the $wpd_{norm}$ is computed and is represented by $wpd_{obs}$. -->
-
-<!-- 2. From the original sequence a random permutation is obtained: $\{v_t^*: t=0, 1, 2, \dots, T-1\}$. -->
-
-<!-- 3. $wpd_{norm}$ is computed for the permuted sequence of the data and is represented by $wpd_{perm_1}$. -->
-
-<!-- 4.  Steps (2) and (3) are repeated a large number -->
-<!-- of times M (M = 200). -->
-
-<!-- 5. For each permutation, one $wpd_{perm_i}$ is obtained. Define $wpd_{sample} = \{wpd_{perm_1}, wpd_{perm_2}, \dots, wpd_{perm_M}\}$. -->
-
-<!-- 6. $95^{th}$ percentile of this $wpd_{sample}$ distribution is computed and stored in $wpd_{threshold}$. -->
-
-<!-- 7. If $wpd_{obs}> wpd_{threshold}$, harmony pairs are accepted. Only one threshold for all harmony pairs. -->
-
-
-## Simulation design
-
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test.
+Simulations are conducted to understand the efficacy of the test. Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test. The results are included in details in the Supplementary paper.
 
 <!-- 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null. -->
 
 
-### Results
+<!-- ### Results -->
 
-The results for this section is WIP and to be included in details in the Supplementary paper. Also, Figure \ref{fig:plot-all-new3} presents the results of $wpd_{norm}$ from the illustrative designs in Section \ref{sec:computation-wpd}. As expected, the value of $wpd_{norm}$ under null design is the least (a), followed by (b, c and d). Moreover, note the relative difference in $wpd_{norm}$ values as we move from  a to d, which aligns with the idea of $wpd_{norm}$, since the differences between x categories are up-weighed by design.
+
 
 
 ```{r varall-new}
@@ -644,7 +649,7 @@ The results for this section is WIP and to be included in details in the Supplem
 
 ## Simulation environment
 
-Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation HPC/HTC Cluster, designed from the ground up to address the computing needs of the Monash HPC community.
+Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation High Power Computing (HPC) Cluster, addressing the needs of the Monash HPC community.
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
@@ -984,10 +989,10 @@ Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumptio
 ```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
 
 id4_tsibble <- elec %>%
-  filter(id== 4)
+  filter(id == 4)
 
 id5_tsibble <- elec %>%
-  filter(id== 5)
+  filter(id == 5)
 
 p1 <- id4_tsibble %>% 
    prob_plot("hour_day",

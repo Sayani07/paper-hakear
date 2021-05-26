@@ -13,10 +13,10 @@ simtable <-  expand.grid(x_levels = c(3, 7, 14),
                          facet_levels = c(2, 9, 10)) %>%
   mutate(design = c("null", "varf","varx", "varall", "null", "varf", "varx", "varall", "null"))
 
-sample_seed = seq(1000, 10999, by = 1000)
+sample_seed = seq(1000, 10999, by = 10)
 npermj <- 200
 ntimesj <- 500
-nsampj <- 10
+nsampj <- 100
 wj <- 2
 # distj <- simj$dist
 # seedj <- simj$seed
