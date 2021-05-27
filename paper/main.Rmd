@@ -341,9 +341,6 @@ d*_{(j,k), (j'k')} =
 
 Ideally it is desired that $wpd$ takes a higher value only if there is a significant difference between distributions across facet or x-axis categories, and not because the number of categories $J$ or $K$ is high. Therefore, in order to compare $wpd$ across panels with different levels, the impact of different number of comparisons need to be eliminated through some adjustment. Henceforth, we call the adjusted measure as $wpd_{norm}$. Two approaches for adjusting for the number of comparisons are discussed, both of which are substantiated using simulations. The first one, denoted as $wpd_{perm}$, involves a permutation method to make the distribution of the adjusted distance measure similar for different comparisons. The second one ($wpd_{glm-scaled}$) fits a model to represent the relationship between $wpd_{raw}$ and number of comparisons and defines the adjusted measure as the residual from the model. 
 
-\noindent _Simulation design_  
-
- Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
 
 - _Permutation approach:_ This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method, in essence, accomplishes a different goal of making the distribution of the different groups (panels in our case) same under $D_{null}$. The values of $wpd_{raw}$ is computed on many permuted ($nperm$) data sets for the $l^{th}$ panel and stored in $wpd_{perm-data}$. $nperm=100$ is considered and the adjusted distance measure
 $wpd_{perm}$ is computed as follows:
@@ -457,7 +454,7 @@ where $wpd_{glm-scaled}$ is the transformed $wpd_{glm}$ with a similar scale as 
 <!-- ### Simulation design{#sec:sim-study} -->
 
 <!-- Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. Each combination is being referred to as a _panel_. That is, data is being generated for each of the panels $\{nx = 2, nfacet = 2\}, \{nx = 2, nfacet = 3\}, \{nx = 2, nfacet = 5\},  \dots, \{nx = 50, nfacet = 31\}, \{nx = 50, nfacet = 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider the panel $\{nx = 2, nfacet = 2\}$, $500$ observations are generated for each of the combination of categories from the panel, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values -->
-<!-- of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation. -->
+<!-- of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution oaf $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation. -->
 
 
 <!-- ### Results -->
@@ -466,13 +463,6 @@ where $wpd_{glm-scaled}$ is the transformed $wpd_{glm}$ with a similar scale as 
 
 <!-- Furthermore, simulation results also show that the values of $wpd$ indeed depend upon the underlying distribution. This is also not desirable as the intended aim of $wpd$ is to capture differences in categories irrespective of the distribution from which the data is generated. -->
 
-
-```{r raw, fig.cap = "Distribution of $wpd$ is plotted across different $nx$ and $nfacet$ categories under $D_{null}$. Both shape and scale of the distribution changes for different comparisons. This is not desirable since under null design, the distribution of the distance measure is not expected to capture any differences."}
-
-```
-
-```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$."}
-```
 
 
 <!-- last writeup -->
@@ -506,33 +496,6 @@ where $wpd_{glm-scaled}$ is the transformed $wpd_{glm}$ with a similar scale as 
 <!-- ### Notations -->
 
 <!-- Let $\{nx_{i}, i = 1, 2, \dots, nx\}$, $\{nfacet_{j}, j = 1, 2, \dots, nfacet\}$ be the set of x-axis and facet categories respectively. Each combination of $nx_{i}$ and $nfacet_{j}$is being referred to as a _panel_. Then the total number of panel is $nx*nfacet$. Let the total number of pairwise distances that could result in each panel be $\{z_k, k = 1, 2 , \dots, nx*nfacet\}$. Here, $\{z_1 = nx_1*nfacet_1\}$, $\{z_2 = nx_2*nfacet_2\}$ and $\{z_k = nx*nfacet\}$. Now, let $\{x_{k,l}, k = 1, 2, \dots, nx*nfacet, l = 1, 2, \dots, nsim\}$ denote the values of $wpd_{raw}$ obtained from the simulation study for $k^{th}$ panel in the $i^{th}$ simulation. Hence, for each of those $k$ panel, we have $nsim$ values of $wpd_{raw}$. -->
-
-
-
-
-```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
-```
-
-
-```{r glm-tab}
-broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
-```
-
-
-```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
-
-```
-
-
-
-```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
-
-```  
-
-```{r dist-new-same-scale-link, fig.cap = "$wpd_perm$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
-
-
-```
 
 
 <!-- use soon -->
@@ -612,9 +575,6 @@ Hence, the values of $wpd_{norm}$ for different harmonies are comparable and can
 <!-- **Assumption:** random permutation of the data keeping the categories of the cyclic granularities constant. -->
 
 
-## Simulations
-
-Simulations are conducted to understand the efficacy of the test. Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test. The results are included in details in the Supplementary paper.
 
 <!-- 14, 20, 31, 50\}$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. The values of $wpd_{norm}$ is obtained for each of the panels for the designs $D_{null}$, $D_{var_x}$, $D_{var_f}$ and $D_{var_{all}}$. $wpd_{threshold}$ is computed from all of these panels together and the number of times a harmony pair $(A, B) \in H_{N_C}$ is selected when in fact it was of the design $D_{null}$ is noted. This entire process is repeated for several null data sets to see the number of times any harmony pair $(A, B) \in H_{N_C}$ is selected under null. -->
 
@@ -647,9 +607,61 @@ Simulations are conducted to understand the efficacy of the test. Observations a
 
 ```
 
-## Simulation environment
+
+# Simulations
+
+## Behavior of distance measures
+
+\noindent _Simulation design_  
+
+\noindent Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
+
+
+
+\noindent _Results_ 
+
+Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$.  Figure \ref{fig:norm} shows the location and scale similar across different $nx$ and $nfacet$ are same by using $wpd_{perm}$.Figure \ref{fig:wpd-glm-dist} shows the modeling approach brings the distribution of measures for different panels similar for higher values of $nx$ and $nfacet$.
+Finally, Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $wpd_perm$ and $wpd_{glm-scaled}$ in the same scale to show that a combination approach could be used for higher values of levels to alleviate the computational time of permutation approach.
+
+
+```{r raw, fig.cap = "Distribution of $wpd$ is plotted across different $nx$ and $nfacet$ categories under $D_{null}$. Both shape and scale of the distribution changes for different comparisons. This is not desirable since under null design, the distribution of the distance measure is not expected to capture any differences."}
+```
+
+```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$.", eval = FALSE}
+```
+
+```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
+```
+
+```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
+
+```
+
+```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
+
+```  
+
+```{r dist-new-same-scale-link, fig.cap = "$wpd_perm$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
+```
+
+## Choosing threshold
+
+
+```{r glm-tab}
+broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
+```
+
+
+### Design
+
+Simulations are conducted to understand the efficacy of the test. Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test. The results are included in details in the Supplementary paper.
+
+
+## Environment
 
 Simulation studies were carried out to study the behavior of $wpd$, build the normalization method as well as compare and evaluate different normalization approaches. R version 4.0.1 (2020-06-06) is used with the platform: x86_64-apple-darwin17.0 (64-bit) running under: macOS Mojave 10.14.6 and MonaRCH, which is a next-generation High Power Computing (HPC) Cluster, addressing the needs of the Monash HPC community.
+
+
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
@@ -995,7 +1007,7 @@ Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumptio
 
 
 
-```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 1 across hod in x-axis and wd-wnd in facets in a) and just the reverse in b). In c), distribution of energy demand for household id:4 shown across hod and wd-wnd. It can be seen that the differences in distributions are more apparent when viewed in a) as compared to b). It seems like there is more difference in the distributions of hod for b) compared to c). This also confers with the value of the normalised measure shown in Figure 11."}
+```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 4 (a) and 5 (b) across dow in x-axis and hod in facets. The value of the normalised measure suggests that the harmony pair (dow, hod) is significant for household id 4, but not for 5. This implies that distributional differences are captured more by this harmony for id 4, which is apparent from the display with more fluctuations across median and 75th percentile."}
 
 id4_tsibble <- elec %>%
   filter(id == 4)
