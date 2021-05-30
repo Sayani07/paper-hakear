@@ -1050,9 +1050,9 @@ p1 + p2
 
 # Discussion
 
-Exploratory data analysis involve many iterations of finding and summarizing patterns. With temporal data available at more and more finer scales, exploring periodicity has become overwhelming with so many possible granularities to explore. A common solution would be to zoom into “interesting” segments, but there is no way to know the “interesting” segments a priori. This work refines the search of periodic patterns by identifying those for which the differences between the displayed distributions is greatest, and rating them in order of importance for exploration.
+Exploratory data analysis involves many iterations of finding and summarizing patterns. With temporal data available at finer scales, exploring time series has become overwhelming with so many possible granularities to explore. A common solution is to aggregate and look at the patterns across usual granularities like hour-of-day or day-of-week, but there is no way to know the “interesting” granularities a priori. A huge number of displays need to be analyzed or we might end up missing informative granularities. This work refines the search of informative granularities by identifying those for which the differences between the displayed distributions are greatest and rating them in order of importance of capturing maximum variation.
 
-A future direction of work could be to look at more individuals/subjects and group them according to similar periodic behavior. Behaviors across different harmonies would be varying for subjects and it would be hard to track the behavior when the number of individuals rise. One way to find groups would be to actually locate clusters who have similar periodic behavior.
+The significant granularities across different datasets (individuals/subjects) do not imply similar patterns across different datasets. They simply mean that maximum distributional differences are being captured across those granularities. A future direction of work is to be able to explore and compare many individuals/subjects together for similar patterns across significant granularities.
 
 <!-- patterns are interesting and others are not. The subjects for which behaviors across a group of cyclic granularities are similar, could be grouped together as their periodic behavior is similar.  to group subjects  -->
 
