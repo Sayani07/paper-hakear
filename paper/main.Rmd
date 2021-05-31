@@ -549,9 +549,9 @@ A threshold and consequently a selection criterion is chosen using the notion of
 
 8. $99^{th}$ percentiles of $wpd^{all}_{sample}$ is computed and stored in $wpd_{threshold99}$
 
-7. If $wpd^{A, B}_{obs} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected with a 1% level of significance, otherwise rejected.
+7. If $wpd^{A, B}_{obs} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected, otherwise rejected.
 
-Similarly, a harmony pair $(A, B)$ is selected with a 5% and 10% level of significance if $wpd^{A, B}_{obs} > wpd_{threshold95}$ and $wpd^{A, B}_{obs} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively. A harmony significant at 1%, 5% and 10% levels are tagged as \*\*\*, \*\*, \* respectively.
+Similarly, a harmony pair $(A, B)$ could be selected if $wpd^{A, B}_{obs} > wpd_{threshold95}$ and $wpd^{A, B}_{obs} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively. A harmony selected using $99^{th}$,  $95^{th}$  and  $90^{th}$ are tagged as \*\*\*, \*\*, \* respectively.
 
 ## Ranking
 
@@ -774,7 +774,7 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 
 _Selecting and Ranking harmonies for all households_ 
 
- $wpd$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
+ $wpd$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and highlighted with `***`, `**` and `*` corresponding to the  $99^{th}$,  $99^{th}$ and $99^{th}$ percentile threshold. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
 
 _Detecting patterns for households not apparent from linear display_ 
 
