@@ -673,8 +673,8 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. The line display of 
 energy usage will have too many measurements squeezed in a linear representation.
-No behavioral pattern is likely to be discerned from this view. When we zoom into the linear representation of this series in Figure \ref{fig:linear-scale-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
-Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each for these households, compare households to get more insights into\ what these rankings imply and if they could be used to remove some non-interesting harmonies. Furthermore, the ranking and selection of significant harmonies could be validated by analyzing the distribution of the energy usage across significant harmonies.
+No behavioral pattern is likely to be discerned from this view. When we zoom into the linear representation of this series in Figure \ref{fig:dotplot-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
+Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each of these households, compare households to get more insights into what these rankings imply. Furthermore, the ranking and selection of significant harmonies could be validated by analyzing the distribution of energy usage across significant harmonies.
 
 
 ```{r tab-demography, eval = FALSE}
@@ -694,6 +694,7 @@ demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 <!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
 
 ```{r linear-scale-8, fig.cap = "Electricity demand for eight households is shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. In fig b, we can see some weekly patterns for the entire period and daily patterns for the highlighted week and there could be some other patterns visible in terms of peaks and troughs, but it is not clear if they are regular or significant.", fig.height=8, eval = FALSE}
+
 library(scales)
 library(tidyquant)
 library(gghighlight)
@@ -773,12 +774,11 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 
 _Selecting and Ranking harmonies for all households_ 
 
- $wpd$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in number of potential harmonies to explore closely, starting from $42$.
+ $wpd$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and the important ones with significance level 1%, 5% and 10% are highlighted with `***`, `**` and `*` respectively. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
 
 _Detecting patterns for households not apparent from linear display_ 
 
-\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and emphasizes patterns not discernible through linear display in (b). (b) contains the raw data for a month (Sep-2019), where the major and minor x-axis corresponds to weeks and days respectively. In (a), the value of $wpd$ filled as colors, implying darker cells correspond to more significant a harmony pair. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have same significant harmonies inspite of having very different total energy usage. Note that the $wpd$ values are computed over the entire range, but the linear display is zoomed into September, which might throw some light on repetitive patterns in the households.
-
+\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and emphasizes patterns not discernible through linear display in (b). (b) contains the raw data for a month (Sep-2019), where the major and minor x-axis corresponds to weeks and days respectively. In (a), the value of $wpd$ filled as colors, implying darker cells correspond to more significant harmony pairs. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have the same significant harmonies despite having very different total energy usage. Note that the $wpd$ values are computed over the entire range, but the linear display is zoomed into September.
 
 <!-- Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics. -->
 
@@ -1003,7 +1003,7 @@ elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the
 _Validating rank of household id:4 and 5_
 
 From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair (dow, hod) is significant for household id 4, but for 5 it has been tagged as an insignificant pair. The distribution of energy demand with dow as the x-axis and hod as the facets for both of these households can help justify the selection. 
-Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 for as many hours. 
+Figure \ref{fig:gravitas-plot-8} show that the median (black) and quartile deviation (orange) of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 with differences captured only for $90^{th}$ percentile. 
 
 <!-- Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
 
@@ -1013,7 +1013,7 @@ Figure \ref{fig:gravitas-plot-8} show that the distribution of energy consumptio
 
 
 
-```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Distribution of energy demand shown for household id 4 (a) and 5 (b) across dow in x-axis and hod in facets. The value of the normalised measure suggests that the harmony pair (dow, hod) is significant for household id 4, but not for 5. This implies that distributional differences are captured more by this harmony for id 4, which is apparent from the display with more fluctuations across median and 75th percentile."}
+```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Comparing distribution of energy demand shown for household id 4 (a) and 5 (b) across dow in x-axis and hod in facets through quantile area plots. The value of $wpd$ in Table 3 suggests that the harmony pair (dow, hod) is significant for household id 4, but not for 5. This implies that distributional differences are captured more by this harmony for id 4, which is apparent from the display with more fluctuations across median and 75th percentile. Here, the median is represented by the black line, the orange area corresponds to quartile deviation and the green area corresponds to area between $10^{th}$ and $90^{th}$ quantile."}
 
 id4_tsibble <- elec %>%
   filter(id == 4)
