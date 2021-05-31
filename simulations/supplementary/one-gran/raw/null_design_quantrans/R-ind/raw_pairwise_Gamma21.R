@@ -12,8 +12,8 @@ set.seed(9999)
 
 nsim = 200
 # change path while running it on HPC
-# simtable<-read_csv(here::here('simulations/null/sim_table.csv'))
-simtable<-read_csv('../../../sim_table/sim_table.csv')
+simtable<-read_csv(here::here('simulations/supplementary/one-gran/sim_table.csv'))
+#simtable<-read_csv('../../../sim_table/sim_table.csv')
 
 ### Extract flags from simulation scenario
 
@@ -35,7 +35,7 @@ sim_panel_data =
   hakear::sim_panel(nx = nxj,
                     nfacet = nfacetj, 
                     ntimes = 500, 
-                    sim_dist = sim_null_normal) %>% 
+                    sim_dist = sim_null_normal(nxj, nfacetj)) %>% 
   unnest(c(data)) %>% ungroup()
 
 set.seed(1111)
@@ -58,6 +58,6 @@ raw_dist <- map(seq_len(nsim), function(i)
 }) %>% bind_rows()
 
 saveRDS(raw_dist,
-        paste0('../data-ind/wpd_Gamma21/',
+        paste0('simulations/supplementary/one-gran/raw/null_design_quantrans/data-ind/wpd_Gamma21/',
                nxj,'_',
                nfacetj,'_wpd.rds')) 

@@ -1,3 +1,5 @@
+# This script computes size of the test in our paper and shows it is close to 95%
+
 library(readr)
 library(dplyr)
 library(distributional)
@@ -8,7 +10,7 @@ library(tidyverse)
 library(purrr)
 library(hakear)
 
-#simtable<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
+# make choices for x levels and seed for which size needs to be computed
 simtable <-  expand.grid(x_levels = c(3, 7, 14),
                          facet_levels = c(2, 9, 10)) %>%
   mutate(design = c("null", "varf","varx", "varall", "null", "varf", "varx", "varall", "null"))
@@ -18,9 +20,6 @@ npermj <- 200
 ntimesj <- 500
 nsampj <- 100
 wj <- 2
-# distj <- simj$dist
-# seedj <- simj$seed
-# typej <- simj$type
 
 # different designs
 

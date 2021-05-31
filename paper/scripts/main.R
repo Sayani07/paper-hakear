@@ -36,6 +36,9 @@ elec <- elec %>%
 #   facet_grid(id ~ ., labeller = label_both) +
 #   theme(legend.position = "bottom")
 # prettify(p_cal_elec, size = 2.5, label.padding = unit(0.1, "lines"))
+# 
+# simtable_new <- simtable %>% filter(nfacet==50 & nx == 20 | nfacet==50 & nx == 31 | nfacet==50 & nx == 50 | nfacet==31 & nx == 50)
+
 
 ## ---- intro_all
 id2_tsibble <- elec %>% 
@@ -54,7 +57,7 @@ p1 <- id2_tsibble %>%
             plot_type = "quantile",
             symmetric = TRUE,
             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) +
-  ggtitle("") + theme(
+  ggtitle("(a)") + theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + 
   scale_colour_brewer(name = "", palette = "PiYG")
 
@@ -65,7 +68,7 @@ p2 <- id4_tsibble %>%
             plot_type = "quantile",
             symmetric = TRUE,
             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) + 
-  ggtitle("a") + theme(
+  ggtitle("(b)") + theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
 
@@ -109,7 +112,8 @@ id2_tsibble_hd <- elec %>%
   create_gran("hour_day") %>% 
   ggplot(aes(x = hour_day, y = kwh)) +
   geom_boxplot(width = 0.6, outlier.colour = "black", outlier.alpha = 0.5, fill = "#CC79A7", colour =  "#0072B2") + scale_y_log10() +
-  geom_jitter(alpha = 0.04, colour = "#E69F00")
+  geom_jitter(alpha = 0.04, colour = "#E69F00") +
+  ggtitle("(a)")
   
 
 id2_tsibble_dw <- elec %>% 
@@ -118,7 +122,8 @@ id2_tsibble_dw <- elec %>%
   create_gran("month_year") %>% 
   ggplot(aes(x = month_year, y = kwh)) +
   geom_boxplot(width = 0.6, outlier.colour = "black", outlier.alpha = 0.5, fill = "#CC79A7", colour =  "#0072B2") + scale_y_log10()+
-  geom_jitter(alpha = 0.04, colour = "#E69F00")
+  geom_jitter(alpha = 0.04, colour = "#E69F00") +
+  ggtitle("(b)")
 
 
 # id2_tsibble_2gran <- id2_tsibble %>%
@@ -144,6 +149,8 @@ sim_varall_normal <- function(nx, nfacet, mean, sd, w1, w2) {
                       by = 1
   ) * w2))
 }
+
+
 sim_panel_varall <- sim_panel(
   nx = 2, nfacet = 3,
   ntimes = 500,
@@ -151,14 +158,14 @@ sim_panel_varall <- sim_panel(
   sim_dist = sim_varall_normal(2, 3, 0, 1, 3, 0)
 ) %>% unnest(data)
 
-# p_varall <- sim_panel_varall %>%
-#   rename("facet level" = "id_facet" ) %>% 
-#   ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
-#   facet_wrap(~`facet level`,labeller = "label_both") + 
-#   geom_boxplot() +
-#   ggtitle("") +
-#   xlab("x level") +
-#   ylab("")
+
+sim_panel_varall_sd <- sim_panel(
+  nx = 2, nfacet = 3,
+  ntimes = 500,
+  #sim_dist = sim_varall_normal(2, 3, 5, 10, 5, -1.5)
+  sim_dist = sim_varall_normal(2, 3, 0, 1, 0, 0.5)
+) %>% unnest(data)
+
 
 
 sim_varx_normal <- function(nx, nfacet, mean, sd, w1, w2) {
@@ -173,16 +180,6 @@ sim_panel_varx <- sim_panel(
 ) %>% unnest(data)
 
 
-# p_varx <- sim_panel_varx %>%
-#   rename("facet level" = "id_facet" ) %>% 
-#   ggplot(aes(x = as.factor(id_x), y = sim_data)) + 
-#   facet_wrap(~`facet level`,labeller = "label_both") + 
-#   ggtitle("") +
-#   geom_boxplot() +
-#   xlab("x level") +
-#   ylab("simulated response")
-# 
-
 
 sim_varf_normal <- function(nx, nfacet, mean, sd, w1, w2) {
   rep(dist_normal((mean + seq(0, nfacet - 1, by = 1) * w1), (sd + seq(0, nfacet - 1, by = 1) * w2)), each = nx)
@@ -195,17 +192,6 @@ sim_panel_varf <- sim_panel(
   sim_dist = sim_varf_normal(2, 3, 0, 1, 3, 0)
 ) %>% unnest(data)
 
-# 
-# p_varf <- sim_panel_varf %>%
-#   rename("facet level" = "id_facet" ) %>% 
-#   ggplot(aes(x = as.factor(id_x), y = sim_data)) +
-#   facet_wrap(~`facet level`,labeller = "label_both") + 
-#   geom_boxplot() +
-#   ggtitle("") +
-#   xlab("x level") +
-#   ylab("")
-
-
 
 sim_panel_null <- sim_panel(
   nx = 2,
@@ -215,7 +201,29 @@ sim_panel_null <- sim_panel(
   ::dist_normal(0,1)
 ) %>% unnest(c(data))
 
+
+sim_panel_null_sd <- sim_panel(
+  nx = 2,
+  nfacet = 3,
+  ntimes = 500,
+  sim_dist = distributional
+  ::dist_normal(0,3)
+) %>% unnest(c(data))
+
+# 
+# sim_normal_skew <- function(n, tau, omega, alpha) {
+#   rsn(n=n, tau=tau, omega = omega, alpha=alpha)
+# }
+
+# sim_panel_null_skew <- sim_panel(
+#   nx = 2,
+#   nfacet = 3,
+#   ntimes = 500,
+#   sim_dist = sim_normal_skew(n=10000, tau=0, omega = 1, alpha=10)
+# ) %>% unnest(c(data))
+
 set.seed(9999)
+
 
 
 # p_null <- sim_panel_null %>%
@@ -237,6 +245,14 @@ varall <- compute_pairwise_norm(sim_panel_varall,
                                 nperm = 200
 )
 
+set.seed(99999)
+varall_sd <- compute_pairwise_norm(sim_panel_varall_sd, 
+                                   gran_x = "id_x",
+                                   gran_facet = "id_facet",
+                                   response = sim_data, 
+                                   nperm = 200
+)
+
 # plot
 p_varall <- sim_panel_varall %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
@@ -251,6 +267,25 @@ null <- compute_pairwise_norm(sim_panel_null,
                               response = sim_data, 
                               nperm = 200
 )
+
+
+null_sd <- compute_pairwise_norm(sim_panel_null_sd, 
+                              gran_x = "id_x",
+                              gran_facet = "id_facet",
+                              response = sim_data, 
+                              nperm = 200
+)
+
+
+
+# null_skew <- compute_pairwise_norm(sim_panel_null_skew, 
+#                                  gran_x = "id_x",
+#                                  gran_facet = "id_facet",
+#                                  response = sim_data, 
+#                                  nperm = 200
+# )
+# 
+# 
 
 p_null <- sim_panel_null %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +

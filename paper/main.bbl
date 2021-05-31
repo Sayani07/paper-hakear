@@ -20,6 +20,11 @@ Dang, T.~N. \harvardand\ Wilkinson, L.  \harvardyearleft 2014\harvardyearright
   , {ScagExplorer}: Exploring scatterplots by their scagnostics, {\em in} `2014
   {IEEE} Pacific Visualization Symposium', pp.~73--80.
 
+\harvarditem{Faraway}{2016}{Faraway2016-uk}
+Faraway, J.~J.  \harvardyearleft 2016\harvardyearright , {\em Extending the
+  Linear Model with {R} : Generalized Linear, Mixed Effects and Nonparametric
+  Regression Models, Second Edition}, 2nd edition edn, Chapman and Hall/CRC.
+
 \harvarditem[Gupta et~al.]{Gupta, Hyndman, Cook \harvardand\
   Unwin}{2020}{Gupta2020-vo}
 Gupta, S., Hyndman, R.~J., Cook, D. \harvardand\ Unwin, A.  \harvardyearleft
@@ -41,10 +46,9 @@ Kullback, S. \harvardand\ Leibler, R.~A.  \harvardyearleft
   1951\harvardyearright , `On information and sufficiency', {\em Ann. Math.
   Stat.} {\bf 22}(1),~79--86.
 
-\harvarditem{{Lin}}{1991}{JSD}
-{Lin}, J.  \harvardyearleft 1991\harvardyearright , `Divergence measures based
-  on the shannon entropy', {\em IEEE Transactions on Information Theory} {\bf
-  37}(1),~145--151.
+\harvarditem{Lin}{1991}{Lin1991-pt}
+Lin, J.  \harvardyearleft 1991\harvardyearright , `Divergence measures based on
+  the shannon entropy', {\em IEEE Trans. Inf. Theory} {\bf 37}(1),~145--151.
 
 \harvarditem[Majumder et~al.]{Majumder, Hofmann \harvardand\
   Cook}{2013}{Majumder2013-hb}
