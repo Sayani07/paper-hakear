@@ -12,3 +12,5 @@ structure.html
 *.rds
 *.7z
 *.csv
+*.err
+*.out
