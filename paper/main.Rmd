@@ -551,7 +551,7 @@ A threshold and consequently a selection criterion is chosen using the notion of
 
 7. If $wpd^{A, B}_{obs} > wpd_{threshold99}$, harmony pair $(A, B)$ is selected, otherwise rejected.
 
-Similarly, a harmony pair $(A, B)$ could be selected if $wpd^{A, B}_{obs} > wpd_{threshold95}$ and $wpd^{A, B}_{obs} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively. A harmony selected using $99^{th}$,  $95^{th}$  and  $90^{th}$ are tagged as \*\*\*, \*\*, \* respectively.
+Similarly, a harmony pair $(A, B)$ could be selected if $wpd^{A, B}_{obs} > wpd_{threshold95}$ and $wpd^{A, B}_{obs} > wpd_{threshold90}$, where  $wpd_{threshold95}$ and $wpd_{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $wpd^{all}_{sample}$ respectively. A harmony selected using $99^{th}$,  $95^{th}$  and  $90^{th}$ threshold are tagged as \*\*\*, \*\*, \* respectively.
 
 ## Ranking
 
@@ -613,50 +613,52 @@ Hence, the values of $wpd$ for different harmonies are comparable and can be use
 
 # Simulations
 
-## Behavior of distance measures
+## Behavior of raw and adjuted distance measures
 
 \noindent _Simulation design_  
 
-\noindent Observations are generated from a Gamma(2,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
+\noindent Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
 
 \noindent _Results_ 
 
-Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$.  Figure \ref{fig:norm} shows the location and scale similar across different $nx$ and $nfacet$ are same by using $wpd_{perm}$.Figure \ref{fig:wpd-glm-dist} shows the modeling approach brings the distribution of measures for different panels similar for higher values of $nx$ and $nfacet$.
-Finally, Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $wpd_perm$ and $wpd_{glm-scaled}$ in the same scale to show that a combination approach could be used for higher values of levels to alleviate the computational time of permutation approach.
+Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $D_{null}$ as it would mean comparisons of $wpd$ values is not appropriate across different $nx$ and $nfacet$. \ref{tab:glm-tab} gives the summary of the generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons. Thus, the model considered is $wpd_{l,s} = 23.69448+-1.02357*log(nx * nfacet)) + e$. The intercepts are similar independent of the starting distribution (Please refer to supplementary).
+Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ in the same scale to show that a combination approach could be used for higher values of levels to alleviate the computational time of permutation approach.
 
-
-```{r raw, fig.cap = "Distribution of $wpd$ is plotted across different $nx$ and $nfacet$ categories under $D_{null}$. Both shape and scale of the distribution changes for different comparisons. This is not desirable since under null design, the distribution of the distance measure is not expected to capture any differences."}
+```{r raw, fig.cap = "Distribution of $wpd_{raw}$ is plotted across different $nx$ and $nfacet$ categories under $D_{null}$ through density and rug plots. Both location (blue line) and scale (orange marks) of the distribution shifts for different panels. This is not desirable since under null design, the distribution  is not expected to capture any differences."}
 ```
-
-```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$.", eval = FALSE}
-```
-
-```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
-```
-
-```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
-
-```
-
-```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
-
-```  
-
-```{r dist-new-same-scale-link, fig.cap = "$wpd_perm$ and $wpd_{glm-scaled}$ are plotted together on the same scale. They also have the same location and hence the values from these two approaches could be compared across panels. $wpd_{glm-scaled}$ would be used to normalise $wpd_{raw}$ for higher $nx$ and $nfacet$ and $wpd_{glm-scaled}$ would be used for smaller levels to alleviate the problem of computational time."}
-```
-
-$$y_l = a+b*log(z_l) + e_l , \quad l = (1, 2, \dots, L)$$, 
-
-\noindent where $y_l = median_s(wpd_{l, s})$, $wpd_{l, s}$ denotes the value of $wpd_{raw}$ obtained for the $l^{th}$ panel and $s^{th}$ simulation, $z_l$ is the number of groups $(nx*nfacet)$ in the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
-$wpd_{glm} = wpd_{raw} - 1/(\hat a + \hat b*log(nx*nfacet))$.
-
-## Choosing threshold
 
 
 ```{r glm-tab}
-broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
+
 ```
 
+
+```{r wpd-glm-dist}
+
+```
+
+
+
+```{r hist-qq-new, eval = FALSE}
+
+```
+
+```{r quadratic, eval=FALSE}
+```
+
+
+```{r norm, eval}
+```
+
+
+```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both appraches for higher levels."}
+```
+
+```{r }
+```
+
+
+## Choosing threshold
 
 ### Design
 
