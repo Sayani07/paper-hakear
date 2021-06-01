@@ -10,14 +10,21 @@ makegraph02 <- function(folder_name){
   
 all_data <- read_rds(paste0("simulations/raw/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
   
+summary_data <- all_data %>% 
+  group_by(nx, nfacet) %>% 
+  summarise(mean = mean(value))
 
 nxbyfacet_density <- all_data %>% 
   ggplot(aes(x = value)) + 
-  geom_density(fill = "blue") +
+  geom_density(fill = "#999999") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   xlab("wpd") +
-  scale_x_continuous(breaks = scales::breaks_extended(3))
+  geom_vline(data = summary_data, aes(xintercept  = mean), color = "#0072B2") +
+  geom_rug(sides = "b", colour = "#D55E00") + 
+ # scale_x_continuous(breaks = scales::breaks_extended(2)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank()) 
 
 ggsave(nxbyfacet_density, filename = paste0("simulations/raw/null_design_quantrans/figs/", "nxbyfacet_density_", folder_name,".png"))
 

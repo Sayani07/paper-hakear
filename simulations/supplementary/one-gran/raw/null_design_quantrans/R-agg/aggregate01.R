@@ -7,12 +7,17 @@ library(rlang)
 
 aggregate01 <-  function(folder_name){
   
-all_files = list.files(path = paste0("simulations/raw/null_design_quantrans/data-ind/", folder_name), 
+all_files = list.files(path = ("simulations/▸ ⁨supplement/one-gran/raw/null_design_quantrans/data-ind/wpd_N01/"))
+
+
+all_files = list.files(path = paste0("simulations/vary_all/raw/data-ind/", folder_name), 
                        pattern = ".rds")
+
+
 
 names_levels <- map_dfr(all_files, 
                         function(x){
-                          z = str_split(str_remove(x, "_dist.rds"), "_") %>% 
+                          z = str_split(str_remove(x, "_wpd.rds"), "_") %>% 
                             unlist()
                           bind_cols(nx = as.numeric(z[1]),
                                     nfacet = as.numeric(z[2]))
@@ -23,7 +28,7 @@ names_levels <- map_dfr(all_files,
 # names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
 
   
-all_files_path <- paste0("simulations/raw/null_design_quantrans/data-ind/",folder_name,"/",
+all_files_path <- paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-ind/",folder_name,"/",
          all_files)  
   
 
@@ -38,7 +43,7 @@ all_data <- lapply(1:length(all_files_path), function(x){
   }) %>% bind_rows() %>% 
     arrange(nfacet, nx)
     
-write_rds(all_data, paste0("simulations/raw/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
+write_rds(all_data, paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
 }
 
 

@@ -363,15 +363,25 @@ knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 
 
 ##----raw
-G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds")
+G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+
+summary_data <- G21 %>% 
+  group_by(nx, nfacet) %>% 
+  summarise(mean = mean(value))
 
 G21 %>% 
   ggplot(aes(x = value)) + 
-  geom_density(fill = "blue") +
+  geom_density(fill = "#999999") +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
-  scale_x_continuous(breaks = scales::breaks_extended(3)) + 
-  xlab("wpd")
+  xlab("raw values of wpd") +
+  geom_vline(data = summary_data, aes(xintercept  = mean), color = "#0072B2") +
+  geom_rug(sides = "b", colour = "#D55E00") + 
+  # scale_x_continuous(breaks = scales::breaks_extended(2)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
 
 ##----quadratic
 G21 %>% 
@@ -414,14 +424,7 @@ G21 %>%
   geom_point(alpha = 0.5, size = 0.5) + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
   ylab("wpd normalised using linear modelling approach")
 
-
-
-
-
-
 ## ---- glm-tab
-
-
 
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
 G21_median <- G21 %>% 
@@ -437,7 +440,7 @@ G21_sd  = G21 %>%
   )
   )
   ))
-scale_fac <- 1/G21_sd$wpd_glm %>% sd()
+#scale_fac <- 1/G21_sd$wpd_glm %>% sd()
 # checking the fit of the residuals from glm fit
 # fitted_glm <- fitted(glm_fit, type = "response")
 # residuals <- residuals.glm(glm_fit, type = "response")
@@ -458,8 +461,7 @@ scale_fac <- 1/G21_sd$wpd_glm %>% sd()
 #   ) +
 #   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
 #   ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
-
-broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between wpd and number of comparisons.")
+broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
 
 
 ## ---- wpd-glm-dist
@@ -470,14 +472,16 @@ G21_glm <- G21 %>%
   )
   ),
   wpd_glm_scaled = ((wpd_glm*320)))
-G21_glm$wpd_glm_scaled %>% sd()
-G21_glm %>% 
-  ggplot() +
-  geom_density(aes(x = wpd_glm), 
-               fill = "blue") +
-  facet_grid(nx~nfacet,
-             labeller = "label_both") +
-  theme(legend.position = "bottom") 
+
+#G21_glm$wpd_glm_scaled %>% sd()
+
+# G21_glm %>% 
+#   ggplot() +
+#   geom_density(aes(x = wpd_glm), 
+#                fill = "blue") +
+#   facet_grid(nx~nfacet,
+#              labeller = "label_both") +
+#   theme(legend.position = "bottom") 
 
 
 ##----hist-qq-new
@@ -526,18 +530,26 @@ G21_all_data <- G21_permutation %>%
 G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_scaled"))
 
 
+summary_data <- G21_all_data %>% 
+  group_by(nx, nfacet, type_estimate) %>% 
+  summarise(mean = mean(value_estimate)) %>% ungroup()
+
+
 G21_all_data %>% 
   filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
-  ggplot() +
-  geom_density(aes(x = value_estimate, 
-                   fill = type_estimate), alpha = 0.5) +
+  ggplot(aes(x = value_estimate)) +
+  geom_density(aes(fill = type_estimate), alpha = 0.5, size = .5) +
+  #geom_vline(data = summary_data, aes(xintercept = mean, color = type_estimate)) + 
+  geom_rug(aes(color = type_estimate), length = unit(0.09,"cm"), alpha = 0.5) +
+  #coord_cartesian(clip = "off") + 
   facet_grid(nx~nfacet,
              labeller = "label_both") +
+  theme_bw() + 
   theme(legend.position = "bottom") +
   scale_fill_manual(values = c( "#D55E00", "#0072B2")) +
-  xlab("wpd_norm2") +
-  scale_x_continuous(breaks = c(-5, -3, 0, 3, 5))
-
+  scale_color_manual(values = c( "#D55E00", "#0072B2")) +
+  xlab("adjusted values of wpd") +
+  scale_x_continuous(breaks = c(-5, -3, 0, 3, 5)) 
 # G21_all_data %>% 
 #   filter(type_estimate %in% c("wpd_permutation", "wpd_glm")) %>% 
 #   ggplot() +

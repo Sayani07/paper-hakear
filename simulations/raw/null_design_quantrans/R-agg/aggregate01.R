@@ -1,5 +1,5 @@
-# contains function to aggregate data each for from N(0,1), N(0,5), N(5,1), N(5,5), Gamma(0.5, 1), Gamma(2, 1)
-#  aggregated data from the file simulations/results/norm/folder_name and tidy them up
+# contains function to aggregate data each for from N(0,1), Gamma(2, 1)
+#  aggregated data from the file ../data-ind 
 library(tidyverse)
 library(here)
 library(readr)
@@ -17,10 +17,6 @@ names_levels <- map_dfr(all_files,
                           bind_cols(nx = as.numeric(z[1]),
                                     nfacet = as.numeric(z[2]))
                         })
-
-# len_file = read_rds(("simulations/results/norm/tuning_param/2_2_tuning_param.rds"))
-# 
-# names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
 
   
 all_files_path <- paste0("simulations/raw/null_design_quantrans/data-ind/",folder_name,"/",

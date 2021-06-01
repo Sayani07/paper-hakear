@@ -217,3 +217,26 @@ knitr::include_graphics(here::here("simulations/result_report/","nfacet_by_nx_ra
 Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. The panel $(3, 2), (7,9), (14, 10)$ are considered to have design $D_{null}$. The panels $(7, 2), (14, 9)$ have design of the form $D_{var_f}$. $(14, 2), (3, 10)$ have design of the form $D_{var_x}$ and the rest are under $D_{var_{null}}$. We generate only one data set for which all these designs were simulated and consider this as the original data set. We generate $200$ repetitions of this experiment with different seeds and compute the proportion of times a panel is rejected when it is under $D_{null}$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test.
 
 ## Results
+
+
+```{r hist-qq-new, fig.cap = "In panel a, the histogram of $wpd_{glm-scaled}$ is plotted. In part b, the QQ plot is shown with the theoretical quantiles on the x-axis and $wpd_{glm-scaled}$ quantiles on the y-axis. The distribution looks symmetric and looks like normal except in the tails.", eval = FALSE}
+
+```  
+
+```{r quadratic, fig.cap = "$wpd$ is plotted against $nx*nfacet$ (the maximum number of pairwise comparisons) and the blue line represents the median of the multiple values for each $nx*nfacet$. The median increases abruptly for lower values of $nx*nfacet$ and slowly for higher $nx*nfacet$. Thus, the measure will have higher values for higher levels in $nx$ or $nfacet$.", eval = FALSE}
+```
+
+
+
+```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
+```
+
+```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
+
+```
+
+$$y_l = a+b*log(z_l) + e_l , \quad l = (1, 2, \dots, L)$$, 
+
+\noindent where $y_l = median_s(wpd_{l, s})$, $wpd_{l, s}$ denotes the value of $wpd_{raw}$ obtained for the $l^{th}$ panel and $s^{th}$ simulation, $z_l$ is the number of groups $(nx*nfacet)$ in the $l^{th}$ panel and $e_l$ are idiosyncratic errors. Let $E(y) = \mu$ and $a + b*log(z) = g(\mu)$ where $g$ is the link function. Then $g(\mu)=  1/\mu$ and $\hat \mu  = 1/(\hat a + \hat b log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b log(z)))$ would be expected to have no dependency on $z$. Thus, $wpd_{glm}$ is chosen as the residuals from this model and is defined as:
+$wpd_{glm} = wpd_{raw} - 1/(\hat a + \hat b*log(nx*nfacet))$.
+
