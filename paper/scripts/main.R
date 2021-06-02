@@ -16,6 +16,9 @@ library(sugrrants)
 library(here)
 library(ggplot2)
 library(patchwork)
+library(scales)
+#library(tidyquant)
+
 
 ## ---- calendar-elec
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
@@ -98,7 +101,7 @@ p4 <- id4_tsibble %>%
   theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
-## ---- id2
+## ---- id2-new
 ggpubr::ggarrange(p1, p2, ncol = 2)
 
 ## ---- id4
@@ -256,7 +259,8 @@ varall_sd <- compute_pairwise_norm(sim_panel_varall_sd,
 # plot
 p_varall <- sim_panel_varall %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("(d)", round(varall, 2))) + xlab("x level")
+  ggtitle(paste("(d)", round(varall, 2))) + xlab("x level") +
+  ylab ("simulated response")
 
 
 set.seed(99999)
@@ -289,7 +293,8 @@ null_sd <- compute_pairwise_norm(sim_panel_null_sd,
 
 p_null <- sim_panel_null %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("(a)", round(null, 2))) + xlab("x level") 
+  ggtitle(paste("(a)", round(null, 2))) + xlab("x level") +
+  ylab ("simulated response")
 
 
 
@@ -304,7 +309,8 @@ varf <- compute_pairwise_norm(sim_panel_varf,
 
 p_varf <- sim_panel_varf %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("(b)", round(varf, 2))) + xlab("x level")
+  ggtitle(paste("(b)", round(varf, 2))) + xlab("x level") +
+  ylab ("simulated response")
 
 
 set.seed(99999)
@@ -318,7 +324,8 @@ varx <- compute_pairwise_norm(sim_panel_varx,
 # plot
 p_varx <- sim_panel_varx %>%
   ggplot(aes(x = as.factor(id_x), y = sim_data)) + facet_wrap(~id_facet) + geom_boxplot() +
-  ggtitle(paste("(c)", round(varx, 2))) + xlab("x level")
+  ggtitle(paste("(c)", round(varx, 2))) + xlab("x level") +
+  ylab ("simulated response")
 
 
 
@@ -637,3 +644,66 @@ G21_all_data %>%
 
 ## ---- plot-all-new3
 
+# {r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households is shown in Fig a. Fig b shows the normal-score-transformed half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand.", eval = FALSE}
+elec_raw <- elec %>% 
+  ggplot() +
+  geom_density(aes(x = kwh)) +
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("demand (in kwh)") + ggtitle("a") +
+  theme(
+    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+
+elec_nqt <- elec %>% 
+  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+  ggplot() +
+  geom_density(aes(x = kwh_transformed))+
+  facet_wrap(~id, scales = "free_y", ncol = 1) +
+  xlab("NQT demand (in kwh)") + ggtitle("b") + theme(
+    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+
+# hour_day_raw <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#     ggplot() + 
+#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
+#   
+# hour_day_trans <- elec %>% 
+#   tsibble::as_tsibble(index = date_time, key = id) %>% 
+#     create_gran("hour_day") %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
+
+elec_raw + elec_nqt
+
+
+
+## ---- linear-scale-8
+
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime") %>% 
+  mutate(date = date(date_time))
+
+
+elec_linear <- elec %>% 
+  ggplot() +
+  geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
+  facet_wrap(~id, nrow = 8, labeller = "label_both",
+             strip.position =  "right",
+             scales = "free_y") + ggtitle("a")
+
+elec_zoom <-  elec %>%
+  as_tibble() %>% 
+  filter(date >as.Date("2019-09-01") & date < (as.Date("2019-09-30"))) %>% 
+  ggplot(aes(x=date_time, y = kwh)) +
+  geom_line(size = 0.1, colour = "blue") +
+  facet_wrap(~id, 
+             scales = "free_y",
+             ncol = 1,
+             strip.position =  "right") +
+  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black")) + ggtitle("b")
+
+elec_linear + elec_zoom

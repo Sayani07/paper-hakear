@@ -231,7 +231,7 @@ are $3$ standard deviations apart, but they do not change across facets. Figure 
 
 ## Notations
 
-\noindent Let the number of cyclic granularities considered in the display be $m$. The notations and methodology are described in detail for $m=2$. But it can be easily extended to $m>2$. Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous variable observed across $T$ time points. This  data structure with $J$ x-axis levels and $K$ facet levels is referred to as a $(J, K)$ panel. For example, a $(2, 3)$ panel will have cyclic granularities with 2 x-axis levels and 3 facet levels. Let the four elementary designs as described in Figure \ref{fig:null4by2} be $D_{null}$ where there is no difference in distribution of $v$ for $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across A. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$. $m = 1$ is a special case of $m = 2$ with $J = 1$.
+\noindent Let the number of cyclic granularities considered in the display be $m$. The notations and methodology are described in detail for $m=2$. But it can be easily extended to $m>2$. Consider two cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$ with $A$ placed across x-axis and $B$ across facets. Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous variable observed across $T$ time points. This  data structure with $J$ x-axis levels and $K$ facet levels is referred to as a $(J, K)$ panel. For example, a $(2, 3)$ panel will have cyclic granularities with 2 x-axis levels and 3 facet levels. Let the four elementary designs as described in Figure \ref{fig:null4by2} be $D_{null}$ (referred to as "null distribution") where there is no difference in distribution of $v$ for $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across A. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$. $m = 1$ is a special case of $m = 2$ with $J = 1$.
 
 
 ```{r notations}
@@ -311,11 +311,11 @@ $D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(\frac{q_1(x)}{q_2(x)})$ is the KL 
 
 ### Within-facet and between-facet distances
 
-\noindent Pairwise distances could be within-facets or between-facets. Figure \ref{fig:distance-explain} illustrates how they are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). 
+\noindent Pairwise distances could be within-facets or between-facets for $m \geq 2$. Figure \ref{fig:distance-explain} illustrates how they are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. Number of between-facet distances would be $^{K}C_2*J$ and number of within-facet distances are $K*(J-1)$ (ordered) and $^{J}C_2*K$ (un-ordered). 
 
 ### Tuning parameter
 
-A tuning parameter specifying the weightage given to the within-facet or between-facet categories can help to choose between designs like \ref{fig:null4by2}(b) and (c). The tuning parameters should be chosen such that $\sum_{i=1}^m \lambda_i = 1$. When $m=2$, following the principle of Gestalt theory, $\lambda = \frac{2}{3} = 0.67$ is chosen to put a relative weightage of $2:1$ for within-facet and between-facet distances. No human experiment is conducted to justify this ratio, however, typically a tuning parameter $\lambda>0.5$ would tend to upweigh the within-facet distances and that with $<0.5$ would upweigh the between-facet distances (refer to the Supplementary section of the paper for more details).
+A tuning parameter specifying the weightage given to the within-facet or between-facet categories can help to balance weightage between designs like \ref{fig:null4by2}(b) and (c). The tuning parameters should be chosen such that $\sum_{i=1}^m \lambda_i = 1$. When $m=2$, following the principle of Gestalt theory, $\lambda = \frac{2}{3} = 0.67$ is chosen to put a relative weightage of $2:1$ for within-facet and between-facet distances. No human experiment is conducted to justify this ratio, however, typically a tuning parameter $\lambda>0.5$ would tend to upweigh the within-facet distances and that with $<0.5$ would upweigh the between-facet distances (refer to the Supplementary section of the paper for more details). For $m = 1$, since there are no conditioning variables or groups, $\lambda = 1$.
 
 ### Raw distance measure
 
@@ -356,7 +356,7 @@ The distribution of $wpd_{glm}$ under $D_{null}$ will have $mean = 0$, since it 
 
 _Combination approach_     
 
-The simulation results (\ref{Sec:}) show that the distribution of $wpd_{glm}$ under null is similar for high $nx$ and $nfacet$ (levels higher than $5$) and not so much for lower $nx$ and $nfacet$. Hence, a combination approach is proposed which chooses permutation approach for categories with smaller levels and modeling approach for categories with higher levels. This ensures that the computational load of the permutation approach is alleviated while maintaining similar null distribution across different categories. This approach, however, requires that the adjusted variables from the two approaches are brought to the same scale. We define $wpd_{glm-scaled} = wpd_{glm}*\sigma^2_{perm}/\sigma^2_{glm}$ as the transformed $wpd_{glm}$ with a similar scale as $wpd_{perm}$. The adjusted measure from the combination approach, denoted by $wpd$ is then defined as follows:
+The simulation results (\ref{sec:simulations}) show that the distribution of $wpd_{glm}$ under null is similar for high $nx$ and $nfacet$ (levels higher than $5$) and not so much for lower $nx$ and $nfacet$. Hence, a combination approach is proposed which chooses permutation approach for categories with smaller levels and modeling approach for categories with higher levels. This ensures that the computational load of the permutation approach is alleviated while maintaining similar null distribution across different categories. This approach, however, requires that the adjusted variables from the two approaches are brought to the same scale. We define $wpd_{glm-scaled} = wpd_{glm}*\sigma^2_{perm}/\sigma^2_{glm}$ as the transformed $wpd_{glm}$ with a similar scale as $wpd_{perm}$. The adjusted measure from the combination approach, denoted by $wpd$ is then defined as follows:
 
 \begin{equation}
 wpd =
@@ -609,7 +609,7 @@ The distribution of $wpd$ is expected to be similar for all harmonies under the 
 
 # Simulations {#sec:simulations}
 
-## Behavior of raw and adjuted distance measures
+## Behavior of raw and adjusted distance measures
 
 \noindent _Simulation design_  
 
@@ -693,10 +693,10 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 
 # Application to residential smart meter dataset {#sec:application-wpd}
 
-The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. The line display of 
-energy usage will have too many measurements squeezed in a linear representation.
-No behavioral pattern is likely to be discerned from this view. When we zoom into the linear representation of this series in Figure \ref{fig:dotplot-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
-Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each of these households, compare households to get more insights into what these rankings imply. Furthermore, the ranking and selection of significant harmonies could be validated by analyzing the distribution of energy usage across significant harmonies.
+The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. 
+No behavioral pattern is likely to be discerned from the line display of 
+energy usage over the entire period, since the plot will have too many measurements squeezed in a linear representation. When we zoom into the linear representation of this series in Figure \ref{fig:dotplot-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
+Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each of these households, compare households to get more insights into what these rankings imply. Furthermore, the ranking and selection of significant harmonies is validated by analyzing the distribution of energy usage across significant harmonies.
 
 
 ```{r tab-demography, eval = FALSE}
@@ -717,75 +717,8 @@ demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 
 ```{r linear-scale-8, fig.cap = "Electricity demand for eight households is shown in different facets from Jul-19 to Dec-19 in Fig a and it has been zoomed in for Sep-19 in Fig b, where a week in Sep-19 has been highlighted. From the scales of Fig a, it is apparent that these households vary in consumption levels, but all their periodic patterns have been squeezed with this representation. In fig b, we can see some weekly patterns for the entire period and daily patterns for the highlighted week and there could be some other patterns visible in terms of peaks and troughs, but it is not clear if they are regular or significant.", fig.height=8, eval = FALSE}
 
-library(scales)
-library(tidyquant)
-library(gghighlight)
-library(lubridate)
-
-elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
-  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
-  select(-meter_id) %>% 
-  rename("id" = "household_id",
-         "date_time" = "reading_datetime") %>% 
-  mutate(date = date(date_time))
-
-
-elec_linear <- elec %>% 
-  ggplot() +
-  geom_line(aes(x = date_time, y = kwh),alpha = 0.7) +
-  facet_wrap(~id, nrow = 8, labeller = "label_both",
-             strip.position =  "right",
-             scales = "free_y") + ggtitle("a")
-
-elec_zoom <-  elec %>%
-  as_tibble() %>% 
-  filter(date >as.Date("2019-09-01") & date < (as.Date("2019-09-30"))) %>% 
-  ggplot(aes(x=date_time, y = kwh)) +
-  geom_line(size = 0.1, colour = "blue") +
-  facet_wrap(~id, 
-             scales = "free_y",
-             ncol = 1,
-             strip.position =  "right") +
-  gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black")) + ggtitle("b")
-
-elec_linear + elec_zoom
-
 ```
 
-
-```{r raw-nqt-8, fig.height = 5, fig.cap="The raw density of the half-hourly demand for the eight households is shown in Fig a. Fig b shows the normal-score-transformed half-hourly demand for the same households which has resulted in more symmetric distribution of half-hourly demand.", eval = FALSE}
-elec_raw <- elec %>% 
-  ggplot() +
-  geom_density(aes(x = kwh)) +
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("demand (in kwh)") + ggtitle("a") +
-  theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
-
-elec_nqt <- elec %>% 
-  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-  ggplot() +
-  geom_density(aes(x = kwh_transformed))+
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("NQT demand (in kwh)") + ggtitle("b") + theme(
-        strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
-
-# hour_day_raw <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#     ggplot() + 
-#     ggridges::geom_density_ridges(aes(y=hour_day, x = kwh))
-#   
-# hour_day_trans <- elec %>% 
-#   tsibble::as_tsibble(index = date_time, key = id) %>% 
-#     create_gran("hour_day") %>% 
-#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-#   ggplot() +
-#   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
-
-elec_raw + elec_nqt
-
-```
 
 _Choosing cyclic granularities of interest and removing clashes_
 
@@ -796,11 +729,12 @@ Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time per
 
 _Selecting and Ranking harmonies for all households_ 
 
- $wpd$ is computed for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and highlighted with `***`, `**` and `*` corresponding to the  $99^{th}$,  $99^{th}$ and $99^{th}$ percentile threshold. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
+$wpd_{i}$ is computed on $v_{i, t}$ for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and highlighted with `***`, `**` and `*` corresponding to the  $99^{th}$,  $95^{th}$ and $90^{th}$ percentile threshold. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
 
 _Detecting patterns for households not apparent from linear display_ 
 
-\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) and emphasizes patterns not discernible through linear display in (b). (b) contains the raw data for a month (Sep-2019), where the major and minor x-axis corresponds to weeks and days respectively. In (a), the value of $wpd$ filled as colors, implying darker cells correspond to more significant harmony pairs. Also, the ones with `*` are significant at 95% level. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have the same significant harmonies despite having very different total energy usage. Note that the $wpd$ values are computed over the entire range, but the linear display is zoomed into September.
+\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) 
+across harmony pairs with x-variable and facet variable plotted on the x-axis and y-axis of the heatmap. Here dom, dow, wdwnd are abbreviations for day-of-month, day-of-week and weekday/weekend and so on. (a) emphasizes patterns not discernible through (b), which is a linear display containing the raw data for one month (Sep-2019), with the major and minor x-axis corresponding to weeks and days respectively. In (a), the colors represent the value of $wpd$, implying darker cells correspond to more significant harmony pairs. Also, the ones with `*` corresponds to the ones above $wpd_{threshold95}$. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have the same significant harmonies despite having very different total energy usage. Note that the $wpd$ values are computed over the entire range, but the linear display is zoomed into September.
 
 <!-- Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics. -->
 
@@ -1025,7 +959,7 @@ elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the
 _Validating rank of household id:4 and 5_
 
 From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair (dow, hod) is significant for household id 4, but for 5 it has been tagged as an insignificant pair. The distribution of energy demand with dow as the x-axis and hod as the facets for both of these households can help justify the selection. 
-Figure \ref{fig:gravitas-plot-8} show that the median (black) and quartile deviation (orange) of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 with differences captured only for $90^{th}$ percentile. 
+Figure \ref{fig:gravitas-plot-8} shows that the median (black) and quartile deviation (orange) of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 with differences captured only for $90^{th}$ percentile. 
 
 <!-- Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
 
