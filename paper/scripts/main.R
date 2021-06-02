@@ -108,8 +108,40 @@ p4 <- id4_tsibble %>%
 ## ---- id2-new2
 ggpubr::ggarrange(p1, p2, ncol = 2, common.legend = TRUE) 
 
-## ---- id4
-ggpubr::ggarrange(p3, p4, ncol = 2)
+## ---- intro-all-wpd
+
+sm <- id2_tsibble 
+
+gran_x <- "hour_day"
+gran_facet <- "month_year"
+v1_id2 <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+  response = kwh, lambda = 0.67
+)
+
+gran_x <- "month_year"
+gran_facet <- "hour_day"
+v2_id2 <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+                                          response = kwh, lambda = 0.67
+)
+
+
+sm <- id4_tsibble 
+
+gran_x <- "hour_day"
+gran_facet <- "month_year"
+v1_id4 <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+                                               response = kwh, lambda = 0.67
+)
+
+gran_x <- "month_year"
+gran_facet <- "hour_day"
+v2_id4 <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+                                               response = kwh, lambda = 0.67
+)
+
+
+
+
 
 
 ## ----onegran-new
@@ -147,6 +179,21 @@ id2_tsibble_dw <- elec %>%
   
 ggpubr::ggarrange(id2_tsibble_hd, id2_tsibble_dw, ncol = 1, 
                   common.legend =  TRUE)
+
+## ----one-gran-wpd
+sm <- elec %>% 
+  filter(id == 2) %>% 
+  as_tsibble(index = date_time) 
+gran_x <- "month_year"
+gran_facet <- NA
+v <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+                                  response = kwh, lambda = 0.9, dist_ordered = FALSE)
+
+
+gran_x <- "hour_day"
+gran_facet <- NA
+v <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
+                                          response = kwh, lambda = 0.9, dist_ordered = FALSE)
 
 
 ## ---- null4by2
@@ -913,3 +960,5 @@ p2 <- id5_tsibble %>%
 
 
 ggarrange(p1, p2, ncol=2, common.legend = TRUE)
+
+
