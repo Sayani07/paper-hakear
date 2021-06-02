@@ -141,9 +141,6 @@ v2_id4 <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
 
 
 
-
-
-
 ## ----onegran-new
 id2_tsibble_hd <- elec %>% 
   filter(id == 2) %>% 
@@ -547,7 +544,21 @@ G21_sd  = G21 %>%
 #   ) +
 #   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
 #   ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
-broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
+
+
+G21_onegran <- read_rds(here("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
+
+G21_median_onegran  <- G21_onegran  %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+glm_fit_onegran  <- glm(actual ~ log(`nx * nfacet`),
+               family = Gamma(link = "inverse"),
+               data = G21_median_onegran)
+
+bind_rows(broom::tidy(glm_fit_onegran),
+          tidy(glm_fit), .id = "m") %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
 
 
 ## ---- wpd-glm-dist
