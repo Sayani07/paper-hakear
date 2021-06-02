@@ -39,7 +39,7 @@ all_data <- lapply(1:length(all_files_path), function(x){
   }) %>% bind_rows() %>% 
     arrange(nfacet, nx)
     
-write_rds(all_data, paste0("simulations/vary_all/raw/data-agg/all_data_", folder_name, ".rds"))
+write_rds(all_data, paste0("", folder_name, ".rds"))
 }
 
 

@@ -67,7 +67,6 @@ $H_0: wpd_{C_i, C_j} = 0 \forall (C_i, C_j) \in N_C$.
 Since, multiple tests are done, the probability of type-1 error needs to be adjusted to incorporate this multiple testing problem.
 
 
-
 ```{r, eval = FALSE, echo = FALSE}
 sample_seed = seq(1000, 2999, by = 10)
 nperm = 200

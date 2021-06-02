@@ -5,15 +5,16 @@ library(here)
 library(readr)
 library(rlang)
 
+
 aggregate01 <-  function(folder_name){
   
-all_files = list.files(path = ("simulations/▸ ⁨supplement/one-gran/raw/null_design_quantrans/data-ind/wpd_N01/"))
-
-
-all_files = list.files(path = paste0("simulations/vary_all/raw/data-ind/", folder_name), 
+all_files = list.files(path = paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-ind/", folder_name), 
                        pattern = ".rds")
 
-
+# all_files = list.files(path = paste0("simulations/vary_all/raw/data-ind/", folder_name), 
+#                        pattern = ".rds")
+# 
+# 
 
 names_levels <- map_dfr(all_files, 
                         function(x){
@@ -22,11 +23,6 @@ names_levels <- map_dfr(all_files,
                           bind_cols(nx = as.numeric(z[1]),
                                     nfacet = as.numeric(z[2]))
                         })
-
-# len_file = read_rds(("simulations/results/norm/tuning_param/2_2_tuning_param.rds"))
-# 
-# names_rep <- names_levels %>% slice(rep(1:n(), each = nrow(len_file)))
-
   
 all_files_path <- paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-ind/",folder_name,"/",
          all_files)  
@@ -50,12 +46,12 @@ write_rds(all_data, paste0("simulations/supplementary/one-gran/raw/null_design_q
 # use functions for all folders
 
 aggregate01(folder_name = "wpd_N01")
-aggregate01(folder_name = "wpd_N05")
-aggregate01(folder_name = "wpd_N51")
-aggregate01(folder_name = "wpd_N55")
-
-
-aggregate01(folder_name = "wpd_Gamma01")
-aggregate01(folder_name = "wpd_Gamma21")
-
-
+# aggregate01(folder_name = "wpd_N05")
+# aggregate01(folder_name = "wpd_N51")
+# aggregate01(folder_name = "wpd_N55")
+# 
+# 
+# aggregate01(folder_name = "wpd_Gamma01")
+# aggregate01(folder_name = "wpd_Gamma21")
+# 
+# 

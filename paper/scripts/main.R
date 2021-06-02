@@ -62,7 +62,9 @@ p1 <- id2_tsibble %>%
             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) +
   ggtitle("(a)") + theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) + 
-  scale_colour_brewer(name = "", palette = "PiYG")
+  scale_colour_brewer(name = "", palette = "PiYG") + 
+  ylab ("energy consumption (in kwh)")
+
 
 p2 <- id4_tsibble %>%
   prob_plot("month_year",
@@ -72,7 +74,9 @@ p2 <- id4_tsibble %>%
             symmetric = TRUE,
             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9)) + 
   ggtitle("(b)") + theme(
-    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))+
+  ylab ("energy consumption (in kwh)")
+
 
 
 p3 <- id2_tsibble %>%
@@ -101,14 +105,14 @@ p4 <- id4_tsibble %>%
   theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
-## ---- id2-new
-ggpubr::ggarrange(p1, p2, ncol = 2)
+## ---- id2-new2
+ggpubr::ggarrange(p1, p2, ncol = 2, common.legend = TRUE) 
 
 ## ---- id4
 ggpubr::ggarrange(p3, p4, ncol = 2)
 
 
-## ----onegran
+## ----onegran-new
 id2_tsibble_hd <- elec %>% 
   filter(id == 2) %>% 
   as_tsibble(index = date_time) %>% 
@@ -116,7 +120,9 @@ id2_tsibble_hd <- elec %>%
   ggplot(aes(x = hour_day, y = kwh)) +
   geom_boxplot(width = 0.6, outlier.colour = "black", outlier.alpha = 0.5, fill = "#CC79A7", colour =  "#0072B2") + scale_y_log10() +
   geom_jitter(alpha = 0.04, colour = "#E69F00") +
-  ggtitle("(a)")
+  ggtitle("(a)")+ 
+  ylab ("energy consumption (in kwh)")
+
   
 
 id2_tsibble_dw <- elec %>% 
@@ -126,7 +132,9 @@ id2_tsibble_dw <- elec %>%
   ggplot(aes(x = month_year, y = kwh)) +
   geom_boxplot(width = 0.6, outlier.colour = "black", outlier.alpha = 0.5, fill = "#CC79A7", colour =  "#0072B2") + scale_y_log10()+
   geom_jitter(alpha = 0.04, colour = "#E69F00") +
-  ggtitle("(b)")
+  ggtitle("(b)")+ 
+  ylab ("energy consumption (in kwh)")
+
 
 
 # id2_tsibble_2gran <- id2_tsibble %>%
@@ -137,7 +145,8 @@ id2_tsibble_dw <- elec %>%
 #             symmetric = TRUE,
 #             quantile_prob = c(0.1, 0.25,0.5,0.75, 0.9),palette = "Blues") + ggtitle("") 
   
-(id2_tsibble_hd/ id2_tsibble_dw) 
+ggpubr::ggarrange(id2_tsibble_hd, id2_tsibble_dw, ncol = 1, 
+                  common.legend =  TRUE)
 
 
 ## ---- null4by2
@@ -653,13 +662,13 @@ elec_raw <- elec %>%
   theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
-elec_nqt <- elec %>% 
-  dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
-  ggplot() +
-  geom_density(aes(x = kwh_transformed))+
-  facet_wrap(~id, scales = "free_y", ncol = 1) +
-  xlab("NQT demand (in kwh)") + ggtitle("b") + theme(
-    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
+# elec_nqt <- elec %>% 
+#   dplyr::mutate(kwh_transformed = stats::qqnorm(kwh, plot.it = FALSE)$x) %>% 
+#   ggplot() +
+#   geom_density(aes(x = kwh_transformed))+
+#   facet_wrap(~id, scales = "free_y", ncol = 1) +
+#   xlab("NQT demand (in kwh)") + ggtitle("b") + theme(
+#     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0)))
 
 # hour_day_raw <- elec %>% 
 #   tsibble::as_tsibble(index = date_time, key = id) %>% 
@@ -674,7 +683,7 @@ elec_nqt <- elec %>%
 #   ggplot() +
 #   ggridges::geom_density_ridges(aes(y=hour_day, x = kwh_transformed))
 
-elec_raw + elec_nqt
+# elec_raw + elec_nqt
 
 
 
@@ -707,3 +716,177 @@ elec_zoom <-  elec %>%
   gghighlight(date > as.Date("2019-09-15") & date < (as.Date("2019-09-21")), unhighlighted_params = list(colour = "black")) + ggtitle("b")
 
 elec_linear + elec_zoom
+
+
+
+## ---- tab-demography
+demography <- tibble(id = c(1, 2, 3, 4, 5,6, 7, 8), 
+                     profession = c("academia", "mixed", "industry", "industry", "mixed", "mixed", "academia", "industry"),
+                     total_members = c(2, 3, 5, 5, 2, 2, 2, 6),
+                     kids = c("no", "no", "yes", "yes", "no", "no", "no", "yes"),
+                     old_parents = c("no", "yes", "yes", "yes", "no", "no", "no", "yes"),
+                     PhD_student = c("no", "yes", "no", "no", "yes", "yes", "yes", "no"))
+
+demography <- demography %>% kable(format  = "markdown", caption = "Demographics of the eight households chosen for study")
+
+demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
+
+
+## ---- dotplot-8
+
+
+# elec_sig_split <- elec_harmony_all %>%
+#   mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
+#   
+select_split <- str_split(elec_harmony_all$select_harmony, " ", simplify = TRUE)[,2]
+
+elec_sig_split <- elec_harmony_all %>% 
+  bind_cols(select_split = select_split) %>% 
+  mutate(significant = case_when(
+    select_split == "***" ~ "highest",
+    select_split == "**" ~ "high",
+    select_split == "*" ~ "medium",
+    select_split == "" ~ "low"
+  )) %>% 
+  mutate(rank = case_when(
+    select_split == "***" ~ paste(rank, "***", sep = " "),
+    select_split == "**" ~  paste(rank, "**", sep = " "),
+    select_split == "*" ~  paste(rank, "*", sep = " "),
+    select_split == "" ~  paste(rank, "", sep = " ")
+  ))
+
+
+elec_sig_split$significant <- 
+  factor(elec_sig_split$significant, levels = c("highest", "high", "medium", "low"))
+
+heatplot <- elec_sig_split %>% 
+  mutate(significance_95 = if_else(significant %in% c("high", "highest"), "*", "")) %>% 
+  ggplot(aes(x = x_variable,
+             y = facet_variable)) +
+  geom_tile(aes(fill = wpd)) + 
+  #color = as.factor(significance_95)),
+  #size = 0.3) +
+  geom_text(aes(label = significance_95), color = "#42275a") +
+  scale_fill_gradient(low = "white",high = "#ba5370") +
+  #scale_fill_manual(palette = "Dark2") +
+  #scale_colour_manual(values = c("white","red")) + 
+  theme(legend.position = "bottom") +
+  coord_fixed() + 
+  guides(fill = guide_legend()) +
+  theme_void() +
+  theme_gray(base_size = 12, base_family = "Times") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom") + ggtitle("a") +
+  theme(
+    strip.background = element_blank(),
+    strip.text.y  = element_blank(), plot.margin = unit(c(0, -2, 0, 0), "cm")) + ggtitle("(a)") + xlab("x variable") + ylab("facet variable") 
+
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+# 
+# elec %>% 
+#   filter(id == "1") %>% 
+#   prob_plot("hour_day", 
+#             "day_week",
+#             response = "kwh",
+#             plot_type = "violin", fill = "blue")
+#   
+elec1 <- elec %>% 
+  filter(id == "1") %>% 
+  create_gran("day_week") %>% 
+  create_gran("hour_day") %>% 
+  mutate(day_week = as.numeric(day_week),
+         hour_day = as.numeric(hour_day),
+         id = as.numeric(id))
+
+# temp.gly <- glyphs(elec1, "day_week", "hour_day", "id","kwh", height = 2.5)
+# 
+# ggplot(temp.gly, ggplot2::aes(gx, gy, group = gid)) +
+#   add_ref_lines(temp.gly, color = "grey90") +
+#   add_ref_boxes(temp.gly, color = "grey90") +
+#   geom_path() +
+#   theme_bw() +
+#   labs(x = "", y = "")
+
+elec_zoom <-  elec %>%
+  as_tibble() %>% 
+  dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30"))) %>%
+  ggplot(aes(x=date_time, y = kwh)) +
+  #geom_point(size = 0.1, colour = "black", alpha = 0.3) +
+  geom_line(size = 0.1, colour = "blue") +
+  facet_wrap(~id, 
+             scales = "free_y",
+             ncol = 1,
+             strip.position =  "right",
+             labeller = "label_both") + 
+  xlab("Time [30m]") + 
+  theme_grey() + 
+  ylab("linear energy demand (kwh) for September") + ggtitle("(b)") +
+  theme(panel.grid.major.x = element_blank()) +
+  scale_x_datetime("Date", date_labels = "%b %d",
+                   breaks = "1 week",
+                   date_minor_breaks = "1 day")  + theme_bw() +
+  theme(panel.grid.major.x =  element_line(colour = "#A9A9A9"),
+        panel.grid.minor.x =  element_line(colour = "#D3D3D3"))
+
+
+heatplot +  facet_grid(id~.) +
+  elec_zoom +
+  theme( plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  plot_layout(widths = c(1, 2)) 
+
+
+##----tab-rank-8
+
+elec_rank <- elec_sig_split %>% 
+  select(-c(6,7, 9, 10)) %>% 
+  pivot_wider(
+    names_from = id,
+    values_from = rank) %>% 
+  rename("facet variable" = "facet_variable",
+         "x variable" = "x_variable") %>% 
+  select(-facet_levels, -x_levels)
+
+elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance levels.")
+
+## ---- gravitas-plot-8
+
+id4_tsibble <- elec %>%
+  filter(id == 4)
+
+id5_tsibble <- elec %>%
+  filter(id == 5)
+
+p1 <- id4_tsibble %>% 
+  prob_plot("hour_day",
+            "day_week",
+            response = "kwh",
+            plot_type = "quantile",
+            symmetric = TRUE,
+            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+  ggtitle("a) hod vs dow (id:4)") + 
+  #scale_colour_brewer(name = "", palette = "Set2") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) +
+  ylab("energy consumption (in kwh)")
+
+
+p2 <- id5_tsibble %>%
+  prob_plot("hour_day",
+            "day_week",
+            response = "kwh",
+            plot_type = "quantile",
+            symmetric = TRUE,
+            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+  ggtitle("a) hod vs dow (id:5)") +
+  #scale_colour_brewer(name = "", palette = "Set2")   +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 7, margin = margin())) +
+  ylab("energy consumption (in kwh)")
+
+
+ggarrange(p1, p2, ncol=2, common.legend = TRUE)

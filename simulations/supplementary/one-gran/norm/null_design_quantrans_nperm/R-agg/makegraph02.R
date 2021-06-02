@@ -5,10 +5,12 @@ library(tidyverse)
 #all_data <- read_rds("simulations/result_report/all_data_ norm.rds")
 # run for  norm max pairwise distances files aggregation
 
+in_loc <- "simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_"
+out_loc <- "simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/figs/"
 
 makegraph02 <- function(folder_name){
   
-all_data <- read_rds(paste0("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_", folder_name, ".rds"))
+all_data <- read_rds(paste0(in_loc, folder_name, ".rds"))
   
 
 nxbyfacet_density <- all_data %>% 
@@ -19,7 +21,7 @@ nxbyfacet_density <- all_data %>%
              scales = "free_y") + 
   xlab("wpd")
 
-ggsave(nxbyfacet_density, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nxbyfacet_density_", folder_name,".png"))
+ggsave(nxbyfacet_density, filename = paste0(out_loc, "nxbyfacet_density_", folder_name,".png"))
 
 
 nxbyfacet_ridge <- all_data %>% 
@@ -29,7 +31,7 @@ nxbyfacet_ridge <- all_data %>%
   xlab("mmpd") +
   ylab("nx")
 
-ggsave(nxbyfacet_ridge, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nxbyfacet_ridge_", folder_name,".png"))
+ggsave(nxbyfacet_ridge, filename = paste0(out_loc, "nxbyfacet_ridge_", folder_name,".png"))
 
 
 nfacetbynx_ridge <- all_data %>% 
@@ -39,7 +41,7 @@ nfacetbynx_ridge <- all_data %>%
   xlab("mmpd") +
   ylab("nfacet")
 
-ggsave(nfacetbynx_ridge, filename = paste0("simulations/norm/null_design_quantrans_nperm/figs/", "nfacetbynx_ridge_", folder_name,".png"))
+ggsave(nfacetbynx_ridge, filename = paste0(out_loc, "nfacetbynx_ridge_", folder_name,".png"))
 }
 
 makegraph02(folder_name = "wpd_N01")
