@@ -14,3 +14,8 @@ structure.html
 *.csv
 *.err
 *.out
+*.aux
+*.bbl
+*.blg
+
+

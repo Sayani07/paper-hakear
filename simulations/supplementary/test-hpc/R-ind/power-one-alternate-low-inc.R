@@ -32,9 +32,9 @@ harmony_table <- expand.grid(
   mutate(design = c("null", "null", "varall", "null", "null", "null", "null", "null", "null"))
 
 # parameters and design used for this simulation
-npermj <- 2
+npermj <- 200
 ntimesj <- 500
-nsampj <- 10
+nsampj <- 100
 wj <- 0.5 # change this to change increment
 
 sim_null <- function(nxj, nfacetj, mean, sd, w = 0) {

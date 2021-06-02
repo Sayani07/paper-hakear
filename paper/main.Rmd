@@ -613,7 +613,13 @@ The distribution of $wpd$ is expected to be similar for all harmonies under the 
 
 \noindent _Simulation design_  
 
-\noindent Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$ to cover a wide range of levels from very low to moderately high. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. The values of $wpd$ is obtained for each of the panels. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
+$m=1$  
+
+\noindent Observations are generated from a N(0,1) distribution for each $nx = \{2, 3, 5, 7, 9, 14, 17, 20, 24, 31, 42, 50\}$ to cover a wide range of levels from very low to moderately high. $ntimes = 500$ observations are drawn for each combination of the categories, that is, for a panel with $nx=3$, $500$ observations are simulated for each of the categories. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the categories $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. The values of $wpd$ is obtained for each of the panels. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation.
+
+$m=2$  
+\noindent Similarly, observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = nfacet = \{2, 3, 5, 7, 14, 20, 31, 50\}$. That is, data is being generated for each of the panels $(2, 2), (2, 3), (2, 5) \dots, (50, 31), (50, 50)$. For each of the $64$ panels, $ntimes = 500$ observations are drawn for each combination of the categories. That is, if we consider a $(2, 2)$ panel, $500$ observations are generated for each of the possible subsets, namely, $\{(1, 1), (1, 2), (2, 1), (2, 2)\}$. 
+
 
 \noindent _Results_ 
 
@@ -650,8 +656,6 @@ Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $wpd_{perm}$
 ```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both appraches for higher levels."}
 ```
 
-```{r }
-```
 
 
 ## Choosing threshold
@@ -839,7 +843,6 @@ Figure \ref{fig:gravitas-plot-8} shows that the median (black) and quartile devi
 
 <!-- Figure \ref{fig:gravitas-plot-8} is used to show -->
 <!-- if this selection and ranking of harmony pairs makes sense for this household. Panel a) of  Figure \ref{fig:gravitas-plot-8} shows the distribution of energy demand with weekday/weekend as the x-axis and hour-of-day as the facets and helps to compare the weekend/weekday patterns for different hours of the day. It could be observed that the difference between weekend and weekday is the highest from 15 to 19 hours of the day. Panel b) shows the distribution of energy demand with the variables swapped and helps to compare the daily patterns within weekday and weekend. It could be observed that the daily pattern is similar for weekdays and weekends with a morning and evening peak. However, the difference between morning and evening peaks are higher for weekends. Since $wpd$ is designed to put more weightage on within-facet differences for $\lambda>0.5$, it makes sense that the pair (hod, wdwnd) has been ranked higher than (wdwnd, hod). Panel c) shows the distribution of energy demand with weekday/weekend as the x-axis and week-of-month as the facets. Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
-
 
 
 ```{r gravitas-plot-8, message = FALSE, warning=FALSE,fig.cap="Comparing distribution of energy demand shown for household id 4 (a) and 5 (b) across dow in x-axis and hod in facets through quantile area plots. The value of $wpd$ in Table 3 suggests that the harmony pair (dow, hod) is significant for household id 4, but not for 5. This implies that distributional differences are captured more by this harmony for id 4, which is apparent from the display with more fluctuations across median and 75th percentile. Here, the median is represented by the black line, the orange area corresponds to quartile deviation and the green area corresponds to area between $10^{th}$ and $90^{th}$ quantile."}

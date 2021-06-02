@@ -16,8 +16,7 @@ data_summary <- all_data %>%
 # plots
 ggplot() + 
   geom_histogram(data = all_data, aes(x = wpd))  + 
-  geom_vline(data = data_summary, aes(xintercept = p_value),colour = "red") +
-  facet_grid(x_levels~facet_levels)
+  geom_vline(data = data_summary, aes(xintercept = p_value),colour = "red")
 
 
 

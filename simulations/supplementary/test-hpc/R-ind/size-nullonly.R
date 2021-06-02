@@ -28,7 +28,7 @@ harmony_table <- expand.grid(
   mutate(design = c("null", "null", "null", "null", "null", "null", "null", "null", "null"))
 
 # parameters and design used for this simulation
-npermj <- 20
+npermj <- 200
 ntimesj <- 500
 nsampj <- 100
 wj <- 2

@@ -398,6 +398,29 @@ G21 %>%
   theme(panel.grid.major.x = element_blank()) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
 
+##----raw-onegran
+G21 <- read_rds("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+
+summary_data <- G21 %>% 
+  group_by(nx, nfacet) %>% 
+  summarise(mean = mean(value))
+
+G21 %>% 
+  ggplot(aes(x = value)) + 
+  geom_density(fill = "#999999") +
+  facet_wrap(~nx, ncol = 1,
+             labeller = "label_both", strip.position = "right") + 
+  xlab("raw values of wpd") +
+  geom_vline(data = summary_data, aes(xintercept  = mean), color = "#0072B2") +
+  geom_rug(sides = "b", colour = "#D55E00") + 
+  # scale_x_continuous(breaks = scales::breaks_extended(2)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
+
+
+
+
 
 ##----quadratic
 G21 %>% 
@@ -442,7 +465,7 @@ G21 %>%
 
 ## ---- glm-tab
 
-G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 G21_median <- G21 %>% 
   group_by(nx*nfacet) %>% 
   summarise(actual = median(value))
@@ -490,14 +513,14 @@ G21_glm <- G21 %>%
   wpd_glm_scaled = ((wpd_glm*320)))
 
 #G21_glm$wpd_glm_scaled %>% sd()
-
-# G21_glm %>% 
+# 
+# G21_glm %>%
 #   ggplot() +
-#   geom_density(aes(x = wpd_glm), 
+#   geom_density(aes(x = wpd_glm),
 #                fill = "blue") +
 #   facet_grid(nx~nfacet,
 #              labeller = "label_both") +
-#   theme(legend.position = "bottom") 
+#   theme(legend.position = "bottom")
 
 
 ##----hist-qq-new
