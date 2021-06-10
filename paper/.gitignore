@@ -1,3 +1,9 @@
-paper/main.log
+main.log
 paper/main.toc
-paper/main.toc
+paper/main.aux
+paper/main.bbl
+paper/main.out
+paper/main.blg
+*.DS_Store
+
+
