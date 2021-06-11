@@ -1,11 +1,16 @@
 library(here)
 library(readr)
 library(tidyverse)
+library(latex2exp)
 # run for raw MMPD files aggregation
 #all_data <- read_rds("simulations/result_report/all_data_raw.rds")
 # run for raw max pairwise distances files aggregation
-all_data <- read_rds(here::here("simulations/tuning_param/all_data.rds")) %>% 
-  filter(nx<30)
+all_data <- read_rds(here::here("simulations/tuning_param/all_data.rds") )%>% 
+  mutate(design = case_when(
+    design == "vary_x" ~ "var_x",
+    design == "vary_facet" ~ "var_f"
+  ))
+
   
 # for omega 8
 
@@ -15,14 +20,15 @@ all_data_filtered <- all_data %>%
 nxbyfacet8 <- all_data_filtered %>% 
   filter(omega == 8) %>% 
   ggplot(aes(x = lambda, y = wpd)) +
-  geom_line(aes(colour = design)) +
+  geom_line(aes(colour = design), size = 1) +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   theme(legend.position = "none")  +
   scale_color_manual(values = c("#E69F00",
                                 "#56B4E9")) +
   theme(legend.position = "bottom") +
-  ggtitle("omega:8")
+  ggtitle("(b)") + theme_bw() + xlab(TeX("$\\lambda$")) +
+  ylab("raw wpd")
 
 
 # ggsave(nxbyfacet, filename = here("simulations/tuning_param/figs/", "nxbyfacet_omega8.png"))
@@ -31,15 +37,15 @@ nxbyfacet8 <- all_data_filtered %>%
 nxbyfacet1 <- all_data_filtered %>% 
   filter(omega == 1) %>% 
   ggplot(aes(x = lambda, y = wpd)) +
-  geom_line(aes(colour = design)) +
+  geom_line(aes(colour = design), size = 1) +
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   theme(legend.position = "none")  +
   scale_color_manual(values = c("#E69F00", 
                                 "#56B4E9")) +
   theme(legend.position = "bottom")  +
-  ggtitle("omega:1")
-
+  ggtitle("(a)") + theme_bw() +  xlab(TeX("$\\lambda$"))  +
+  ylab("raw wpd")
 # ggsave(nxbyfacet, filename = here("simulations/tuning_param/figs/", "nxbyfacet_omega1.png"))
 
 # 
@@ -61,13 +67,15 @@ nxbyfacet1 <- all_data_filtered %>%
 #   theme(legend.position = "bottom") +
 #   xlab("raw wpd") 
 
-fixed_omega <- ggpubr::ggarrange(
-  nxbyfacet1, nxbyfacet8, nrow = 2, common.legend = TRUE) +
-  theme(legend.position = "bottom") +
-  xlab("raw wpd") 
+# fixed_omega <- ggpubr::ggarrange(
+#   nxbyfacet1, nxbyfacet8, nrow = 2, common.legend = TRUE) +
+#   theme(legend.position = "bottom") +
+#   xlab("raw wpd") + xlab("tuning parameter")
 
-ggsave(fixed_omega, filename = here("simulations/tuning_param/figs/", "fixed_omega.png"))
 
+fixed_omega <- nxbyfacet1 / nxbyfacet8 
+
+ggsave(fixed_omega, filename = here("simulations/tuning_param/figs/", "fixed_omega.png")) 
 
 
 
@@ -76,16 +84,17 @@ ggsave(fixed_omega, filename = here("simulations/tuning_param/figs/", "fixed_ome
 intersection_data <- all_data %>% 
   pivot_wider(id_cols = -c(design), names_from = design, values_from = wpd) %>% 
   group_by(nx, nfacet, omega) %>% 
-  mutate(intersection_point = abs(vary_x - vary_facet)) %>% filter(intersection_point == min(intersection_point)) %>% 
+  mutate(intersection_point = abs(var_x - var_f)) %>% filter(intersection_point == min(intersection_point)) %>% 
   mutate(factor = as.factor(omega))
 
-intersection_plot <- ggplot(intersection_data %>% ungroup(), aes(x = omega, y = lambda)) +
+intersection_plot <- ggplot(intersection_data %>% ungroup() %>% filter(nx<=14), aes(x = omega, y = lambda)) +
   geom_line() +
   geom_point() + 
   facet_grid(nx~nfacet, labeller = "label_both") +
   theme(legend.position = "bottom") +
-  scale_x_continuous(breaks = seq(1, 10, 3))
-
+  scale_x_continuous(breaks = seq(1, 10, 3)) +
+  theme_bw() + xlab(TeX("$\\omega$")) + ylab(TeX("$\\lambda$")) 
+  
 
 ggsave(intersection_plot, filename = here("simulations/tuning_param/figs/", "intersection_plot.png"))
 

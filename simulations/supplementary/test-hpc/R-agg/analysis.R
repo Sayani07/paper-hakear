@@ -4,7 +4,7 @@ all_data <- read_rds("simulations/supplementary/test-hpc/data-agg/all_data.rds")
 
 
 # computes size for 99 percentile threshold
-data_summary <- all_data %>%
+data_summary <- all_data %>% 
   mutate(sig = if_else(significance!=99, 0, 99)) %>% 
   group_by(seed_id) %>% 
   summarize(sumsig = sum(sig)) %>% 
@@ -16,11 +16,7 @@ data_summary <- all_data %>%
 # plots
 ggplot() + 
   geom_histogram(data = all_data, aes(x = wpd))  + 
-  geom_vline(data = data_summary, aes(xintercept = p_value),colour = "red")
-
-
-
-
+  geom_vline(data = data_summary, aes(xintercept = p_value),colour = "red", size= 1.5) 
 
 
 # computes size for 95 percentile threshold
@@ -46,7 +42,6 @@ data_summary %>%
 
 # plot
   
-  
 # p_data <- all_data %>% 
 #     mutate(sig = if_else(significance!=99, 0, 99)) %>% 
 #     group_by(x_levels, facet_levels) %>% 
@@ -54,8 +49,6 @@ data_summary %>%
 #               .groups = 'drop') %>%
 #     summarise(p_value = sum(p_value))
 #     
-
-
 
 +
   geom_text(data = round(compute_p_value, 3), size = 3,  

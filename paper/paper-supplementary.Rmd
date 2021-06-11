@@ -275,7 +275,30 @@ G21_norm %>%
 
 ## Modeling approach
 
+### Case: m = 1 
+
+Figure \ref{fig:glm-horizontal-onegran} shows the scatterplot of $wpd_{raw}$ against different values of $nx$ and also the display of residuals from the model. Figure \ref{fig:glm-density-onegran} shows the distribution of $wpd_{glm}$ for different $nx$.
+
 ```{r}
+G21_onegran <- read_rds(here("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
+
+G21_median_onegran  <- G21_onegran  %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+
+
+glm_fit_onegran  <- glm(actual ~ log(`nx * nfacet`),
+               family = Gamma(link = "inverse"),
+               data = G21_median_onegran)
+
+bind_cols(distribution = "Normal (0, 1)", broom::tidy(glm_fit_onegran)) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons for $m=1$.")
+
+```
+
+
+
+```{r glm-horizontal-onegran, fig.cap = "Residuals from the model is plotted across different $nx$. Residuals seem to be indeoendent of $nx$ and have been defined as $wpd_{glm}$ in the paper."}
+
 G21 <- read_rds(here("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 
 G21_median <- G21 %>% 
@@ -286,7 +309,6 @@ G21_median <- G21 %>%
 glm_fit <- glm(actual ~ log(`nx * nfacet`),
                family = Gamma(link = "inverse"),
                data = G21_median)
-tidy(glm_fit)
 
 intercept <- glm_fit$coefficients[1]
 slope <- glm_fit$coefficients[2]
@@ -318,7 +340,9 @@ G21 %>%
   ) +
   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
   ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
+```
 
+```{r glm-density-onegran, fig.cap = "Distribution of $wpd_{glm}$ is plotted across different $nx$. Both shape and scale of the distributions are different for lower $nx$ than for higher $nx$."}
 G21_glm <- G21 %>% 
   mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
   )
@@ -329,19 +353,19 @@ G21_glm <- G21 %>%
 
 nxbyfacet_ridge <- G21_glm %>% 
   ggplot(aes(x = wpd_glm_scaled, y = as.factor(nx))) +
-  ggridges::geom_density_ridges() +
-  facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
+  ggridges::geom_density_ridges()  + 
   xlab("mmpd") +
   ylab("nx")
 
 nxbyfacet_ridge
 ```
 
-
 ### Case: m = 2   
 
 
-```{r}
+Figure \ref{fig:glm-horizontal-onegran} shows the scatterplot of $wpd_{raw}$ against different values of $nx$ and also the display of residuals from the model. Figure \ref{fig:wpd-glm-dist} shows the distribution of $wpd_{glm}$ for different $nx$.
+
+```{r tab-models}
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma21.rds"))
 G01 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_Gamma01.rds"))
 N01 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
@@ -394,31 +418,150 @@ tidy_obs <- by_dist %>%
 tidy_obs %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons for different underlying distribution.")
 ```
 
-```{r}
+<!-- # ```{r} -->
+<!-- #  -->
+<!-- # G21_median <- N01 %>% -->
+<!-- #   group_by(nx*nfacet) %>% -->
+<!-- #   summarise(actual = median(value)) -->
+<!-- #  -->
+<!-- #  -->
+<!-- # glm_fit <- glm(actual ~ log(`nx * nfacet`), -->
+<!-- #                family = Gamma(link = "inverse"), -->
+<!-- #                data = G21_median) -->
+<!-- # # tidy(glm_fit) -->
+<!-- #  -->
+<!-- # ``` -->
 
-G21_median <- N01 %>%
-  group_by(nx*nfacet) %>%
+```{r glm-horizontal-twogran, fig.cap = "Residuals from the model is plotted across different $nx$ and $nfacet$. Residuals seem to be independent of $log(nx*nfacet)$ and have been defined as $wpd_{glm}$ in the paper."}
+
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
   summarise(actual = median(value))
-
-
 glm_fit <- glm(actual ~ log(`nx * nfacet`),
                family = Gamma(link = "inverse"),
                data = G21_median)
-# tidy(glm_fit)
+intercept <- glm_fit$coefficients[1]
+slope <- glm_fit$coefficients[2]
+G21_sd  = G21 %>% 
+  mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+  )
+  )
+  ))
+#scale_fac <- 1/G21_sd$wpd_glm %>% sd()
+# checking the fit of the residuals from glm fit
+# fitted_glm <- fitted(glm_fit, type = "response")
+# residuals <- residuals.glm(glm_fit, type = "response")
+# hist(residuals)
+#h = augment(glm_fit)
+# ggplot(h) +
+#   geom_histogram(aes(x = .resid))
+# residual <- G21_median$actual  - fitted_glm
+# 
+# hist(residual)
+G21 %>%
+  ggplot(aes(x=log(nx*nfacet),
+             y = (value - (1/(intercept + slope*log(nx*nfacet)
+             )
+             )
+             )
+  )
+  ) +
+  geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") +
+  ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
+broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
+```
+
+```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher $nx$ and nfacet and dissimilar for fewer $nx$ and $nfacet$."}
+G21_glm <- G21 %>% 
+  mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+  )
+  )
+  ),
+  wpd_glm_scaled = ((wpd_glm*320)))
+
+G21_glm$wpd_glm_scaled %>% sd()
+
+G21_glm %>%
+  ggplot() +
+  geom_density(aes(x = wpd_glm),
+               fill = "blue") +
+  facet_grid(nx~nfacet,
+             labeller = "label_both") +
+  theme(legend.position = "bottom")
 
 ```
+
+
 
 ## Combination approach
 
 
-### Case: m = 1   
+```{r dist-same-scale-onegran, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ for $m=1$. The distribution of the adjusted measure looks similar for both appraches for higher levels."}
+G21_permutation <- read_rds(here("simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds")) %>%
+  rename("wpd_permutation" = "value")
 
 
+# G21_model_data <- G21 %>%
+#   mutate(model =
+#            ((1/value)
+#                   - intercept -
+#                     slope*log(nx*nfacet))/slope) %>%
+#   mutate(model_trans =
+#            (model - mean(model))/sd(model))
 
-### Case: m = 2   
+# G21_model_data$model %>% summary()
+
+G21_all_data <- G21_permutation %>% 
+  # left_join(G21_lm, by = c("nx", "nfacet", "perm_id")) %>% 
+  left_join(G21_glm, by = c("nx", "nfacet", "perm_id")) %>% 
+  pivot_longer(cols = c(3, 7),
+               names_to = "type_estimate",
+               values_to = "value_estimate")
+G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_scaled"))
 
 
-```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both appraches for higher levels."}
+summary_data <- G21_all_data %>% 
+  group_by(nx, nfacet, type_estimate) %>% 
+  summarise(mean = mean(value_estimate)) %>% ungroup()
+
+
+G21_all_data %>% 
+  filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
+  ggplot(aes(x = value_estimate)) +
+  geom_density(aes(fill = type_estimate), alpha = 0.5, size = .5) +
+  geom_vline(data = summary_data, aes(xintercept = mean, color = type_estimate)) + 
+  geom_rug(aes(color = type_estimate), length = unit(0.09,"cm"), alpha = 0.5) +
+  #coord_cartesian(clip = "off") + 
+  facet_wrap(~nx,
+             labeller = "label_both") +
+  theme_bw() + 
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c( "#D55E00", "#0072B2")) +
+  scale_color_manual(values = c( "#D55E00", "#0072B2")) +
+  xlab("adjusted values of wpd") 
+```
+
+```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$ for $m=2$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both appraches for higher levels."}
+
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
+G21_median <- G21 %>% 
+  group_by(nx*nfacet) %>% 
+  summarise(actual = median(value))
+glm_fit <- glm(actual ~ log(`nx * nfacet`),
+               family = Gamma(link = "inverse"),
+               data = G21_median)
+intercept <- glm_fit$coefficients[1]
+slope <- glm_fit$coefficients[2]
+
+G21_glm <- G21_glm <- G21 %>% 
+  mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
+  )
+  )
+  ),
+  wpd_glm_scaled = ((wpd_glm*320)))
+
+
 G21_permutation <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds")) %>%
   rename("wpd_permutation" = "value")
 
@@ -467,50 +610,6 @@ G21_all_data %>%
 
 
 
-```{r}
-G21_permutation <- read_rds(here("simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds")) %>%
-  rename("wpd_permutation" = "value")
-
-
-# G21_model_data <- G21 %>%
-#   mutate(model =
-#            ((1/value)
-#                   - intercept -
-#                     slope*log(nx*nfacet))/slope) %>%
-#   mutate(model_trans =
-#            (model - mean(model))/sd(model))
-
-# G21_model_data$model %>% summary()
-
-G21_all_data <- G21_permutation %>% 
-  # left_join(G21_lm, by = c("nx", "nfacet", "perm_id")) %>% 
-  left_join(G21_glm, by = c("nx", "nfacet", "perm_id")) %>% 
-  pivot_longer(cols = c(3, 7),
-               names_to = "type_estimate",
-               values_to = "value_estimate")
-G21_all_data$type_estimate = factor(G21_all_data$type_estimate , levels = c( "wpd_permutation", "wpd_glm_scaled"))
-
-
-summary_data <- G21_all_data %>% 
-  group_by(nx, nfacet, type_estimate) %>% 
-  summarise(mean = mean(value_estimate)) %>% ungroup()
-
-
-G21_all_data %>% 
-  filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
-  ggplot(aes(x = value_estimate)) +
-  geom_density(aes(fill = type_estimate), alpha = 0.5, size = .5) +
-  geom_vline(data = summary_data, aes(xintercept = mean, color = type_estimate)) + 
-  geom_rug(aes(color = type_estimate), length = unit(0.09,"cm"), alpha = 0.5) +
-  #coord_cartesian(clip = "off") + 
-  facet_wrap(~nx,
-             labeller = "label_both") +
-  theme_bw() + 
-  theme(legend.position = "bottom") +
-  scale_fill_manual(values = c( "#D55E00", "#0072B2")) +
-  scale_color_manual(values = c( "#D55E00", "#0072B2")) +
-  xlab("adjusted values of wpd") 
-```
 
 
 ### Simulation design
@@ -519,65 +618,6 @@ Observations are generated from Gamma(2,1), G(0.5, 1), N(0,1), N(0, 5) and N(5, 
 of $wpd$ is obtained for each of the panels. The measurement variable for each combination of categories in a panel are drawn from the same distribution and hence the design corresponds to $D_{null}$ . Furthermore, this entire method is repeated for each panels $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed.
 
 
-
-```{r wpd-glm-dist, fig.cap = " The distribution of $wpd_{glm}$ is plotted. The distributions are more similar across higher nx and nfacet and dissimilar for fewer nc and nfacets."}
-
-G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
-G21_median <- G21 %>% 
-  group_by(nx*nfacet) %>% 
-  summarise(actual = median(value))
-glm_fit <- glm(actual ~ log(`nx * nfacet`),
-               family = Gamma(link = "inverse"),
-               data = G21_median)
-intercept <- glm_fit$coefficients[1]
-slope <- glm_fit$coefficients[2]
-G21_sd  = G21 %>% 
-  mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
-  )
-  )
-  ))
-#scale_fac <- 1/G21_sd$wpd_glm %>% sd()
-# checking the fit of the residuals from glm fit
-# fitted_glm <- fitted(glm_fit, type = "response")
-# residuals <- residuals.glm(glm_fit, type = "response")
-# hist(residuals)
-#h = augment(glm_fit)
-# ggplot(h) +
-#   geom_histogram(aes(x = .resid))
-# residual <- G21_median$actual  - fitted_glm
-# 
-# hist(residual)
-# G21 %>% 
-#   ggplot(aes(x=log(nx*nfacet),
-#              y = (value - (1/(intercept + slope*log(nx*nfacet)
-#              )
-#              )
-#              )
-#   )
-#   ) +
-#   geom_point() + stat_summary(fun=mean, geom="line", aes(group=1), color = "blue") + 
-#   ylab("wpd_glm = wpd_raw - 1/(a  + b*log(nx*nfacet))")
-broom::tidy(glm_fit) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
-
-
-G21_glm <- G21 %>% 
-  mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
-  )
-  )
-  ),
-  wpd_glm_scaled = ((wpd_glm*320)))
-
-G21_glm$wpd_glm_scaled %>% sd()
-
-G21_glm %>%
-  ggplot() +
-  geom_density(aes(x = wpd_glm),
-               fill = "blue") +
-  facet_grid(nx~nfacet,
-             labeller = "label_both") +
-  theme(legend.position = "bottom")
-
-```
 
 # Ranking and selecting harmonies
 
@@ -595,7 +635,12 @@ all_data <- read_rds("simulations/supplementary/test-hpc/data-agg/all_data.rds")
 
 
 # computes size for 99 percentile threshold
-data_summary <- all_data %>%
+all_data <- all_data %>%
+  filter(!is.na(x_levels), !is.na(facet_levels))
+
+
+
+data_summary <- all_data%>% 
   mutate(sig = if_else(significance!=99, 0, 99)) %>% 
   group_by(seed_id) %>% 
   summarize(sumsig = sum(sig)) %>% 
@@ -603,11 +648,33 @@ data_summary <- all_data %>%
   mutate(p_value = n/sum(n)) %>% 
   slice(1)
 
+data_summary_lowlev <- all_data%>% 
+  filter(x_levels==3, facet_levels ==2) %>% 
+  mutate(sig = if_else(significance!=99, 0, 99)) %>% 
+  group_by(seed_id) %>% 
+  summarize(sumsig = sum(sig)) %>% 
+  count(sumsig==0) %>% 
+  mutate(p_value = n/sum(n)) %>% 
+  slice(1)
 
 # plots
+
+global_threshold <-  tibble(threshold = "99", value = quantile(all_data$wpd, 0.99, na.rm = TRUE))
+```
+
+$wpd_{threshold99}$ is obtained as `r round(global_threshold$value, 2)` for this experiment, which leads to a p-value of `r round(data_summary$p_value, 3)`. Figure \ref{fig:global-size} shows the distribution of $wpd$ obtained from this experiment with the red line denoting $wpd_{threshold99}$. If we split the diplay of distribution between $nx$ and $nfacet$, then Figure \ref{fig:local-size} shows that the probability of rejecting the null when it is actually true is higher for smaller levels, however, it is still within limits (around `r round(data_summary_lowlev$p_value, 3)`).
+
+```{r global-size, fig.cap = "something"}
 ggplot() + 
   geom_histogram(data = all_data, aes(x = wpd))  + 
-  geom_vline(data = data_summary, aes(xintercept = p_value),colour = "red")
+  geom_vline(data = global_threshold, aes(xintercept =  value),colour = "red", size = 1.5) 
+```
+
+```{r local-size, fig.cap = "something"}
+ggplot() + 
+  geom_histogram(data = all_data, aes(x = wpd))  + 
+  geom_vline(data = global_threshold, aes(xintercept =  value),colour = "red", size = 1.5) +
+  facet_grid(x_levels~facet_levels)
 ```
 
 ## Power
