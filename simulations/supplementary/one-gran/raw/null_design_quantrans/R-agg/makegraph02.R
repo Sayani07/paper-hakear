@@ -11,7 +11,7 @@ out_loc <- "simulations/supplementary/one-gran/raw/null_design_quantrans/figs/"
 
 makegraph02 <- function(folder_name){
   
-all_data <- read_rds(paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_", folder_name, ".rds"))
+all_data <- read_rds(paste0("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_", folder_name, ".rds"))
   
 
 nxbyfacet_density <- all_data %>% 
@@ -27,24 +27,25 @@ ggsave(nxbyfacet_density, filename = paste0(out_loc, "nxbyfacet_density_", folde
 
 nxbyfacet_ridge <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nx))) +
-  ggridges::geom_density_ridges() +
-  facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
-  xlab("mmpd") +
+  ggridges::geom_density_ridges()  + 
+  xlab("raw wpd") + 
   ylab("nx") +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  scale_x_continuous(breaks = scales::breaks_extended(4)) + theme_bw()
 
-ggsave(nxbyfacet_ridge, filename = paste0(out_loc, "nxbyfacet_ridge_", folder_name,".png"))
+ggsave(nxbyfacet_ridge, filename = paste0(out_loc, "nxbyfacet_ridge_wpd_", folder_name,".png"))
 
 
 nfacetbynx_ridge <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nfacet))) +
   ggridges::geom_density_ridges() +
   facet_wrap(~nx, labeller = "label_both", nrow = 2) + 
-  xlab("mmpd") +
-  ylab("nfacet") +
-  scale_x_continuous(breaks = scales::breaks_extended(4))
+  xlab("raw wpd") +
+  ylab("") +
+  scale_x_continuous(breaks = scales::breaks_extended(3.5)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+ theme(axis.text.y=element_blank())
 
-ggsave(nfacetbynx_ridge, filename = paste0(out_loc, "nfacetbynx_ridge_", folder_name,".png"))
+ggsave(nfacetbynx_ridge, filename = paste0(out_loc, "nfacetbynx_ridge_wpd_", folder_name,".png"))
 }
 
 makegraph02(folder_name = "wpd_N01")

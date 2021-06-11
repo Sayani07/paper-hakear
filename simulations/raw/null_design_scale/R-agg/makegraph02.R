@@ -8,7 +8,8 @@ library(tidyverse)
 
 makegraph02 <- function(folder_name){
 all_data <- read_rds(paste0("simulations/null_design/data/all_data_", folder_name, ".rds"))
-  
+
+all_data <- read_rds(paste0("simulations/raw/null_design_scale/data-agg/all_data_wpd", folder_name, ".rds"))  
 
 nxbyfacet <- all_data %>% 
   ggplot(aes(x = value)) + 

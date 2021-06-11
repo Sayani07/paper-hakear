@@ -61,6 +61,7 @@ library(readr)
 library(tidyverse)
 library(here)
 library(broom)
+library(latex2exp)
 
 
 opts_chunk$set(
@@ -205,7 +206,7 @@ _Results_
 
 Figure \ref{fig:nxbyfacet-ridge-N01-onegran} shows ridge plots of $wpd_{raw}$ for an underlying N(0,1) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately from lower values  to higher values of $nx$ and left tails are longer for lower facet levels.
 
-```{r nxbyfacet-ridge-N01-onegran, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
+```{r nxbyfacet-ridge-N01-onegran, fig.cap="Ridge plots of raw wpd is shown for N(0,1) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
 knitr::include_graphics(here::here("simulations/supplementary/one-gran/raw/null_design_quantrans/figs/nxbyfacet_ridge_wpd_N01.png"))
 ```
 
