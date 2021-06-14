@@ -558,7 +558,12 @@ glm_fit_onegran  <- glm(actual ~ log(`nx * nfacet`),
                data = G21_median_onegran)
 
 bind_rows(broom::tidy(glm_fit_onegran),
-          tidy(glm_fit), .id = "m") %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
+          tidy(glm_fit), .id = "m") %>%
+  mutate(estimate = round(estimate, 2),
+         std.error = round(std.error, 2),
+         statistic = round(statistic, 2),
+         p.value = round(p.value, 2)
+         ) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons.")
 
 
 ## ---- wpd-glm-dist
