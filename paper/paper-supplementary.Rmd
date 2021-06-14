@@ -262,7 +262,7 @@ include_graphics(here("simulations/supplementary/one-gran/norm/null_design_quant
 
 
 ```{r norm, fig.cap = "Distribution of $wpd_{perm}$ is plotted across different $nx$ and $nfacet$ categories. Both shape and scale of the distributions are now similar for different panels under the null design."}
-G21_norm <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_Gamma21.rds"))
+G21_norm <- read_rds(here("simulations/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds"))
 
 G21_norm %>% 
   ggplot(aes(x = value)) + 
@@ -270,7 +270,7 @@ G21_norm %>%
   facet_grid(nx~nfacet,
              labeller = "label_both") + 
   scale_x_continuous(breaks = scales::breaks_extended(3)) + 
-  xlab("wpd normalised using permutation approach")
+  xlab("wpd normalised using permutation approach") +    xlab(TeX("wpd_{perm}")) + theme_bw()
 
 ```
 

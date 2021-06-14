@@ -293,7 +293,7 @@ set.seed(9999)
 
 
 
-set.seed(99999)
+set.seed(9999)
 varall <- compute_pairwise_norm(sim_panel_varall, 
                                 gran_x = "id_x",
                                 gran_facet = "id_facet",
@@ -301,7 +301,7 @@ varall <- compute_pairwise_norm(sim_panel_varall,
                                 nperm = 200
 )
 
-set.seed(99999)
+set.seed(9999)
 varall_sd <- compute_pairwise_norm(sim_panel_varall_sd, 
                                    gran_x = "id_x",
                                    gran_facet = "id_facet",
@@ -316,7 +316,7 @@ p_varall <- sim_panel_varall %>%
   ylab ("simulated response")
 
 
-set.seed(99999)
+set.seed(9999)
 
 null <- compute_pairwise_norm(sim_panel_null, 
                               gran_x = "id_x",
@@ -352,7 +352,7 @@ p_null <- sim_panel_null %>%
 
 
 
-set.seed(99999)
+set.seed(9999)
 varf <- compute_pairwise_norm(sim_panel_varf, 
                               gran_x = "id_x",
                               gran_facet = "id_facet",
@@ -366,7 +366,7 @@ p_varf <- sim_panel_varf %>%
   ylab ("simulated response")
 
 
-set.seed(99999)
+set.seed(9999)
 varx <- compute_pairwise_norm(sim_panel_varx, 
                               gran_x = "id_x",
                               gran_facet = "id_facet",
@@ -818,12 +818,68 @@ demography <- demography %>% kable(format  = "markdown", caption = "Demographics
 demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 
 
+## ---- rank-household-mclapply-8
+elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+  select(-meter_id) %>% 
+  rename("id" = "household_id",
+         "date_time" = "reading_datetime")
+
+
+
+library(tictoc)
+#tic()
+elec_split = elec %>% group_split(id)
+
+elec_select_harmony = parallel::mclapply(1:8, function(x){
+  
+  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
+    as_tsibble(index = date_time)
+  
+  harmonies <- data_id %>%
+    harmony(
+      ugran = "month",
+      filter_in = "wknd_wday",
+      filter_out = c("hhour", "fortnight")
+    )
+  
+  hakear::select_harmonies(data_id,
+                           harmony_tbl = harmonies,
+                           response = kwh,
+                           nperm = 200,
+                           nsamp = 200
+  )
+  
+}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
+#toc()
+
+
+## ---- elec_select_harmony-8
+elec_harmony_all <- elec_select_harmony %>% 
+  bind_rows(.id = "id") %>% 
+  mutate(facet_variable = case_when(
+    facet_variable == "hour_day" ~ "hod" ,
+    facet_variable == "day_month" ~ "dom" ,
+    facet_variable == "day_week" ~ "dow" ,
+    facet_variable == "week_month" ~ "wom" ,
+    facet_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(x_variable = case_when(
+    x_variable == "hour_day" ~ "hod" ,
+    x_variable == "day_month" ~ "dom" ,
+    x_variable == "day_week" ~ "dow" ,
+    x_variable == "week_month" ~ "wom" ,
+    x_variable == "wknd_wday" ~ "wdwnd"
+  )) %>% 
+  mutate(id = paste("id", id, sep = " ")) %>% 
+  group_by(id) %>% 
+  mutate(rank = row_number())
+
+
+
 ## ---- dotplot-8
 
 
-# elec_sig_split <- elec_harmony_all %>%
-#   mutate(select_split =  str_split(select_harmony, " ", simplify = TRUE)[,2]) %>% 
-#   
 select_split <- str_split(elec_harmony_all$select_harmony, " ", simplify = TRUE)[,2]
 
 elec_sig_split <- elec_harmony_all %>% 
@@ -873,14 +929,7 @@ elec <- read_rds(here("paper/data/elec_all-8.rds")) %>%
   rename("id" = "household_id",
          "date_time" = "reading_datetime")
 
-# 
-# elec %>% 
-#   filter(id == "1") %>% 
-#   prob_plot("hour_day", 
-#             "day_week",
-#             response = "kwh",
-#             plot_type = "violin", fill = "blue")
-#   
+
 elec1 <- elec %>% 
   filter(id == "1") %>% 
   create_gran("day_week") %>% 
@@ -889,14 +938,6 @@ elec1 <- elec %>%
          hour_day = as.numeric(hour_day),
          id = as.numeric(id))
 
-# temp.gly <- glyphs(elec1, "day_week", "hour_day", "id","kwh", height = 2.5)
-# 
-# ggplot(temp.gly, ggplot2::aes(gx, gy, group = gid)) +
-#   add_ref_lines(temp.gly, color = "grey90") +
-#   add_ref_boxes(temp.gly, color = "grey90") +
-#   geom_path() +
-#   theme_bw() +
-#   labs(x = "", y = "")
 
 elec_zoom <-  elec %>%
   as_tibble() %>% 

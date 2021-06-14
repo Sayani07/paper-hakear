@@ -5,7 +5,7 @@ library(tidyverse)
 #all_data <- read_rds("simulations/result_report/all_data_ norm.rds")
 # run for  norm max pairwise distances files aggregation
 
-in_loc <- "simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_"
+in_loc <- "simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_"
 out_loc <- "simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/figs/"
 
 makegraph02 <- function(folder_name){
@@ -26,12 +26,11 @@ ggsave(nxbyfacet_density, filename = paste0(out_loc, "nxbyfacet_density_", folde
 
 nxbyfacet_ridge <- all_data %>% 
   ggplot(aes(x = value, y = as.factor(nx))) +
-  ggridges::geom_density_ridges() +
-  facet_wrap(~nfacet, labeller = "label_both", nrow = 2) + 
-  xlab("mmpd") +
-  ylab("nx")
+  ggridges::geom_density_ridges()  + 
+  xlab(TeX("wpd_{perm}")) +
+  ylab("nx") + theme_bw()
 
-ggsave(nxbyfacet_ridge, filename = paste0(out_loc, "nxbyfacet_ridge_", folder_name,".png"))
+ggsave(nxbyfacet_ridge, filename = paste0(out_loc, "nxbyfacet_ridge_wpd_", folder_name,".png"))
 
 
 nfacetbynx_ridge <- all_data %>% 
