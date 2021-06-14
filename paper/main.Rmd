@@ -16,9 +16,10 @@ authors:
   affiliation: Department of Econometrics and Business Statistics, Monash University, Australia
 keywords:
 - data visualization
-- periodicities
 - cyclic granularities
+- periodicities
 - permutation tests
+- distributional difference
 - Jensen-Shannon distances
 - smart meter data
 - R
@@ -669,11 +670,16 @@ Figure \ref{fig:raw} shows that both the location and scale of the distributions
 
 \noindent _Simulation design_  
  
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. This would result in 9 panels, viz, $(3, 2), (3, 9), (3, 10), \dots, (14,9), (14, 10)$. Few experiments were conducted. In the first scenario, data for all panels are simulated using the null design  $D_{null}$. In other scenarios, data simulated from the panel $(14, 2)$ and $(3, 10)$ are under $D_{vary_{all}}$. Moreover, $\omega = \{0.5, 2, 5\}$ are considered to examine if the proposed test is able to capture subtle differences and non-subtle differences when we shift from the null design. In the last scenario, we consider the panel $(3, 2), (7,9), (14, 10)$ to be under $D_{null}$, the panels $(7, 2), (14, 9)$ to be under $D_{var_f}$. $(14, 2), (3, 10)$ under $D_{var_x}$ and the rest under $D_{var_{null}}$. This is done to check if the consequent ranking procedure leads to designs like $D_{vary_{all}}$ to be chosen first followed by $D_{vary_{all}}$. We generate only one data set each for which these scenarios were simulated and consider this as the original data set. We generate $1000$ repetitions of this experiment with different seeds.
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. This would result in 9 panels, viz, $(3, 2), (3, 9), (3, 10), \dots, (14,9), (14, 10)$. Few experiments were conducted. In the first scenario, data for all panels are simulated using the null design  $D_{null}$. In other scenarios, data simulated from the panel $(14, 2)$ and $(3, 10)$ are considered under $D_{vary_{all}}$. Moreover, $\omega = \{0.5, 2, 5\}$ are considered to examine if the proposed test is able to capture subtle differences and non-subtle differences when we shift from the null design. 
+
+<!-- In the last scenario, we consider the panel $(3, 2), (7,9), (14, 10)$ to be under $D_{null}$, the panels $(7, 2), (14, 9)$ to be under $D_{var_f}$. $(14, 2), (3, 10)$ under $D_{var_x}$ and the rest under $D_{var_{null}}$. This is done to check if the consequent ranking procedure leads to designs like $D_{vary_{all}}$ to be chosen first followed by $D_{vary_{all}}$. We generate only one data set each for which these scenarios were simulated and consider this as the original data set. We generate $1000$ repetitions of this experiment with different seeds. -->
 
 \noindent _Results_  
 
-The proportion of times a panel is rejected when it is under $D_{null}$ is computed with $wpd_{threshold99}$ and it is around $0.1$. This is obvious, since if the level of significance for each test is less than $0.01$ (as a result of choosing $99^{th}$ percentile as the threshold) and we have $9$ tests, the size for the entire test should be close to $0.01 *9 \approx 0.1$. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. The first proportion is desired to be as small as possible and a higher value of the later is expected. Also, these would constitute to be the estimated size and power of the test. It is found that as we increase from low to high changes from the null distribution, the power increased. The results and graphics are included in details in the Supplementary paper.
+
+For the first scenario, size of the test is obtained as $0.1$ with $wpd_{threshold99}$ as the threshold.
+This implies that the proportion of times a panel is rejected when it is under $D_{null}$ is $0.1$. The level of significance for each test is 1% (as a result of choosing $99^{th}$ percentile as the threshold) and we have $9$ multiple tests. Hence, it is reasonable
+that the level of significance of the composite tests would be larger than the individual tests. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. These proportions constitute to be the estimated size and power of the test. It is found that as we increase from low to high changes from the null distribution, the power increased. The power also increases with increased sample size. The results and graphics are included in details in the Supplementary paper.
 
 ```{r, eval = FALSE}
 all_data <- read_rds("simulations/supplementary/test-hpc/data-agg/all_data.rds")
@@ -705,8 +711,7 @@ Simulation studies were carried out to study the behavior of $wpd$, build the no
 # Application to residential smart meter dataset {#sec:application-wpd}
 
 The smart meter data set for eight households in Melbourne has been utilized to see the use of $wpd$ proposed in the paper. The data has been cleaned to be a `tsibble` (@wang2019tsibble) containing half-hourly electricity consumption from Jul-2019 to Dec-2019 for each of the households, which is procured by them by downloading their data from the energy supplier/retailer. 
-No behavioral pattern is likely to be discerned from the line display of 
-energy usage over the entire period, since the plot will have too many measurements squeezed in a linear representation. When we zoom into the linear representation of this series in Figure \ref{fig:dotplot-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
+No behavioral pattern is likely to be discerned from the line graph of energy usage over the entire period, since the plot will have too many measurements squeezed in a linear representation. When we zoom into the linear representation of this series in Figure \ref{fig:dotplot-8} (b) for September, some patterns are visible in terms of peaks and troughs, but we do not know if they are regular or what is their period.
 Electricity demand, in general, has a daily and weekly periodic pattern. However, it is not apparent from this view if all of these households have those patterns and in case they have if they are significant enough. Also, it is not clear if any other periodic patterns are present in any household which might have been hidden with this view. We start the analysis by choosing few harmonies, ranking them for each of these households, compare households to get more insights into what these rankings imply. Furthermore, the ranking and selection of significant harmonies is validated by analyzing the distribution of energy usage across significant harmonies.
 
 <!-- if we are benefiting by moving from a linear to cyclic representation of time to . -->
@@ -718,57 +723,22 @@ Electricity demand, in general, has a daily and weekly periodic pattern. However
 
 _Choosing cyclic granularities of interest and removing clashes_
 
-Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of the tsibble is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month in the hierarchy table, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely “hour_day”, “hour_week”, “hour_month”, “day_ week”, “day_month” and “week_month”, read as “hour of the day”, etc. Further, we add cyclic granularity day-type( “wknd wday”) to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analyzed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo]. Table \ref{tab:tab-rank-8}  shows $14$ harmony pairs that belong to $H_{N_C}$.
+Let $v_{i, t}$ denote the electricity demand for $i^{th}$ household for time period $t$. The series $v_{i, t}$ is the linear granularity corresponding to half-hour since the interval of the tsibble is 30 minutes. We consider coarser linear granularities like hour, day, week and month from the commonly used Gregorian calendar. Considering $4$ linear granularities hour, day, week, month, the number of cyclic granularities is $N_C = (4 * 3/2) = 6$. We obtain cyclic granularities namely "hour_day", "hour_week", "hour_month", "day_ week", "day_month" and "week_month", read as "hour of the day", etc. Further, we add cyclic granularity day-type ("wknd wday") to capture weekend and weekday behavior. Thus, $7$ cyclic granularities are considered to be of interest. The set consisting of pairs of cyclic granularities ($C_{N_C}$) will have $7_{P_2}=42$ elements which could be analyzed for detecting possible periodicities. The set of possible harmonies $H_{N_C}$ from $C_{N_C}$ are chosen by removing clashes using procedures described in [@Gupta2020-vo]. Table \ref{tab:tab-rank-8}  shows $14$ harmony pairs that belong to $H_{N_C}$.
 
  <!-- The paper also shows how the number of harmonies could be identified among  by removing clashes. This section shows how we could refine the search further by only looking at significant harmonies. -->
 
 
 _Selecting and Ranking harmonies for all households_ 
 
-$wpd_{i}$ is computed on $v_{i, t}$ for all harmony pairs $\in H_{N_C}$ and for each households $i \in i = \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and highlighted with `***`, `**` and `*` corresponding to the  $99^{th}$,  $95^{th}$ and $90^{th}$ percentile threshold. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
+$wpd_{i}$ is computed on $v_{i, t}$ for all harmony pairs $\in H_{N_C}$ and for each households $i \in \{1, 2, \dots, 8\}$. The harmony pairs are then arranged in descending order and highlighted with `***`, `**` and `*` corresponding to the  $99^{th}$,  $95^{th}$ and $90^{th}$ percentile threshold. Table \ref{tab:tab-rank-8} shows the rank of the harmonies for different households. The rankings are different for different households, which is a reflection of their varied behaviors. Most importantly, there are at most $3$ harmonies that are significant for any household. This is a huge reduction in the number of potential harmonies to explore closely, starting from $42$.
 
-_Detecting patterns for households not apparent from linear display_ 
+_Detecting patterns not apparent from linear display_ 
 
-\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) 
-across harmony pairs with the cyclic granularity mapped to x-axis and facet being plotted on the x-axis and y-axis of the heatmap. Here dom, dow, wdwnd are abbreviations for day-of-month, day-of-week and weekday/weekend and so on. (a) emphasizes patterns not discernible through (b), which is a linear display containing the raw data for one month (Sep-2019), with the major and minor x-axis corresponding to weeks and days respectively. In (a), the colors represent the value of $wpd$, implying darker cells correspond to more significant harmony pairs. Also, the ones with `*` corresponds to the ones above $wpd_{threshold95}$. This plot suggests that there are no significant periodic patterns for id 5. Household id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off. id 7 and 8 have the same significant harmonies despite having very different total energy usage. Note that the $wpd$ values are computed over the entire range, but the linear display is zoomed into September.
+\noindent Figure \ref{fig:dotplot-8} helps to compare households through the heatmap (a) across harmony pairs with the cyclic granularity mapped to x-axis and facet being plotted on the x-axis and y-axis of the heatmap. Here $dom$, $dow$, $wdwnd$ are abbreviations for day-of-month, day-of-week, weekday/weekend and so on. The colors represent the value of $wpd$. Darker cells correspond to more significant harmony pairs. Also, the ones with `*` corresponds to the ones above $wpd_{threshold95}$. 
+Few observations that emphasizes patterns not discernible through (b) includes - (1) id 7 and 8 have the same significant harmonies despite having very different total energy usage, (2) id 6 and 7 differ in the sense that for id 6, the difference in patterns only during weekday/weekends, whereas for id 7, all or few other days of the week are also important. This might be due to their flexible work routines or different day-off, (3) there are no significant periodic patterns for id 5 when we fix the threshold to $wpd_{threshold95}$. Note that the $wpd$ values are computed over the entire range, but the linear display in (b) is zoomed only for September, with the major and minor x-axis corresponding to weeks and days respectively.
+
 
 <!-- Households id 2 and 3 are similar, in terms of linear display and heatmap, which implies that similar periodic behavior can stem from households with different demographics. -->
-
-```{r gravitas-plot-8-id5, message = FALSE, warning=FALSE, fig.cap="something", eval = FALSE}
-
-id5_tsibble <- elec %>%
-  filter(id== 5)
-
-p1 <- id5_tsibble %>% 
-   prob_plot("hour_day",
-             "day_week",
-             response = "kwh",
-             plot_type = "violin",
-             symmetric = FALSE,
-             quantile_prob = seq(0.1, 0.9, 0.01),
-             fill = "blue") +
-  ggtitle("a) hod vs dow (Rank 1)") + 
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin()), axis.text.x = element_text(angle = 60, hjust=1))
-
-p2 <- id5_tsibble %>% 
-   prob_plot("hour_day",
-             "wknd_wday",
-             response = "kwh",
-             plot_type = "violin",
-             symmetric = FALSE,
-             quantile_prob = seq(0.1, 0.9, 0.01),
-             fill = "blue") +
-  ggtitle("a) hod vs wdwnd (insignificant)") + 
-  scale_colour_brewer(name = "", palette = "Set2") +
-  theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin()), axis.text.x = element_text(angle = 60, hjust=1))
-
-
-p1 + p2
-```
-
 
 
 ```{r rank-household-mclapply-8}
@@ -840,10 +810,9 @@ elec_harmony_all <- elec_select_harmony %>%
 ```
 
 
-_Validating rank of household id:4 and 5_
+_Validating rank of households_
 
-From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair (dow, hod) is significant for household id 4, but for 5 it has been tagged as an insignificant pair. The distribution of energy demand with dow as the x-axis and hod as the facets for both of these households can help justify the selection. 
-Figure \ref{fig:gravitas-plot-8} shows that the median (black) and quartile deviation (orange) of energy consumption changes across both dow and hod for id 4 for most hours, but it is not so different for id 5 with differences captured only for $90^{th}$ percentile. 
+From table \ref{tab:tab-rank-8}, it could be seen that the harmony pair $(dow, hod)$ is significant for household id 4, but for id 5 it has been tagged as an insignificant pair. The distribution of energy demand with $dow$ as the x-axis and hod as the facets for both of these households can help justify the selection. Figure \ref{fig:gravitas-plot-8} shows that the median (black) and quartile deviation (orange) of energy consumption changes across both $dow$ and $hod$ for id 4 for most hours, but it is not so different for id 5 with differences captured only for $90^{th}$ percentile. 
 
 <!-- Although the differences might seem significant at first, with closer inspection it could be seen that the scale of the demand is lower in this case and hence the differences are not large enough to cross the threshold for significance. -->
 
