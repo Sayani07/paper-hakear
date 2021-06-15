@@ -154,7 +154,7 @@ Observations are generated from N(0,1) distribution for each combination of $nx$
 
 _Results_
 
-Figure \ref{fig:tuning-oneomega} shows how the value of $wpd$ changes for $\lambda = {0.1, 0.2, \dots, 0.9}$ for the two different designs $D_{var_x}$ and $D_{var_f}$ for two values of increment in mean $\omega = {1, 8}$. For a lower value of $\omega$, the two designs intersect at $\lambda > 0.7$ and for a higher $\omega$, the two designs intersect at $\lambda =  0.5$. The value of $wpd$ increases with $\lambda$ for $D_{var_x}$ and decreases with increasing $\lambda$ for $D_{var_f}$. \noindent Figure \ref{fig:tuning-parameter-inter} shows the value of $\lambda$ for which the two designs intersect for different values of $\omega$. It can be observed that as the value of $\omega$ ($\omega > 4$) increase, the value of $\lambda$ at which the two designs intersect converge is $\lambda = 0.5$ and for $\omega$ ($\omega <= 4$), designs interact between $\lambda = [0.6,0.75]$. Hence, $\lambda = 0.67$ for the rest of the paper, which is an average of the range of values $\lambda$ can take.
+Figure \ref{fig:tuning-oneomega} shows how the value of $wpd$ changes for $\lambda = {0.1, 0.2, \dots, 0.9}$ for the two different designs $D_{var_x}$ and $D_{var_f}$ for two values of increment in mean $\omega = {1, 8}$. For a lower value of $\omega$, the two designs intersect at $\lambda > 0.7$ and for a higher $\omega$, the two designs intersect at $\lambda =  0.5$. The value of $wpd$ increases with $\lambda$ for $D_{var_x}$ and decreases with increasing $\lambda$ for $D_{var_f}$. \noindent Figure \ref{fig:tuning-parameter-inter} shows the value of $\lambda$ for which the two designs intersect for different values of $\omega$. It can be observed that as the value of $\omega$ ($\omega > 4$) increase, the value of $\lambda$ at which the two designs intersect converge is $\lambda = 0.5$ and for $\omega$ ($\omega <= 4$), designs interact between $\lambda = [0.6,0.75]$. Hence, $\lambda = 0.67$ is used for the rest of the paper, which is an average of the range of values $\lambda$ can take in order to have equal or more weightage for the within-facet distances.
 
 
 ```{r tuning-oneomega, fig.cap = " $wpd_{raw}$ from two designs are plotted for different values of $\\lambda$ $nx$ and $nfacet$. For $\\omega = 1$, the designs intersect for $0.6<\\lambda<=0.75$, whereas for higher omega, design intersects at $\\lambda = 0.5$."}
@@ -230,17 +230,17 @@ _Simulation design_
 
 _Results_
 
-Figures \ref{fig:nxbyfacet-ridge-N01}, \ref{fig:nfacetbynx} and  \ref{fig:density-raw} shows the ridge plot of $wpd_{raw}$ with $nx$ as facets, $nfacet$ as facets and the density plot of $wpd_{raw}$ with $nx$ on the x-axis and $nfacet$ on the facets.
+Figures \ref{fig:nxbyfacet-ridge-N01}, \ref{fig:nfacetbynx} and  \ref{fig:density-raw} shows the ridge plot of $wpd_{raw}$ with $nx$ as facets, $nfacet$ as facets and the density plot of $wpd_{raw}$ with $nx$ on the x-axis and $nfacet$ on the facets. The right-ward shift in location can be clearly observed from all figures.
 
-```{r nxbyfacet-ridge-N01, fig.cap="Ridge plots of raw wpd is shown for N(0,5) distribution. For each panel, it could be seen that the location shifts to the right for increasing x levels. Across each panel, the scale of the distribution seems to change for low/moderately lower values and higher values of nfacets and left tails are longer for lower facet levels."}
+```{r nxbyfacet-ridge-N01, fig.cap="Ridge plots of raw wpd is shown for N(0,1) distribution with nfacets as facets. For each panel, it could be seen that the location shifts to the right for increasing nx levels."}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_ridge_wpd_N01.png"))
 ```
 
-```{r nfacetbynx, fig.cap="something1"}
+```{r nfacetbynx, fig.cap="Ridge plots of raw wpd is shown for N(0,1) distribution with nx as facets. For each panel, it could be seen that the location shifts to the right for increasing nfacet levels."}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nfacetbynx_ridge_wpd_N01.png"))
 ```
 
-```{r density-raw, fig.cap="something2"}
+```{r density-raw, fig.cap="Density plot of raw wpd is shown for N(0,1) distribution with nx on x-axis and nfacet on facets. For each panel, it could be seen that the location as well as scale shifts as we move from top-left to bottom-right corner."}
 knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/nxbyfacet_density_wpd_N01.png"))
 ```
 
@@ -522,6 +522,9 @@ G21_glm %>%
 
 ### Results
 
+"The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels 
+$(<=5)$, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both approaches for higher levels."
+
 
 
 ```{r dist-same-scale-onegran, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ for $m=1$. The distribution of the adjusted measure looks similar for both appraches for higher levels."}
@@ -681,9 +684,9 @@ data_summary_lowlev <- all_data%>%
 global_threshold <-  tibble(threshold = "89.4", value = quantile(all_data$wpd, 0.894, na.rm = TRUE))
 ```
 
-<!-- $wpd_{threshold99}$ is obtained as `r round(global_threshold$value, 2)` for this experiment, which leads to a p-value of `r round(data_summary$p_value, 3)`. Figure \ref{fig:global-size} shows the distribution of $wpd$ obtained from this experiment with the red line denoting $wpd_{threshold99}$. If we split the diplay of distribution between $nx$ and $nfacet$, then Figure \ref{fig:local-size} shows that the probability of rejecting the null when it is actually true is higher for smaller levels, however, it is still within limits (around `r round(data_summary_lowlev$p_value, 3)`). -->
+<!-- $wpd_{threshold99}$ is obtained as `r round(global_threshold$value, 2)` for this experiment, which leads to a p-value of `r round(data_summary$p_value, 3)`. Figure \ref{fig:global-size} shows the distribution of $wpd$ obtained from this experiment with the red line denoting $wpd_{threshold99}$. If we split the display of distribution between $nx$ and $nfacet$, then Figure \ref{fig:local-size} shows that the probability of rejecting the null when it is actually true is higher for smaller levels, however, it is still within limits (around `r round(data_summary_lowlev$p_value, 3)`). -->
 
-(ref:foo) The distribution of $wpd$ for 9 null designs of different levels with each harmony being rejected if the correponding $wpd$ value is higher than $wpd_{threshold99}$. Although the level of significance for each test is 1%, the level of significance for multiple tests together is 10% as displayed through the red line. This means 10% of the times the null designs will be tagged as interesting even when there is actually nothing interesting going on.
+(ref:foo) The distribution of $wpd$ for 9 null designs of different levels with each harmony being rejected if the corresponding $wpd$ value is higher than $wpd_{threshold99}$. Although the level of significance for each test is 1%, the level of significance for multiple tests together is 10% as displayed through the red line. This means 10% of the times the null designs will be tagged as interesting even when there is actually nothing interesting going on.
 
 ```{r foo, fig.cap='(ref:foo)'}
 
