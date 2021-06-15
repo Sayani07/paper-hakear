@@ -18,13 +18,19 @@ library(hakear)
 
 # harmony_table<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
 
-sample_seed <- seq(1000, 10999, by = 10) %>% as_tibble()
-simtable <- sample_seed
+sample_seed <- seq(1000, 10999, by = 10) 
+sample_seed <- sample_seed[1:500]
+samp_size <- c(10, 50, 100, 200)
+omega <- c(0.5, 2, 5)
+simtable <- expand.grid(seed = sample_seed, samp_size = samp_size, increment = omega)
 scen <- as.numeric(commandArgs()[[6]])
 #scen = 2 # testing if works for one seed
 simj <- simtable[scen, ] # Extract row of table
-seedj <- simj$value # which seed with which simulations should be run
+seedj <- simj$seed # which seed with which simulations should be run
+samp_sizej <- simj$samp_size
+incrementj <- simj$increment
 
+set.seed(seedj)
 
 harmony_table <- expand.grid(
   x_levels = c(3, 7, 14),
@@ -34,15 +40,18 @@ harmony_table <- expand.grid(
 
 # parameters and design used for this simulation
 npermj <- 200
-ntimesj <- 500
+ntimesj <- samp_sizej
 nsampj <- 100
-wj <- 0.5 # change this to change increment
+wj <- incrementj # change this to change increment
+
+
 
 sim_null <- function(nxj, nfacetj, mean, sd, w = 0) {
   rep(distributional::dist_normal(mu = mean, sigma = sd),
       times = nxj * nfacetj
   )
 }
+
 sim_varall <- function(nx, nfacet, mean, sd, w)
 {
   dist_normal((mean + seq(0,
@@ -50,7 +59,6 @@ sim_varall <- function(nx, nfacet, mean, sd, w)
                              nfacet - 1), by  = 1)*w), sd)
 }
 
-set.seed(seedj)
 ## code for one harmony table starts
 sim_data_all <- map(
   seq_len(nrow(harmony_table)),
@@ -107,9 +115,13 @@ null_harmony_oneseed <- wpd_threshold(sim_data_all,
 
 ## code for one harmony table ends
 
-write_csv(
+write_rds(
   null_harmony_oneseed,
-  paste0("../data-ind-power-one-alternate-low-inc/", "seed-id-", scen, ".csv")
+  paste0("simulations/supplementary/test-hpc/data-ind-power-one/", "power-",
+         "seed-", seedj, "-",
+         "sampsize-", samp_sizej, "-",
+         "increment-",  incrementj,
+         ".rds")
 )
 
 

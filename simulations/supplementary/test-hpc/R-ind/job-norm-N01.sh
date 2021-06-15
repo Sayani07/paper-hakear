@@ -10,3 +10,4 @@
 #SBATCH --export=NONE
 module load R/4.0.5
 Rscript ../R-ind/norm_pairwise_N01.R $SLURM_ARRAY_TASK_ID 
+
