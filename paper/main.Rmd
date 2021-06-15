@@ -678,7 +678,7 @@ Observations are generated from a N(0,1) distribution for each combination of $n
 
 For the first scenario, size of the test is obtained as $0.1$ with $wpd_{threshold99}$ as the threshold. This implies that the proportion of times a panel is rejected when it is under $D_{null}$ is $0.1$. The level of significance for each test is 1% (as a result of choosing $99^{th}$ percentile as the threshold) and we have $9$ multiple tests. Hence, it is reasonable
 that the level of significance of the composite tests would be larger than the individual tests. We also compute the proportion of times a panel is rejected when it actually belongs to a non-null design. These proportions constitute to be the estimated size and power of the test.
-Power can depend on many things like sample size, number of deviations from the null and extent of deviations from the null. It is found that as we increase from low to high changes from the null distribution, the power increased. <!---The power also increases with increased sample size, as is expected.---> The results and graphics are included in details in the Supplementary paper.
+Power can depend on many things like sample size, number of designs that deviate from the null and extent to which from the null. It is found that as we increase from low to high changes from the null distribution, the power increased. <!---The power also increases with increased sample size, as is expected.---> The results and graphics are included in details in the Supplementary paper.
 
 ```{r, eval = FALSE}
 all_data <- read_rds("simulations/supplementary/test-hpc/data-agg/all_data.rds")
