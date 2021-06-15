@@ -66,7 +66,7 @@ library(latex2exp)
 
 opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE, comment = "#>",
-  fig.path = "figure/", fig.align = "center", fig.show = "hold", fig.pos = "h",
+  fig.path = "figure/", fig.align = "center", fig.show = "hold", fig.pos = "ht",
   cache = TRUE, cache.path = "cache/",
   out.width = ifelse(is_html_output(), "100%", "\\textwidth")
 )
@@ -91,7 +91,7 @@ here::here()
 Let $v = \{v_t: t = 0, 1, 2, \dots, T-1\}$ be a continuous measured variable observed across $T$ time points. The number of cyclic granularities considered in the display (at once) is $m$. Consider cyclic granularities $A$ and $B$, such that $A = \{ a_j: j = 1, 2, \dots, J\}$ and $B = \{ b_k: k = 1, 2, \dots, K\}$. For $m=1$, only one of $A$ or $B$ is plotted at once and a _panel_ refers to a display of distributions of $v$ across $J$ or $K$ levels on the x-axis. For $m=2$, the distribution display of $v$ with $A$ placed across x-axis and $B$ across facets is referred to as a $(J, K)$ _panel_ ($J$ x-axis levels and $K$ facet levels). The pairwise distances between pairs ($a_jb_k,a_j'b_k'$) could be within-facets or between-facets as seen in Figure 4 of the main paper. The tuning parameter, used to put relative weight-age to the pairwise distances within and between facets is denoted by $\lambda$. Let the four elementary designs be $D_{null}$ where there is no pairwise difference in distribution of $v$ across $A$ or $B$, $D_{var_f}$ denotes the set of designs where there is difference in distribution of $v$ for $B$ and not for $A$. Similarly, $D_{var_x}$ denotes the set of designs where difference is observed only across $A$. Finally, $D_{var_{all}}$ denotes those designs for which difference is observed across both $A$ and $B$. The following method is deployed for generating different distributions across different combinations for non-null designs - suppose the distribution of the combination of first levels of x and facet category is $N(\mu,\sigma)$ and $\mu_{jk}$ denotes the mean of the combination $(a_jb_k)$, then $\mu_{j.} = \mu + j\omega$ (for design $D_{var_x}$) and $\mu_{.k} = \mu + k\omega$ (for design $D_{var_f}$), where $\omega$ denotes the increment in mean. Table \ref{tab:explain-design} shows an example of how designs are defined for a $(2, 3)$ panel using $\omega = 3$. $nx$ and $nfacet$ denotes the number of categories placed on x-axis and facets respectively. $wpd_{raw}$ and $wpd$ denote the raw and normalized weighted pairwise distances.
 
 
-```{r explain-design, fig.pos="h"}
+```{r explain-design, fig.pos="ht"}
 sim_varx_normal = function(nx, nfacet, mean, sd, w)
 {
   rep(dist_normal((mean + seq(0, nx-1, by  = 1)*w), sd), nfacet)
@@ -248,13 +248,13 @@ knitr::include_graphics(here::here("simulations/raw/null_design_quantrans/figs/n
 
 _Simulation design_  
 
-This sections shows the result from the different approaches of adjusting for the number of comparisons.Simulation design is the same as for raw weighted pairwise distances for $m=1$ and $m=2$. In place of $wpd_{raw}$, $wpd_{perm}$, $wpd_{glm}$ and $wpd$ is computed for all panels. 
+This section shows results from the different approaches of adjusting for the number of comparisons. Simulation design is the same as for raw weighted pairwise distances for $m=1$ and $m=2$. In place of $wpd_{raw}$, $wpd_{perm}$, $wpd_{glm}$ and $wpd$ is computed for all panels. 
 
 <!-- \noindent Observations are generated from a N(0,1) distribution for each $nx = \{2, 3, 5, 7, 9, 14, 17, 20, 24, 31, 42, 50\}$ to cover a wide range of levels from very low to moderately high. $ntimes = 500$ observations are drawn for each combination of the categories, that is, for a panel with $nx=3$, $500$ observations are simulated for each of the categories. This design corresponds to $D_{null}$ as each combination of categories in a panel are drawn from the same distribution. Furthermore, the data is simulated for each of the categories $nsim=200$ times, so that the distribution of $wpd$ under $D_{null}$ could be observed. The values of $wpd$ is obtained for each of the panels. $wpd_{l, s}$ denotes the value of $wpd$ obtained for the $l^{th}$ panel and $s^{th}$ simulation. -->
 
 ## Permutation approach
 
-Figure \ref{fig:one-gran-nxnyfacet} and \ref{fig:norm} show the normalized ${wpd}$ for $m=1$ and $m=2$ respectively. The location and scale are brought to similar values for increasing values of $nx$ or $nfacet$. Due to heavy computational load, $wpd_{perm}$ for few panels with very high value of $nx$ or $nfacet$ are not computed.
+Figure \ref{fig:one-gran-nxnyfacet} and \ref{fig:norm} show the normalized ${wpd}$ for $m=1$ and $m=2$ respectively. The location and scale of the distribution of ${wpd}$ is similar for increasing values of $nx$ or $nfacet$. Due to heavy computational load, $wpd_{perm}$ for few panels with very high value of $nx$ or $nfacet$ are not computed.
 
 
 ```{r one-gran-nxnyfacet, fig.cap="Distribution of $wpd_{perm}$ are shown for different levels for $m=1$ under the null design. The distribution for different panels have similar location and scale."}
@@ -277,9 +277,9 @@ G21_norm %>%
 
 ## Modeling approach
 
-For for $m=1$, Figure \ref{fig:glm-horizontal-onegran1} shows the scatterplot of $wpd_{raw}$ against different values of $nx$ and also the display of residuals from the model and Figure \ref{fig:glm-density-onegran} shows the distribution of $wpd_{glm}$ for different $nx$. For $m=2$, Figure \ref{fig:glm-horizontal-twogran1} shows the scatterplot of $wpd_{raw}$ against different values of $nx$ and also the display of residuals from the model. Figure \ref{fig:wpd-glm-dist} shows the distribution of $wpd_{glm}$ for different $nx$.
+For for $m=1$, Figure \ref{fig:glm-horizontal-onegran1} shows the scatterplot of $wpd_{raw}$ against different values of $nx$ and also the display of residuals from the model and Figure \ref{fig:glm-density-onegran} shows the distribution of $wpd_{glm}$ for different $nx$. For $m=2$, Figure \ref{fig:glm-horizontal-twogran1} shows the scatter plot of $wpd_{raw}$ against different values of $nx$ and $nfacet$ and also the display of residuals from the model. Figure \ref{fig:wpd-glm-dist} shows the distribution of $wpd_{glm}$ for different $nx$ and $nfacet$. Tables \ref{tab:tab-modelsm1} and \ref{tab:tab-models} show the GLM results for $m=1$ and $m=2$ respectively. All of these jointly show that the residuals from the model are independent of the number of comparisons. The location and scale of the distribution of $wpd_{glm}$ is similar for higher levels and distinctly different for lower levels.
 
-```{r}
+```{r tab-modelsm1}
 library(here)
 G21_onegran <- read_rds(here("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 
@@ -292,7 +292,11 @@ glm_fit_onegran  <- glm(actual ~ log(`nx * nfacet`),
                family = Gamma(link = "inverse"),
                data = G21_median_onegran)
 
-bind_cols(distribution = "N(0, 1)", broom::tidy(glm_fit_onegran)) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons for $m=1$.")
+bind_cols(distribution = "N(0, 1)", broom::tidy(glm_fit_onegran)) %>% 
+  mutate(estimate = round(estimate, 2),
+         std.error = round(std.error, 3),
+         statistic = round(statistic, 2),
+         p.value = round(p.value, 2)) %>% kable(caption = "Results of generalised linear model to capture the relationship between $wpd_{raw}$ and number of comparisons for $m=1$.")
 
 ```
 
@@ -340,25 +344,25 @@ G21_horizontal <- G21 %>%
 #ggsave("figs/G21_horizontal.png")
 ```
 
-```{r glm-horizontal-onegran1, fig.cap = "Residuals from the model is plotted across different number of comparisons for $m=1$. Residuals seem to be independent of $nx$ and have been defined as $wpd_{glm}$."}
+```{r glm-horizontal-onegran1, fig.cap = "$wpd_{raw}$ (points) and residuals (blue line) from the model is plotted across different number of comparisons for $m=1$. Residuals seem to be independent of $nx$ and have been defined as $wpd_{glm}$."}
 knitr::include_graphics(here("paper/figs/G21_horizontal.png"))
 ```
 
 
-```{r glm-density-onegran, fig.cap = "Distribution of $wpd_{glm}$ is plotted across different $nx$ for $m=1$. Both shape and scale of the distributions are different for lower $nx$ than for higher $nx$."}
-G21_glm <- G21 %>% 
+```{r glm-density-onegran, fig.cap = "Distribution of $wpd_{glm}$ is plotted across different $nx$ for $m=1$. Both shape and location of the distributions are different for lower $nx$ than for higher $nx$."}
+G21_glm_m1 <- G21 %>% 
   mutate(wpd_glm =  (value - (1/(intercept + slope*log(nx*nfacet)
   )
   )
   ),
   wpd_glm_scaled = ((wpd_glm*261)))
 
-mylabels <- G21_glm %>% 
+mylabels <- G21_glm_m1 %>% 
   group_by(nx) %>% 
   summarise(mean = round(mean(wpd_glm), 3), sd = round(sd(wpd_glm), 3)) %>% 
   mutate(label_glm = paste0("(", mean, ", " ,sd, ")"))
 
-nxbyfacet_ridge <- G21_glm %>% 
+nxbyfacet_ridge <- G21_glm_m1 %>% 
   ggplot(aes(x = wpd_glm, y = as.factor(nx))) +
   ggridges::geom_density_ridges() +
   xlab(TeX("wpd_{glm}")) +
@@ -370,8 +374,8 @@ nxbyfacet_ridge <- G21_glm %>%
 
 
 nxbyfacet_ridge
-
 ```
+
 
 
 ```{r tab-models}
@@ -492,7 +496,7 @@ G21_horizontal <- G21 %>%
 #ggsave("figs/G21_horizontal_m2.png")
 ```
 
-```{r glm-horizontal-twogran1, fig.cap = "Residuals from the model is plotted across different number of comparisons for $m=2$. Residuals seem to be independent of $nx$ and have been defined as $wpd_{glm}$."}
+```{r glm-horizontal-twogran1, fig.cap = "$wpd_{raw}$ (points) and residuals (blue line) from the model is plotted across different number of comparisons for $m=2$. Residuals seem to be independent of $nx$ and have been defined as $wpd_{glm}$."}
 knitr::include_graphics(here("paper/figs/G21_horizontal_m2.png"))
 ```
 
@@ -516,35 +520,21 @@ G21_glm %>%
 
 ```
 
-
-
 ## Combination approach
 
-### Results
-
-"The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels 
-$(<=5)$, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both approaches for higher levels."
+Figure \ref{fig:dist-same-scale-onegran} and \ref{fig:dist-new-same-scale-link} show the distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ overlaid on each other for $m=1$ and $m=2$ respectively. $wpd$ takes the value of $wpd_{perm}$ for lower levels 
+$(<=5)$, and $wpd_{glm-scaled}$ for higher levels so that we have similar location and scale across panels with different levels.
 
 
-
-```{r dist-same-scale-onegran, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ for $m=1$. The distribution of the adjusted measure looks similar for both appraches for higher levels."}
+```{r dist-same-scale-onegran, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ for $m=1$. The distribution of the adjusted measure looks similar for both approaches for higher levels, but for $nx=2$ both location and scale differs."}
 G21_permutation <- read_rds(here("simulations/supplementary/one-gran/norm/null_design_quantrans_nperm/data-agg/all_data_wpd_N01.rds")) %>%
   rename("wpd_permutation" = "value")
 
 
-# G21_model_data <- G21 %>%
-#   mutate(model =
-#            ((1/value)
-#                   - intercept -
-#                     slope*log(nx*nfacet))/slope) %>%
-#   mutate(model_trans =
-#            (model - mean(model))/sd(model))
-
-# G21_model_data$model %>% summary()
 
 G21_all_data <- G21_permutation %>% 
   # left_join(G21_lm, by = c("nx", "nfacet", "perm_id")) %>% 
-  left_join(G21_glm, by = c("nx", "nfacet", "perm_id")) %>% 
+  left_join(G21_glm_m1, by = c("nx", "nfacet", "perm_id")) %>% 
   pivot_longer(cols = c(3, 7),
                names_to = "type_estimate",
                values_to = "value_estimate")
@@ -572,7 +562,7 @@ G21_all_data %>%
   xlab("adjusted values of wpd") 
 ```
 
-```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$ for $m=2$. $wpd_{norm}$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both appraches for higher levels."}
+```{r dist-new-same-scale-link, fig.cap = "The distribution of $wpd_{perm}$ and $wpd_{glm-scaled}$ are overlaid to compare the location and scale across different $nx$ and $nfacet$ for $m=2$. $wpd$ takes the value of $wpd_{perm}$ for lower levels, and $wpd_{glm-scaled}$ for higher levels. "}
 
 G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 G21_median <- G21 %>% 
@@ -624,7 +614,7 @@ G21_all_data %>%
   filter(type_estimate %in% c("wpd_glm_scaled", "wpd_permutation")) %>% 
   ggplot(aes(x = value_estimate)) +
   geom_density(aes(fill = type_estimate), alpha = 0.5, size = .5) +
-  #geom_vline(data = summary_data, aes(xintercept = mean, color = type_estimate)) + 
+  geom_vline(data = summary_data, aes(xintercept = mean, color = type_estimate)) + 
   geom_rug(aes(color = type_estimate), length = unit(0.09,"cm"), alpha = 0.5) +
   #coord_cartesian(clip = "off") + 
   facet_grid(nx~nfacet,
@@ -644,13 +634,11 @@ G21_all_data %>%
 
 \noindent _Simulation design_  
  
-Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. This would result in 9 panels, viz, $(3, 2), (3, 9), (3, 10), \dots, (14,9), (14, 10)$. Few experiments were conducted. In the first scenario, data for all panels are simulated using the null design  $D_{null}$. In other scenarios, data simulated from the panel $(14, 2)$ and $(3, 10)$ are under $D_{vary_{all}}$. Moreover, $\omega = \{0.5, 2, 5\}$ are considered to examine if the proposed test is able to capture subtle differences and non-subtle differences when we shift from the null design. In the last scenario, we consider the panel $(3, 2), (7,9), (14, 10)$ to be under $D_{null}$, the panels $(7, 2), (14, 9)$ to be under $D_{var_f}$. $(14, 2), (3, 10)$ under $D_{var_x}$ and the rest under $D_{var_{null}}$. This is done to check if the consequent ranking procedure leads to designs like $D_{vary_{all}}$ to be chosen first followed by $D_{vary_{all}}$. We generate only one data set each for which these scenarios were simulated and consider this as the original data set. We generate $1000$ repetitions of this experiment with different seeds.
-
-
-
-
+Observations are generated from a N(0,1) distribution for each combination of $nx$ and $nfacet$ from the following sets: $nx = \{3, 7, 14\}$ and $nfacet = \{2, 9, 10\}$. This would result in 9 panels, viz, $(3, 2), (3, 9), (3, 10), \dots, (14,9), (14, 10)$. Few experiments were conducted. In the first scenario, data for all panels are simulated using the null design $D_{null}$. In other scenarios, data simulated from the panel $(14, 2)$ and $(3, 10)$ are under $D_{vary_{all}}$. Moreover, $\omega = \{0.5, 2, 5\}$ are considered to examine if the proposed test is able to capture subtle differences and non-subtle differences when we shift from the null design. In the last scenario, we consider the panel $(3, 2), (7,9), (14, 10)$ to be under $D_{null}$, the panels $(7, 2), (14, 9)$ to be under $D_{var_f}$. $(14, 2), (3, 10)$ under $D_{var_x}$ and the rest under $D_{var_{null}}$. This is done to check if the consequent ranking procedure leads to designs like $D_{vary_{f}}$ rank below $D_{vary_{all}}$. We generate only one data set each for which these scenarios were simulated and consider this as the original data set. We generate $1000$ repetitions of this experiment with different seeds.
 
 \noindent _Results_  
+
+Figure \ref{fig:foo} shows the distribution of $wpd$ for the simulated $9$ null designs of different levels with each harmony being rejected if the corresponding $wpd$ value is higher than $wpd_{threshold99}$. Although the level of significance for each test is 1%, the level of significance for multiple tests together is 10% as displayed through the red line. This means that 10% of the times the null designs will be tagged as interesting even when there is actually nothing interesting going on.
 
 ```{r}
 all_data <- read_rds("simulations/supplementary/test-hpc/data-agg/all_data.rds")

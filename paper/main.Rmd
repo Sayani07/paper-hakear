@@ -798,7 +798,7 @@ The Australian authors thank the ARC Centre of Excellence for Mathematical and S
 **Simulation results and scripts:** All simulation table, graphics and and R code to reproduce it (paper-supplementary.pdf, paper-supplementary.Rmd)
 
 \noindent
-**R-package:** The open-source R [@R-language] package `hakear` [@R-hakear] is available on Github (https://github.com/Sayani07/hakear) to implement ideas presented in this paper.
+**R-package:** The open-source R [@R-language] package `hakear` is available on Github (https://github.com/Sayani07/hakear) to implement ideas presented in this paper.
 
 
 # Bibliography
