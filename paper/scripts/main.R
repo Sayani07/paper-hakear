@@ -4,7 +4,6 @@ library(tidyverse)
 library(lubridate)
 library(lvplot)
 #library(ggridges)
-library(viridis)
 library(tsibble)
 library(gravitas)
 library(ggpubr)
@@ -17,6 +16,10 @@ library(here)
 library(ggplot2)
 library(patchwork)
 library(scales)
+library(GGally)
+library(viridis)
+
+
 #library(tidyquant)
 
 
@@ -316,7 +319,7 @@ p_varall <- sim_panel_varall %>%
   ylab ("simulated response")
 
 
-set.seed(9999)
+                  set.seed(9999)
 
 null <- compute_pairwise_norm(sim_panel_null, 
                               gran_x = "id_x",
@@ -875,6 +878,8 @@ elec_harmony_all <- elec_select_harmony %>%
   group_by(id) %>% 
   mutate(rank = row_number())
 
+#write_rds(elec_harmony_all, "paper/data/elec_harmony_all.rds")
+#elec_harmony_all <- read_rds("paper/data/elec_harmony_all.rds")
 
 
 ## ---- dotplot-8
@@ -912,7 +917,7 @@ heatplot <- elec_sig_split %>%
   scale_fill_gradient(low = "white",high = "#ba5370") +
   #scale_fill_manual(palette = "Dark2") +
   #scale_colour_manual(values = c("white","red")) + 
-  theme(legend.position = "bottom") +
+  theme(legend.position = "none") +
   coord_fixed() + 
   guides(fill = guide_legend()) +
   theme_void() +
@@ -952,7 +957,7 @@ elec_zoom <-  elec %>%
              labeller = "label_both") + 
   xlab("Time [30m]") + 
   theme_grey() + 
-  ylab("linear energy demand (kwh) for September") + ggtitle("(b)") +
+  ylab("") + ggtitle("(b)") +
   theme(panel.grid.major.x = element_blank()) +
   scale_x_datetime("Date", date_labels = "%b %d",
                    breaks = "1 week",
@@ -961,10 +966,45 @@ elec_zoom <-  elec %>%
         panel.grid.minor.x =  element_line(colour = "#D3D3D3"))
 
 
-heatplot +  facet_grid(id~.) +
+
+##parallel-coordinate-plot
+
+data_order <- elec_harmony_all %>% 
+  mutate(comb = paste(facet_variable, x_variable, sep = "-")) %>% 
+  group_by(comb) %>% 
+  summarise(m = mean(wpd)) %>% 
+  arrange(desc(m))
+
+
+data_pcp <- elec_harmony_all %>% 
+  mutate(wpd = as.numeric(wpd)) %>% 
+  mutate(comb = paste(facet_variable, x_variable, sep = "-")) %>% 
+  left_join(data_order) %>% 
+  arrange(desc(m)) %>% 
+  pivot_wider(-c(2, 3, 4, 5, 7, 8, 9, 10), 
+              names_from = comb, 
+              values_from = wpd) 
+
+parcoord <- GGally::ggparcoord(data_pcp,
+                   columns = 2:ncol(data_pcp),
+                   groupColumn = 1,
+                   showPoints = TRUE, 
+                   title = "Parallel Coordinate Plot for the Iris Data",
+                   alphaLines = 0.8,
+                   scale = "globalminmax"
+) + ggplot2::theme_bw() +
+  scale_color_viridis(discrete=TRUE) + 
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size=10)
+  )+
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
+
+
+(heatplot +  facet_grid(id~.) +
   elec_zoom +
-  theme( plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")))/parcoord + 
   plot_layout(widths = c(1, 2)) 
+
 
 
 ##----tab-rank-8
@@ -980,42 +1020,83 @@ elec_rank <- elec_sig_split %>%
 
 elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance marked for different thresholds. Rankings are different and at most three harmonies are significant for any household. The number of harmonies to explore are reduced from 42 to 3.")
 
+
+
+
 ## ---- gravitas-plot-8
 
-id4_tsibble <- elec %>%
-  filter(id == 4)
+# id4_tsibble <- elec %>%
+#   filter(id == 4)
+# 
+# id5_tsibble <- elec %>%
+#   filter(id == 5)
+# 
+# p1 <- id4_tsibble %>% 
+#   prob_plot("hour_day",
+#             "day_week",
+#             response = "kwh",
+#             plot_type = "quantile",
+#             symmetric = TRUE,
+#             quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+#   ggtitle("a) hod vs dow (id:4)") + 
+#   #scale_colour_brewer(name = "", palette = "Set2") +
+#   theme(legend.position = "none",
+#         strip.text = element_text(size = 7, margin = margin())) +
+#   ylab("energy consumption (in kwh)")
+# 
+# 
+# p2 <- id5_tsibble %>%
+#   prob_plot("hour_day",
+#             "day_week",
+#             response = "kwh",
+#             plot_type = "quantile",
+#             symmetric = TRUE,
+#             quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
+#   ggtitle("a) hod vs dow (id:5)") +
+#   #scale_colour_brewer(name = "", palette = "Set2")   +
+#   theme(legend.position = "none",
+#         strip.text = element_text(size = 7, margin = margin())) +
+#   ylab("energy consumption (in kwh)")
+# 
+# 
+# ggarrange(p1, p2, ncol=2, common.legend = TRUE)
 
-id5_tsibble <- elec %>%
-  filter(id == 5)
+id1_tsibble <- elec %>%
+  filter(id == 1)
 
-p1 <- id4_tsibble %>% 
-  prob_plot("hour_day",
-            "day_week",
+id7_tsibble <- elec %>%
+  filter(id == 7)
+
+p1 <- id1_tsibble %>% 
+  prob_plot("day_week",
+            "hour_day",
             response = "kwh",
             plot_type = "quantile",
             symmetric = TRUE,
-            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
-  ggtitle("a) hod vs dow (id:4)") + 
-  #scale_colour_brewer(name = "", palette = "Set2") +
+            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9), nrow = 1) +
+  ggtitle("a) hod vs dow (id:1)") + 
+  #scale_colour_brewer(name = "", palette = "Set2") 
+  ylab("energy consumption (in kwh)") +
+  scale_y_log10() + theme_bw()  +
   theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin())) +
-  ylab("energy consumption (in kwh)")
+        strip.text = element_text(size = 10, margin = margin())) + 
+  theme(panel.spacing =unit(0, "lines"))
 
-
-p2 <- id5_tsibble %>%
-  prob_plot("hour_day",
-            "day_week",
+p2 <- id7_tsibble %>%
+  prob_plot("day_week",
+            "hour_day",
             response = "kwh",
             plot_type = "quantile",
             symmetric = TRUE,
-            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9)) +
-  ggtitle("a) hod vs dow (id:5)") +
+            quantile_prob = c(0.1, 0.25, 0.5, 0.75, 0.9), nrow = 1) +
+  ggtitle("b) hod vs dow (id:7)") +
   #scale_colour_brewer(name = "", palette = "Set2")   +
+  ylab("energy consumption (in kwh)") +
+  scale_y_log10() + theme_bw()  +
   theme(legend.position = "none",
-        strip.text = element_text(size = 7, margin = margin())) +
-  ylab("energy consumption (in kwh)")
+        strip.text = element_text(size = 10, margin = margin()))+ 
+  theme(panel.spacing =unit(0, "lines"))
 
 
-ggarrange(p1, p2, ncol=2, common.legend = TRUE)
 
-
+ggarrange(p1, p2, nrow=2, common.legend = TRUE, widths= c(0.01, 1))
