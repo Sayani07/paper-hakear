@@ -926,7 +926,7 @@ heatplot <- elec_sig_split %>%
         axis.text.x = element_text(angle = 60, hjust=1),legend.position = "bottom") + ggtitle("a") +
   theme(
     strip.background = element_blank(),
-    strip.text.y  = element_blank(), plot.margin = unit(c(0, -2, 0, 0), "cm")) + ggtitle("(a)") + xlab("x variable") + ylab("facet variable") 
+    strip.text.y  = element_blank(), plot.margin = unit(c(0, -2, 0, 0), "cm")) + ggtitle("(a)") + xlab("x") + ylab("facet") 
 
 elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
   dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
@@ -957,14 +957,16 @@ elec_zoom <-  elec %>%
              labeller = "label_both") + 
   xlab("Time [30m]") + 
   theme_grey() + 
-  ylab("") + ggtitle("(b)") +
+  ylab("Energy demand (in Kwh)") + ggtitle("(b)") +
   theme(panel.grid.major.x = element_blank()) +
   scale_x_datetime("Date", date_labels = "%b %d",
                    breaks = "1 week",
                    date_minor_breaks = "1 day")  + theme_bw() +
   theme(panel.grid.major.x =  element_line(colour = "#A9A9A9"),
-        panel.grid.minor.x =  element_line(colour = "#D3D3D3"))
-
+        panel.grid.minor.x =  element_line(colour = "#D3D3D3")) +
+  theme(
+    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) 
+ 
 
 
 ##parallel-coordinate-plot
@@ -989,7 +991,7 @@ parcoord <- GGally::ggparcoord(data_pcp,
                    columns = 2:ncol(data_pcp),
                    groupColumn = 1,
                    showPoints = TRUE, 
-                   title = "Parallel Coordinate Plot for the Iris Data",
+                   title = "(c)",
                    alphaLines = 0.8,
                    scale = "globalminmax"
 ) + ggplot2::theme_bw() +
@@ -997,15 +999,22 @@ parcoord <- GGally::ggparcoord(data_pcp,
   ggplot2::theme(
     plot.title = ggplot2::element_text(size=10)
   )+
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
+  ggplot2::theme(axis.text.y = ggplot2::element_text(angle = 0)) +
+  theme(legend.position = "bottom") +
+  coord_flip() +
+  xlab("") +
+  ylab("wpd")
 
 
-(heatplot +  facet_grid(id~.) +
+(heatplot + 
+    theme(legend.position = "none") +
+    facet_grid(id~.) +
   elec_zoom +
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")))/parcoord + 
-  plot_layout(widths = c(1, 2)) 
-
-
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))) +  
+  parcoord + 
+    plot_layout(widths = c(1, 3, 1.5), guides = "collect") &
+    theme(legend.position='bottom') + 
+  theme(panel.spacing = unit(0.2, "lines"))
 
 ##----tab-rank-8
 
