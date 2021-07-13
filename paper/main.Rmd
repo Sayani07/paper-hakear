@@ -164,11 +164,7 @@ This is huge and overwhelming for human consumption even for moderately large $N
 
 <!-- If we have $n$ periodic linear granularities in the hierarchy table, then $n(n-1)/2$ circular or quasi-circular cyclic granularities could be constructed.  -->
 
-
-
-
-
-Our contributions in this paper are:
+<!-- Our contributions in this paper are: -->
 
  <!-- * We introduce a new distance measure for detecting periodic interactions. This induces data reduction which allows for identification of patterns, if any, in the time series data. -->
 
@@ -176,14 +172,14 @@ Our contributions in this paper are:
 
  <!-- * We device a framework for choosing a threshold, which will result in detection of only significantly interesting periodic patterns in the time series data. -->
 
- * introduce a distance measure for detecting distributional difference in temporal granularities, which enables identification
-of patterns in the time series data;
+ <!-- *  -->
 
- * devise a selection criterion by choosing a threshold, which results in detection of only significantly interesting patterns;
- 
- * show that the proposed distance metric could be used to rank the interesting patterns across different datasets and temporal granularities since they have been normalized for relevant parameters.
+ <!-- * ; -->
 
-\noindent The article is organized as follows. Section \ref{sec:computation-wpd} introduces a new distance measure, discusses the reasoning and details the computation.  Section \ref{sec:rank-wpd} discusses how to choose a threshold to select only useful displays. Section \ref{sec:simulations} provides some simulation study on the proposed methodology. Section \ref{sec:application-wpd} presents an application to residential smart meter data in Melbourne to show how the proposed methodology can be used to automatically detect temporal granularities along which distributional differences are significant.
+ <!-- * show that the proposed distance metric could be used to rank the interesting patterns across different datasets and temporal granularities since they have been normalized for relevant parameters. -->
+
+\noindent The article is organized as follows. Section \ref{sec:computation-wpd} introduces a distance measure for detecting distributional difference in temporal granularities, which enables identification of patterns in the time series data;
+Section \ref{sec:rank-wpd} devises a selection criterion by choosing a threshold, which results in detection of only significantly interesting patterns. Section \ref{sec:simulations} provides some simulation study on the proposed methodology. Section \ref{sec:application-wpd} presents an application to residential smart meter data in Melbourne to show how the proposed methodology can be used to automatically detect temporal granularities along which distributional differences are significant.
 
 <!-- acts as a way to automatically detect periodic patterns in time series. -->
 
