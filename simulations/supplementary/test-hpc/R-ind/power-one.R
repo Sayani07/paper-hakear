@@ -19,7 +19,7 @@ library(hakear)
 # harmony_table<-read_csv(here::here('simulations/sim_table/sim_table.csv'))
 
 sample_seed <- seq(1000, 10999, by = 10) 
-sample_seed <- sample_seed[1:500]
+sample_seed <- sample_seed[1:100]
 samp_size <- c(10, 50, 100, 200)
 omega <- c(0.5, 2, 5)
 simtable <- expand.grid(seed = sample_seed, samp_size = samp_size, increment = omega)

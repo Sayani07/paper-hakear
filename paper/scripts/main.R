@@ -22,7 +22,6 @@ library(viridis)
 
 #library(tidyquant)
 
-
 ## ---- calendar-elec
 elec <- read_rds(here("paper/data/elec.rds")) %>% 
   filter(date >= ymd("20180101"), date < ymd("20180701"))
@@ -197,6 +196,9 @@ v <- hakear::compute_pairwise_norm_scalar(sm, gran_x, gran_facet,
 
 
 ## ---- null4by2
+
+set.seed(9999)
+
 sim_varall_normal <- function(nx, nfacet, mean, sd, w1, w2) {
   dist_normal((mean + seq(0,
                           (nx *
@@ -944,17 +946,33 @@ elec1 <- elec %>%
          id = as.numeric(id))
 
 
+# data_elec_order <- elec %>% 
+#   as_tibble() %>% 
+#   group_by(id) %>% 
+#   summarise(av = mean(kwh)) %>% 
+#   arrange(av)
+# 
+# 
+# 
+# elec_zoom <-  elec %>%
+#   as_tibble() %>%   
+#   left_join(data_elec_order) %>%
+#   arrange(av)  %>% 
+#   dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30")))
+# 
+# elec_zoom$id = factor(elec_zoom$id, levels = data_elec_order$id)
+
 elec_zoom <-  elec %>%
-  as_tibble() %>% 
-  dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30"))) %>%
+    as_tibble() %>%
+    dplyr::filter(date(date_time) > as.Date("2019-09-01") & date(date_time) < (as.Date("2019-09-30"))) %>% 
+  mutate(id = paste("id", id, sep = " ")) %>% 
   ggplot(aes(x=date_time, y = kwh)) +
   #geom_point(size = 0.1, colour = "black", alpha = 0.3) +
-  geom_line(size = 0.1, colour = "blue") +
+  geom_line(size = 0.5, aes(color = id), alpha = 1) +
   facet_wrap(~id, 
              scales = "free_y",
              ncol = 1,
-             strip.position =  "right",
-             labeller = "label_both") + 
+             strip.position =  "right") + 
   xlab("Time [30m]") + 
   theme_grey() + 
   ylab("Energy demand (in Kwh)") + ggtitle("(b)") +
@@ -965,7 +983,8 @@ elec_zoom <-  elec %>%
   theme(panel.grid.major.x =  element_line(colour = "#A9A9A9"),
         panel.grid.minor.x =  element_line(colour = "#D3D3D3")) +
   theme(
-    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) 
+    strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) +
+  scale_color_viridis(discrete=TRUE)
  
 
 
@@ -990,9 +1009,9 @@ data_pcp <- elec_harmony_all %>%
 parcoord <- GGally::ggparcoord(data_pcp,
                    columns = 2:ncol(data_pcp),
                    groupColumn = 1,
-                   showPoints = TRUE, 
+                   showPoints = FALSE, 
                    title = "(c)",
-                   alphaLines = 0.8,
+                   alphaLines = 1 ,
                    scale = "globalminmax"
 ) + ggplot2::theme_bw() +
   scale_color_viridis(discrete=TRUE) + 
@@ -1019,7 +1038,7 @@ parcoord <- GGally::ggparcoord(data_pcp,
 ##----tab-rank-8
 
 elec_rank <- elec_sig_split %>% 
-  select(-c(6,7, 9, 10)) %>% 
+  select(-c(6, 7, 9, 10)) %>% 
   pivot_wider(
     names_from = id,
     values_from = rank) %>% 

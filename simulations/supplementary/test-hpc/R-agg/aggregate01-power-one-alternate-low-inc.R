@@ -31,7 +31,7 @@ all_data <- lapply(1:length(all_files_path), function(x){
 
 
 
- write_rds(all_data, paste0("simulations/supplementary/test-hpc/data-agg/all_data.rds"))
+ write_rds(all_data, paste0("simulations/supplementary/test-hpc/data-agg/all_data-power-one-alternate-low-inc.rds"))
 
 
 
