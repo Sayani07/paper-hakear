@@ -25,7 +25,7 @@ keywords:
 - R
 
 abstract: |
- Patterns or associations in large univariate time series data could be explored by analyzing the behavior across cyclic temporal granularities, which are temporal deconstructions accounting for repetitive behavior, for eg, hour-of-the-day, work-day/weekend, or holidays. This way of exploring time series analysis, however, presents itself with a plethora of displays that are potentially overwhelming for human consumption. This work provides a methodology to screen and rank the displays that are most informative in discerning distributional differences. This is done by introducing a distance measure for one or a pair of cyclic granularities that could be compared across different cyclic granularities and data sets. All the methods are implemented in the open-source R package `hakear`. 
+ Repetitive and dependency patterns in large univariate time series data can be measured by cyclic temporal granularities, which are temporal deconstructions such as hour-of-the-day, work-day/weekend, or holidays. This provides a new way to do exploratory analysis of time series data. However, especially when there are numerous granularities, it can present too many possible displays to process by a person. A new distance metric is proposed that provides a tool to screen and rank the possible displays. The distance measure is computed for a single or pairs of cyclic granularities can can be compared across different cyclic granularities and also on a collection of time series. These methods are implemented in the open-source R package `hakear`. 
 
 bibliography: [bibliography.bib]
 preamble: >
