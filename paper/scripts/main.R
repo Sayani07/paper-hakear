@@ -822,63 +822,66 @@ demography <- demography %>% kable(format  = "markdown", caption = "Demographics
 
 demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 
+# 
+# code of elec_harmony_all to follow. Since it takes long to run data/elec_harmony_all.rds is called
 
 ## ---- rank-household-mclapply-8
-elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
-  dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
-  select(-meter_id) %>% 
-  rename("id" = "household_id",
-         "date_time" = "reading_datetime")
-
-
-
-library(tictoc)
-#tic()
-elec_split = elec %>% group_split(id)
-
-elec_select_harmony = parallel::mclapply(1:8, function(x){
-  
-  data_id <-  elec_split %>% magrittr::extract2(x) %>% 
-    as_tsibble(index = date_time)
-  
-  harmonies <- data_id %>%
-    harmony(
-      ugran = "month",
-      filter_in = "wknd_wday",
-      filter_out = c("hhour", "fortnight")
-    )
-  
-  hakear::select_harmonies(data_id,
-                           harmony_tbl = harmonies,
-                           response = kwh,
-                           nperm = 200,
-                           nsamp = 200
-  )
-  
-}, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
-#toc()
+# elec <- read_rds(here("paper/data/elec_all-8.rds")) %>% 
+#   dplyr::filter(date(reading_datetime) >= ymd("20190701"), date(reading_datetime) < ymd("20191231"), meter_id==1) %>% 
+#   select(-meter_id) %>% 
+#   rename("id" = "household_id",
+#          "date_time" = "reading_datetime")
+# 
+# 
+# 
+# library(tictoc)
+# #tic()
+# elec_split = elec %>% group_split(id)
+# 
+# elec_select_harmony = parallel::mclapply(1:8, function(x){
+#   
+#   data_id <-  elec_split %>% magrittr::extract2(x) %>% 
+#     as_tsibble(index = date_time)
+#   
+#   harmonies <- data_id %>%
+#     harmony(
+#       ugran = "month",
+#       filter_in = "wknd_wday",
+#       filter_out = c("hhour", "fortnight")
+#     )
+#   
+#   hakear::select_harmonies(data_id,
+#                            harmony_tbl = harmonies,
+#                            response = kwh,
+#                            nperm = 200,
+#                            nsamp = 200
+#   )
+#   
+# }, mc.cores = parallel::detectCores() - 1, mc.preschedule = FALSE, mc.set.seed = FALSE)
+# 
 
 
 ## ---- elec_select_harmony-8
-elec_harmony_all <- elec_select_harmony %>% 
-  bind_rows(.id = "id") %>% 
-  mutate(facet_variable = case_when(
-    facet_variable == "hour_day" ~ "hod" ,
-    facet_variable == "day_month" ~ "dom" ,
-    facet_variable == "day_week" ~ "dow" ,
-    facet_variable == "week_month" ~ "wom" ,
-    facet_variable == "wknd_wday" ~ "wdwnd"
-  )) %>% 
-  mutate(x_variable = case_when(
-    x_variable == "hour_day" ~ "hod" ,
-    x_variable == "day_month" ~ "dom" ,
-    x_variable == "day_week" ~ "dow" ,
-    x_variable == "week_month" ~ "wom" ,
-    x_variable == "wknd_wday" ~ "wdwnd"
-  )) %>% 
-  mutate(id = paste("id", id, sep = " ")) %>% 
-  group_by(id) %>% 
-  mutate(rank = row_number())
+# 
+# elec_harmony_all <- elec_select_harmony %>% 
+#   bind_rows(.id = "id") %>% 
+#   mutate(facet_variable = case_when(
+#     facet_variable == "hour_day" ~ "hod" ,
+#     facet_variable == "day_month" ~ "dom" ,
+#     facet_variable == "day_week" ~ "dow" ,
+#     facet_variable == "week_month" ~ "wom" ,
+#     facet_variable == "wknd_wday" ~ "wdwnd"
+#   )) %>% 
+#   mutate(x_variable = case_when(
+#     x_variable == "hour_day" ~ "hod" ,
+#     x_variable == "day_month" ~ "dom" ,
+#     x_variable == "day_week" ~ "dow" ,
+#     x_variable == "week_month" ~ "wom" ,
+#     x_variable == "wknd_wday" ~ "wdwnd"
+#   )) %>% 
+#   mutate(id = paste("id", id, sep = " ")) %>% 
+#   group_by(id) %>% 
+#   mutate(rank = row_number())
 
 #write_rds(elec_harmony_all, "paper/data/elec_harmony_all.rds")
 #elec_harmony_all <- read_rds("paper/data/elec_harmony_all.rds")
@@ -886,7 +889,7 @@ elec_harmony_all <- elec_select_harmony %>%
 
 ## ---- dotplot-8
 
-
+elec_harmony_all <- read_rds("paper/data/elec_harmony_all.rds")
 select_split <- str_split(elec_harmony_all$select_harmony, " ", simplify = TRUE)[,2]
 
 elec_sig_split <- elec_harmony_all %>% 
