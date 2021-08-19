@@ -9,7 +9,7 @@ structure.html
 *.log
 *.tex
 *.toc
-*.rds
+simulations/*.rds
 *.7z
 *.csv
 *.err
