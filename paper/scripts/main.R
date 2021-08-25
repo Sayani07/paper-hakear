@@ -18,6 +18,8 @@ library(patchwork)
 library(scales)
 library(GGally)
 library(viridis)
+#remotes::install_github("Sayani07/hakear", force = TRUE)
+library(hakear)
 
 
 #library(tidyquant)
