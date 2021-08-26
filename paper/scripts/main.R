@@ -21,7 +21,6 @@ library(viridis)
 #remotes::install_github("Sayani07/hakear", force = TRUE)
 library(hakear)
 
-
 #library(tidyquant)
 
 ## ---- calendar-elec
