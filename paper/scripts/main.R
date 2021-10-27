@@ -401,15 +401,23 @@ p_varx <- sim_panel_varx %>%
 
 ## ---- notations
 ## 
-d1 <- tibble (variable = c("$N_C$", "$H_{N_C}$", "nx", "nfacet" , "$\\lambda$", "$\\omega$", "$wpd$", "$wpd_{norm}$","$nperm$", "$nsim$"),  description = c("number of cyclic granularities", "set of harmonies", "number of x-axis categories", "number of facet categories", "tuning parameter", "increment (mean or sd)", "raw weighted pairwise distance", "normalized weighted pairwise distance", "number of permutations for threshold/normalization", "number of simulations"))
-
+d1 <- tibble (
+  variable = c("$N_C$", "$H_{N_C}$", "$\\nx$", "$\\nf$" ,
+  "$\\lambda$", "$\\omega$", "$\\wpd$", "$\\wpdsub{norm}$",
+  "$\\nsub{perm}$", "$\\nsub{sim}$"),
+  description = c("number of cyclic granularities", "set of harmonies",
+    "number of x-axis categories", "number of facet categories",
+    "tuning parameter", "increment (mean or sd)",
+    "raw weighted pairwise distance", "normalized weighted pairwise distance",
+    "number of permutations for threshold/normalization", "number of simulations")
+)
 
 d2 <- tibble(variable =  c( 
-                           "$wpd_{threshold}$",
-                           "$D_{null}$",
-                           "$D_{var_f}$", 
-                           "$D_{var_x}$",
-                           "$D_{var_{all}}$"), 
+                           "$\\wpdsub{threshold}$",
+                           "$\\Dnull$",
+                           "$\\Df$",
+                           "$\\Dx$",
+                           "$\\Dfx$"),
              description = c(
                              "threshold for significance",
                              "null design with no distributional difference across categories",
