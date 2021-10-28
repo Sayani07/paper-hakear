@@ -310,7 +310,7 @@ where $M = \frac{q_1+q_2}{2}$ and $D(q_1||q_2) := \int^\infty_{-\infty} q_1(x)f(
 
 ```
 
-Pairwise distances could be within-facets or between-facets for $m \geq 2$. Figure \ref{fig:distance-explain} illustrates how they are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. There are a total of ${K \choose 2}J$ between-facet distances, and ${J \choose 2}K$ within-facet distances if they are ordered and $K(J-1)$ within-facet distances if they are unordered.
+Pairwise distances could be within-facets or between-facets for $m = 2$. Figure \ref{fig:distance-explain} illustrates how they are defined. Pairwise distances are within-facets when $b_{k} = b_{k'}$, that is, between pairs of the form $(a_{j}b_{k}, a_{j'}b_{k})$ as shown in panel (3) of Figure \ref{fig:distance-explain}. If categories are ordered (like all temporal cyclic granularities), then only distances between pairs where $a_{j'} = (a_{j+1})$ are considered (panel (4)). Pairwise distances are between-facets when they are considered between pairs of the form $(a_{j}b_{k}, a_{j}b_{k'})$. There are a total of ${K \choose 2}J$ between-facet distances, and ${J \choose 2}K$ within-facet distances if they are ordered and $K(J-1)$ within-facet distances if they are unordered.
 
 ### Tuning parameter {-}
 
@@ -334,13 +334,13 @@ $$
 $$
 The statistic "maximum" is chosen to combine the weighted pairwise distances since the distance measure is aimed at capturing the maximum variation of the measured variable within a panel. The statistic "maximum" is, however, affected by the number of comparisons (resulting pairwise distances). For example, for a $(2, 3)$ panel, there are $6$ possible subsets of observations corresponding to the combinations $(a_1, b_1), (a_1, b_2), (a_1, b_3), (a_2 ,b_1), (a_2 ,b_2), (a_2, b_3)$, whereas for a $(2, 2)$ panel, there are only $4$ possible subsets $(a_1, b_1), (a_1, b_2), (a_2 ,b_1), (a_2 ,b_2)$. Consequently, the measure would have higher values for the panel $(2, 3)$ as compared to $(2, 2)$, since maximum is taken over higher number of pairwise distances.
 
-### Adjusting for the number of comparisons {-}
+## Adjusting for the number of comparisons
 
 Ideally, it is desired that the proposed distance measure takes a higher value only if there is a significant difference between distributions across categories, and not because the number of categories $J$ or $K$ is high. That is, under designs like $\Dnull$, their distribution should not differ for a different number of categories. Only then the distance measure could be compared across panels with different levels. This calls for an adjusted measure, which normalizes for the different number of comparisons.
 
 Two approaches for adjusting the number of comparisons are discussed, both of which are substantiated using simulations. The first one defines an adjusted measure $\wpdsub{perm}$ based on the permutation method to remove the effect of different comparisons. The second approach fits a model to represent the relationship between $\wpdsub{raw}$ and the number of comparisons and defines the adjusted measure ($\wpdsub{glm}$) as the residual from the model.
 
-### _Permutation approach_ {-}
+### Permutation approach {-}
 
 This method is somewhat similar in spirit to bootstrap or permutation tests, where the goal is to test the hypothesis that the groups under study have identical distributions. This method accomplishes a different goal of finding the null distribution for different groups (panels in our case) and standardizing the raw values using that distribution. The values of $\wpdsub{raw}$ is computed on many ($\nsub{perm}$) permuted data sets and stored in $\wpdsub{perm-data}$. Then $\wpdsub{perm}$ is computed as follows:
 \begin{align*}
@@ -350,13 +350,13 @@ where $\text{mean}(\wpdsub{perm-data})$ and $\text{sd}(\wpdsub{perm-data})$ are 
 
 <!-- for the $l^{th}$ panel and -->
 
-### _Modeling approach_ {-}
+### Modeling approach {-}
 
 In this approach, a Gamma generalized linear model (GLM) for $\wpdsub{raw}$ is fitted with the number of comparisons as the explanatory variable. Since, $\wpdsub{raw}$ is a Jensen-Shannon distance, it follows a Chi-square distribution [@Menendez1997-in], which is a special case of a Gamma distribution. Furthermore, the mean response is bounded, since any JSD is bounded by $1$ if a base $2$ logarithm is used [@Lin1991-pt]. Hence, by @Faraway2016-uk, an inverse link is used for the model, which is of the form $y = a+b*\log(z) + e$, where $y = \wpdsub{raw}$, $z = (\nx*\nf)$ is the number of groups and $e$ are idiosyncratic errors. Let $\text{E}(y) = \mu$ and $a + b*\log(z) = g(\mu)$ where $g(\mu)= 1/\mu$ and $\hat \mu = 1/(\hat a + \hat b \log(z))$. The residuals from this model $(y-\hat y) = (y-1/(\hat a + \hat b \log(z)))$ would be expected to have no dependency on $z$. Thus, $\wpdsub{glm}$ is defined as the residuals from this model given by
 $$\wpdsub{glm} = \wpdsub{raw} - 1/(\hat a + \hat b*\log(\nx*\nf))$$
 The distribution of $\wpdsub{glm}$ under $\Dnull$ will have approximately zero mean and a constant variance (not necessarily 1).
 
-### _Combination approach_ {-}
+### Combination approach {-}
 
 The simulation results (in Section \ref{sec:simulations}) show that the distribution of $\wpdsub{glm}$ under the null design is similar for high $\nx$ and $\nf$ (levels higher than $5$) but less so for lower values of $\nx$ and $\nf$. Hence, a combination approach is proposed where we use a permutation approach for categories with small numbers of levels, and a modeling approach for categories with higher numbers of levels. This ensures that the computational load of the permutation approach is alleviated while maintaining a similar null distribution across different categories. This approach, however, requires that the adjusted variables from the two approaches are brought to the same scale. We define $\wpdsub{glm-scaled} = \wpdsub{glm}*\sigma^2_{\text{perm}}/\sigma^2_{\text{glm}}$ as the transformed $\wpdsub{glm}$ with a similar scale as $\wpdsub{perm}$. The adjusted measure from the combination approach, denoted by $\wpd$ is then defined as follows:
 \begin{equation}
@@ -483,7 +483,7 @@ The simulation results (in Section \ref{sec:simulations}) show that the distribu
 
 # Ranking and selection of cyclic granularities {#sec:rank-wpd}
 
-A cyclic granularity is referred to as "significant" if there is a significant distributional difference of the measured variable between different categories of the harmony. In this section, a selection criterion to choose significant harmonies is provided, thereby eliminating all harmonies that exhibit complete randomness in the measured variable. The distance measure $\wpd$ is used as a test statistic to test the null hypothesis that no harmony/cyclic granularity is significant. We select only those harmonies/cyclic granularities for which the test fails. They are then ranked basis how well they capture variation in the measured variable.
+A cyclic granularity is referred to as "significant" if there is a significant distributional difference of the measured variable between different categories of the harmony. In this section, a selection criterion to choose significant harmonies is provided, thereby eliminating all harmonies that exhibit non-significant differences in the measured variable. The distance measure $\wpd$ is used as a test statistic to test the null hypothesis that no harmony/cyclic granularity is significant. We select only those harmonies/cyclic granularities for which the test fails. They are then ranked based on how well they capture variation in the measured variable.
 
 <!-- . Randomization tests (permutation tests) generates a random distribution by re-ordering the observed data and allows us to test if the observed data is significantly different from any random distribution. -->
 <!-- the harmonies are not significant under null hypothesis and then test if our hypotheses are true: -->
@@ -497,37 +497,53 @@ A cyclic granularity is referred to as "significant" if there is a significant d
 
 <!-- Under the null hypothesis, the harmonies are not significant. -->
 
-A threshold and consequently a selection criterion is chosen using the notion of Randomization tests [@edgington2007randomization]. The data is permuted several times and $\wpd$ is computed for each of the permuted data sets to obtain the sampling distribution of $\wpd$ under the null hypothesis. If the null hypothesis is true, then $\wpd$ obtained from the original data set would be a likely value in the sampling distribution. But in case the null hypothesis is not true, then it is less probable that $\wpd$ obtained for the original data will be from the same distribution. This idea is utilized to come up with a threshold for selection, denoted by $\wpdsub{threshold}$, defined as the $99^{th}$ percentile of the sampling distribution. A harmony is selected if the value of $\wpd$ for that harmony is greater than the chosen threshold. The detailed algorithm for choosing a threshold and selection procedure (for two cyclic granularities) is listed as follows:
+A threshold (and consequently a selection criterion) is chosen using the notion of randomization tests [@edgington2007randomization]. The data is permuted several times and $\wpd$ is computed for each of the permuted data sets to obtain the sampling distribution of $\wpd$ under the null hypothesis. If the null hypothesis is true, then $\wpd$ obtained from the original data set would be a likely value in the sampling distribution. But in case the null hypothesis is not true, then it is less probable that $\wpd$ obtained for the original data will be from the same distribution. This idea is utilized to come up with a threshold for selection, denoted by $\wpdsub{threshold}$, defined as the $99^{th}$ percentile of the sampling distribution. A harmony is selected if the value of $\wpd$ for that harmony is greater than the chosen threshold. The detailed algorithm for choosing a threshold and selection procedure (for two cyclic granularities) is listed as follows:
 
 <!-- The selection criterion is stated as follows: for $(i \in {1, 2, \dots, H_{N_C}})$, select $H_i$ if $wpd_i > \wpdsub{threshold}$, else reject. -->
 
-- **Input:** All harmonies of the form $\{(A, B), A = \{ a_j: j = 1, 2, \dots, J\}, B = \{ b_k: k = 1, 2, \dots, K\}\}$, $\forall (A, B) \in H_{N_C}$.
+- **Input:** All harmonies of the form $\{(A, B),~ A = \{ a_j: j = 1, 2, \dots, J\},~ B = \{ b_k: k = 1, 2, \dots, K\}\}$, $\forall (A, B) \in H_{N_C}$.
 
 - **Output:** Harmony pairs $(A, B)$ for which $\wpd$ is significant.
 
-1. Fix harmony pair $(A, B)$.
+1. For each harmony pair $(A, B) \in H_{N_C}$, the following steps are taken.
 
-2. Given the measured variable; $\{v_t: t=0, 1, 2, \dots, T-1\}$, $\wpd$ is computed and is represented by $\wpd^{A, B}_{obs}$.
+    a. Given the measured variable; $\{v_t: t=0, 1, 2, \dots, T-1\}$, $\wpd$ is computed and is represented by $\wpd^{A, B}_{obs}$.
+    b. For $i=1,\dots,m$, randomly permute the original time series: $\{v_t^{i}: t=0, 1, 2, \dots, T-1\}$ and compute $\wpd^{A, B}_{i}$ from $\{v_t^{i}\}$.
+    c. Define $\wpdsub{sample} = \{\wpd^{A, B}_{1}, \dots, \wpd^{A, B}_{M}\}$.
 
-3. From the original sequence a random permutation is obtained: $\{v_t^{1}: t=0, 1, 2, \dots, T-1\}$.
-
-4. $\wpd$ is computed for the permuted sequence of the data and is represented by $\wpd^{A, B}_{1}$.
-
-5. Steps (3) and (4) are repeated a large number of times $M$ (e.g. $M = 200$).
-
-6. For each permutation, one $\wpd^{A, B}_{i}$ is obtained. Define $\wpdsub{sample} = \{\wpd^{A, B}_{1} \wpd^{A, B}_{2}, \dots, \wpd^{A, B}_{M}\}$.
-
-7. Repeat Steps (1-6) for all harmony pairs $(A, B) \in H_{N_C}$ and stored $\wpdsub{sample}^{\text{all}}$.
-
-8. $99^{th}$ percentiles of $\wpdsub{sample}^{\text{all}}$ is computed and stored in $\wpdsub{threshold99}$
-
-7. If $\wpd^{A, B}_{obs} > \wpdsub{threshold99}$, harmony pair $(A, B)$ is selected, otherwise rejected.
-
-Similarly, a harmony pair $(A, B)$ could be selected if $\wpd^{A, B}_{obs} > \wpdsub{threshold95}$ and $\wpd^{A, B}_{obs} > \wpdsub{threshold90}$, where $\wpdsub{threshold95}$ and $\wpdsub{threshold90}$ denote the $95^{th}$ and $90^{th}$ percentile of $\wpdsub{sample}^{\text{all}}$ respectively. A harmony selected using $99^{th}$, $95^{th}$ and $90^{th}$ threshold are tagged as \*\*\*, \*\*, \* respectively.
+2. Stack the $\wpdsub{sample}$ vectors as $\wpdsub{sample}^{\text{all}}$ and compute its $p = 100(1-\alpha)$ percentiles as $\wpdsub{threshold\emph{p}}$.
+3. If $\wpd^{A, B}_{obs} > \wpdsub{threshold\emph{p}}$, harmony pair $(A, B)$ is selected at the $1-p/100$ level, otherwise rejected.
+4. Harmonies selected using the $99^{th}$, $95^{th}$ and $90^{th}$ thresholds are tagged as \*\*\*, \*\*, \* respectively.
 
 ## Ranking {#sec:ranking}
 
-The distribution of $\wpd$ is expected to be similar for all harmonies under the null hypothesis, since they have been adjusted for different number of categories for the harmonies or underlying distribution of the measured variable. Hence, the values of $\wpd$ for different harmonies are comparable and can be used to rank the significant harmonies. A higher value of $\wpd$ for a harmony indicates that higher maximum variation in the measured variable is captured through that harmony. Figure \ref{fig:null4by2} presents the results of $\wpd$ from the illustrative designs in Section \ref{sec:computation-wpd}. The value of $\wpd$ under null design (a) is the least, followed by (b), (c) and (d). This aligns with the principle of $\wpd$, which is expected to have lowest value for null designs and highest for designs of the form $\Dfx$ (d). Moreover, note the relative differences in $\wpd$ values between (b) and (c). The value of the tuning parameter $\lambda$ is set to $0.67$, which has resulted in giving more emphasis to differences in x-axis categories. Again consider \ref{fig:onegran-new}(a) and \ref{fig:onegran-new}(b) with a $\wpd$ value of 20.5 and 145 respectively. This is because there is more gradual increase across hours of the day than months of the year. If order of the categories is not considered, they result in a $\wpd$ value of $97.8$ and $161$ respectively, which follows from the fact that if we consider difference between any hours of the day, the magnitude will be much larger than if we consider difference between consecutive categories. Similarly, \ref{fig:onegran-new}(a) and (b) have $\wpd$ values of  $110.79$ and $125.82$ respectively. The ranking implies that the distributional differences are more prominent for the second household, as is also seen from the bigger fluctuations in the $90^{th}$ percentile than the first household.
+The distribution of $\wpd$ is expected to be similar for all harmonies under the null hypothesis, since they have been adjusted for different number of categories for the harmonies or underlying distribution of the measured variable. Hence, the values of $\wpd$ for different harmonies are comparable and can be used to rank the significant harmonies. A higher value of $\wpd$ for a harmony indicates that higher maximum variation in the measured variable is captured through that harmony.
+
+
+```{r varall-new}
+
+```
+
+```{r varx-new}
+
+```
+
+```{r varf-new}
+```
+
+```{r null-new}
+
+```
+
+(ref:plot-all-new3) $\wpd$ values for the four illustrative designs are presented here. As expected, the value of $\wpd$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design.
+
+```{r plot-all-new3, fig.cap = "(ref:plot-all-new3)", dependson= "null4by2"}
+
+```
+
+\todo[inline]{Plot missing and plot-all-new3 code is not relevant.}
+
+Figure \ref{fig:plot-all-new3} presents the results of $\wpd$ from the illustrative designs in Section \ref{sec:computation-wpd}. The value of $\wpd$ under null design (a) is the least, followed by (b), (c) and (d). This aligns with the principle of $\wpd$, which is expected to have lowest value for null designs and highest for designs of the form $\Dfx$ (d). Moreover, note the relative differences in $\wpd$ values between (b) and (c). The value of the tuning parameter $\lambda$ is set to $0.67$, which has resulted in giving more emphasis to differences in x-axis categories. Again consider \ref{fig:onegran-new}(a) and \ref{fig:onegran-new}(b) with a $\wpd$ value of 20.5 and 145 respectively. This is because there is more gradual increase across hours of the day than months of the year. If order of the categories is not considered, they result in a $\wpd$ value of $97.8$ and $161$ respectively, which follows from the fact that if we consider difference between any hours of the day, the magnitude will be much larger than if we consider difference between consecutive categories. Similarly, \ref{fig:onegran-new}(a) and (b) have $\wpd$ values of  $110.79$ and $125.82$ respectively. The ranking implies that the distributional differences are more prominent for the second household, as is also seen from the bigger fluctuations in the $90^{th}$ percentile than the first household.
  
 
 <!-- ## Choosing a threshold -->
@@ -551,27 +567,6 @@ The distribution of $\wpd$ is expected to be similar for all harmonies under the
 
 <!-- ### Results -->
 
-```{r varall-new}
-
-```
-
-```{r varx-new}
-
-```
-
-```{r varf-new}
-```
-
-```{r null-new}
-
-```
-
-(ref:plot-all-new3) $\wpd$ values for the four illustrative designs are presented here. As expected, the value of $\wpd$ under null design is the least (a), followed by (b, c and d). Moreover, the relative difference is interesting as c is closer to d than b, since the differences between x categories are up-weighed by design.
-
-```{r plot-all-new3, fig.cap = "(ref:plot-all-new3", dependson= "null4by2"}
-
-```
-
 # Simulations {#sec:simulations}
 
 ## Behavior of raw and adjusted distance measures
@@ -588,11 +583,10 @@ The distribution of $\wpd$ is expected to be similar for all harmonies under the
 
 ### _Results_ {-}
 
-Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $\Dnull$ as it would mean comparisons of $\wpd$ values is not appropriate across different $\nx$ and $\nf$. Table \ref{tab:glm-tab} gives the summary of the generalized linear model to capture the relationship between $\wpdsub{raw}$ and number of comparisons. For example, the model considered for $m = 2$ is $wpd_{l,s} = 23.4 - 0.96*log(nx * \nf)) + e$. The intercepts and slopes are similar independent of the starting distributions (see supplementary paper for details) and hence the coefficients are shown for the case when observations are drawn from a N(0, 1) distribution. Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $\wpdsub{perm}$ and $wpd_{glm-scaled}$ in the same scale to show that a combination approach could be used for higher values of levels to alleviate the computational time of permutation approach.
 
 (ref:raw) Distribution of $\wpdsub{raw}$ is plotted across different $\nx$ and $\nf$ categories under $\Dnull$ through density and rug plots. Both location (blue line) and scale (orange marks) of the distribution shifts for different panels. This is not desirable since under null design, the distribution is not expected to capture any differences.
 
-```{r raw, fig.cap = "(ref:raw"}
+```{r raw, fig.cap = "(ref:raw)", fig.pos="!b"}
 ```
 
 ```{r glm-tab}
@@ -613,10 +607,13 @@ Figure \ref{fig:raw} shows that both the location and scale of the distributions
 ```{r norm, eval}
 ```
 
-(ref:dist-new-same-scale-link) The distribution of $\wpdsub{perm}$ and $\wpdsub{glm-scaled}$ are overlaid to compare the location and scale across different $\nx$ and $\nf$. $\wpdnorm$ takes the value of $\wpdsub{perm}$ for lower levels, and $\wpdsub{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both approaches for higher levels.
+(ref:dist-new-same-scale-link) The distribution of $\wpdsub{perm}$ and $\wpdsub{glm-scaled}$ are overlaid to compare the location and scale across different $\nx$ and $\nf$. $\wpdsub{norm}$ takes the value of $\wpdsub{perm}$ for lower levels, and $\wpdsub{glm-scaled}$ for higher levels to to alleviate the problem of computational time in permutation approaches. This is possible as the distribution of the adjusted measure looks similar for both approaches for higher levels.
 
-```{r dist-new-same-scale-link, fig.cap = "(ref:dist-new-same-scale-link"}
+```{r dist-new-same-scale-link, fig.cap = "(ref:dist-new-same-scale-link)"}
 ```
+
+
+Figure \ref{fig:raw} shows that both the location and scale of the distributions change across panels. This is not desirable under $\Dnull$ as it would mean comparisons of $\wpd$ values is not appropriate across different $\nx$ and $\nf$. Table \ref{tab:glm-tab} gives the summary of the generalized linear model to capture the relationship between $\wpdsub{raw}$ and number of comparisons. For example, the model considered for $m = 2$ is $wpd_{l,s} = 23.4 - 0.96*log(nx * \nf)) + e$. The intercepts and slopes are similar independent of the starting distributions (see supplementary paper for details) and hence the coefficients are shown for the case when observations are drawn from a N(0, 1) distribution. Figure \ref{fig:dist-new-same-scale-link} shows the distribution of $\wpdsub{perm}$ and $wpd_{glm-scaled}$ in the same scale to show that a combination approach could be used for higher values of levels to alleviate the computational time of permutation approach.
 
 ## Choosing threshold
 
