@@ -1,6 +1,7 @@
 ## ---- load 
 library(knitr)
 library(tidyverse)
+library(broom)
 library(lubridate)
 library(lvplot)
 #library(ggridges)
@@ -17,9 +18,12 @@ library(ggplot2)
 library(patchwork)
 library(scales)
 library(GGally)
-library(viridis)
+#library(viridis)
 #remotes::install_github("Sayani07/hakear", force = TRUE)
 library(hakear)
+
+# OkabeIto color blind friendly scale
+okabeito <- c("#D55E00", "#0072B2","#009E73", "#CC79A7", "#E69F00", "#56B4E9", "#F0E442", "#333333")
 
 #library(tidyquant)
 
@@ -912,12 +916,10 @@ elec_sig_split <- elec_harmony_all %>%
     select_split == "*" ~ "medium",
     select_split == "" ~ "low"
   )) %>% 
-  mutate(rank = case_when(
-    select_split == "***" ~ paste(rank, "***", sep = " "),
-    select_split == "**" ~  paste(rank, "**", sep = " "),
-    select_split == "*" ~  paste(rank, "*", sep = " "),
-    select_split == "" ~  paste(rank, "", sep = " ")
-  ))
+  mutate(
+    rank = if_else(rank < 10, paste0("\\phantom{0}",rank), paste0(rank)),
+    rank = paste0(rank,"\\rlap{$^{",select_split,"}$}")
+  )
 
 
 elec_sig_split$significant <- 
@@ -999,7 +1001,7 @@ elec_zoom <-  elec %>%
         panel.grid.minor.x =  element_line(colour = "#D3D3D3")) +
   theme(
     strip.text = element_text(size = 10, margin = margin(b = 0, t = 0))) +
-  scale_color_viridis(discrete=TRUE)
+  scale_color_discrete(type = okabeito)
  
 
 
@@ -1029,7 +1031,7 @@ parcoord <- GGally::ggparcoord(data_pcp,
                    alphaLines = 1 ,
                    scale = "globalminmax"
 ) + ggplot2::theme_bw() +
-  scale_color_viridis(discrete=TRUE) + 
+  scale_color_discrete(type = okabeito) + 
   ggplot2::theme(
     plot.title = ggplot2::element_text(size=10)
   )+
@@ -1061,7 +1063,9 @@ elec_rank <- elec_sig_split %>%
          "x variable" = "x_variable") %>% 
   select(-facet_levels, -x_levels)
 
-elec_rank %>% kable(format = "markdown", caption = "Ranking of harmonies for the eight households with significance marked for different thresholds. Rankings are different and at most three harmonies are significant for any household. The number of harmonies to explore are reduced from 42 to 3.")
+elec_rank %>% 
+  kable(format = "markdown", 
+        caption = "Ranking of harmonies for the eight households with significance marked for different thresholds. Rankings are different and at most three harmonies are significant for any household. The number of harmonies to explore are reduced from 42 to 3.")
 
 
 
