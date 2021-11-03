@@ -431,8 +431,10 @@ d2 <- tibble(variable =  c(
 
 
 d <- bind_rows(d1, d2)
-knitr::kable(d, format = "markdown", 
+knitr::kable(d, format = "latex",
              escape = FALSE,
+             longtable = FALSE,
+             booktabs = TRUE,
              caption = 
                "Nomenclature table")
 
@@ -441,7 +443,7 @@ knitr::include_graphics(here::here("paper/Figs/dist_explain.png"))
 
 
 ##----raw
-G21 <- read_rds("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+G21 <- read_rds(here("simulations/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 
 summary_data <- G21 %>% 
   group_by(nx, nfacet) %>% 
@@ -461,7 +463,7 @@ G21 %>%
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))
 
 ##----raw-onegran
-G21 <- read_rds("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds")
+G21 <- read_rds(here("simulations/supplementary/one-gran/raw/null_design_quantrans/data-agg/all_data_wpd_N01.rds"))
 
 summary_data <- G21 %>% 
   group_by(nx, nfacet) %>% 
@@ -905,7 +907,7 @@ demography %>% add_footnote(label = "***: 99% significant, **: 95% and *: 90%")
 
 ## ---- dotplot-8
 
-elec_harmony_all <- read_rds("paper/data/elec_harmony_all.rds")
+elec_harmony_all <- read_rds(here("paper/data/elec_harmony_all.rds"))
 select_split <- str_split(elec_harmony_all$select_harmony, " ", simplify = TRUE)[,2]
 
 elec_sig_split <- elec_harmony_all %>% 
