@@ -1,2 +1,7 @@
 load("/Users/sgup0008/Documents/paper-hakear/paper/data/reverse_smart_normal.rds")
 load("/Users/sgup0008/Documents/paper-hakear/paper/data/smart_harmony_nonst.rds")
+load("/Users/sgup0008/Documents/paper-hakear/paper/data/harmonies.rds")
+load("/Users/sgup0008/Documents/paper-hakear/paper/data/elec_harmony_all.rds")
+load("/Users/sgup0008/Documents/paper-hakear/paper/data/elec_all.rds")
+load("/Users/sgup0008/Documents/paper-hakear/paper/data/elec_all-8.rds")
+load("/Users/sgup0008/Documents/paper-hakear/paper/data/elec.rds")
