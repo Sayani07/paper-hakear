@@ -300,7 +300,8 @@ bind_cols(distribution = "N(0, 1)", broom::tidy(glm_fit_onegran)) %>%
   mutate(estimate = round(estimate, 2),
          std.error = round(std.error, 3),
          statistic = round(statistic, 2),
-         p.value = round(p.value, 2)) %>% kable(caption = "Results of generalised linear model to capture the relationship between $\\wpdsub{raw}$ and number of comparisons for $m=1$.")
+         #p.value = round(p.value, 2)
+         p.value = "<.001") %>% kable(caption = "Results of generalised linear model to capture the relationship between $\\wpdsub{raw}$ and number of comparisons for $m=1$.")
 
 ```
 
